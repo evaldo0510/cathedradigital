@@ -1,8 +1,15 @@
 /**
  * /admin/editorial-audit — Sprint 6 · Consolidação Editorial do Glossário.
  *
- * Score 0–100 por verbete + pendências por campo + geração granular via IA
- * (glossary-generate-deep aceita { slug, field }). Toda geração vira draft.
+ * Refinamentos Sprint 6 (pré-Santos):
+ *  1. Índice de Confiança Editorial (ICE) — Ouro/Prata/Bronze/Revisão
+ *  2. Scores separados: Editorial × Nexus
+ *  3. Pendências Inteligentes com sugestões de fontes
+ *  4. Histórico Editorial por verbete (criado/revisado/publicado/versão)
+ *  5. Dashboard de Produção cross-módulo (Glossário, Santos, Orações, etc.)
+ *  6. Sprint 6.5 · Selo de Congelamento Editorial
+ *
+ * Toda geração via IA rebaixa o verbete para draft.
  */
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
@@ -15,8 +22,10 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Progress } from "@/components/ui/progress";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   Loader2, Sparkles, AlertCircle, CheckCircle2, ExternalLink, Award, Filter,
+  History, Lightbulb, ChevronDown, Snowflake,
 } from "lucide-react";
 
 const GOLD_MIN = 20;
@@ -27,12 +36,15 @@ type Field =
   | "bibliography" | "bible_verses" | "catechism_references"
   | "fathers_refs" | "magisterium_references";
 
+type Group = "editorial" | "nexus";
+
 interface Check {
   field: Field | "definition" | "short_definition" | "nexus";
   label: string;
   weight: number;
   ok: boolean;
   generable: boolean;
+  group: Group;
 }
 
 interface Row {
@@ -41,9 +53,17 @@ interface Row {
   status: string;
   editorial_completeness: string | null;
   score: number;
+  editorial_score: number;
+  nexus_score: number;
   nexus_count: number;
   checks: Check[];
   pending: number;
+  created_at: string | null;
+  updated_at: string | null;
+  published_at: string | null;
+  reviewed_at: string | null;
+  reviewed_by: string | null;
+  version: number | null;
 }
 
 interface Totals {
@@ -51,17 +71,30 @@ interface Totals {
   published: number;
   drafts: number;
   gold: number;
-  perfect: number;
-  critical: number;
+  silver: number;
+  bronze: number;
+  needs_review: number;
   avg: number;
+  avg_editorial: number;
+  avg_nexus: number;
+}
+
+interface ModuleStat {
+  key: string;
+  label: string;
+  published: number;
+  total: number;
+  note?: string;
 }
 
 const FILTERS = [
   { key: "all", label: "Todos" },
   { key: "published", label: "Publicados" },
   { key: "draft", label: "Drafts" },
-  { key: "lt80", label: "Score < 80" },
-  { key: "lt70", label: "Score < 70 (críticos)" },
+  { key: "gold", label: "ICE Ouro (≥95)" },
+  { key: "silver", label: "ICE Prata (85–94)" },
+  { key: "bronze", label: "ICE Bronze (70–84)" },
+  { key: "review", label: "Revisão obrigatória (<70)" },
   { key: "no_deep", label: "Sem interpretação" },
   { key: "no_faq", label: "Sem FAQ" },
   { key: "no_logos", label: "Sem Logos" },
@@ -71,42 +104,112 @@ const FILTERS = [
 ] as const;
 type FilterKey = typeof FILTERS[number]["key"];
 
+/** Índice de Confiança Editorial */
+function ice(score: number) {
+  if (score >= 95) return { tier: "gold" as const, label: "Ouro", emoji: "🟢",
+    cls: "border-emerald-500/40 bg-emerald-500/10 text-emerald-700" };
+  if (score >= 85) return { tier: "silver" as const, label: "Prata", emoji: "🔵",
+    cls: "border-sky-500/40 bg-sky-500/10 text-sky-700" };
+  if (score >= 70) return { tier: "bronze" as const, label: "Bronze", emoji: "🟡",
+    cls: "border-amber-500/40 bg-amber-500/10 text-amber-700" };
+  return { tier: "review" as const, label: "Revisão obrigatória", emoji: "🔴",
+    cls: "border-red-500/40 bg-red-500/10 text-red-700" };
+}
+
 function computeChecks(r: any): Check[] {
   const nz = (v: any) => typeof v === "string" && v.trim().length >= 20;
   const arr = (v: any, min = 1) => Array.isArray(v) && v.length >= min;
   const nexusCount = Array.isArray(r.nexus_refs) ? r.nexus_refs.length : 0;
   return [
-    { field: "short_definition", label: "Definição curta", weight: 4, ok: nz(r.short_definition), generable: false },
-    { field: "definition", label: "Definição", weight: 8, ok: nz(r.definition), generable: false },
-    { field: "deep_interpretation", label: "Interpretação profunda", weight: 15, ok: nz(r.deep_interpretation), generable: true },
-    { field: "etymology", label: "Etimologia", weight: 8, ok: nz(r.etymology), generable: true },
-    { field: "historical_context", label: "Contexto histórico", weight: 8, ok: nz(r.historical_context), generable: true },
-    { field: "practical_application", label: "Aplicação prática", weight: 8, ok: nz(r.practical_application), generable: true },
-    { field: "logos_meditation", label: "Meditação Logos", weight: 8, ok: nz(r.logos_meditation), generable: true },
-    { field: "faq", label: "FAQ (≥3)", weight: 8, ok: arr(r.faq, 3), generable: true },
-    { field: "bibliography", label: "Bibliografia (≥3)", weight: 7, ok: arr(r.bibliography, 3), generable: true },
-    { field: "bible_verses", label: "Bíblia (≥3)", weight: 6, ok: arr(r.bible_verses, 3), generable: true },
-    { field: "catechism_references", label: "CIC (≥2)", weight: 6, ok: arr(r.catechism_references, 2), generable: true },
-    { field: "fathers_refs", label: "Padres (≥1)", weight: 5, ok: arr(r.fathers_refs, 1), generable: true },
-    { field: "magisterium_references", label: "Magistério (≥1)", weight: 5, ok: arr(r.magisterium_references, 1), generable: true },
-    { field: "nexus", label: `Nexus ${nexusCount}/${GOLD_MIN}`, weight: 4, ok: nexusCount >= GOLD_MIN, generable: false },
+    { field: "short_definition", label: "Definição curta", weight: 4, ok: nz(r.short_definition), generable: false, group: "editorial" },
+    { field: "definition", label: "Definição", weight: 8, ok: nz(r.definition), generable: false, group: "editorial" },
+    { field: "deep_interpretation", label: "Interpretação profunda", weight: 15, ok: nz(r.deep_interpretation), generable: true, group: "editorial" },
+    { field: "etymology", label: "Etimologia", weight: 8, ok: nz(r.etymology), generable: true, group: "editorial" },
+    { field: "historical_context", label: "Contexto histórico", weight: 8, ok: nz(r.historical_context), generable: true, group: "editorial" },
+    { field: "practical_application", label: "Aplicação prática", weight: 8, ok: nz(r.practical_application), generable: true, group: "editorial" },
+    { field: "logos_meditation", label: "Meditação Logos", weight: 8, ok: nz(r.logos_meditation), generable: true, group: "editorial" },
+    { field: "faq", label: "FAQ (≥3)", weight: 8, ok: arr(r.faq, 3), generable: true, group: "editorial" },
+    { field: "bibliography", label: "Bibliografia (≥3)", weight: 7, ok: arr(r.bibliography, 3), generable: true, group: "editorial" },
+    { field: "bible_verses", label: "Bíblia (≥3)", weight: 6, ok: arr(r.bible_verses, 3), generable: true, group: "nexus" },
+    { field: "catechism_references", label: "CIC (≥2)", weight: 6, ok: arr(r.catechism_references, 2), generable: true, group: "nexus" },
+    { field: "fathers_refs", label: "Padres (≥1)", weight: 5, ok: arr(r.fathers_refs, 1), generable: true, group: "nexus" },
+    { field: "magisterium_references", label: "Magistério (≥1)", weight: 5, ok: arr(r.magisterium_references, 1), generable: true, group: "nexus" },
+    { field: "nexus", label: `Nexus ${nexusCount}/${GOLD_MIN}`, weight: 4, ok: nexusCount >= GOLD_MIN, generable: false, group: "nexus" },
   ];
 }
 
-function scoreOf(checks: Check[]): number {
-  const total = checks.reduce((s, c) => s + c.weight, 0);
-  const earned = checks.filter(c => c.ok).reduce((s, c) => s + c.weight, 0);
+function scoreOfGroup(checks: Check[], group?: Group): number {
+  const sel = group ? checks.filter(c => c.group === group) : checks;
+  const total = sel.reduce((s, c) => s + c.weight, 0) || 1;
+  const earned = sel.filter(c => c.ok).reduce((s, c) => s + c.weight, 0);
   return Math.round((earned / total) * 100);
+}
+
+/** Sugestões editoriais por campo + slug (fallback genérico) */
+const SLUG_SUGGESTIONS: Record<string, Partial<Record<Check["field"], string[]>>> = {
+  trindade: {
+    fathers_refs: ["Santo Agostinho — De Trinitate", "São Basílio — Sobre o Espírito Santo", "São Gregório Nazianzeno — Orações Teológicas"],
+    catechism_references: ["CIC §§232–260"],
+    bible_verses: ["Mt 28,19", "Jo 14,26", "2Cor 13,13"],
+  },
+  eucaristia: {
+    fathers_refs: ["Santo Inácio de Antioquia — Ad Smyrnaeos", "São Justino — I Apologia 66", "Santo Agostinho — Sermão 227"],
+    catechism_references: ["CIC §§1322–1419"],
+    magisterium_references: ["Ecclesia de Eucharistia (João Paulo II)", "Sacrosanctum Concilium §§47–58"],
+  },
+  encarnacao: {
+    fathers_refs: ["Santo Atanásio — De Incarnatione", "São Cirilo de Alexandria — Contra Nestório", "São Leão Magno — Tomus ad Flavianum"],
+    catechism_references: ["CIC §§456–478"],
+  },
+  cristologia: {
+    fathers_refs: ["Concílio de Calcedônia (451)", "São Máximo Confessor — Ambigua", "São João Damasceno — De Fide Orthodoxa"],
+  },
+  ressurreicao: {
+    catechism_references: ["CIC §§638–658"], bible_verses: ["1Cor 15,3-8", "Lc 24", "Jo 20"],
+  },
+  purgatorio: {
+    catechism_references: ["CIC §§1030–1032"],
+    magisterium_references: ["Bento XVI — Spe Salvi §§45–48", "Concílio de Trento — Decreto sobre o Purgatório"],
+  },
+  fe: {
+    catechism_references: ["CIC §§142–184", "CIC §§1814–1816"],
+    magisterium_references: ["Bento XVI — Porta Fidei", "Vaticano II — Dei Verbum §5"],
+  },
+};
+
+const GENERIC_SUGGESTIONS: Partial<Record<Check["field"], string[]>> = {
+  fathers_refs: ["Verificar Patrologia Latina/Graeca", "Buscar homilias patrísticas relacionadas"],
+  magisterium_references: ["Consultar encíclicas correlatas em vatican.va", "Verificar documentos conciliares"],
+  bibliography: ["Adicionar ≥3 obras (clássica, moderna, contemporânea)"],
+  bible_verses: ["Adicionar ≥3 passagens (AT, NT, Evangelhos)"],
+  catechism_references: ["Consultar CIC (índice temático)"],
+  faq: ["3 perguntas frequentes de leigos/catecúmenos"],
+  logos_meditation: ["Meditação Logos 2030 (2–3 parágrafos contemplativos)"],
+  etymology: ["Origem hebraica/grega/latina + evolução semântica"],
+  historical_context: ["Contexto histórico-eclesial (concílios, controvérsias)"],
+  practical_application: ["Aplicação na vida cristã hoje"],
+  deep_interpretation: ["Interpretação teológica profunda (Escritura + Tradição)"],
+};
+
+function suggestionsFor(slug: string, field: Check["field"]): string[] {
+  return SLUG_SUGGESTIONS[slug]?.[field] ?? GENERIC_SUGGESTIONS[field] ?? [];
+}
+
+function fmtDate(iso: string | null): string {
+  if (!iso) return "—";
+  try { return new Date(iso).toLocaleDateString("pt-BR"); } catch { return iso; }
 }
 
 export default function EditorialAuditPage() {
   const [rows, setRows] = useState<Row[]>([]);
   const [totals, setTotals] = useState<Totals>({
-    total: 0, published: 0, drafts: 0, gold: 0, perfect: 0, critical: 0, avg: 0,
+    total: 0, published: 0, drafts: 0, gold: 0, silver: 0, bronze: 0,
+    needs_review: 0, avg: 0, avg_editorial: 0, avg_nexus: 0,
   });
+  const [modules, setModules] = useState<ModuleStat[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [busy, setBusy] = useState<string | null>(null); // "slug:field"
+  const [busy, setBusy] = useState<string | null>(null);
   const [batchField, setBatchField] = useState<Field>("deep_interpretation");
   const [batchRunning, setBatchRunning] = useState(false);
   const [filter, setFilter] = useState<FilterKey>("all");
@@ -116,13 +219,16 @@ export default function EditorialAuditPage() {
     setLoading(true);
     setError(null);
     try {
-      const { data, error: e1 } = await supabase
-        .from("glossary")
-        .select("slug,term,status,editorial_completeness,short_definition,definition,deep_interpretation,etymology,historical_context,practical_application,logos_meditation,faq,bibliography,bible_verses,catechism_references,fathers_refs,magisterium_references,nexus_refs")
-        .order("term");
+      const [{ data: gData, error: e1 }, mods] = await Promise.all([
+        supabase
+          .from("glossary")
+          .select("slug,term,status,editorial_completeness,short_definition,definition,deep_interpretation,etymology,historical_context,practical_application,logos_meditation,faq,bibliography,bible_verses,catechism_references,fathers_refs,magisterium_references,nexus_refs,created_at,updated_at,published_at,reviewed_at,reviewed_by,version")
+          .order("term"),
+        loadModuleStats(),
+      ]);
       if (e1) throw e1;
 
-      const list: Row[] = (data ?? []).map((r: any) => {
+      const list: Row[] = (gData ?? []).map((r: any) => {
         const checks = computeChecks(r);
         const nexusCount = Array.isArray(r.nexus_refs) ? r.nexus_refs.length : 0;
         return {
@@ -130,30 +236,34 @@ export default function EditorialAuditPage() {
           term: r.term,
           status: r.status,
           editorial_completeness: r.editorial_completeness,
-          score: scoreOf(checks),
+          score: scoreOfGroup(checks),
+          editorial_score: scoreOfGroup(checks, "editorial"),
+          nexus_score: scoreOfGroup(checks, "nexus"),
           nexus_count: nexusCount,
           checks,
           pending: checks.filter(c => !c.ok && c.generable).length,
+          created_at: r.created_at, updated_at: r.updated_at, published_at: r.published_at,
+          reviewed_at: r.reviewed_at, reviewed_by: r.reviewed_by, version: r.version,
         };
       });
 
-      const published = list.filter(r => r.status === "published");
-      const drafts = list.filter(r => r.status === "draft");
-      const gold = list.filter(r => r.nexus_count >= GOLD_MIN);
-      const perfect = list.filter(r => r.score === 100);
-      const critical = list.filter(r => r.score < 70);
+      const published = list.filter(r => r.status === "published").length;
+      const drafts = list.filter(r => r.status === "draft").length;
+      let gold = 0, silver = 0, bronze = 0, needs_review = 0;
+      list.forEach(r => {
+        const t = ice(r.score).tier;
+        if (t === "gold") gold++;
+        else if (t === "silver") silver++;
+        else if (t === "bronze") bronze++;
+        else needs_review++;
+      });
       const avg = list.length ? Math.round(list.reduce((s, r) => s + r.score, 0) / list.length) : 0;
+      const avg_editorial = list.length ? Math.round(list.reduce((s, r) => s + r.editorial_score, 0) / list.length) : 0;
+      const avg_nexus = list.length ? Math.round(list.reduce((s, r) => s + r.nexus_score, 0) / list.length) : 0;
 
       setRows(list);
-      setTotals({
-        total: list.length,
-        published: published.length,
-        drafts: drafts.length,
-        gold: gold.length,
-        perfect: perfect.length,
-        critical: critical.length,
-        avg,
-      });
+      setTotals({ total: list.length, published, drafts, gold, silver, bronze, needs_review, avg, avg_editorial, avg_nexus });
+      setModules(mods);
     } catch (e: any) {
       setError(e?.message ?? String(e));
     } finally {
@@ -167,11 +277,14 @@ export default function EditorialAuditPage() {
     const q = query.trim().toLowerCase();
     return rows.filter(r => {
       if (q && !(r.term.toLowerCase().includes(q) || r.slug.toLowerCase().includes(q))) return false;
+      const tier = ice(r.score).tier;
       switch (filter) {
         case "published": return r.status === "published";
         case "draft": return r.status === "draft";
-        case "lt80": return r.score < 80;
-        case "lt70": return r.score < 70;
+        case "gold": return tier === "gold";
+        case "silver": return tier === "silver";
+        case "bronze": return tier === "bronze";
+        case "review": return tier === "review";
         case "no_deep": return !r.checks.find(c => c.field === "deep_interpretation")!.ok;
         case "no_faq": return !r.checks.find(c => c.field === "faq")!.ok;
         case "no_logos": return !r.checks.find(c => c.field === "logos_meditation")!.ok;
@@ -236,7 +349,18 @@ export default function EditorialAuditPage() {
     await load();
   }, [filtered, batchField, load]);
 
-  const certified = totals.total > 0 && totals.perfect === totals.total;
+  // Sprint 6.5 · Selo de Congelamento Editorial
+  const freezeCriteria = useMemo(() => {
+    const totalPublished = totals.published === totals.total && totals.total > 0;
+    return [
+      { key: "gold", label: "100% ICE Ouro", ok: totals.total > 0 && totals.gold === totals.total },
+      { key: "editorial", label: "Média Editorial ≥ 95", ok: totals.avg_editorial >= 95 },
+      { key: "nexus", label: "Média Nexus ≥ 95", ok: totals.avg_nexus >= 95 },
+      { key: "no_review", label: "Zero verbetes em Revisão", ok: totals.needs_review === 0 },
+      { key: "published", label: "Todos publicados", ok: totalPublished },
+    ];
+  }, [totals]);
+  const frozen = freezeCriteria.every(c => c.ok);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
@@ -247,12 +371,13 @@ export default function EditorialAuditPage() {
 
       <header className="mb-6">
         <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-          Sprint 6 · Consolidação Editorial
+          Sprint 6 · Consolidação Editorial · Refinamentos
         </p>
         <h1 className="text-3xl font-serif">Editorial Audit · Glossário</h1>
         <p className="mt-1 text-sm text-muted-foreground max-w-2xl">
-          Score 0–100 por verbete no padrão Logos 2030 + Nexus Ouro. Toda geração via IA
-          rebaixa o verbete para <code>draft</code> — revisão em <Link to="/admin/glossario" className="underline">/admin/glossario</Link>.
+          ICE (Índice de Confiança Editorial), scores separados Editorial × Nexus, pendências
+          inteligentes, histórico e dashboard de produção. Geração via IA rebaixa para{" "}
+          <code>draft</code> — revisão em <Link to="/admin/glossario" className="underline">/admin/glossario</Link>.
         </p>
       </header>
 
@@ -261,45 +386,79 @@ export default function EditorialAuditPage() {
 
       {!loading && !error && (
         <>
-          {certified && (
-            <Card className="mb-6 border-amber-500/50 bg-gradient-to-br from-amber-500/10 to-transparent">
-              <CardContent className="flex items-center gap-4 py-5">
-                <Award className="h-10 w-10 text-amber-600" />
-                <div>
-                  <p className="text-lg font-serif">🏅 Glossário Certificado</p>
-                  <p className="text-xs text-muted-foreground">
-                    100% Editorial · 100% Nexus · 100% Logos · 100% SEO · 100% MCP Ready · 100% IA Ready
-                  </p>
+          {/* Sprint 6.5 — Selo de Congelamento */}
+          <Card className={`mb-6 ${frozen
+            ? "border-sky-500/50 bg-gradient-to-br from-sky-500/10 to-transparent"
+            : "border-dashed"}`}>
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Snowflake className={`h-5 w-5 ${frozen ? "text-sky-600" : "text-muted-foreground"}`} />
+                Sprint 6.5 · Congelamento Editorial do Glossário
+                {frozen && <Badge className="ml-2 bg-sky-600">SELO ATIVO</Badge>}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-2 gap-2 md:grid-cols-5 text-xs">
+              {freezeCriteria.map(c => (
+                <div key={c.key} className={`flex items-center gap-1.5 rounded border px-2 py-1.5 ${
+                  c.ok ? "border-emerald-500/30 bg-emerald-500/5 text-emerald-700"
+                       : "border-muted bg-muted/20 text-muted-foreground"
+                }`}>
+                  {c.ok ? <CheckCircle2 className="h-3.5 w-3.5" /> : <AlertCircle className="h-3.5 w-3.5" />}
+                  <span>{c.label}</span>
                 </div>
-              </CardContent>
-            </Card>
-          )}
+              ))}
+            </CardContent>
+          </Card>
 
-          <div className="mb-8 grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-7">
+          {/* Dashboard de Produção cross-módulo */}
+          <Card className="mb-6">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Dashboard de Produção Cathedra</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2">
+              {modules.map(m => {
+                const pct = m.total > 0 ? Math.round((m.published / m.total) * 100) : 0;
+                return (
+                  <div key={m.key} className="grid grid-cols-[110px_1fr_90px] items-center gap-3 text-sm">
+                    <span className="font-medium">{m.label}</span>
+                    <Progress value={pct} className="h-2" />
+                    <span className="tabular-nums text-xs text-muted-foreground text-right">
+                      {m.published}/{m.total} · {pct}%
+                      {m.note && <span className="ml-1">·</span>}
+                    </span>
+                  </div>
+                );
+              })}
+              <p className="pt-2 text-[11px] text-muted-foreground">
+                Publicação como proxy de completude. Auditoria detalhada (score/ICE) hoje só para Glossário —
+                Santos entra na Sprint 7 após o selo de Congelamento.
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Resumo com distribuição ICE */}
+          <div className="mb-8 grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-8">
             <Summary label="Total" value={totals.total} />
             <Summary label="Publicados" value={totals.published} tone="ok" />
             <Summary label="Drafts" value={totals.drafts} tone="warn" />
-            <Summary label="Nexus Ouro" value={`${totals.gold}/${totals.total}`} />
-            <Summary label="Score médio" value={`${totals.avg}%`}
+            <Summary label="🟢 Ouro" value={totals.gold} tone="ok" />
+            <Summary label="🔵 Prata" value={totals.silver} />
+            <Summary label="🟡 Bronze" value={totals.bronze} tone="warn" />
+            <Summary label="🔴 Revisão" value={totals.needs_review}
+              tone={totals.needs_review === 0 ? "ok" : "bad"} />
+            <Summary label="Média Editorial × Nexus"
+              value={`${totals.avg_editorial}% · ${totals.avg_nexus}%`}
               tone={totals.avg >= 90 ? "ok" : totals.avg >= 75 ? "warn" : "bad"} />
-            <Summary label="Verbetes 100%" value={totals.perfect} tone="ok" />
-            <Summary label="Críticos <70" value={totals.critical}
-              tone={totals.critical === 0 ? "ok" : "bad"} />
           </div>
 
+          {/* Filtros e batch */}
           <div className="mb-4 flex flex-wrap items-end gap-3">
             <div className="flex-1 min-w-[200px]">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                Buscar
-              </label>
-              <Input
-                value={query}
-                onChange={e => setQuery(e.target.value)}
-                placeholder="termo ou slug…"
-                className="mt-1"
-              />
+              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Buscar</label>
+              <Input value={query} onChange={e => setQuery(e.target.value)}
+                placeholder="termo ou slug…" className="mt-1" />
             </div>
-            <div className="min-w-[200px]">
+            <div className="min-w-[220px]">
               <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                 <Filter className="mr-1 inline h-3 w-3" /> Filtro
               </label>
@@ -312,7 +471,7 @@ export default function EditorialAuditPage() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="min-w-[220px]">
+            <div className="min-w-[240px]">
               <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                 Correção em massa
               </label>
@@ -350,81 +509,178 @@ export default function EditorialAuditPage() {
                 Nenhum verbete no filtro atual.
               </CardContent></Card>
             )}
-            {filtered.map(r => (
-              <Card key={r.slug}>
-                <CardHeader className="flex flex-row items-start justify-between gap-4 pb-3">
-                  <div className="min-w-0 flex-1">
-                    <CardTitle className="text-lg flex items-center gap-2 flex-wrap">
-                      <Link to={`/glossario/${r.slug}`} className="hover:underline">
-                        {r.term}
-                      </Link>
-                      <ExternalLink className="h-3 w-3 text-muted-foreground" />
-                      <Badge variant={r.status === "published" ? "default" : "outline"} className="text-[10px]">
-                        {r.status}
-                      </Badge>
-                      {r.editorial_completeness && (
-                        <Badge variant="outline" className="text-[10px]">
-                          {r.editorial_completeness}
+            {filtered.map(r => {
+              const iceInfo = ice(r.score);
+              const pendingGenerable = r.checks.filter(c => !c.ok && c.generable);
+              return (
+                <Card key={r.slug}>
+                  <CardHeader className="flex flex-row items-start justify-between gap-4 pb-3">
+                    <div className="min-w-0 flex-1">
+                      <CardTitle className="text-lg flex items-center gap-2 flex-wrap">
+                        <Link to={`/glossario/${r.slug}`} className="hover:underline">{r.term}</Link>
+                        <ExternalLink className="h-3 w-3 text-muted-foreground" />
+                        <Badge variant={r.status === "published" ? "default" : "outline"} className="text-[10px]">
+                          {r.status}
                         </Badge>
-                      )}
-                    </CardTitle>
-                    <div className="mt-2 flex items-center gap-3">
-                      <Progress value={r.score} className="h-2 flex-1 max-w-xs" />
-                      <span className={`text-sm font-bold tabular-nums ${
-                        r.score === 100 ? "text-emerald-600"
-                        : r.score >= 80 ? "text-emerald-700"
-                        : r.score >= 70 ? "text-amber-700"
-                        : "text-red-700"
-                      }`}>{r.score}%</span>
-                      <span className="text-xs text-muted-foreground">
-                        {r.pending} pendência(s)
-                      </span>
+                        <Badge variant="outline" className={`text-[10px] ${iceInfo.cls}`}>
+                          {iceInfo.emoji} ICE {iceInfo.label}
+                        </Badge>
+                        {r.editorial_completeness && (
+                          <Badge variant="outline" className="text-[10px]">
+                            {r.editorial_completeness}
+                          </Badge>
+                        )}
+                        {r.version && r.version > 1 && (
+                          <Badge variant="outline" className="text-[10px]">v{r.version}</Badge>
+                        )}
+                      </CardTitle>
+                      {/* Scores separados */}
+                      <div className="mt-2 grid grid-cols-1 gap-1.5 sm:grid-cols-2 max-w-2xl">
+                        <ScoreBar label="Editorial" value={r.editorial_score} />
+                        <ScoreBar label="Nexus" value={r.nexus_score} />
+                      </div>
+                      <p className="mt-1.5 text-[11px] text-muted-foreground">
+                        Global <b className="tabular-nums">{r.score}%</b> · {r.pending} pendência(s) geráveis
+                      </p>
                     </div>
-                  </div>
-                  <Link
-                    to={`/admin/glossario?slug=${r.slug}`}
-                    className="text-xs text-muted-foreground hover:underline whitespace-nowrap"
-                  >
-                    editar →
-                  </Link>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 text-[11px]">
-                    {r.checks.map(c => {
-                      const canGen = c.generable && !c.ok;
-                      const key = `${r.slug}:${c.field}`;
-                      const isBusy = busy === key;
-                      return (
-                        <div key={c.field}
-                          className={`flex items-center gap-1.5 rounded border px-2 py-1 ${
-                            c.ok ? "border-emerald-500/20 bg-emerald-500/5 text-emerald-700"
-                                 : "border-amber-500/30 bg-amber-500/5 text-amber-700"
-                          }`}>
-                          {c.ok ? <CheckCircle2 className="h-3 w-3 shrink-0" />
-                                : <AlertCircle className="h-3 w-3 shrink-0" />}
-                          <span className="truncate flex-1">{c.label}</span>
-                          {canGen && (
-                            <button
-                              type="button"
-                              onClick={() => generateField(r.slug, c.field as Field)}
-                              disabled={isBusy || batchRunning}
-                              title={`Gerar ${c.label} via IA`}
-                              className="rounded p-0.5 hover:bg-amber-500/20 disabled:opacity-40"
-                            >
-                              {isBusy ? <Loader2 className="h-3 w-3 animate-spin" />
-                                      : <Sparkles className="h-3 w-3" />}
-                            </button>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                    <Link to={`/admin/glossario?slug=${r.slug}`}
+                      className="text-xs text-muted-foreground hover:underline whitespace-nowrap">
+                      editar →
+                    </Link>
+                  </CardHeader>
+                  <CardContent className="pt-0 space-y-3">
+                    {/* Grid de checks */}
+                    <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4 text-[11px]">
+                      {r.checks.map(c => {
+                        const canGen = c.generable && !c.ok;
+                        const key = `${r.slug}:${c.field}`;
+                        const isBusy = busy === key;
+                        return (
+                          <div key={c.field}
+                            className={`flex items-center gap-1.5 rounded border px-2 py-1 ${
+                              c.ok ? "border-emerald-500/20 bg-emerald-500/5 text-emerald-700"
+                                   : "border-amber-500/30 bg-amber-500/5 text-amber-700"
+                            }`}>
+                            {c.ok ? <CheckCircle2 className="h-3 w-3 shrink-0" />
+                                  : <AlertCircle className="h-3 w-3 shrink-0" />}
+                            <span className="truncate flex-1">{c.label}</span>
+                            {canGen && (
+                              <button type="button"
+                                onClick={() => generateField(r.slug, c.field as Field)}
+                                disabled={isBusy || batchRunning}
+                                title={`Gerar ${c.label} via IA`}
+                                className="rounded p-0.5 hover:bg-amber-500/20 disabled:opacity-40">
+                                {isBusy ? <Loader2 className="h-3 w-3 animate-spin" />
+                                        : <Sparkles className="h-3 w-3" />}
+                              </button>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {/* Pendências Inteligentes + Histórico (colapsáveis) */}
+                    <div className="grid gap-2 md:grid-cols-2">
+                      {pendingGenerable.length > 0 && (
+                        <Collapsible>
+                          <CollapsibleTrigger className="flex w-full items-center gap-1.5 rounded border border-dashed px-2 py-1.5 text-[11px] font-medium text-amber-700 hover:bg-amber-500/5">
+                            <Lightbulb className="h-3.5 w-3.5" />
+                            Pendências Inteligentes ({pendingGenerable.length})
+                            <ChevronDown className="ml-auto h-3 w-3" />
+                          </CollapsibleTrigger>
+                          <CollapsibleContent className="mt-1.5 space-y-1.5 rounded border bg-muted/20 p-2 text-[11px]">
+                            {pendingGenerable.map(c => {
+                              const sugg = suggestionsFor(r.slug, c.field);
+                              return (
+                                <div key={c.field}>
+                                  <p className="font-semibold text-amber-800">⚠ Falta: {c.label}</p>
+                                  {sugg.length > 0 && (
+                                    <ul className="ml-4 list-disc text-muted-foreground">
+                                      {sugg.map((s, i) => <li key={i}>{s}</li>)}
+                                    </ul>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </CollapsibleContent>
+                        </Collapsible>
+                      )}
+
+                      <Collapsible>
+                        <CollapsibleTrigger className="flex w-full items-center gap-1.5 rounded border border-dashed px-2 py-1.5 text-[11px] font-medium text-muted-foreground hover:bg-muted/40">
+                          <History className="h-3.5 w-3.5" />
+                          Histórico Editorial
+                          <ChevronDown className="ml-auto h-3 w-3" />
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="mt-1.5 rounded border bg-muted/20 p-2 text-[11px] text-muted-foreground">
+                          <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                            <span>📝 Criado</span><span className="tabular-nums">{fmtDate(r.created_at)}</span>
+                            <span>✏️ Última edição</span><span className="tabular-nums">{fmtDate(r.updated_at)}</span>
+                            <span>👤 Revisão humana</span><span className="tabular-nums">
+                              {r.reviewed_at ? `${fmtDate(r.reviewed_at)}${r.reviewed_by ? ` · ${r.reviewed_by.slice(0, 8)}` : ""}` : "—"}
+                            </span>
+                            <span>📖 Publicado</span><span className="tabular-nums">{fmtDate(r.published_at)}</span>
+                            <span>🔢 Versão</span><span className="tabular-nums">v{r.version ?? 1}</span>
+                          </div>
+                        </CollapsibleContent>
+                      </Collapsible>
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </>
       )}
+    </div>
+  );
+}
+
+async function loadModuleStats(): Promise<ModuleStat[]> {
+  const results = await Promise.allSettled([
+    supabase.from("glossary").select("status", { count: "exact", head: false }),
+    supabase.from("saints").select("id", { count: "exact", head: true }),
+    supabase.from("prayers").select("is_published", { count: "exact", head: false }),
+    supabase.from("collections").select("status", { count: "exact", head: false }),
+    supabase.from("journeys").select("status", { count: "exact", head: false }),
+  ]);
+
+  const stat = (label: string, key: string, res: any, isPub: (r: any) => boolean, note?: string): ModuleStat => {
+    if (res.status !== "fulfilled" || res.value.error) {
+      return { key, label, published: 0, total: 0, note: "sem acesso" };
+    }
+    const rows = res.value.data ?? [];
+    const total = res.value.count ?? rows.length;
+    const published = rows.filter(isPub).length;
+    return { key, label, published, total, note };
+  };
+
+  return [
+    stat("Glossário", "glossary", results[0], (r) => r.status === "published"),
+    // Santos: sem coluna status → tratamos "todos publicados" (import massivo)
+    (() => {
+      if (results[1].status !== "fulfilled" || results[1].value.error) {
+        return { key: "saints", label: "Santos", published: 0, total: 0, note: "sem acesso" };
+      }
+      const t = results[1].value.count ?? 0;
+      return { key: "saints", label: "Santos", published: t, total: t, note: "sem status" };
+    })(),
+    stat("Orações", "prayers", results[2], (r) => r.is_published === true),
+    stat("Coleções", "collections", results[3], (r) => r.status === "published"),
+    stat("Jornadas", "journeys", results[4], (r) => r.status === "published"),
+  ];
+}
+
+function ScoreBar({ label, value }: { label: string; value: number }) {
+  const tone =
+    value >= 95 ? "text-emerald-600" :
+    value >= 85 ? "text-sky-700" :
+    value >= 70 ? "text-amber-700" : "text-red-700";
+  return (
+    <div className="flex items-center gap-2">
+      <span className="w-16 text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{label}</span>
+      <Progress value={value} className="h-1.5 flex-1" />
+      <span className={`w-10 text-right text-xs font-bold tabular-nums ${tone}`}>{value}%</span>
     </div>
   );
 }
@@ -440,7 +696,7 @@ function Summary({
   return (
     <div className={`rounded-lg border p-3 ${cls}`}>
       <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{label}</p>
-      <p className="mt-1 text-xl font-bold tabular-nums">{value}</p>
+      <p className="mt-1 text-lg font-bold tabular-nums">{value}</p>
     </div>
   );
 }
