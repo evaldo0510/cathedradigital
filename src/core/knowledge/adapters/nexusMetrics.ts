@@ -19,11 +19,13 @@ export type NexusAdapter =
   | 'catechism'
   | 'magisterium'
   | 'saint'
-  | 'liturgy';
+  | 'liturgy'
+  | 'mystery';
 
 export const NEXUS_ADAPTERS: readonly NexusAdapter[] = [
-  'glossary', 'journey', 'prayer', 'bible', 'catechism', 'magisterium', 'saint', 'liturgy',
+  'glossary', 'journey', 'prayer', 'bible', 'catechism', 'magisterium', 'saint', 'liturgy', 'mystery',
 ];
+
 
 export interface NexusMetricEvent {
   adapter: NexusAdapter;
