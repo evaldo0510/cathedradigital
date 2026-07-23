@@ -646,79 +646,104 @@ const GlossaryTermPage: React.FC = () => {
         shareUrl={canonical}
       />
 
-      <EditorialShell>
-        {/* Breadcrumb */}
-        <nav aria-label="Trilha de navegação" className="max-w-6xl mx-auto px-4 pt-6">
-          <ol className="flex flex-wrap items-center gap-2 font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-muted">
-            <li>
-              <Link to="/glossario" className="hover:text-stitch-secondary transition">
-                Léxico
-              </Link>
-            </li>
-            {term.category && (
-              <>
-                <li aria-hidden="true" className="text-stitch-muted/50">/</li>
+      <ReaderShell
+        ariaLabel={`Verbete: ${term.term}`}
+        contentMaxWidth="max-w-6xl"
+        hero={
+          <>
+            {/* Breadcrumb */}
+            <nav aria-label="Trilha de navegação" className="max-w-6xl mx-auto px-4 pt-6">
+              <ol className="flex flex-wrap items-center gap-2 font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-stitch-muted">
                 <li>
-                  <Link
-                    to={`/glossario?category=${encodeURIComponent(term.category)}`}
-                    className="hover:text-stitch-secondary transition"
-                  >
-                    {term.category}
+                  <Link to="/glossario" className="hover:text-stitch-secondary transition">
+                    Léxico
                   </Link>
                 </li>
-              </>
-            )}
-            <li aria-hidden="true" className="text-stitch-muted/50">/</li>
-            <li
-              aria-current="page"
-              className="text-stitch-ink normal-case tracking-normal font-stitch-display text-stitch-body-sm"
-            >
-              {term.term}
-            </li>
-          </ol>
-        </nav>
+                {term.category && (
+                  <>
+                    <li aria-hidden="true" className="text-stitch-muted/50">/</li>
+                    <li>
+                      <Link
+                        to={`/glossario?category=${encodeURIComponent(term.category)}`}
+                        className="hover:text-stitch-secondary transition"
+                      >
+                        {term.category}
+                      </Link>
+                    </li>
+                  </>
+                )}
+                <li aria-hidden="true" className="text-stitch-muted/50">/</li>
+                <li
+                  aria-current="page"
+                  className="text-stitch-ink normal-case tracking-normal font-stitch-display text-stitch-body-sm"
+                >
+                  {term.term}
+                </li>
+              </ol>
+            </nav>
 
-        <EditorialHero
-          kicker={term.category ? `Léxico · ${term.category}` : 'Léxico Teológico'}
-          title={term.term}
-          subtitle={heroSubtitle}
-          size="md"
-          parchment
-          action={
-            <button
-              type="button"
-              onClick={handleFavorite}
-              aria-pressed={favorited}
-              className={cn(
-                'inline-flex items-center gap-2 px-4 py-2 border rounded-full',
-                'font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] transition-colors',
-                favorited
-                  ? 'border-stitch-secondary bg-stitch-secondary/10 text-stitch-secondary'
-                  : 'border-stitch-outline-variant/60 text-stitch-on-surface-variant hover:border-stitch-secondary hover:text-stitch-secondary',
-              )}
-            >
-              {favorited ? (
-                <>
-                  <BookmarkCheck className="h-4 w-4" aria-hidden="true" />
-                  Favoritado
-                </>
-              ) : (
-                <>
-                  <BookmarkPlus className="h-4 w-4" aria-hidden="true" />
-                  Favoritar
-                </>
-              )}
-            </button>
-          }
-        />
+            <EditorialHero
+              kicker={term.category ? `Léxico · ${term.category}` : 'Léxico Teológico'}
+              title={term.term}
+              subtitle={heroSubtitle}
+              size="md"
+              parchment
+              action={
+                <button
+                  type="button"
+                  onClick={handleFavorite}
+                  aria-pressed={favorited}
+                  className={cn(
+                    'inline-flex items-center gap-2 px-4 py-2 border rounded-full',
+                    'font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] transition-colors',
+                    favorited
+                      ? 'border-stitch-secondary bg-stitch-secondary/10 text-stitch-secondary'
+                      : 'border-stitch-outline-variant/60 text-stitch-on-surface-variant hover:border-stitch-secondary hover:text-stitch-secondary',
+                  )}
+                >
+                  {favorited ? (
+                    <>
+                      <BookmarkCheck className="h-4 w-4" aria-hidden="true" />
+                      Favoritado
+                    </>
+                  ) : (
+                    <>
+                      <BookmarkPlus className="h-4 w-4" aria-hidden="true" />
+                      Favoritar
+                    </>
+                  )}
+                </button>
+              }
+            />
 
-        {/* Selo de completude editorial */}
-        <div className="max-w-6xl mx-auto px-4 mt-6 flex justify-center">
-          <CompletenessBadge value={term.editorial_completeness} />
-        </div>
-
-        {/* Sumário lateral (desktop) */}
-        <div className="max-w-6xl mx-auto px-4 lg:grid lg:grid-cols-[220px_1fr] lg:gap-12 mt-8">
+            <div className="max-w-6xl mx-auto px-4 mt-6 flex justify-center">
+              <CompletenessBadge value={term.editorial_completeness} />
+            </div>
+          </>
+        }
+        nexus={
+          nexusPanelOutput && (
+            <NexusPanel
+              output={nexusPanelOutput}
+              order={NEXUS_ORDER}
+              title="Nexus Theologicus"
+              kicker="Conexões deste verbete"
+              className="mx-auto"
+            />
+          )
+        }
+        continuation={
+          <ReaderContinuation
+            context={{
+              kind: 'glossary-term',
+              id: term.slug ?? term.id,
+              meta: { theme: term.category ?? undefined },
+            }}
+          />
+        }
+      >
+        {/* Sumário lateral (desktop) + corpo editorial */}
+        <div className="lg:grid lg:grid-cols-[220px_1fr] lg:gap-12">
           <nav aria-label="Sumário do verbete" className="hidden lg:block sticky top-32 self-start">
             <EditorialKicker className="mb-4">Sumário</EditorialKicker>
             <ol className="space-y-2 font-stitch-label text-stitch-label-sm uppercase tracking-[0.16em] text-stitch-muted">
@@ -775,59 +800,8 @@ const GlossaryTermPage: React.FC = () => {
                   )}
                   {k === 'application' && <TextSection>{term.practical_application}</TextSection>}
                   {k === 'meditation' && <MeditationBlock>{term.logos_meditation}</MeditationBlock>}
-                  {k === 'bible' && (
-                    <AutoNexusList
-                      nodes={nexus.byKind.bible}
-                      emptyLabel="Passagens bíblicas ainda não indicadas."
-                    />
-                  )}
-                  {k === 'catechism' && (
-                    <AutoNexusList
-                      nodes={nexus.byKind.catechism}
-                      emptyLabel="Referências do Catecismo ainda não indicadas."
-                    />
-                  )}
-                  {k === 'magisterium' && (
-                    <AutoNexusList
-                      nodes={nexus.byKind.magisterium}
-                      emptyLabel="Documentos do Magistério ainda não indicados."
-                    />
-                  )}
-                  {k === 'saints' && (
-                    <AutoNexusList
-                      nodes={nexus.byKind.saint}
-                      emptyLabel="Santos relacionados ainda não indicados."
-                    />
-                  )}
-                  {k === 'fathers' && (
-                    <AutoNexusList
-                      nodes={nexus.byKind.father}
-                      emptyLabel="Padres relacionados ainda não indicados."
-                    />
-                  )}
-                  {k === 'liturgy' && (
-                    <AutoNexusList
-                      nodes={nexus.byKind.liturgy}
-                      emptyLabel="Referências litúrgicas ainda não indicadas."
-                    />
-                  )}
-                  {k === 'prayer' && (
-                    <AutoNexusList
-                      nodes={nexus.byKind.prayer}
-                      emptyLabel="Oração relacionada ainda não indicada."
-                    />
-                  )}
-                  {k === 'journey' && (
-                    <AutoNexusList
-                      nodes={nexus.byKind.journey}
-                      emptyLabel="Jornada sugerida ainda não indicada."
-                    />
-                  )}
                   {k === 'faq' && <FaqBlock items={term.faq} />}
                   {k === 'next_steps' && <NextStepsBlock items={term.next_steps} />}
-                  {k === 'nexus' && (
-                    <NexusFullList byKind={nexus.byKind} labels={nexus.labels} />
-                  )}
                   {k === 'bibliography' && <BibliographyBlock items={term.bibliography} />}
                 </section>
               );
@@ -837,15 +811,7 @@ const GlossaryTermPage: React.FC = () => {
               A palavra do sábio é como uma luz que dissipa as trevas do coração.
             </EditorialQuote>
 
-            <ReaderContinuation
-              context={{
-                kind: 'glossary-term',
-                id: term.slug ?? term.id,
-                meta: { theme: term.category ?? undefined },
-              }}
-            />
-
-            {/* Rodapé de versão / revisão teológica */}
+            {/* Rodapé de versão / revisão teológica (extensão do módulo, não substitui slots) */}
             <footer className="mt-16 pt-8 border-t border-stitch-outline-variant/40 max-w-[68ch] mx-auto">
               <EditorialDivider variant="gold-fade" className="mb-6" />
               <dl className="grid grid-cols-2 md:grid-cols-5 gap-4 font-stitch-label text-stitch-label-sm text-stitch-on-surface-variant uppercase tracking-[0.18em]">
@@ -885,9 +851,10 @@ const GlossaryTermPage: React.FC = () => {
             </footer>
           </div>
         </div>
-      </EditorialShell>
+      </ReaderShell>
     </>
   );
 };
 
 export default GlossaryTermPage;
+
