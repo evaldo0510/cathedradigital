@@ -319,6 +319,16 @@ export default function EditorialAuditPage() {
   }, []);
   useEffect(() => { void loadSnapshots(); }, [loadSnapshots]);
 
+  const loadStrategy = useCallback(async () => {
+    const [{ data: cov }, { data: prio }] = await Promise.all([
+      (supabase as any).rpc("glossary_doctrinal_coverage"),
+      (supabase as any).rpc("glossary_correction_priority"),
+    ]);
+    if (cov) setCoverage(cov as any[]);
+    if (prio) setPriorityRows(prio as any[]);
+  }, []);
+  useEffect(() => { void loadStrategy(); }, [loadStrategy]);
+
   const runAudit = useCallback(async () => {
     setAuditing(true);
     try {
@@ -328,13 +338,13 @@ export default function EditorialAuditPage() {
       if (error) throw error;
       if ((data as any)?.error) throw new Error((data as any).error);
       toast.success("Auditoria concluída · snapshot registrado.");
-      await Promise.all([loadSnapshots(), load()]);
+      await Promise.all([loadSnapshots(), load(), loadStrategy()]);
     } catch (e: any) {
       toast.error(`Auditoria falhou: ${e?.message ?? String(e)}`);
     } finally {
       setAuditing(false);
     }
-  }, [load, loadSnapshots]);
+  }, [load, loadSnapshots, loadStrategy]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
