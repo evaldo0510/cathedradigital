@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { SOCIAL_LINKS } from '@/config/site-config';
 import { trackEvent } from '@/lib/analytics';
@@ -134,6 +135,39 @@ const AboutPage: React.FC = () => (
             </div>
           </div>
         ))}
+      </div>
+    </div>
+
+    {/* Por que existe / Visão de futuro */}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg">
+      <div className="bg-card border border-primary/5 rounded-premium p-spacing-lg space-y-spacing-sm shadow-premium">
+        <div className="flex items-center gap-spacing-sm">
+          <Icons.Feather className="w-spacing-md h-spacing-md text-primary" />
+          <h3 className="text-premium-xl font-serif font-bold text-foreground">Por que existe</h3>
+        </div>
+        <p className="text-premium-sm text-muted-foreground leading-relaxed">
+          A fé merece uma casa digital à altura da sua profundidade. A Cathedra existe para que
+          Escritura, Tradição, Liturgia e Oração sejam encontradas em um só lugar — sem diluição,
+          sem ruído, sem dependência de plataformas que não compartilham a mesma missão.
+        </p>
+        <Link
+          to="/manifesto"
+          className="inline-flex items-center gap-spacing-2xs text-premium-sm font-semibold text-primary hover:underline"
+        >
+          Ler o Manifesto
+          <Icons.ArrowRight className="w-spacing-sm h-spacing-sm" />
+        </Link>
+      </div>
+      <div className="bg-card border border-primary/5 rounded-premium p-spacing-lg space-y-spacing-sm shadow-premium">
+        <div className="flex items-center gap-spacing-sm">
+          <Icons.Star className="w-spacing-md h-spacing-md text-primary" />
+          <h3 className="text-premium-xl font-serif font-bold text-foreground">Visão de futuro</h3>
+        </div>
+        <p className="text-premium-sm text-muted-foreground leading-relaxed">
+          Tornar-se a referência digital para formação católica em língua portuguesa: leitura
+          contemplativa, cross-references vivos entre toda a Tradição e uma inteligência a serviço
+          da fé — nunca substituta da vida espiritual.
+        </p>
       </div>
     </div>
 

@@ -156,6 +156,10 @@ const TermsPage = lazy(() => import('./components/cathedra/TermsPage'));
 const PrivacyPage = lazy(() => import('./components/cathedra/PrivacyPage'));
 const TransparencyPage = lazy(() => import('./components/cathedra/TransparencyPage'));
 const PartnersPage = lazy(() => import('./components/cathedra/PartnersPage'));
+const ManifestoPage = lazy(() => import('./components/cathedra/ManifestoPage'));
+const LegalCenterPage = lazy(() => import('./components/cathedra/LegalCenterPage'));
+const LGPDPage = lazy(() => import('./components/cathedra/LGPDPage'));
+const ContactPage = lazy(() => import('./components/cathedra/ContactPage'));
 const PricingPage = lazy(() => import('./components/cathedra/PricingPage'));
 const UpgradePage = lazy(() => import('./components/cathedra/UpgradePage'));
 const CheckoutPage = lazy(() => import('./components/cathedra/CheckoutPage'));
@@ -673,8 +677,15 @@ const AppLayout: React.FC = () => {
 
               {/* Institucional */}
               <Route path="/about" element={<Suspense fallback={<LoadingFallback />}><AboutPage /></Suspense>} />
+              <Route path="/manifesto" element={<Suspense fallback={<LoadingFallback />}><ManifestoPage /></Suspense>} />
+              <Route path="/legal" element={<Suspense fallback={<LoadingFallback />}><LegalCenterPage /></Suspense>} />
+              <Route path="/legal/privacy" element={<Suspense fallback={<LoadingFallback />}><PrivacyPage /></Suspense>} />
+              <Route path="/legal/lgpd" element={<Suspense fallback={<LoadingFallback />}><LGPDPage /></Suspense>} />
+              <Route path="/legal/termos" element={<Navigate to="/terms" replace />} />
               <Route path="/terms" element={<Suspense fallback={<LoadingFallback />}><TermsPage /></Suspense>} />
               <Route path="/privacy" element={<Suspense fallback={<LoadingFallback />}><PrivacyPage /></Suspense>} />
+              <Route path="/contato" element={<Suspense fallback={<LoadingFallback />}><ContactPage /></Suspense>} />
+              <Route path="/contact" element={<Navigate to="/contato" replace />} />
               <Route path="/offline" element={<Suspense fallback={<LoadingFallback />}><OfflinePage /></Suspense>} />
               <Route path="/cache-manager" element={<Suspense fallback={<LoadingFallback />}><CacheManager /></Suspense>} />
               <Route path="/bible-recovery" element={<Suspense fallback={<LoadingFallback />}><BibleRecoveryPanel /></Suspense>} />
