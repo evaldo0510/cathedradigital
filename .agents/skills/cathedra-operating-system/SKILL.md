@@ -148,20 +148,31 @@ Plano oficial congelado:
 
 ```
 Sprint C0
-├── C0.1  Missal                 [CERTIFIED]
-├── C0.2  Liturgia das Horas     [CERTIFIED]
-├── C0.3  Santos
-├── C0.4  Rosário
-├── C0.5  Via Sacra
-├── C0.6  Bíblia
-├── C0.7  Catecismo
-├── C0.8  Jornadas
-├── C0.9  Coleções
-└── C0.10 ICE Universal (Essencial → Gate por módulo em C0.6.2/fase 2)
+├── C0.1  Missal                       [CERTIFIED]
+├── C0.2  Liturgia das Horas           [CERTIFIED]
+├── C0.3  Homologação do Prayer Engine [em andamento — fase 1 CERTIFIED]
+│   ├── C0.3.1  Rosário
+│   ├── C0.3.2  Via Sacra
+│   ├── C0.3.3  Novenas
+│   └── C0.3.4  Ladainhas
+├── C0.4  Santos
+├── C0.5  Bíblia
+├── C0.6  Catecismo
+├── C0.7  Jornadas
+├── C0.8  Coleções
+└── C0.9  ICE Universal (Essencial → Gate por módulo em fase 2)
 
 Sprint K  · Catequese
 Sprint I  · Identidade Cathedra
 ```
+
+**C0.3 — Nota arquitetural:** Rosário, Via Sacra, Novenas e Ladainhas
+partilham o mesmo motor (`PrayerEngineReader`). A onda fecha o eixo inteiro
+migrando o motor para `ReaderShell` + `EditorialHero` + `PrayerContext` +
+`NexusPanel` + `ReaderContinuation`. `PrayerPortal` continua existindo
+como *portal de entrada*, mas deixa de ser Reader. Fase 2 remove
+`MysteryNexusPanel` legado substituindo por `NexusPanel` per-mistério.
+
 
 **ICE Universal (C0.10)** entrega apenas o núcleo essencial:
 `editorial_completeness`, ICE 0–100, badge Ouro/Prata/Bronze/Revisão, snapshots e leitura no Mission Control — **sem gate bloqueante**. Gates específicos por entidade (manifesto próprio + certificação individual) só entram numa fase 2 após cada módulo ter sido homologado na C0.
