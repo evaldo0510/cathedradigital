@@ -86,10 +86,12 @@ Allowlist do guardrail:
 - [ ] Remoção física de `AutoNexusList`/`NexusFullList` locais (feita — validar no audit)
 - [ ] Score = 100 no relatório
 
-### Sub-onda C.3 — Catecismo 90%
-- [ ] Substituir `NexusBubbles` por `NexusPanel` alimentado por `catechismAutoNexus`
-- [ ] Envolver render em `ReaderShell`
-- [ ] `CatechismPopover` migrado para `ReferencePopover`
+### Sub-onda C.3 — Catecismo 90% ✅ (score 100)
+- [x] `NexusBubbles` removido de `Catechism.tsx`
+- [x] `Catechism.tsx` envelopado em `ReaderShell` (hero=EditorialHero, nexus=NexusPanel, continuation=ReaderContinuation)
+- [x] `CatechismPopover` migrado para `ReferencePopover` (adapter fino, zero radix direto)
+- [x] Removido do allowlist do guardrail
+- [x] `reader-modules.ts` marca catechism como `certified` / blocking
 
 ### Sub-onda C.4 — Bíblia 85%
 - [ ] Substituir `NexusBubbles` por `NexusPanel` alimentado por `bibleAutoNexus`
