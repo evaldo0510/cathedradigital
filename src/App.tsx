@@ -50,6 +50,8 @@ const ReadingPreferencesPanel = lazy(() => import('./components/cathedra/Reading
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
 import SplashScreen from './components/cathedra/SplashScreen';
 import { GlobalLogosAI } from './components/cathedra/GlobalLogosAI';
+import WelcomeFirstAccess from './components/cathedra/WelcomeFirstAccess';
+import { installSessionRenewal } from './lib/sessionRenewal';
 
 
 import SwipeNavigation from './components/cathedra/SwipeNavigation';
