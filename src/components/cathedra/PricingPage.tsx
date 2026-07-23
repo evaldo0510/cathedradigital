@@ -96,7 +96,7 @@ const PricingPage: React.FC = () => {
                     ) : (
                       <Icons.X className="w-spacing-md h-spacing-md text-muted-foreground/60 shrink-0" />
                     )}
-                    <span className={item.free ? '' : 'text-foreground/50 line-through'}>{item.feature}</span>
+                    <span className={item.free ? '' : 'text-foreground/75 line-through'}>{item.feature}</span>
                   </li>
                 ))}
               </ul>
