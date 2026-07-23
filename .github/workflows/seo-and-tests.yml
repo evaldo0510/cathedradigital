@@ -48,6 +48,9 @@ jobs:
       - name: Auditar relações hardcoded no Glossário e adapters
         run: bun run scripts/audit-glossary-hardcoded.ts
 
+      - name: Auditar links do rodapé (footer-links.ts × App.tsx × routeMeta.ts)
+        run: bun run scripts/audit-footer-links.ts
+
       - name: Rodar SEO checklist
         run: bun run scripts/seo-checklist.ts
 
