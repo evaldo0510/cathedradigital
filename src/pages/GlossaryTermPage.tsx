@@ -489,10 +489,33 @@ const GlossaryTermPage: React.FC = () => {
 
   const order = useMemo<SectionKey[]>(() => {
     const raw = term?.sections_order?.length ? term.sections_order : DEFAULT_ORDER;
-    return raw.filter((k): k is SectionKey => k in SECTION_META);
+    // Reader Architecture Rule: apenas seções editoriais aqui. Conexões
+    // teológicas (bible/catechism/magisterium/saints/fathers/liturgy/prayer/
+    // journey/nexus) são consolidadas no `NexusPanel` do slot `nexus`.
+    return raw.filter((k): k is SectionKey =>
+      k in SECTION_META && EDITORIAL_ONLY.has(k as SectionKey),
+    );
   }, [term]);
 
   const autoNexus = useMemo(() => (term ? resolveAutoNexus(term) : null), [term]);
+
+  const nexusPanelOutput = useMemo(() => {
+    if (!autoNexus) return null;
+    // Adapta `AutoNexusResult.byKind` (kinds semânticos do glossário) para
+    // o contrato `ReaderAutoNexusOutput.byBucket` que o NexusPanel consome.
+    const byBucket: Partial<Record<ReaderNexusBucket, typeof autoNexus.byKind[string]>> = {};
+    for (const bucket of NEXUS_ORDER) {
+      const list = autoNexus.byKind[bucket];
+      if (list && list.length > 0) byBucket[bucket] = list;
+    }
+    return {
+      selfId: autoNexus.selfId,
+      suggestions: [],
+      byBucket,
+      labels: { ...BUCKET_LABEL, ...autoNexus.labels },
+    };
+  }, [autoNexus]);
+
 
   if (loading) {
     return (
