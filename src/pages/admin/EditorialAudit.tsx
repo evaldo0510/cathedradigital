@@ -292,6 +292,37 @@ export default function EditorialAuditPage() {
 
   useEffect(() => { void load(); }, [load]);
 
+  const loadSnapshots = useCallback(async () => {
+    const { data } = await supabase
+      .from("editorial_snapshots")
+      .select("*")
+      .eq("module", "glossary")
+      .order("captured_at", { ascending: false })
+      .limit(2);
+    if (data && data.length > 0) {
+      setSnapshot(data[0] as unknown as Snapshot);
+      setPrevSnapshot((data[1] as unknown as Snapshot) ?? null);
+    }
+  }, []);
+  useEffect(() => { void loadSnapshots(); }, [loadSnapshots]);
+
+  const runAudit = useCallback(async () => {
+    setAuditing(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("glossary-daily-audit", {
+        body: { trigger: "manual" },
+      });
+      if (error) throw error;
+      if ((data as any)?.error) throw new Error((data as any).error);
+      toast.success("Auditoria concluída · snapshot registrado.");
+      await Promise.all([loadSnapshots(), load()]);
+    } catch (e: any) {
+      toast.error(`Auditoria falhou: ${e?.message ?? String(e)}`);
+    } finally {
+      setAuditing(false);
+    }
+  }, [load, loadSnapshots]);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     return rows.filter(r => {
