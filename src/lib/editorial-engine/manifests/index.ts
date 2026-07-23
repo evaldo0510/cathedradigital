@@ -8,6 +8,7 @@
 
 import type { EntityManifest } from "../types";
 import { glossaryManifest } from "./glossary.manifest";
+import { saintsManifest } from "./saints.manifest";
 import { assertValidManifest, validateManifest } from "../validate-manifest";
 
 /** Placeholder para entidades ainda não plugadas (`ready: false`). */
@@ -22,7 +23,7 @@ const placeholder = (id: string, label: string, shortLabel: string, icon: string
 
 const rawRegistry: EntityManifest[] = [
   glossaryManifest,
-  placeholder("saints",      "Santos",   "Santos",   "Users",   9),
+  saintsManifest,
   placeholder("prayers",     "Orações",  "Orações",  "Heart",   8),
   placeholder("collections", "Coleções", "Coleções", "Library", 7),
   placeholder("journeys",    "Jornadas", "Jornadas", "Compass", 7),
@@ -49,5 +50,5 @@ export function auditRegistry() {
   return editorialRegistry.map(m => ({ id: m.id, ...validateManifest(m) }));
 }
 
-export { glossaryManifest };
+export { glossaryManifest, saintsManifest };
 
