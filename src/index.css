@@ -45,6 +45,8 @@
     --gold: #c9a84c;
     --gold-text: #8a7020;
     --gold-text-strong: #6d5a1a;
+    /* Gold para TEXTO sobre fundo ESCURO (#000/#0B1F3A). ~ratio 8.5:1 sobre #000. */
+    --gold-on-dark: #e6c96b;
     
     /* 2. Spacing Scale (8pt-based) */
     --spacing-3xs: 0.125rem; /* 2px */
