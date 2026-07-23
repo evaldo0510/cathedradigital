@@ -991,8 +991,9 @@ export default function EditorialAuditPage() {
                       })}
                     </div>
 
-                    {/* Pendências Inteligentes + Histórico (colapsáveis) */}
-                    <div className="grid gap-2 md:grid-cols-2">
+                    {/* Pendências Inteligentes + Dependências + Histórico */}
+                    <div className="grid gap-2 md:grid-cols-3">
+
                       {pendingGenerable.length > 0 && (
                         <Collapsible>
                           <CollapsibleTrigger className="flex w-full items-center gap-1.5 rounded border border-dashed px-2 py-1.5 text-[11px] font-medium text-amber-700 hover:bg-amber-500/5">
