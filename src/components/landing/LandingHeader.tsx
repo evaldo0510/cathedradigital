@@ -156,7 +156,7 @@ const LandingHeader = () => {
           <HomeButton
             variant="ghost"
             size="sm"
-            className={`hidden xs:flex rounded-premium-full px-spacing-md sm:px-spacing-lg shadow-premium-none transition-all ${isScrolled ? 'text-primary' : ''}`}
+            className={`hidden xs:flex rounded-premium-full px-spacing-md sm:px-spacing-lg shadow-premium-none transition-all text-primary`}
             onClick={() => navigate(AppRoute.LOGIN)}
           >
             Começar <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-2xs" />
