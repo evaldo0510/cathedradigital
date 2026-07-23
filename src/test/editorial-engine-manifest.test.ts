@@ -79,8 +79,8 @@ describe("Editorial Engine · Manifest Validation", () => {
   });
 
   it("registry lista as entidades ready registradas hoje", () => {
-    // Todas as 5 entidades editoriais plugadas — nenhum placeholder restante.
+    // 6 entidades editoriais plugadas (Fase 1.5 · Catequese adicionada).
     const ready = editorialRegistry.filter(m => m.ready);
-    expect(ready.map(m => m.id).sort()).toEqual(["collections", "glossary", "journeys", "prayers", "saints"]);
+    expect(ready.map(m => m.id).sort()).toEqual(["catechism", "collections", "glossary", "journeys", "prayers", "saints"]);
   });
 });

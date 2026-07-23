@@ -12,6 +12,7 @@ import { saintsManifest } from "./saints.manifest";
 import { journeysManifest } from "./journeys.manifest";
 import { collectionsManifest } from "./collections.manifest";
 import { prayersManifest } from "./prayers.manifest";
+import { catechismManifest } from "./catechism.manifest";
 import { assertValidManifest, validateManifest } from "../validate-manifest";
 
 /** Placeholder para entidades ainda não plugadas (`ready: false`). */
@@ -30,6 +31,7 @@ const rawRegistry: EntityManifest[] = [
   journeysManifest,
   collectionsManifest,
   prayersManifest,
+  catechismManifest,
 ];
 
 // Fail-fast: qualquer manifesto inválido derruba o boot do módulo.
@@ -53,5 +55,5 @@ export function auditRegistry() {
   return editorialRegistry.map(m => ({ id: m.id, ...validateManifest(m) }));
 }
 
-export { glossaryManifest, saintsManifest, journeysManifest, collectionsManifest, prayersManifest };
+export { glossaryManifest, saintsManifest, journeysManifest, collectionsManifest, prayersManifest, catechismManifest };
 

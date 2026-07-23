@@ -1795,6 +1795,8 @@ export type Database = {
           interpretacao_profunda: string | null
           paragraph: number
           reflexao_final: string | null
+          slug: string
+          status: string
           texto_base: string | null
         }
         Insert: {
@@ -1806,6 +1808,8 @@ export type Database = {
           interpretacao_profunda?: string | null
           paragraph: number
           reflexao_final?: string | null
+          slug: string
+          status?: string
           texto_base?: string | null
         }
         Update: {
@@ -1817,6 +1821,8 @@ export type Database = {
           interpretacao_profunda?: string | null
           paragraph?: number
           reflexao_final?: string | null
+          slug?: string
+          status?: string
           texto_base?: string | null
         }
         Relationships: []
@@ -7059,6 +7065,55 @@ export type Database = {
         }
         Returns: undefined
       }
+      catechism_correction_priority: {
+        Args: never
+        Returns: {
+          area: string
+          editorial: number
+          effort_tier: string
+          ice: number
+          impact_tier: string
+          inbound_refs: number
+          missing_bible: boolean
+          missing_cic: boolean
+          missing_count: number
+          missing_deep: boolean
+          missing_faq: boolean
+          missing_fathers: boolean
+          missing_logos: boolean
+          nexus: number
+          priority: string
+          slug: string
+          status: string
+          term: string
+        }[]
+      }
+      catechism_doctrinal_area: {
+        Args: { _paragraph: number }
+        Returns: string
+      }
+      catechism_doctrinal_coverage: {
+        Args: never
+        Returns: {
+          area: string
+          avg_ice: number
+          bronze: number
+          gate_passing: number
+          gold: number
+          review: number
+          silver: number
+          total: number
+        }[]
+      }
+      catechism_ice: {
+        Args: { _slug: string }
+        Returns: {
+          editorial: number
+          ice: number
+          nexus: number
+        }[]
+      }
+      catechism_quality_gate: { Args: { _slug: string }; Returns: boolean }
       check_daily_reminders: { Args: never; Returns: undefined }
       cleanup_bible_audit_action_logs: {
         Args: { p_override_days?: number; p_triggered_by?: string }
