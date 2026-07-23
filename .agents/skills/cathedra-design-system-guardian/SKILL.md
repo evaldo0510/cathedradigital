@@ -74,9 +74,12 @@ Só criar de fato após passar pelas 4 perguntas.
 - Skeleton custom quando cabe `ContentSkeleton`.
 - Hero paralelo em vez de estender `EditorialHero`.
 - Portal de oração paralelo (usar `PrayerPortal` + tema em `portalTheme.ts`).
+- **Reader paralelo** — usar `ReaderShell`.
+- **Nexus paralelo** (`NexusBubbles`, `MysteryNexusPanel`, `AutoNexusList`, `NexusFullList` local) — usar `NexusPanel`.
+- **Popover de referência paralelo** — usar `ReferencePopover`.
 - Ícone de outra lib que não Lucide.
 - Cor hardcoded (`text-white`, `bg-[#...]`).
 - `font-*` inline.
 - Hook após early-return.
 
-Rejeitar qualquer PR que introduza duplicata ou quebre ordem de hooks.
+Rejeitar qualquer PR que introduza duplicata, quebre ordem de hooks ou viole a Reader Architecture Rule.
