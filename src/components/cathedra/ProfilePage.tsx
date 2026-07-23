@@ -311,6 +311,10 @@ const ProfilePage: React.FC = () => {
           ))}
         </div>
 
+        {/* Streak / Ofensiva Espiritual */}
+        <StreakCard streak={profile.streak || 0} maxStreak={profile.max_streak || 0} />
+
+
         {/* Tabs organizam o resto */}
         <Tabs defaultValue="overview" className="space-y-spacing-lg">
           <TabsList className="w-full grid grid-cols-3 h-auto p-spacing-2xs rounded-premium-full bg-muted">
