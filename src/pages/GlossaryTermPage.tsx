@@ -176,19 +176,19 @@ const DEFAULT_ORDER: SectionKey[] = [
   'interpretation',
   'application',
   'meditation',
-  'bible',
-  'catechism',
-  'magisterium',
-  'saints',
-  'fathers',
-  'liturgy',
-  'prayer',
-  'journey',
   'faq',
   'next_steps',
-  'nexus',
   'bibliography',
 ];
+
+/**
+ * Após a Reader Architecture Rule (COS §10 / v1.1), as antigas seções
+ * per-kind (bible/catechism/magisterium/saints/fathers/liturgy/prayer/
+ * journey/nexus) foram consolidadas em um ÚNICO `NexusPanel` renderizado
+ * pelo slot `nexus` do `ReaderShell`. Elas continuam válidas em
+ * `sections_order` do banco por compatibilidade, mas são filtradas aqui.
+ */
+const EDITORIAL_ONLY = new Set<SectionKey>(DEFAULT_ORDER);
 
 const SECTION_META: Record<SectionKey, { kicker: string; title: string; anchor: string }> = {
   definition: { kicker: 'I · Fundamento', title: 'Definição', anchor: 'definicao' },
@@ -196,19 +196,33 @@ const SECTION_META: Record<SectionKey, { kicker: string; title: string; anchor: 
   interpretation: { kicker: 'III · Contemplação', title: 'Interpretação teológica', anchor: 'interpretacao' },
   application: { kicker: 'IV · Vida', title: 'Aplicação prática', anchor: 'aplicacao' },
   meditation: { kicker: 'V · Logos', title: 'Meditação Logos', anchor: 'meditacao' },
-  bible: { kicker: 'VI · Escritura', title: 'Fundamentação bíblica', anchor: 'biblia' },
-  catechism: { kicker: 'VII · Catequese', title: 'Fundamentação catequética', anchor: 'catecismo' },
-  magisterium: { kicker: 'VIII · Doutrina', title: 'Magistério relacionado', anchor: 'magisterio' },
-  saints: { kicker: 'IX · Comunhão', title: 'Santos relacionados', anchor: 'santos' },
-  fathers: { kicker: 'X · Tradição', title: 'Padres relacionados', anchor: 'padres' },
-  liturgy: { kicker: 'XI · Liturgia', title: 'Liturgia relacionada', anchor: 'liturgia' },
-  prayer: { kicker: 'XII · Oração', title: 'Orações relacionadas', anchor: 'oracao' },
-  journey: { kicker: 'XIII · Caminho', title: 'Jornadas sugeridas', anchor: 'jornada' },
-  faq: { kicker: 'XIV · Perguntas', title: 'Perguntas frequentes', anchor: 'faq' },
-  next_steps: { kicker: 'XV · Continuar', title: 'Próximos passos', anchor: 'proximos-passos' },
-  nexus: { kicker: 'XVI · Nexus', title: 'Nexus completo', anchor: 'nexus' },
-  bibliography: { kicker: 'XVII · Fontes', title: 'Bibliografia', anchor: 'bibliografia' },
+  faq: { kicker: 'VI · Perguntas', title: 'Perguntas frequentes', anchor: 'faq' },
+  next_steps: { kicker: 'VII · Continuar', title: 'Próximos passos', anchor: 'proximos-passos' },
+  bibliography: { kicker: 'VIII · Fontes', title: 'Bibliografia', anchor: 'bibliografia' },
+  // Chaves legadas — não renderizadas (filtradas por EDITORIAL_ONLY).
+  bible: { kicker: '', title: '', anchor: '' },
+  catechism: { kicker: '', title: '', anchor: '' },
+  magisterium: { kicker: '', title: '', anchor: '' },
+  saints: { kicker: '', title: '', anchor: '' },
+  fathers: { kicker: '', title: '', anchor: '' },
+  liturgy: { kicker: '', title: '', anchor: '' },
+  prayer: { kicker: '', title: '', anchor: '' },
+  journey: { kicker: '', title: '', anchor: '' },
+  nexus: { kicker: '', title: '', anchor: '' },
 };
+
+/** Ordem canônica dos buckets no NexusPanel (Escritura → Doutrina → Vida). */
+const NEXUS_ORDER: readonly ReaderNexusBucket[] = [
+  'bible',
+  'catechism',
+  'magisterium',
+  'father',
+  'saint',
+  'liturgy',
+  'prayer',
+  'journey',
+  'glossary',
+];
 
 /* ------------------------------------------------------------------ */
 /* Data hook                                                           */
