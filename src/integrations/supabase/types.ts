@@ -7288,6 +7288,52 @@ export type Database = {
       }
       resolve_user_id_by_email: { Args: { _email: string }; Returns: string }
       run_manual_security_scan: { Args: never; Returns: string }
+      saints_correction_priority: {
+        Args: never
+        Returns: {
+          area: string
+          editorial: number
+          effort_tier: string
+          ice: number
+          impact_tier: string
+          inbound_refs: number
+          missing_bible: boolean
+          missing_cic: boolean
+          missing_count: number
+          missing_deep: boolean
+          missing_faq: boolean
+          missing_fathers: boolean
+          missing_logos: boolean
+          nexus: number
+          priority: string
+          slug: string
+          status: string
+          term: string
+        }[]
+      }
+      saints_doctrinal_area: { Args: { _category: string }; Returns: string }
+      saints_doctrinal_coverage: {
+        Args: never
+        Returns: {
+          area: string
+          avg_ice: number
+          bronze: number
+          gate_passing: number
+          gold: number
+          review: number
+          silver: number
+          total: number
+        }[]
+      }
+      saints_ice: {
+        Args: { _id: string }
+        Returns: {
+          editorial: number
+          ice: number
+          nexus: number
+        }[]
+      }
+      saints_quality_gate: { Args: { _slug: string }; Returns: boolean }
       search_community_posts_fuzzy: {
         Args: { result_limit?: number; search_query: string }
         Returns: {
