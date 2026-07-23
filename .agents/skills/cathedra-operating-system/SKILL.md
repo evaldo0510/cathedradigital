@@ -93,6 +93,7 @@ Toda leitura na Cathedra obedece ao **Reader Template Master**:
 ```
 ReaderShell
   ├─ EditorialHero
+  ├─ HeaderContext          (slot opcional — variantes canônicas apenas)
   ├─ ReaderContent (children)
   │    └─ ReferencePopover (inline)
   ├─ NexusPanel
@@ -106,10 +107,27 @@ Proibições (bloqueantes, sem exceção):
 - **Se existir `ReaderShell`** → proibido criar outro Reader/Shell.
 - **Se existir `NexusPanel`** → proibido criar outro Nexus. Isso inclui, retroativamente: `NexusBubbles`, `MysteryNexusPanel`, `AutoNexusList` local, `NexusFullList` local, `NexusInlinePreview` fora do ReferencePopover, e qualquer "painel de conexões" novo.
 - **Se existir `ReferencePopover`** → proibido criar outro Popover de referência. Isso inclui, retroativamente: `BibleVersePopover`, `BibleDictionaryPopover`, `TagBubble` popover, popover ad-hoc de verbete/santo/CIC.
+- **Se existir `HeaderContext`** → proibido criar cabeçalho contextual paralelo (litúrgico, jornada, catequese, estudo). Nova variante entra como implementação em `@/components/reader/HeaderContext`, nunca como componente solto.
 - Extensão sempre via props / render props do primitivo canônico. Nunca via componente paralelo.
 - Novos módulos de leitura devem passar pela auditoria de aderência (`docs/reader-architecture-master.md`) antes de merge.
 
 Auditoria de aderência (score por módulo): ver `docs/reader-architecture-master.md`. Meta: **100% em todos os módulos até fim da Sprint Nexus 2.0**.
+
+---
+
+## 11. Regra da Leitura Universal (congelada em v1.2)
+
+Todo módulo textual novo da Cathedra **deve nascer dentro do Reader**. Sem exceção. O esqueleto mínimo é:
+
+- `ReaderShell` — layout raiz
+- `EditorialHero` — cabeçalho editorial
+- `ReferencePopover` — toda referência inline (Bíblia, CIC, verbete, santo, oração)
+- `NexusPanel` — conexões teológicas
+- `ReaderContinuation` — rodapé de continuidade
+- `HeaderContext` — obrigatório quando o módulo tem contexto de domínio (litúrgico, jornada, catequese, estudo)
+
+Um PR que introduza um módulo textual sem esses primitivos é **automaticamente BLOQUEADO** pelo guardrail do CI (`scripts/reader-guardrail.ts`). Justificativas do tipo "é diferente" ou "é temporário" são recusadas. Se a arquitetura atual não atende, o caminho é **estender o primitivo canônico**, nunca duplicá-lo.
+
 
 ---
 

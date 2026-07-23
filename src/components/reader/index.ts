@@ -28,6 +28,19 @@ export {
   type ReferencePopoverProps,
   type ReferenceKind,
 } from './ReferencePopover';
+export {
+  HeaderContext,
+  LiturgicalContext,
+  JourneyContext,
+  CatechesisContext,
+  StudyContext,
+  type HeaderContextProps,
+  type LiturgicalContextProps,
+  type JourneyContextProps,
+  type CatechesisContextProps,
+  type StudyContextProps,
+} from './HeaderContext';
 export { NexusPanel, type NexusPanelProps } from '@/components/nexus/NexusPanel';
 export { default as ReaderContinuation } from '@/components/shared/ReaderContinuation';
 export { EditorialHero } from '@/components/editorial';
+

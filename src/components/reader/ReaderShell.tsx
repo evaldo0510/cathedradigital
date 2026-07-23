@@ -26,6 +26,13 @@ import { cn } from '@/lib/utils';
 export interface ReaderShellProps {
   /** Cabeçalho editorial da leitura (use EditorialHero). */
   hero: React.ReactNode;
+  /**
+   * Slot opcional entre o Hero e o corpo — use uma implementação
+   * canônica de HeaderContext (Liturgical, Journey, Catechesis, Study).
+   * NÃO passe componentes ad-hoc; se precisar de uma variante nova,
+   * adicione-a em `@/components/reader/HeaderContext`.
+   */
+  headerContext?: React.ReactNode;
   /** Corpo da leitura — texto contínuo, referências inline, ReferencePopover. */
   children: React.ReactNode;
   /** Painel de conexões teológicas (use NexusPanel). Opcional. */
@@ -47,6 +54,7 @@ export interface ReaderShellProps {
  */
 export const ReaderShell: React.FC<ReaderShellProps> = ({
   hero,
+  headerContext,
   children,
   nexus,
   continuation,
@@ -65,6 +73,10 @@ export const ReaderShell: React.FC<ReaderShellProps> = ({
       data-reader-shell
     >
       <header data-reader-slot="hero">{hero}</header>
+
+      {headerContext}
+
+
 
       <div
         data-reader-slot="content"
