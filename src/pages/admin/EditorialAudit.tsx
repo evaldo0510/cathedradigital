@@ -252,6 +252,18 @@ export default function EditorialAuditPage() {
   }>>([]);
   const [priorityFilter, setPriorityFilter] = useState<"quick_win" | "red" | "orange" | "yellow" | "all">("quick_win");
 
+  // Sprint 6.1.1 · Corrigir Bucket em Lote — fila com progresso e retry
+  type BatchTask = { slug: string; term: string; field: Field };
+  type BatchResult = BatchTask & { ok: boolean; error?: string };
+  const [bucketBatch, setBucketBatch] = useState<{
+    running: boolean;
+    total: number;
+    done: number;
+    current: BatchTask | null;
+    results: BatchResult[];
+    label: string;
+  } | null>(null);
+
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -431,6 +443,56 @@ export default function EditorialAuditPage() {
     );
     await load();
   }, [filtered, batchField, load]);
+
+  // Sprint 6.1.1 — executa uma fila arbitrária de tarefas (slug×campo)
+  const runQueue = useCallback(async (tasks: BatchTask[], label: string) => {
+    if (tasks.length === 0) { toast.info("Nada a corrigir neste bucket."); return; }
+    if (!confirm(`Corrigir bucket "${label}"?\n\n${tasks.length} tarefa(s) — cada verbete volta para draft após IA.`)) return;
+
+    setBucketBatch({ running: true, total: tasks.length, done: 0, current: null, results: [], label });
+    const results: BatchResult[] = [];
+    for (let i = 0; i < tasks.length; i++) {
+      const t = tasks[i];
+      setBucketBatch(b => b && ({ ...b, current: t, done: i }));
+      try {
+        const { data, error } = await supabase.functions.invoke("glossary-generate-deep", {
+          body: { slug: t.slug, field: t.field },
+        });
+        if (error || (data as any)?.error) throw new Error(error?.message ?? (data as any)?.error);
+        results.push({ ...t, ok: true });
+      } catch (e: any) {
+        console.error(`[bucket-batch] ${t.slug}:${t.field}`, e);
+        results.push({ ...t, ok: false, error: e?.message ?? String(e) });
+      }
+      setBucketBatch(b => b && ({ ...b, results: [...results] }));
+      await new Promise(r => setTimeout(r, 700));
+    }
+    setBucketBatch(b => b && ({ ...b, running: false, done: tasks.length, current: null }));
+    const ok = results.filter(r => r.ok).length;
+    const fail = results.length - ok;
+    toast[fail === 0 ? "success" : "warning"](`Bucket "${label}" · ${ok} ok · ${fail} falha(s).`);
+    await Promise.all([load(), loadStrategy()]);
+  }, [load, loadStrategy]);
+
+  const buildTasksFromBucket = useCallback((bucketRows: typeof priorityRows): BatchTask[] => {
+    const tasks: BatchTask[] = [];
+    for (const r of bucketRows) {
+      if (r.missing_deep)    tasks.push({ slug: r.slug, term: r.term, field: "deep_interpretation" });
+      if (r.missing_faq)     tasks.push({ slug: r.slug, term: r.term, field: "faq" });
+      if (r.missing_logos)   tasks.push({ slug: r.slug, term: r.term, field: "logos_meditation" });
+      if (r.missing_bible)   tasks.push({ slug: r.slug, term: r.term, field: "bible_verses" });
+      if (r.missing_cic)     tasks.push({ slug: r.slug, term: r.term, field: "catechism_references" });
+      if (r.missing_fathers) tasks.push({ slug: r.slug, term: r.term, field: "fathers_refs" });
+    }
+    return tasks;
+  }, []);
+
+  const retryFailed = useCallback(async () => {
+    if (!bucketBatch) return;
+    const failed = bucketBatch.results.filter(r => !r.ok).map(({ slug, term, field }) => ({ slug, term, field }));
+    if (failed.length === 0) { toast.info("Nenhuma falha para reprocessar."); return; }
+    await runQueue(failed, `${bucketBatch.label} · retry`);
+  }, [bucketBatch, runQueue]);
 
   // Sprint 6.5 · Selo de Congelamento Editorial
   const freezeCriteria = useMemo(() => {
@@ -715,6 +777,90 @@ export default function EditorialAuditPage() {
                       </Button>
                     ))}
                   </div>
+
+                  {/* Sprint 6.1.1 · Corrigir bucket em lote */}
+                  {(() => {
+                    const target = shown;
+                    const tasks = buildTasksFromBucket(target);
+                    const fieldCount = tasks.reduce<Record<string, number>>((a, t) => {
+                      a[t.field] = (a[t.field] ?? 0) + 1; return a;
+                    }, {});
+                    const fieldLabels: Record<string, string> = {
+                      deep_interpretation: "Interpretação", faq: "FAQ", logos_meditation: "Logos",
+                      bible_verses: "Bíblia", catechism_references: "CIC", fathers_refs: "Patrística",
+                    };
+                    const running = bucketBatch?.running;
+                    const pct = bucketBatch && bucketBatch.total > 0
+                      ? Math.round((bucketBatch.done / bucketBatch.total) * 100) : 0;
+                    const ok = bucketBatch?.results.filter(r => r.ok).length ?? 0;
+                    const fail = (bucketBatch?.results.length ?? 0) - ok;
+                    return (
+                      <div className="mt-3 rounded-lg border bg-muted/30 p-3">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <div className="text-xs">
+                            <div className="font-medium">Corrigir bucket em lote</div>
+                            <div className="text-muted-foreground">
+                              {target.length === 0
+                                ? "Bucket zerado — nada a corrigir."
+                                : `Serão corrigidos ${target.length} verbete(s) · ${tasks.length} tarefa(s) de IA${
+                                    Object.keys(fieldCount).length
+                                      ? ` (${Object.entries(fieldCount).map(([f, n]) => `${fieldLabels[f] ?? f}: ${n}`).join(" · ")})`
+                                      : ""
+                                  }.`}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            {bucketBatch && !running && fail > 0 && (
+                              <Button size="sm" variant="outline" onClick={retryFailed} className="h-7 text-xs">
+                                <RefreshCw className="mr-1 h-3 w-3" /> Reprocessar {fail} falha(s)
+                              </Button>
+                            )}
+                            <Button
+                              size="sm"
+                              disabled={running || tasks.length === 0}
+                              onClick={() => runQueue(tasks, `${priorityFilter}`)}
+                              className="h-7 text-xs"
+                            >
+                              {running
+                                ? <><Loader2 className="mr-1 h-3 w-3 animate-spin" /> Executando…</>
+                                : <><Sparkles className="mr-1 h-3 w-3" /> Corrigir bucket</>}
+                            </Button>
+                          </div>
+                        </div>
+
+                        {bucketBatch && (
+                          <div className="mt-3 space-y-2">
+                            <div className="flex items-center justify-between text-[11px]">
+                              <span className="tabular-nums">
+                                {bucketBatch.done}/{bucketBatch.total}
+                                {bucketBatch.current && running && (
+                                  <span className="ml-2 text-muted-foreground">
+                                    → {bucketBatch.current.term} · {fieldLabels[bucketBatch.current.field] ?? bucketBatch.current.field}
+                                  </span>
+                                )}
+                              </span>
+                              <span className="text-muted-foreground">
+                                {ok > 0 && <span className="text-emerald-700">✓ {ok}</span>}
+                                {fail > 0 && <span className="ml-2 text-red-700">✗ {fail}</span>}
+                                {!running && <span className="ml-2">· concluído</span>}
+                              </span>
+                            </div>
+                            <Progress value={pct} className="h-1.5" />
+                            {!running && bucketBatch.results.length > 0 && (
+                              <div className="max-h-32 overflow-y-auto rounded border bg-background/50 p-2 text-[10px] font-mono">
+                                {bucketBatch.results.map((r, i) => (
+                                  <div key={i} className={r.ok ? "text-emerald-700" : "text-red-700"}>
+                                    {r.ok ? "✓" : "✗"} {r.slug} · {fieldLabels[r.field] ?? r.field}
+                                    {!r.ok && r.error && <span className="ml-1 opacity-70">— {r.error}</span>}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </CardHeader>
                 <CardContent className="p-0">
                   {shown.length === 0 ? (
