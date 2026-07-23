@@ -228,10 +228,10 @@ const AtriumBibliotecaPage: React.FC = () => {
                 <span className="font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-secondary-fixed">
                   Tema em Destaque
                 </span>
-                <h3 className="mt-2 font-stitch-display text-[32px] italic leading-tight md:text-[48px] md:leading-[56px] md:tracking-[-0.02em]">
+                <h3 className="mt-2 font-stitch-display text-[32px] italic leading-tight text-stitch-primary-foreground md:text-[48px] md:leading-[56px] md:tracking-[-0.02em]">
                   A Arquitetura do Silêncio
                 </h3>
-                <p className="mt-4 font-stitch-body text-[18px] leading-[28px] opacity-80">
+                <p className="mt-4 font-stitch-body text-[18px] leading-[28px] text-stitch-primary-foreground/80">
                   Como os espaços monásticos espelham a paisagem interior da
                   oração contemplativa.
                 </p>

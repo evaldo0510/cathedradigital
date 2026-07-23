@@ -219,11 +219,11 @@ const AtriumJornadasPage: React.FC = () => {
                   <Flame className="mr-2 inline h-3 w-3" />
                   Jornada em Destaque
                 </span>
-                <h3 className="mt-2 font-stitch-display text-[32px] italic leading-tight md:text-[48px] md:leading-[56px] md:tracking-[-0.02em]">
+                <h3 className="mt-2 font-stitch-display text-[32px] italic leading-tight text-stitch-primary-foreground md:text-[48px] md:leading-[56px] md:tracking-[-0.02em]">
                   {featured.title}
                 </h3>
                 {featured.description && (
-                  <p className="mt-4 font-stitch-body text-[18px] leading-[28px] opacity-80">
+                  <p className="mt-4 font-stitch-body text-[18px] leading-[28px] text-stitch-primary-foreground/80">
                     {featured.description}
                   </p>
                 )}
