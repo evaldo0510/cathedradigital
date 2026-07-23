@@ -469,84 +469,102 @@ const Catechism: React.FC = memo(() => {
   const nextUnreadParagraph = 1; // Simplified for template consistency
 
   if (viewMode === 'reading' && selectedSection && selectedPart) {
+    const sectionNexus = resolveCatechismAutoNexus({
+      paragraph: currentParagraph,
+      excerpt: null,
+    });
     return (
       <CatechismPendingProvider>
         <ContemplativeLayout>
-          <div className="w-full editorial-column editorial-section" data-testid={`secao-${selectedSection.id}-conteudo`}>
-            <EditorialReaderHeader
-              kicker={`Catecismo · ${selectedPart.part}`}
-              title={selectedSection.title}
-              subtitle={selectedPart.title}
-              meta={`§${startPara} — §${endPara}`}
-            />
-
-            {/* Unified Reading Navigation */}
-            <div className="flex items-center justify-between gap-spacing-md py-spacing-xs border-b border-primary/5 mb-spacing-md">
-               <Button variant="ghost" onClick={() => { goBack(); setTimeout(() => { if (lastFocusedElement) document.getElementById(lastFocusedElement)?.focus(); }, 100); }} id="back-to-summary" className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary" aria-label="Voltar para o sumário de seções">← Sumário</Button>
-               <div className="flex items-center gap-spacing-lg">
-                  <Button 
+          <ReaderShell
+            ariaLabel={`Catecismo — ${selectedSection.title}`}
+            contentMaxWidth="max-w-4xl"
+            hero={
+              <EditorialHero
+                kicker={`Catecismo · ${selectedPart.part}`}
+                title={selectedSection.title}
+                subtitle={`${selectedPart.title} · §${startPara} — §${endPara}`}
+                size="md"
+                parchment
+              />
+            }
+            nexus={
+              <NexusPanel
+                output={sectionNexus}
+                title="Nexus Theologicus"
+                kicker={`Conexões de §${currentParagraph}`}
+              />
+            }
+            continuation={
+              <ReaderContinuation
+                context={{
+                  kind: 'catechism',
+                  id: String(currentParagraph),
+                  graphNodeId: sectionNexus.selfId ?? undefined,
+                  meta: {
+                    paragraph: currentParagraph,
+                    nextParagraph: currentParagraph + 1,
+                    section: selectedSection.id,
+                  },
+                }}
+                suggestions={sectionNexus.suggestions.length > 0 ? sectionNexus.suggestions : undefined}
+              />
+            }
+          >
+            <div className="w-full editorial-column editorial-section" data-testid={`secao-${selectedSection.id}-conteudo`}>
+              {/* Unified Reading Navigation */}
+              <div className="flex items-center justify-between gap-spacing-md py-spacing-xs border-b border-primary/5 mb-spacing-md">
+                <Button variant="ghost" onClick={() => { goBack(); setTimeout(() => { if (lastFocusedElement) document.getElementById(lastFocusedElement)?.focus(); }, 100); }} id="back-to-summary" className="text-[10px] font-bold uppercase tracking-widest text-primary/40 hover:text-primary" aria-label="Voltar para o sumário de seções">← Sumário</Button>
+                <div className="flex items-center gap-spacing-lg">
+                  <Button
                     disabled={selectedSection.id <= 1}
                     onClick={() => {
                       const prev = selectedPart.sections.find(s => s.id === selectedSection.id - 1);
                       if (prev) {
-                        console.info('[CIC section nav]', {
-                          origin: 'Catechism.section-nav',
-                          direction: 'prev',
-                          from: { section: selectedSection.id, paragraph: currentParagraph },
-                          to: { section: prev.id, paragraph: prev.paragraphs[0] },
-                          href: `/catechism?p=${prev.paragraphs[0]}`,
-                        });
-                        setSelectedSection(prev); setCurrentParagraph(prev.paragraphs[0]); window.scrollTo(0,0);
+                        setSelectedSection(prev); setCurrentParagraph(prev.paragraphs[0]); window.scrollTo(0, 0);
                       }
                     }}
                     data-testid="catechism-section-prev"
                     variant="ghost" className="text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100">Anterior</Button>
                   <span className="text-premium-xs font-serif italic text-primary/20">Seção {selectedSection.id}</span>
-                  <Button 
+                  <Button
                     disabled={selectedSection.id >= 10}
                     onClick={() => {
                       const next = selectedPart.sections.find(s => s.id === selectedSection.id + 1);
                       if (next) {
-                        console.info('[CIC section nav]', {
-                          origin: 'Catechism.section-nav',
-                          direction: 'next',
-                          from: { section: selectedSection.id, paragraph: currentParagraph },
-                          to: { section: next.id, paragraph: next.paragraphs[0] },
-                          href: `/catechism?p=${next.paragraphs[0]}`,
-                        });
-                        setSelectedSection(next); setCurrentParagraph(next.paragraphs[0]); window.scrollTo(0,0);
+                        setSelectedSection(next); setCurrentParagraph(next.paragraphs[0]); window.scrollTo(0, 0);
                       }
                     }}
                     data-testid="catechism-section-next"
                     variant="ghost" className="text-[10px] font-bold uppercase tracking-widest opacity-40 hover:opacity-100">Próxima</Button>
+                </div>
+                <ReadingControlPanel />
+              </div>
 
-               </div>
-               <ReadingControlPanel />
+              <CatechismPendingPanel
+                startPara={startPara}
+                endPara={endPara}
+                onJumpTo={(p) => document.getElementById(`p${p}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
+              />
+
+              <div className="space-y-spacing-xl md:space-y-spacing-3xl">
+                {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
+                  <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={new Set()} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} highlights={currentChapterNotes} />
+                ))}
+              </div>
+
+              <EditorialDivider variant="gold-fade" className="max-w-[240px] mx-auto mt-spacing-4xl mb-spacing-2xl" />
+              <div>
+                <Relatio context={{ type: 'catechism', paragraph: currentParagraph }} onNavigateToBible={handleNavigateToBible} onNavigateToCIC={jumpToParagraph} onNavigateToDoc={handleNavigateToDoc} />
+              </div>
             </div>
-
-            <CatechismPendingPanel
-              startPara={startPara}
-              endPara={endPara}
-              onJumpTo={(p) => document.getElementById(`p${p}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
-            />
-
-            <div className="space-y-spacing-xl md:space-y-spacing-3xl">
-              {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
-                <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={new Set()} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} highlights={currentChapterNotes} />
-              ))}
-            </div>
-
-            <EditorialDivider variant="gold-fade" className="max-w-[240px] mx-auto mt-spacing-4xl mb-spacing-2xl" />
-            <div>
-               <Relatio context={{ type: 'catechism', paragraph: currentParagraph }} onNavigateToBible={handleNavigateToBible} onNavigateToCIC={jumpToParagraph} onNavigateToDoc={handleNavigateToDoc} />
-            </div>
-
-          </div>
+          </ReaderShell>
           <CatechismDiagnosticPanel />
         </ContemplativeLayout>
       </CatechismPendingProvider>
     );
   }
+
 
   if (viewMode === 'sections' && selectedPart) {
     return (
