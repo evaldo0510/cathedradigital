@@ -42,6 +42,8 @@ import {
   useAnnouncements,
 } from '@/modules/atrium/hooks';
 import type { ResumeItem } from '@/modules/atrium/types';
+import { useAuth } from '@/hooks/useAuth';
+import AtriumReception from '@/components/cathedra/AtriumReception';
 
 // ─── Copy oficial ────────────────────────────────────────────────────────────
 const HERO_KICKER = 'Sanctuarium Digital';
