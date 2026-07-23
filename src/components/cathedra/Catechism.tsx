@@ -729,27 +729,3 @@ const Catechism: React.FC = memo(() => {
 
 export default Catechism;
 
-const CatechismReaderContinuation: React.FC<{ paragraph: number; excerpt: string | null }> = ({ paragraph, excerpt }) => {
-  const nexus = React.useMemo(
-    () => resolveCatechismAutoNexus({ paragraph, excerpt }),
-    [paragraph, excerpt],
-  );
-  return (
-    <div className="space-y-spacing-xl">
-      <NexusPanel
-        output={nexus}
-        title="Nexus Theologicus"
-        kicker={`Conexões de §${paragraph}`}
-      />
-      <ReaderContinuation
-        context={{
-          kind: 'catechism',
-          id: String(paragraph),
-          graphNodeId: nexus.selfId ?? undefined,
-          meta: { paragraph, nextParagraph: paragraph + 1 },
-        }}
-        suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
-      />
-    </div>
-  );
-};
