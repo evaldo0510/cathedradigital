@@ -25,7 +25,7 @@ import { Progress } from "@/components/ui/progress";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   Loader2, Sparkles, AlertCircle, CheckCircle2, ExternalLink, Award, Filter,
-  History, Lightbulb, ChevronDown, Snowflake,
+  History, Lightbulb, ChevronDown, Snowflake, ShieldCheck, TrendingDown, RefreshCw,
 } from "lucide-react";
 
 const GOLD_MIN = 20;
