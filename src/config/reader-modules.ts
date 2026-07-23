@@ -53,8 +53,8 @@ export const READER_MODULES: readonly ReaderModule[] = [
     entry: 'src/components/cathedra/Catechism.tsx',
     sampleRoutes: ['/catechism?p=1'],
     targetScore: 90,
-    status: 'partial',
-    blocking: false,
+    status: 'certified',
+    blocking: true,
   },
   {
     id: 'bible',
@@ -173,7 +173,6 @@ export const GUARDRAIL_ALLOWLIST: readonly string[] = [
   // ── Baseline Fase C: consumidores legados aguardando migração.
   //    Remover ao concluir a sub-onda de cada módulo (ver docs/reader-template-master-fase-c.md).
   'src/components/cathedra/BibleReader.tsx',           // sub-onda C.4
-  'src/components/cathedra/Catechism.tsx',             // sub-onda C.3
   'src/components/cathedra/JornadaStepPage.tsx',       // Fase D
   'src/components/cathedra/MagisteriumViewer.tsx',     // Fase D
   'src/components/cathedra/SaintDetail.tsx',           // Fase D
@@ -181,7 +180,6 @@ export const GUARDRAIL_ALLOWLIST: readonly string[] = [
   // Popovers editoriais legados (ainda usam radix diretamente até migrarem para ReferencePopover)
   'src/components/cathedra/BibleVersePopover.tsx',
   'src/components/cathedra/BibleDictionaryPopover.tsx',
-  'src/components/cathedra/CatechismPopover.tsx',
   'src/lib/nexusContent.ts',
 ];
 
