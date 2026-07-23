@@ -130,7 +130,7 @@ const CatechismLanding: React.FC = () => {
                     {PART_KICKERS[part.part] ?? part.part}
                   </span>
                   <div className="mt-[var(--sp-s)] flex items-baseline gap-4">
-                    <span className="font-stitch-display text-[48px] italic leading-none text-stitch-secondary/30">
+                    <span className="font-stitch-display text-[48px] italic leading-none text-stitch-secondary/55">
                       {String(idx).padStart(2, '0')}
                     </span>
                     <div>
