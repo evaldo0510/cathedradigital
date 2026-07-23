@@ -75,6 +75,14 @@ const Auth = lazy(() => import('./components/cathedra/Auth'));
 const OAuthConsent = lazy(() => import('./pages/OAuthConsent'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 const ProfileFavoritesPage = lazy(() => import('./pages/ProfileFavoritesPage'));
+// Sprint UX · Área do Usuário (Comandos) — shell unificado /conta/*
+const ContaLayout = lazy(() => import('./pages/conta/ContaLayout'));
+const ContaPerfil = lazy(() => import('./pages/conta/sections/PerfilSection'));
+const ContaJornada = lazy(() => import('./pages/conta/sections/JornadaSection'));
+const ContaFavoritos = lazy(() => import('./pages/conta/sections/FavoritosSection'));
+const ContaDiario = lazy(() => import('./pages/conta/sections/DiarioSection'));
+const ContaConfiguracoes = lazy(() => import('./pages/conta/sections/ConfiguracoesSection'));
+const ContaAdmin = lazy(() => import('./pages/conta/sections/AdminSection'));
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
 const AtriumBuscarPage = lazy(() => import('./pages/AtriumBuscarPage'));
 const Index = lazy(() => import('./pages/Index'));
@@ -540,6 +548,17 @@ const AppLayout: React.FC = () => {
               <Route path="/hoje" element={<Suspense fallback={<LoadingFallback />}><HojePage /></Suspense>} />
               <Route path="/dashboard" element={<Navigate to="/hoje" replace />} />
               <Route path="/diario" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><SpiritualJournalPage /></AuthGuard></Suspense>} />
+
+              {/* Sprint UX · Área do Usuário unificada. Rotas antigas acima preservadas. */}
+              <Route path="/conta" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><ContaLayout /></AuthGuard></Suspense>}>
+                <Route index element={<Navigate to="perfil" replace />} />
+                <Route path="perfil" element={<Suspense fallback={<LoadingFallback />}><ContaPerfil /></Suspense>} />
+                <Route path="jornada" element={<Suspense fallback={<LoadingFallback />}><ContaJornada /></Suspense>} />
+                <Route path="favoritos" element={<Suspense fallback={<LoadingFallback />}><ContaFavoritos /></Suspense>} />
+                <Route path="diario" element={<Suspense fallback={<LoadingFallback />}><ContaDiario /></Suspense>} />
+                <Route path="configuracoes" element={<Suspense fallback={<LoadingFallback />}><ContaConfiguracoes /></Suspense>} />
+                <Route path="admin" element={<Suspense fallback={<LoadingFallback />}><ContaAdmin /></Suspense>} />
+              </Route>
 
               {/* Biblioteca */}
               <Route path="/biblioteca" element={<Suspense fallback={<LoadingFallback />}><AtriumBibliotecaPage /></Suspense>} />
