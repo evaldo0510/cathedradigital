@@ -29,6 +29,7 @@ import { useSaintOfDay } from '@/hooks/useSaintOfDay';
 import { PrayerTTSButton } from './PrayerTTSButton';
 import { RitualOptionSelector } from './primitives/liturgy/RitualOptionSelector';
 import { LiturgyRichHeader } from './primitives/liturgy/LiturgyRichHeader';
+import { LiturgyBlockCard } from './primitives/liturgy/LiturgyBlockCard';
 import { MissaClosingActionCard } from './primitives/liturgy/MissaClosingActionCard';
 
 interface Props {
@@ -42,78 +43,111 @@ interface Props {
   celebrationMode?: boolean;
 }
 
-/* ─────────────────────── Slot Cards (editorial) ─────────────────────── */
-
-interface SlotCardProps {
-  kicker: string;
-  title: string;
-  text?: string | null;
-  note?: string | null;
-  variant?: 'default' | 'antiphon' | 'preface';
-  loading?: boolean;
-}
-
-const SlotCard: React.FC<SlotCardProps> = ({ kicker, title, text, note, variant = 'default', loading }) => (
-  <section
-    aria-label={title}
-    className={cn(
-      'relative my-spacing-lg rounded-2xl border p-spacing-md md:p-spacing-lg',
-      variant === 'antiphon' && 'border-primary/30 bg-primary/[0.03] italic',
-      variant === 'preface' && 'border-primary/40 bg-primary/[0.04]',
-      variant === 'default' && 'border-border/60 bg-card/60',
-    )}
-  >
-    <p className="font-stitch-body text-[10px] font-black uppercase tracking-[0.3em] text-primary">{kicker}</p>
-    <h3 className="mt-spacing-2xs font-stitch-display text-premium-lg md:text-premium-xl leading-tight text-foreground">{title}</h3>
-    {loading ? (
-      <div className="mt-spacing-sm space-y-2">
-        <div className="h-3 w-full bg-muted/60 rounded animate-pulse" />
-        <div className="h-3 w-5/6 bg-muted/60 rounded animate-pulse" />
-      </div>
-    ) : text ? (
-      <p className={cn(
-        'mt-spacing-sm whitespace-pre-line font-stitch-display leading-[1.65] text-foreground',
-        variant === 'antiphon' ? 'text-premium-lg italic text-center' : 'text-premium-base md:text-premium-lg',
-      )}>{text}</p>
-    ) : null}
-    {note && (
-      <p className="mt-spacing-sm font-stitch-body text-premium-xs italic text-muted-foreground">{note}</p>
-    )}
-  </section>
-);
+/* ─────────────────────── Slot Cards (editorial) ───────────────────────
+ * Unificados via `LiturgyBlockCard` (Etapa 1 · Sprint C.4).
+ * ------------------------------------------------------------------- */
 
 const EntranceSlot: React.FC<{ proper: MissalProperRow | null; loading: boolean }> = ({ proper, loading }) => {
   if (!proper?.entrance_antiphon && !loading) return null;
-  return <SlotCard kicker="Próprio · Antiphona ad introitum" title="Antífona de Entrada" text={proper?.entrance_antiphon ?? null} variant="antiphon" loading={loading} />;
+  return (
+    <LiturgyBlockCard
+      kicker="Próprio · Antiphona ad introitum"
+      title="Antífona de Entrada"
+      text={proper?.entrance_antiphon ?? null}
+      variant="antiphon"
+      align="center"
+      loading={loading}
+    />
+  );
 };
 const CollectSlot: React.FC<{ proper: MissalProperRow | null; loading: boolean }> = ({ proper, loading }) => (
-  <SlotCard kicker="Próprio · Collecta" title="Oração da Coleta" text={proper?.collect ?? null} loading={loading} note={proper?.season_note ?? null} />
+  <LiturgyBlockCard
+    kicker="Próprio · Collecta"
+    title="Oração da Coleta"
+    text={proper?.collect ?? null}
+    loading={loading}
+    note={proper?.season_note ?? null}
+  />
 );
 const ReadingsSlot: React.FC<{ liturgy: DailyLiturgy | null }> = ({ liturgy }) => {
   if (!liturgy) return null;
   const { primeiraLeitura, salmo, segundaLeitura, evangelho } = liturgy;
   return (
     <div className="my-spacing-lg space-y-spacing-md">
-      {primeiraLeitura && <SlotCard kicker={`Liturgia da Palavra · ${primeiraLeitura.referencia}`} title={primeiraLeitura.titulo || 'Primeira Leitura'} text={primeiraLeitura.texto} />}
-      {salmo && <SlotCard kicker={`Salmo Responsorial · ${salmo.referencia}`} title={salmo.refrao || 'Salmo'} text={salmo.texto} variant="antiphon" />}
-      {segundaLeitura && <SlotCard kicker={`Segunda Leitura · ${segundaLeitura.referencia}`} title={segundaLeitura.titulo || 'Segunda Leitura'} text={segundaLeitura.texto} />}
-      {evangelho && <SlotCard kicker={`Evangelho · ${evangelho.referencia}`} title={evangelho.titulo || 'Evangelho'} text={evangelho.texto} variant="preface" />}
+      {primeiraLeitura && (
+        <LiturgyBlockCard
+          kicker={`Liturgia da Palavra · ${primeiraLeitura.referencia}`}
+          title={primeiraLeitura.titulo || 'Primeira Leitura'}
+          text={primeiraLeitura.texto}
+        />
+      )}
+      {salmo && (
+        <LiturgyBlockCard
+          kicker={`Salmo Responsorial · ${salmo.referencia}`}
+          title={salmo.refrao || 'Salmo'}
+          text={salmo.texto}
+          variant="antiphon"
+          align="center"
+        />
+      )}
+      {segundaLeitura && (
+        <LiturgyBlockCard
+          kicker={`Segunda Leitura · ${segundaLeitura.referencia}`}
+          title={segundaLeitura.titulo || 'Segunda Leitura'}
+          text={segundaLeitura.texto}
+        />
+      )}
+      {evangelho && (
+        <LiturgyBlockCard
+          kicker={`Evangelho · ${evangelho.referencia}`}
+          title={evangelho.titulo || 'Evangelho'}
+          text={evangelho.texto}
+          variant="preface"
+        />
+      )}
     </div>
   );
 };
 const OfferingsSlot: React.FC<{ proper: MissalProperRow | null; loading: boolean }> = ({ proper, loading }) => (
-  <SlotCard kicker="Próprio · Super oblata" title="Oração sobre as Oferendas" text={proper?.offertory_prayer ?? null} loading={loading} />
+  <LiturgyBlockCard
+    kicker="Próprio · Super oblata"
+    title="Oração sobre as Oferendas"
+    text={proper?.offertory_prayer ?? null}
+    loading={loading}
+  />
 );
 const PrefaceSlot: React.FC<{ proper: MissalProperRow | null; loading: boolean }> = ({ proper, loading }) => {
   if (!proper?.preface_suggestion && !loading) return null;
-  return <SlotCard kicker="Próprio · Praefatio" title="Prefácio Próprio" text={proper?.preface_suggestion ?? null} variant="preface" loading={loading} />;
+  return (
+    <LiturgyBlockCard
+      kicker="Próprio · Praefatio"
+      title="Prefácio Próprio"
+      text={proper?.preface_suggestion ?? null}
+      variant="preface"
+      loading={loading}
+    />
+  );
 };
 const CommunionSlot: React.FC<{ proper: MissalProperRow | null; loading: boolean }> = ({ proper, loading }) => {
   if (!proper?.communion_antiphon && !loading) return null;
-  return <SlotCard kicker="Próprio · Antiphona ad communionem" title="Antífona de Comunhão" text={proper?.communion_antiphon ?? null} variant="antiphon" loading={loading} />;
+  return (
+    <LiturgyBlockCard
+      kicker="Próprio · Antiphona ad communionem"
+      title="Antífona de Comunhão"
+      text={proper?.communion_antiphon ?? null}
+      variant="antiphon"
+      align="center"
+      loading={loading}
+    />
+  );
 };
 const PostCommunionSlot: React.FC<{ proper: MissalProperRow | null; loading: boolean }> = ({ proper, loading }) => (
-  <SlotCard kicker="Próprio · Post communionem" title="Oração depois da Comunhão" text={proper?.prayer_after_communion ?? null} loading={loading} />
+  <LiturgyBlockCard
+    kicker="Próprio · Post communionem"
+    title="Oração depois da Comunhão"
+    text={proper?.prayer_after_communion ?? null}
+    loading={loading}
+  />
 );
 
 /* ─────────────────────── Block View ─────────────────────── */
