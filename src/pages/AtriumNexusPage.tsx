@@ -256,10 +256,10 @@ const AtriumNexusPage: React.FC = () => {
               <span className="font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-secondary-fixed">
                 Curadoria
               </span>
-              <h3 className="mt-4 font-stitch-display text-[24px] italic leading-tight">
+              <h3 className="mt-4 font-stitch-display text-[24px] italic leading-tight text-stitch-primary-foreground">
                 Contribua com um fio
               </h3>
-              <p className="mt-3 font-stitch-body text-[15px] leading-relaxed opacity-80">
+              <p className="mt-3 font-stitch-body text-[15px] leading-relaxed text-stitch-primary-foreground/80">
                 Você percebeu uma conexão nova entre um versículo e a Tradição?
                 Envie sua sugestão à curadoria.
               </p>
