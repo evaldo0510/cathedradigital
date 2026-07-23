@@ -39,7 +39,7 @@ const AparicoesPage: React.FC = () => {
           </div>
           <Button
             onClick={() => handleToggleFavorite(selectedApparition)}
-            className={`p-spacing-xs rounded-premium-full border transition-all ${isFav ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-muted-foreground hover:text-primary hover:border-primary/30'}`}
+            className={`p-spacing-xs rounded-premium-full border transition-all ${isFav ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-card border-border text-foreground/75 hover:text-primary hover:border-primary/30'}`}
             title={isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}
           >
             <Icons.Heart className={`w-spacing-md h-spacing-md ${isFav ? 'fill-primary' : ''}`} />

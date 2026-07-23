@@ -53,7 +53,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
         </div>
         <div className="text-left flex-1">
           <p className={`text-premium-xs font-black uppercase tracking-[0.2em] ${
-            selectedPassage === dailyPassage.ref ? 'text-white/70' : 'text-primary/60'
+            selectedPassage === dailyPassage.ref ? 'text-white/70' : 'text-primary/85'
           }`}>Lectio do Dia</p>
           <p className={`font-serif font-bold text-premium-lg ${
             selectedPassage === dailyPassage.ref ? 'text-white' : 'text-foreground'
@@ -81,7 +81,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
               <step.icon className="w-spacing-lg h-spacing-lg" />
             </div>
             <div>
-              <p className="text-premium-xs font-black uppercase tracking-widest text-primary/60">{step.latin}</p>
+              <p className="text-premium-xs font-black uppercase tracking-widest text-primary/85">{step.latin}</p>
               <p className="font-serif font-bold text-premium-sm text-foreground">{step.title}</p>
             </div>
           </div>
@@ -97,7 +97,7 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
       >
         <div className="space-y-spacing-lg w-full mx-auto">
           <div className="text-center space-y-spacing-xs">
-            <h3 className="text-premium-sm font-black uppercase tracking-widest text-primary/60">Ou escolha outra passagem</h3>
+            <h3 className="text-premium-sm font-black uppercase tracking-widest text-primary/85">Ou escolha outra passagem</h3>
             <p className="text-premium-xs text-muted-foreground font-serif italic">Digite uma referência bíblica ou escolha uma sugestão.</p>
           </div>
           <div className="relative">
@@ -111,17 +111,19 @@ const LectioIntro: React.FC<LectioIntroProps> = ({ selectedPassage, onPassageCha
 
           <div className="flex flex-wrap gap-spacing-xs justify-center">
             {SUGGESTED_PASSAGES.map(p => (
-              <Button
+              <button
+                type="button"
                 key={p.ref}
                 onClick={() => onPassageChange(p.ref)}
-                className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all border ${
+                aria-pressed={selectedPassage === p.ref}
+                className={`px-spacing-md py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
                   selectedPassage === p.ref
-                    ? 'bg-primary border-primary text-white shadow-premium'
-                    : 'bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-primary'
+                    ? 'bg-primary border-primary text-primary-foreground shadow-premium'
+                    : 'bg-card border-border text-primary hover:border-primary hover:text-primary hover:bg-primary/[0.04]'
                 }`}
               >
                 {p.ref}
-              </Button>
+              </button>
             ))}
           </div>
         </div>

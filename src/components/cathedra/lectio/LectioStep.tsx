@@ -39,7 +39,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
           <Icons.ArrowLeft className="w-spacing-lg h-spacing-lg text-foreground" />
         </Button>
         <div className="flex-1 space-y-spacing-2xs">
-          <div className="flex items-center gap-spacing-xs text-premium-xs font-black uppercase tracking-[0.2em] text-primary/60">
+          <div className="flex items-center gap-spacing-xs text-premium-xs font-black uppercase tracking-[0.2em] text-primary/85">
             <Icons.Feather className="w-spacing-sm h-spacing-sm" />
             Lectio Divina
           </div>
@@ -51,7 +51,7 @@ const LectioStep: React.FC<LectioStepProps> = ({
             text={`Meditando sobre ${selectedPassage} na Lectio Divina.`}
           />
           <div className="flex items-center gap-spacing-sm px-spacing-md py-spacing-sm rounded-premium bg-card border border-border shadow-premium-md">
-            <Icons.Timer className="w-spacing-md h-spacing-md text-primary/60" />
+            <Icons.Timer className="w-spacing-md h-spacing-md text-primary/85" />
             <span className="font-mono text-premium-lg font-bold text-foreground tabular-nums">{formatTime(seconds)}</span>
           </div>
         </div>

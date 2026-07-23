@@ -249,7 +249,7 @@ const ProfilePage: React.FC = () => {
         <CathedraButton 
           variant="outline" 
           onClick={() => navigate('/spiritual-profile')}
-          className="rounded-premium-full px-spacing-xl h-spacing-2xl border-primary/20 text-primary/60 font-bold uppercase tracking-widest text-[10px] hover:bg-primary hover:text-primary-foreground transition-all duration-700"
+          className="rounded-premium-full px-spacing-xl h-spacing-2xl border-primary/30 text-primary font-bold uppercase tracking-widest text-[10px] hover:bg-primary hover:text-primary-foreground transition-all duration-700"
         >
           <Icons.Sparkles className="w-spacing-md h-spacing-md mr-spacing-xs" />
           Ver Perfil Espiritual Contemplativo
@@ -280,7 +280,7 @@ const ProfilePage: React.FC = () => {
         <div>
           <h1 className="text-premium-2xl font-black text-foreground">{profile.name || 'Peregrino'}</h1>
           <p className="text-premium-xs text-muted-foreground uppercase tracking-widest font-bold">
-            {profile.is_premium ? '⭐ Erudito PRO' : 'Peregrino'} · Membro desde {memberSince}
+            Peregrino · Membro desde {memberSince}
           </p>
         </div>
       </div>
@@ -485,37 +485,8 @@ const ProfilePage: React.FC = () => {
         </div>
       </CathedraCard>
 
-      {!profile.is_premium && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-        >
-          <CathedraCard 
-            variant="interactive" 
-            padding="none"
-            className="border-secondary/50 bg-secondary/10 border-2 overflow-hidden relative group" 
-            onClick={() => navigate(AppRoute.PRICING)}
-          >
-            <div className="absolute top-spacing-0 right-0 p-spacing-lg opacity-20 group-hover:opacity-40 transition-all group-hover:scale-110">
-              <Icons.Star className="w-spacing-3xl h-spacing-3xl text-secondary fill-current" />
-            </div>
-            <div className="p-spacing-lg space-y-spacing-md">
-              <div className="flex items-center gap-spacing-xs mb-spacing-2xs">
-                <div className="px-spacing-xs py-spacing-3xs rounded-premium-full bg-secondary/20 text-amber-800 dark:text-secondary text-[10px] font-black uppercase tracking-widest border border-secondary/30">
-                  Acesso Completo
-                </div>
-              </div>
-              <h3 className="text-premium-xl font-serif text-foreground font-bold">Eleve sua vida espiritual ao nível PRO.</h3>
-              <p className="text-premium-sm text-muted-foreground leading-relaxed max-w-[280px]">
-                Desbloqueie todas as jornadas, o Logos ilimitado e ferramentas exclusivas de estudo.
-              </p>
-              <CathedraButton size="sm" className="bg-secondary hover:bg-secondary/90 text-amber-950 font-black text-[10px] uppercase tracking-widest h-spacing-xl px-spacing-lg">
-                Ver Planos <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-2xs" />
-              </CathedraButton>
-            </div>
-          </CathedraCard>
-        </motion.div>
-      )}
+      {/* CTA PRO removido conforme diretriz: esconder planos e créditos do usuário. */}
+
 
       <CathedraCard className="p-spacing-lg space-y-spacing-md">
         <h2 className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Editar Perfil</h2>
@@ -546,7 +517,7 @@ const ProfilePage: React.FC = () => {
             <Icons.Church className="w-spacing-md h-spacing-md text-primary" />
             <h3 className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Localização Eclesial</h3>
           </div>
-          <p className="text-[10px] text-muted-foreground -mt-spacing-xs">Opcional — ajuda a personalizar sua experiênica.</p>
+          <p className="text-[10px] text-muted-foreground -mt-spacing-xs">Opcional — ajuda a personalizar sua experiência.</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-md">
             <div className="space-y-spacing-2xs">
