@@ -40,3 +40,6 @@ verify_jwt = true
 [functions.glossary-rss]
 verify_jwt = false
 
+[functions.glossary-daily-audit]
+verify_jwt = false
+
