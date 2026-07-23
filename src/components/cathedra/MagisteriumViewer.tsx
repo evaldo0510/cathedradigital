@@ -150,12 +150,40 @@ const MagisteriumViewer: React.FC = () => {
           body: { url },
         });
 
-        if (invokeError) throw invokeError;
+        if (invokeError) {
+          // Extrai detalhes (attempts, tried, step) do corpo da resposta 4xx/5xx.
+          let details: any = null;
+          try {
+            const resp = (invokeError as any)?.context?.response;
+            if (resp && typeof resp.json === 'function') details = await resp.json();
+          } catch { /* body já consumido/indisponível */ }
+          if (details) {
+            console.warn('[Magisterium] edge error details', details);
+            (invokeError as any).details = details;
+            const attempts = details?.details?.attempts ?? details?.attempts;
+            if (Array.isArray(attempts) && attempts.length) {
+              const lines = attempts
+                .map((a: any) => `  • [${a.status || 'err'}] ${a.url} — ${a.reason}`)
+                .join('\n');
+              (invokeError as any).message =
+                `${details?.details?.message || details?.error || invokeError.message}\n\nURLs tentadas:\n${lines}`;
+            }
+          }
+          throw invokeError;
+        }
         if (!data?.text) throw new Error('Conteúdo não retornado pela função.');
 
-        const meta = (data as { meta?: { step?: string; content_length?: number } })?.meta;
+        const meta = (data as { meta?: { step?: string; content_length?: number; winning_url?: string; attempts?: Array<{url:string;status:number;reason:string}> } })?.meta;
         const text: string = data.text;
         const isThin = text.length < MIN_DOC_LEN;
+
+        if (meta?.attempts && meta.attempts.length > 1) {
+          console.info('[Magisterium] fallback usado', {
+            requested: url,
+            winner: meta.winning_url,
+            attempts: meta.attempts,
+          });
+        }
 
         if (isThin) {
           logMagisteriumDiag({
