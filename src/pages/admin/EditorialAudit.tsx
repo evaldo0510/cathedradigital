@@ -498,6 +498,56 @@ export default function EditorialAuditPage() {
 
       {!loading && !error && (
         <>
+          {/* Sprint 6.1 · CATHEDRA EDITORIAL — dashboard consolidado (Operação Ouro) */}
+          <Card className={`mb-6 ${v1Certified
+            ? "border-emerald-600/60 bg-gradient-to-br from-emerald-500/10 via-amber-400/10 to-transparent"
+            : "border-primary/30 bg-gradient-to-br from-primary/5 to-transparent"}`}>
+            <CardContent className="p-5">
+              <div className="flex flex-wrap items-baseline justify-between gap-3">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    Cathedra Editorial · Operação Ouro
+                  </p>
+                  <h2 className="font-serif text-2xl leading-tight">
+                    {v1Certified ? "Glossário Cathedra v1.0 — Certificado" : "Linha de produção editorial"}
+                  </h2>
+                </div>
+                {v1Certified && (
+                  <Badge className="bg-emerald-600 text-white shadow-sm">
+                    <Award className="mr-1 h-3.5 w-3.5" /> v1.0
+                  </Badge>
+                )}
+              </div>
+
+              <div className="mt-4 grid grid-cols-2 gap-2 text-xs sm:grid-cols-3 lg:grid-cols-9">
+                <Kpi label="ICE" value={`${totals.avg}%`} tone={toneFor(totals.avg)} />
+                <Kpi label="ICE ponderado" value={`${totals.avg_weighted}%`} tone={toneFor(totals.avg_weighted)} hint="peso doutrinário" />
+                <Kpi label="Editorial" value={`${totals.avg_editorial}%`} tone={toneFor(totals.avg_editorial)} />
+                <Kpi label="Nexus" value={`${totals.avg_nexus}%`} tone={toneFor(totals.avg_nexus)} />
+                <Kpi label="Cobertura" value={avgCoverage !== null ? `${avgCoverage}%` : "—"} tone={avgCoverage !== null ? toneFor(avgCoverage) : "neutral"} />
+                <Kpi
+                  label="Gate"
+                  value={snapshot ? `${snapshot.gate_passing}/${snapshot.gate_passing + snapshot.gate_failing}` : "—"}
+                  tone={snapshot && snapshot.gate_failing === 0 ? "ok" : "warn"}
+                />
+                <Kpi label="Quick wins" value={buckets.quick_win} tone={buckets.quick_win === 0 ? "ok" : "warn"} />
+                <Kpi label="Alto impacto" value={buckets.red} tone={buckets.red === 0 ? "ok" : "bad"} />
+                <Kpi label="Revisão" value={totals.needs_review} tone={totals.needs_review === 0 ? "ok" : "bad"} />
+              </div>
+
+              <p className="mt-3 text-[11px] text-muted-foreground">
+                Última auditoria:{" "}
+                <b>
+                  {snapshot
+                    ? new Date(snapshot.captured_at).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })
+                    : "nunca"}
+                </b>
+                {" · "}Meta Operação Ouro: zerar buckets → 0 quick wins, 0 alto impacto, 0 revisão.
+              </p>
+            </CardContent>
+          </Card>
+
+
           {/* Sprint 6.6 — Certificação Editorial Permanente */}
           {(() => {
             const ice_v = snapshot ? Number(snapshot.avg_ice) : totals.avg;
