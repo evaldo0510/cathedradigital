@@ -139,14 +139,14 @@ export const READER_MODULES: readonly ReaderModule[] = [
     status: 'certified',
     blocking: true,
   },
-  // ── Sub-onda C0.3 · Prayer Engine (fase 1: ReaderShell + Continuation) ─
+  // ── Sub-onda C0.3 · Prayer Engine (fase 2: MysteryNexusPanel removido) ─
   {
     id: 'prayer-engine',
     label: 'Prayer Engine (Rosário, Via Sacra, Novenas, Ladainhas)',
     entry: 'src/components/cathedra/PrayerEngineReader.tsx',
     sampleRoutes: ['/oracao'],
-    targetScore: 85,
-    status: 'partial', // fase 2: substituir MysteryNexusPanel legado
+    targetScore: 90,
+    status: 'certified',
     blocking: true,
   },
 ] as const;
@@ -196,7 +196,6 @@ export const FORBIDDEN_IMPORTS = [
 export const GUARDRAIL_ALLOWLIST: readonly string[] = [
   // Os próprios arquivos deprecados (serão removidos na Fase D)
   'src/components/cathedra/NexusBubbles.tsx',
-  'src/components/prayer/rosary/MysteryNexusPanel.tsx',
   // Primitivo shadcn (Popover base)
   'src/components/ui/popover.tsx',
   // ReferencePopover é o único wrapper autorizado
@@ -207,7 +206,6 @@ export const GUARDRAIL_ALLOWLIST: readonly string[] = [
   'src/components/cathedra/JornadaStepPage.tsx',       // Fase D
   'src/components/cathedra/MagisteriumViewer.tsx',     // Fase D
   'src/components/cathedra/SaintDetail.tsx',           // Fase D
-  'src/components/cathedra/PrayerEngineReader.tsx',    // sub-onda C.5
   'src/components/cathedra/MissalPage.tsx',            // sub-onda C.4
   'src/components/cathedra/MissaContinuousReader.tsx', // sub-onda C.4
   'src/components/cathedra/BreviaryPage.tsx',          // sub-onda C.4
