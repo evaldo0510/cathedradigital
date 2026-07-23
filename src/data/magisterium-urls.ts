@@ -63,7 +63,7 @@ export interface MagisteriumCategory {
 export const MAGISTERIUM_URLS: Record<string, string> = {
   // Documentos conciliares e dogmáticos (chaves por nome — legado)
   'Dei Filius': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700424_dei-filius_la.html',
-  'Ineffabilis Deus': 'https://www.vatican.va/content/pius-ix/la/documents/bulla-ineffabilis-deus-8-decembris-1854.html',
+  'Ineffabilis Deus': 'https://www.vatican.va/content/pius-ix/pt/documents/18541208-costituzione-apostolica-ineffabilis-deus.html',
   'Munificentissimus Deus': 'https://www.vatican.va/content/pius-xii/pt/apost_constitutions/documents/hf_p-xii_apc_19501101_munificentissimus-deus.html',
   'Pastor Aeternus': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700718_pastor-aeternus_la.html',
   'Mystici Corporis': 'https://www.vatican.va/content/pius-xii/pt/encyclicals/documents/hf_p-xii_enc_29061943_mystici-corporis-christi.html',
@@ -107,7 +107,7 @@ export const MAGISTERIUM_URLS: Record<string, string> = {
   // que o Viewer resolva `/magisterium/:slug` sem depender de nomes com espaço.
   'dfil': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700424_dei-filius_la.html',
   'paet': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700718_pastor-aeternus_la.html',
-  'ideus': 'https://www.vatican.va/content/pius-ix/la/documents/bulla-ineffabilis-deus-8-decembris-1854.html',
+  'ideus': 'https://www.vatican.va/content/pius-ix/pt/documents/18541208-costituzione-apostolica-ineffabilis-deus.html',
   'mdeus': 'https://www.vatican.va/content/pius-xii/pt/apost_constitutions/documents/hf_p-xii_apc_19501101_munificentissimus-deus.html',
   'bdeus': 'https://www.vatican.va/content/benedict-xii/la/documents/constitutio-dogmatica-benedictus-deus-29-ian-1336.html',
   'mcorp': 'https://www.vatican.va/content/pius-xii/pt/encyclicals/documents/hf_p-xii_enc_29061943_mystici-corporis-christi.html',
@@ -149,7 +149,7 @@ export const MAGISTERIUM_URLS: Record<string, string> = {
   'catecismo-igreja-catolica': 'https://www.vatican.va/archive/cathechism_po/index_po.htm',
   'dei-filius': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700424_dei-filius_la.html',
   'pastor-aeternus': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700718_pastor-aeternus_la.html',
-  'ineffabilis-deus': 'https://www.vatican.va/content/pius-ix/la/documents/bulla-ineffabilis-deus-8-decembris-1854.html',
+  'ineffabilis-deus': 'https://www.vatican.va/content/pius-ix/pt/documents/18541208-costituzione-apostolica-ineffabilis-deus.html',
   'munificentissimus-deus': 'https://www.vatican.va/content/pius-xii/pt/apost_constitutions/documents/hf_p-xii_apc_19501101_munificentissimus-deus.html',
   'benedictus-deus': 'https://www.vatican.va/content/benedict-xii/la/documents/constitutio-dogmatica-benedictus-deus-29-ian-1336.html',
   'mystici-corporis': 'https://www.vatican.va/content/pius-xii/pt/encyclicals/documents/hf_p-xii_enc_29061943_mystici-corporis-christi.html',
