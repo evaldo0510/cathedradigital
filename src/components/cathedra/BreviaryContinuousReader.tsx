@@ -25,6 +25,7 @@ import type { HourSlug, LiturgyHoursOfficeRow, OfficePsalmody } from '@/hooks/us
 import ReaderContinuation from '@/components/shared/ReaderContinuation';
 import { resolvePrayerAutoNexus } from '@/core/knowledge/adapters/prayerAutoNexus';
 import { PrayerTTSButton } from './PrayerTTSButton';
+import { LiturgyBlockCard } from './primitives/liturgy/LiturgyBlockCard';
 
 export interface BreviaryHourBundle {
   hourSlug: HourSlug;
@@ -51,65 +52,11 @@ interface Props {
 }
 
 /* ─────────────────────── SlotCard editorial ─────────────────────── */
+/* ─────────────────────── SlotCard editorial ───────────────────────
+ * Unificado via `LiturgyBlockCard` (Etapa 1 · Sprint C.4).
+ * ------------------------------------------------------------------ */
 
-interface SlotCardProps {
-  kicker: string;
-  title?: string;
-  text?: string | null;
-  note?: string | null;
-  variant?: 'default' | 'antiphon' | 'psalm' | 'concluding';
-  anchorId: string;
-  loading?: boolean;
-  celebrationMode?: boolean;
-}
-
-const SlotCard: React.FC<SlotCardProps> = ({
-  kicker, title, text, note, variant = 'default', anchorId, loading, celebrationMode,
-}) => (
-  <section
-    id={anchorId}
-    data-block-id={anchorId}
-    aria-label={title ?? kicker}
-    className={cn(
-      'scroll-mt-24 my-spacing-md rounded-2xl border p-spacing-md md:p-spacing-lg',
-      variant === 'antiphon' && 'border-primary/30 bg-primary/[0.03]',
-      variant === 'psalm' && 'border-border/60 bg-card/50',
-      variant === 'concluding' && 'border-primary/40 bg-primary/[0.05]',
-      variant === 'default' && 'border-border/60 bg-card/60',
-    )}
-  >
-    <div className="flex items-start justify-between gap-spacing-sm">
-      <p className="font-stitch-body text-[10px] font-black uppercase tracking-[0.3em] text-primary">
-        {kicker}
-      </p>
-      {text && !celebrationMode && (
-        <PrayerTTSButton text={[title, text].filter(Boolean).join('. ')} label="Ouvir" />
-      )}
-    </div>
-    {title && (
-      <h3 className="mt-spacing-2xs font-stitch-display text-premium-base md:text-premium-lg leading-tight text-foreground">
-        {title}
-      </h3>
-    )}
-    {loading ? (
-      <div className="mt-spacing-sm space-y-2">
-        <div className="h-3 w-full bg-muted/60 rounded animate-pulse" />
-        <div className="h-3 w-5/6 bg-muted/60 rounded animate-pulse" />
-      </div>
-    ) : text ? (
-      <p className={cn(
-        'mt-spacing-sm whitespace-pre-line font-stitch-display leading-[1.7] text-foreground',
-        celebrationMode ? 'text-premium-xl md:text-premium-2xl' : 'text-premium-base md:text-premium-lg',
-        variant === 'antiphon' && 'italic',
-      )}>{text}</p>
-    ) : null}
-    {note && (
-      <p className="mt-spacing-sm font-stitch-body text-premium-xs italic text-muted-foreground">
-        {note}
-      </p>
-    )}
-  </section>
-);
+const SlotCard = LiturgyBlockCard;
 
 /* ─────────────────────── Ordinário block ─────────────────────── */
 
