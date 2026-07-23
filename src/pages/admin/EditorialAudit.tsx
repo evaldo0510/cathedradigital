@@ -64,6 +64,8 @@ interface Row {
   reviewed_at: string | null;
   reviewed_by: string | null;
   version: number | null;
+  doctrinal_weight: number;
+  nexus_refs: Array<{ kind?: string; slug?: string; ref?: string; label?: string }>;
 }
 
 interface Totals {
@@ -77,7 +79,9 @@ interface Totals {
   avg: number;
   avg_editorial: number;
   avg_nexus: number;
+  avg_weighted: number;
 }
+
 
 interface ModuleStat {
   key: string;
@@ -220,8 +224,9 @@ export default function EditorialAuditPage() {
   const [rows, setRows] = useState<Row[]>([]);
   const [totals, setTotals] = useState<Totals>({
     total: 0, published: 0, drafts: 0, gold: 0, silver: 0, bronze: 0,
-    needs_review: 0, avg: 0, avg_editorial: 0, avg_nexus: 0,
+    needs_review: 0, avg: 0, avg_editorial: 0, avg_nexus: 0, avg_weighted: 0,
   });
+
   const [modules, setModules] = useState<ModuleStat[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -254,7 +259,7 @@ export default function EditorialAuditPage() {
       const [{ data: gData, error: e1 }, mods] = await Promise.all([
         supabase
           .from("glossary")
-          .select("slug,term,status,editorial_completeness,short_definition,definition,deep_interpretation,etymology,historical_context,practical_application,logos_meditation,faq,bibliography,bible_verses,catechism_references,fathers_refs,magisterium_references,nexus_refs,created_at,updated_at,published_at,reviewed_at,reviewed_by,version")
+          .select("slug,term,status,editorial_completeness,short_definition,definition,deep_interpretation,etymology,historical_context,practical_application,logos_meditation,faq,bibliography,bible_verses,catechism_references,fathers_refs,magisterium_references,nexus_refs,doctrinal_weight,created_at,updated_at,published_at,reviewed_at,reviewed_by,version")
           .order("term"),
         loadModuleStats(),
       ]);
@@ -276,6 +281,8 @@ export default function EditorialAuditPage() {
           pending: checks.filter(c => !c.ok && c.generable).length,
           created_at: r.created_at, updated_at: r.updated_at, published_at: r.published_at,
           reviewed_at: r.reviewed_at, reviewed_by: r.reviewed_by, version: r.version,
+          doctrinal_weight: typeof r.doctrinal_weight === "number" ? r.doctrinal_weight : 5,
+          nexus_refs: Array.isArray(r.nexus_refs) ? r.nexus_refs : [],
         };
       });
 
@@ -292,10 +299,13 @@ export default function EditorialAuditPage() {
       const avg = list.length ? Math.round(list.reduce((s, r) => s + r.score, 0) / list.length) : 0;
       const avg_editorial = list.length ? Math.round(list.reduce((s, r) => s + r.editorial_score, 0) / list.length) : 0;
       const avg_nexus = list.length ? Math.round(list.reduce((s, r) => s + r.nexus_score, 0) / list.length) : 0;
+      const weightSum = list.reduce((s, r) => s + (r.doctrinal_weight || 1), 0) || 1;
+      const avg_weighted = Math.round(list.reduce((s, r) => s + r.score * (r.doctrinal_weight || 1), 0) / weightSum);
 
       setRows(list);
-      setTotals({ total: list.length, published, drafts, gold, silver, bronze, needs_review, avg, avg_editorial, avg_nexus });
+      setTotals({ total: list.length, published, drafts, gold, silver, bronze, needs_review, avg, avg_editorial, avg_nexus, avg_weighted });
       setModules(mods);
+
     } catch (e: any) {
       setError(e?.message ?? String(e));
     } finally {
@@ -435,6 +445,35 @@ export default function EditorialAuditPage() {
   }, [totals]);
   const frozen = freezeCriteria.every(c => c.ok);
 
+  // Sprint 6.1 · Operação Ouro — verbetes que passam no gate (proxy client-side).
+  const passesGateSet = useMemo(() => {
+    const set = new Set<string>();
+    for (const r of rows) {
+      const need = ["deep_interpretation","faq","logos_meditation","bible_verses","catechism_references","fathers_refs"] as const;
+      const ok = need.every(f => r.checks.find(c => c.field === f)?.ok);
+      if (r.score >= 85 && r.editorial_score >= 90 && r.nexus_score >= 90 && ok) set.add(r.slug);
+    }
+    return set;
+  }, [rows]);
+
+  // Sprint 6.1 · buckets a partir da RPC de prioridade (fonte da verdade).
+  const buckets = useMemo(() => ({
+    quick_win: priorityRows.filter(r => r.priority === "quick_win").length,
+    red:       priorityRows.filter(r => r.priority === "red").length,
+    orange:    priorityRows.filter(r => r.priority === "orange").length,
+    yellow:    priorityRows.filter(r => r.priority === "yellow").length,
+  }), [priorityRows]);
+
+  // Sprint 6.1 · Certificação v1.0 — todos os 47 verbetes passam no gate oficial.
+  const v1Certified = !!snapshot && snapshot.gate_failing === 0 && snapshot.gate_passing > 0;
+
+  // Cobertura média por área (para o header consolidado)
+  const avgCoverage = useMemo(() => {
+    if (coverage.length === 0) return null;
+    return Math.round(coverage.reduce((s, c) => s + Number(c.avg_ice || 0), 0) / coverage.length);
+  }, [coverage]);
+
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
       <Helmet>
@@ -459,6 +498,56 @@ export default function EditorialAuditPage() {
 
       {!loading && !error && (
         <>
+          {/* Sprint 6.1 · CATHEDRA EDITORIAL — dashboard consolidado (Operação Ouro) */}
+          <Card className={`mb-6 ${v1Certified
+            ? "border-emerald-600/60 bg-gradient-to-br from-emerald-500/10 via-amber-400/10 to-transparent"
+            : "border-primary/30 bg-gradient-to-br from-primary/5 to-transparent"}`}>
+            <CardContent className="p-5">
+              <div className="flex flex-wrap items-baseline justify-between gap-3">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    Cathedra Editorial · Operação Ouro
+                  </p>
+                  <h2 className="font-serif text-2xl leading-tight">
+                    {v1Certified ? "Glossário Cathedra v1.0 — Certificado" : "Linha de produção editorial"}
+                  </h2>
+                </div>
+                {v1Certified && (
+                  <Badge className="bg-emerald-600 text-white shadow-sm">
+                    <Award className="mr-1 h-3.5 w-3.5" /> v1.0
+                  </Badge>
+                )}
+              </div>
+
+              <div className="mt-4 grid grid-cols-2 gap-2 text-xs sm:grid-cols-3 lg:grid-cols-9">
+                <Kpi label="ICE" value={`${totals.avg}%`} tone={toneFor(totals.avg)} />
+                <Kpi label="ICE ponderado" value={`${totals.avg_weighted}%`} tone={toneFor(totals.avg_weighted)} hint="peso doutrinário" />
+                <Kpi label="Editorial" value={`${totals.avg_editorial}%`} tone={toneFor(totals.avg_editorial)} />
+                <Kpi label="Nexus" value={`${totals.avg_nexus}%`} tone={toneFor(totals.avg_nexus)} />
+                <Kpi label="Cobertura" value={avgCoverage !== null ? `${avgCoverage}%` : "—"} tone={avgCoverage !== null ? toneFor(avgCoverage) : "neutral"} />
+                <Kpi
+                  label="Gate"
+                  value={snapshot ? `${snapshot.gate_passing}/${snapshot.gate_passing + snapshot.gate_failing}` : "—"}
+                  tone={snapshot && snapshot.gate_failing === 0 ? "ok" : "warn"}
+                />
+                <Kpi label="Quick wins" value={buckets.quick_win} tone={buckets.quick_win === 0 ? "ok" : "warn"} />
+                <Kpi label="Alto impacto" value={buckets.red} tone={buckets.red === 0 ? "ok" : "bad"} />
+                <Kpi label="Revisão" value={totals.needs_review} tone={totals.needs_review === 0 ? "ok" : "bad"} />
+              </div>
+
+              <p className="mt-3 text-[11px] text-muted-foreground">
+                Última auditoria:{" "}
+                <b>
+                  {snapshot
+                    ? new Date(snapshot.captured_at).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })
+                    : "nunca"}
+                </b>
+                {" · "}Meta Operação Ouro: zerar buckets → 0 quick wins, 0 alto impacto, 0 revisão.
+              </p>
+            </CardContent>
+          </Card>
+
+
           {/* Sprint 6.6 — Certificação Editorial Permanente */}
           {(() => {
             const ice_v = snapshot ? Number(snapshot.avg_ice) : totals.avg;
@@ -902,8 +991,9 @@ export default function EditorialAuditPage() {
                       })}
                     </div>
 
-                    {/* Pendências Inteligentes + Histórico (colapsáveis) */}
-                    <div className="grid gap-2 md:grid-cols-2">
+                    {/* Pendências Inteligentes + Dependências + Histórico */}
+                    <div className="grid gap-2 md:grid-cols-3">
+
                       {pendingGenerable.length > 0 && (
                         <Collapsible>
                           <CollapsibleTrigger className="flex w-full items-center gap-1.5 rounded border border-dashed px-2 py-1.5 text-[11px] font-medium text-amber-700 hover:bg-amber-500/5">
@@ -929,7 +1019,44 @@ export default function EditorialAuditPage() {
                         </Collapsible>
                       )}
 
+                      {/* Sprint 6.1 · Dependências conceituais (via nexus_refs kind=glossary) */}
+                      {(() => {
+                        const deps = Array.from(new Set(
+                          (r.nexus_refs || [])
+                            .filter(n => n?.kind === "glossary" && typeof n?.slug === "string")
+                            .map(n => n.slug as string)
+                            .filter(s => s !== r.slug),
+                        ));
+                        return (
+                          <Collapsible>
+                            <CollapsibleTrigger className="flex w-full items-center gap-1.5 rounded border border-dashed px-2 py-1.5 text-[11px] font-medium text-sky-700 hover:bg-sky-500/5">
+                              <History className="h-3.5 w-3.5" />
+                              Dependências ({deps.length})
+                              <ChevronDown className="ml-auto h-3 w-3" />
+                            </CollapsibleTrigger>
+                            <CollapsibleContent className="mt-1.5 rounded border bg-muted/20 p-2 text-[11px]">
+                              {deps.length === 0 ? (
+                                <p className="text-muted-foreground">Sem dependências mapeadas em <code>nexus_refs</code>.</p>
+                              ) : (
+                                <ul className="grid grid-cols-2 gap-x-3 gap-y-0.5">
+                                  {deps.map(dep => {
+                                    const ok = passesGateSet.has(dep);
+                                    return (
+                                      <li key={dep} className="flex items-center gap-1">
+                                        <span className={ok ? "text-emerald-600" : "text-red-600"}>{ok ? "✔" : "✘"}</span>
+                                        <Link to={`/admin/glossario?slug=${dep}`} className="hover:underline truncate">{dep}</Link>
+                                      </li>
+                                    );
+                                  })}
+                                </ul>
+                              )}
+                            </CollapsibleContent>
+                          </Collapsible>
+                        );
+                      })()}
+
                       <Collapsible>
+
                         <CollapsibleTrigger className="flex w-full items-center gap-1.5 rounded border border-dashed px-2 py-1.5 text-[11px] font-medium text-muted-foreground hover:bg-muted/40">
                           <History className="h-3.5 w-3.5" />
                           Histórico Editorial
@@ -1023,3 +1150,26 @@ function Summary({
     </div>
   );
 }
+
+type KpiTone = "ok" | "warn" | "bad" | "neutral";
+function toneFor(v: number): KpiTone {
+  if (v >= 95) return "ok";
+  if (v >= 85) return "neutral";
+  if (v >= 70) return "warn";
+  return "bad";
+}
+function Kpi({ label, value, tone = "neutral", hint }: { label: string; value: string | number; tone?: KpiTone; hint?: string }) {
+  const cls =
+    tone === "ok" ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-700"
+    : tone === "warn" ? "border-amber-500/40 bg-amber-500/10 text-amber-700"
+    : tone === "bad" ? "border-red-500/40 bg-red-500/10 text-red-700"
+    : "border-border bg-background";
+  return (
+    <div className={`rounded-md border px-2.5 py-2 ${cls}`}>
+      <p className="text-[9px] font-bold uppercase tracking-widest opacity-70">{label}</p>
+      <p className="mt-0.5 text-base font-bold tabular-nums leading-tight">{value}</p>
+      {hint && <p className="text-[9px] opacity-60">{hint}</p>}
+    </div>
+  );
+}
+
