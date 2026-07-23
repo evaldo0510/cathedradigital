@@ -260,6 +260,7 @@ const AtriumHome: React.FC = () => {
             </article>
           </div>
         </section>
+        )}
 
         {/* ─── Cinco Ambientes (P4) ──────────────────────────────────── */}
         <section className="mt-16">
