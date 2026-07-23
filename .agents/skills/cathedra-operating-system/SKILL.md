@@ -131,6 +131,44 @@ Um PR que introduza um módulo textual sem esses primitivos é **automaticamente
 
 ---
 
+## 12. Regra da Homologação Sequencial (congelada em v1.3)
+
+Enquanto existir **qualquer onda aberta da Sprint C0** (Homologação Geral Cathedra), é PROIBIDO:
+
+- iniciar Sprint K (Catequese)
+- iniciar Sprint I (Identidade)
+- abrir qualquer módulo textual novo fora do plano C0
+- promover mudanças estéticas amplas fora do escopo da onda vigente
+
+Correções pontuais de bug, segurança e a11y continuam permitidas. Toda outra frente entra na fila.
+
+Justificativa: a dívida de padronização só é debelada se cada módulo vigente for fechado antes que o próximo se abra. Quebrar a sequência recria os débitos que a C0 existe para eliminar.
+
+Plano oficial congelado:
+
+```
+Sprint C0
+├── C0.1  Missal                 [CERTIFIED]
+├── C0.2  Liturgia das Horas     [CERTIFIED]
+├── C0.3  Santos
+├── C0.4  Rosário
+├── C0.5  Via Sacra
+├── C0.6  Bíblia
+├── C0.7  Catecismo
+├── C0.8  Jornadas
+├── C0.9  Coleções
+└── C0.10 ICE Universal (Essencial → Gate por módulo em C0.6.2/fase 2)
+
+Sprint K  · Catequese
+Sprint I  · Identidade Cathedra
+```
+
+**ICE Universal (C0.10)** entrega apenas o núcleo essencial:
+`editorial_completeness`, ICE 0–100, badge Ouro/Prata/Bronze/Revisão, snapshots e leitura no Mission Control — **sem gate bloqueante**. Gates específicos por entidade (manifesto próprio + certificação individual) só entram numa fase 2 após cada módulo ter sido homologado na C0.
+
+---
+
+
 ## 4. Matriz de Impacto (obrigatória antes de editar)
 
 Gerar internamente e declarar no início da execução:
