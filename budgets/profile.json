@@ -1,0 +1,16 @@
+{
+  "$schema": "https://raw.githubusercontent.com/GoogleChrome/lighthouse/main/types/budget.json",
+  "path": "/profile",
+  "resourceSizes": [
+    { "resourceType": "script", "budget": 500 },
+    { "resourceType": "image", "budget": 250 },
+    { "resourceType": "total", "budget": 1500 }
+  ],
+  "timings": [
+    { "metric": "largest-contentful-paint", "budget": 3000 },
+    { "metric": "cumulative-layout-shift", "budget": 150 },
+    { "metric": "total-blocking-time", "budget": 400 },
+    { "metric": "interactive", "budget": 5000 },
+    { "metric": "speed-index", "budget": 4500 }
+  ]
+}
