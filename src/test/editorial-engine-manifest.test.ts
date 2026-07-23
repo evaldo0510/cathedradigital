@@ -85,4 +85,3 @@ describe("Editorial Engine · Manifest Validation", () => {
     expect(ready.map(m => m.id).sort()).toEqual(["glossary", "saints"]);
   });
 });
-});
