@@ -167,10 +167,10 @@ function runAudit() {
 const { reports, lastBuild, history } = runAudit();
 
 // Schema Validation for compliance-config.yml
-const ThresholdSchema = z.number({
-  error: (issue) =>
-    issue.input === undefined ? "Threshold é obrigatório" : "Deve ser um número",
-}).min(0, "O valor mínimo é 0").max(100, "O valor máximo é 100");
+const ThresholdSchema = z
+  .number({ invalid_type_error: "Deve ser um número", required_error: "Threshold é obrigatório" })
+  .min(0, "O valor mínimo é 0")
+  .max(100, "O valor máximo é 100");
 
 const PageThresholdsSchema = z.strictObject({
   layout: ThresholdSchema.optional(),
