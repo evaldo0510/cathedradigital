@@ -22,7 +22,14 @@ import type { PrayerBlock } from '@/types/prayer';
 import type { Prayer } from '@/hooks/usePrayers';
 import type { DailyLiturgy } from '@/core/liturgy/LiturgyProvider';
 import type { MissalProperRow } from '@/hooks/useMissalProper';
-import ReaderContinuation from '@/components/shared/ReaderContinuation';
+import {
+  ReaderShell,
+  EditorialHero,
+  LiturgicalContext,
+  NexusPanel,
+  ReaderContinuation,
+} from '@/components/reader';
+
 import { resolvePrayerAutoNexus } from '@/core/knowledge/adapters/prayerAutoNexus';
 import { useReaderTypography } from '@/hooks/useReaderTypography';
 import { useSaintOfDay } from '@/hooks/useSaintOfDay';
@@ -369,8 +376,34 @@ export const MissaContinuousReader: React.FC<Props> = ({
     return null;
   };
 
-  return (
-    <div className={cn('mx-auto max-w-3xl', celebrationMode ? 'px-spacing-md' : 'px-spacing-sm')}>
+  const dateLabel = new Date(isoDate + 'T00:00:00').toLocaleDateString('pt-BR', {
+    weekday: 'long', day: 'numeric', month: 'long',
+  });
+  const celebrationTitle = proper?.celebration_title || (properLoading ? '…' : 'Missa do Dia');
+  const liturgicalColor = proper?.liturgical_color ?? liturgy?.cor ?? null;
+  const liturgicalSeason = liturgy?.season ?? proper?.season_note ?? null;
+
+  const hero = !celebrationMode ? (
+    <EditorialHero
+      kicker={`Santa Missa · ${dateLabel}`}
+      title={celebrationTitle}
+      subtitle={saint?.name ? `Memória: ${saint.name}` : undefined}
+      align="center"
+      size="md"
+    />
+  ) : null;
+
+  const headerContext = !celebrationMode ? (
+    <LiturgicalContext
+      date={dateLabel}
+      celebration={celebrationTitle}
+      color={liturgicalColor ?? undefined}
+      season={liturgicalSeason ?? undefined}
+    />
+  ) : null;
+
+  const body = (
+    <div className={cn(celebrationMode && 'px-spacing-md')}>
       <div
         role="progressbar"
         aria-valuenow={Math.round(progress * 100)}
@@ -382,18 +415,8 @@ export const MissaContinuousReader: React.FC<Props> = ({
         <div className="h-full bg-gradient-to-r from-primary via-primary to-primary transition-[width] duration-300" style={{ width: `${progress * 100}%` }} />
       </div>
 
-      {(proper || properLoading) && !celebrationMode && (
-        <header className="text-center py-spacing-lg">
-          <p className="font-stitch-body text-[11px] font-black uppercase tracking-[0.3em] text-primary">
-            Santa Missa · {new Date(isoDate + 'T00:00:00').toLocaleDateString('pt-BR', {
-              weekday: 'long', day: 'numeric', month: 'long',
-            })}
-          </p>
-          <h2 className="mt-spacing-2xs font-stitch-display text-premium-2xl md:text-premium-3xl text-foreground">
-            {proper?.celebration_title || (properLoading ? '…' : 'Missa do Dia')}
-          </h2>
-          <LiturgyRichHeader liturgy={liturgy} proper={proper} saintOfDay={saint?.name ?? null} isoDate={isoDate} />
-        </header>
+      {!celebrationMode && (
+        <LiturgyRichHeader liturgy={liturgy} proper={proper} saintOfDay={saint?.name ?? null} isoDate={isoDate} />
       )}
 
       <div ref={scrollRef} style={typographyStyle}>
@@ -425,18 +448,7 @@ export const MissaContinuousReader: React.FC<Props> = ({
         })}
       </div>
 
-      {/* C6: Ação concreta */}
       <MissaClosingActionCard gospelSummary={liturgy?.evangelho?.texto ?? null} />
-
-      {/* Nexus automático */}
-      {!celebrationMode && (
-        <div className="mt-spacing-lg border-t border-border/40 pt-spacing-xl">
-          <ReaderContinuation
-            context={{ kind: 'prayer', id: prayer.id }}
-            suggestions={nexus.suggestions}
-          />
-        </div>
-      )}
 
       {currentBlockId && import.meta.env.DEV && (
         <p className="sr-only" aria-live="polite">Bloco atual: {currentBlockId}</p>
@@ -445,7 +457,31 @@ export const MissaContinuousReader: React.FC<Props> = ({
       <BackToTopFab />
     </div>
   );
+
+  if (celebrationMode) {
+    // Modo Celebração: chrome removido; apenas o corpo é renderizado.
+    return <div className="mx-auto max-w-3xl px-spacing-md">{body}</div>;
+  }
+
+  return (
+    <ReaderShell
+      hero={hero}
+      headerContext={headerContext}
+      contentMaxWidth="max-w-3xl"
+      ariaLabel="Santa Missa"
+      nexus={<NexusPanel output={nexus} />}
+      continuation={
+        <ReaderContinuation
+          context={{ kind: 'prayer', id: prayer.id }}
+          suggestions={nexus.suggestions}
+        />
+      }
+    >
+      {body}
+    </ReaderShell>
+  );
 };
+
 
 const BackToTopFab: React.FC = () => {
   const [show, setShow] = useState(false);
