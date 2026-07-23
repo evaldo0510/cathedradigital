@@ -67,6 +67,12 @@ export const ROUTE_META: Record<string, RouteMeta> = {
       'Lista completa dos dogmas católicos com definição, contexto histórico e fontes magisteriais.',
   },
 
+  '/atrium': {
+    title: 'Átrio — Cathedra Digital',
+    description:
+      'Portal interno da Cathedra: acesse Bíblia, Catecismo, Liturgia, Orações e Logos AI em um único ambiente contemplativo.',
+  },
+
   // ─── Vida de Oração (Igreja) ──────────────────────────────────
   '/oracao': {
     title: 'Livro de Orações Católicas — Cathedra',
