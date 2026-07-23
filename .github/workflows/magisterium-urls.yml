@@ -1,0 +1,29 @@
+name: Magisterium URLs availability
+
+on:
+  pull_request:
+    paths:
+      - 'src/data/magisterium-urls.ts'
+      - 'src/test/magisteriumUrls.availability.test.ts'
+      - '.github/workflows/magisterium-urls.yml'
+  workflow_dispatch:
+  schedule:
+    # Executa diariamente às 06:00 UTC para detectar quando o vatican.va
+    # move ou remove um documento antes de o pipeline principal quebrar.
+    - cron: '0 6 * * *'
+
+jobs:
+  check-urls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Validar disponibilidade das URLs
+        env:
+          CHECK_MAGISTERIUM_URLS: '1'
+        run: npx vitest run src/test/magisteriumUrls.availability.test.ts --reporter=verbose
