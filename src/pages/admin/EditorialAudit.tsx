@@ -1172,6 +1172,60 @@ export default function EditorialAuditPage() {
             );
           })()}
 
+          {/* Sprint 6.1.1a — Histórico de operações editoriais */}
+          {jobs.length > 0 && (
+            <Card className="mb-6">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm flex items-center gap-2">
+                  <History className="h-4 w-4 text-primary" />
+                  Últimas operações editoriais
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="max-h-64 overflow-y-auto">
+                  <table className="w-full text-xs">
+                    <thead className="sticky top-0 bg-muted/60 text-[10px] uppercase tracking-wider">
+                      <tr>
+                        <th className="px-3 py-2 text-left">Quando</th>
+                        <th className="px-2 py-2 text-left">Bucket</th>
+                        <th className="px-2 py-2 text-right">Tarefas</th>
+                        <th className="px-2 py-2 text-right">✓ / ✗</th>
+                        <th className="px-2 py-2 text-right">Duração</th>
+                        <th className="px-2 py-2 text-right">Δ ICE</th>
+                        <th className="px-2 py-2 text-left">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                      {jobs.map(j => {
+                        const dur = j.duration_ms ? `${Math.floor(j.duration_ms / 60000)}m${String(Math.floor((j.duration_ms % 60000) / 1000)).padStart(2, "0")}s` : "—";
+                        const delta = j.ice_delta ?? 0;
+                        return (
+                          <tr key={j.id} className="hover:bg-muted/30">
+                            <td className="px-3 py-1.5 text-muted-foreground tabular-nums">{new Date(j.started_at).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
+                            <td className="px-2 py-1.5">{j.bucket}</td>
+                            <td className="px-2 py-1.5 text-right tabular-nums">{j.tasks_total}</td>
+                            <td className="px-2 py-1.5 text-right tabular-nums">
+                              <span className="text-emerald-700">{j.tasks_ok}</span>
+                              <span className="mx-0.5 text-muted-foreground">/</span>
+                              <span className="text-red-700">{j.tasks_fail}</span>
+                            </td>
+                            <td className="px-2 py-1.5 text-right tabular-nums">{dur}</td>
+                            <td className={`px-2 py-1.5 text-right tabular-nums font-semibold ${delta > 0 ? "text-emerald-700" : delta < 0 ? "text-red-700" : "text-muted-foreground"}`}>
+                              {delta > 0 ? "+" : ""}{Number(delta).toFixed(1)}
+                            </td>
+                            <td className="px-2 py-1.5">
+                              <Badge variant="outline" className="h-4 px-1 text-[9px]">{j.status}</Badge>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Sprint 6.6 — Quality Gate (critérios de bloqueio de publicação) */}
           <Card className="mb-6 border-l-4 border-l-primary">
             <CardHeader className="pb-2">
