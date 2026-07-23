@@ -569,12 +569,14 @@ const Catechism: React.FC = memo(() => {
     return (
       <ContemplativeLayout>
         <div className="w-full space-y-spacing-lg md:space-y-spacing-2xl pb-spacing-2xl md:pb-spacing-4xl">
-          <EditorialReaderHeader
+          <EditorialHero
             kicker={`Catecismo · ${selectedPart.part}`}
             title={selectedPart.title}
-            subtitle="Selecione uma seção para iniciar a leitura"
-            meta={`${selectedPart.sections.length} seções`}
+            subtitle={`Selecione uma seção para iniciar a leitura · ${selectedPart.sections.length} seções`}
+            size="sm"
+            parchment
           />
+
 
           <div className="flex justify-center">
             <Button variant="ghost" onClick={goBack} className="px-spacing-xl py-spacing-sm h-auto rounded-premium-full text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 hover:text-primary border border-primary/5 transition-all">
