@@ -22,7 +22,7 @@ describe('getAvatarSources', () => {
     expect(out.srcSet).toMatch(/96w/);
     expect(out.srcSet).toMatch(/192w/);
     expect(out.srcSet).toMatch(/384w/);
-    expect(out.sizes).toBe('(max-width: 640px) 96px, 128px');
+    expect(out.sizes).toBe('(max-width: 640px) 64px, 96px');
   });
 
   it('preserva cache-busters e descarta parâmetros de transformação prévios', () => {

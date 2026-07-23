@@ -59,8 +59,8 @@ export const getAvatarSources = (
   return {
     src: build(largest),
     srcSet,
-    // Avatar do hero tem ~96px em mobile e ~128px em telas maiores; o
-    // navegador escolhe a variante mais próxima do DPR.
-    sizes: '(max-width: 640px) 96px, 128px',
+    // Avatar do hero tem 64px em mobile e 96px em telas ≥sm; o navegador
+    // escolhe a variante mais próxima do DPR (2x → 128/192w).
+    sizes: '(max-width: 640px) 64px, 96px',
   };
 };
