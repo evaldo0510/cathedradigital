@@ -41,6 +41,8 @@
     "test:report": "playwright test tests/e2e/generate-final-report.spec.ts",
     "test:pdf": "bun run scripts/generate-pdf-report.ts",
     "a11y:local": "BASE_URL=${BASE_URL:-http://127.0.0.1:8080} python3 scripts/a11y-axe-report.py",
+    "a11y:baseline:update": "python3 scripts/a11y-update-baseline.py",
+    "a11y:baseline:update:ci": "python3 scripts/a11y-update-baseline.py --yes",
     "test:performance": "playwright test tests/performance/mobile-performance.spec.ts",
     "test:system-audit": "bun run scripts/audit-visual-system.ts",
     "test:sitemap": "bun run scripts/validate-sitemap.ts",
