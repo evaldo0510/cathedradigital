@@ -64,6 +64,8 @@ interface Row {
   reviewed_at: string | null;
   reviewed_by: string | null;
   version: number | null;
+  doctrinal_weight: number;
+  nexus_refs: Array<{ kind?: string; slug?: string; ref?: string; label?: string }>;
 }
 
 interface Totals {
@@ -77,7 +79,9 @@ interface Totals {
   avg: number;
   avg_editorial: number;
   avg_nexus: number;
+  avg_weighted: number;
 }
+
 
 interface ModuleStat {
   key: string;
