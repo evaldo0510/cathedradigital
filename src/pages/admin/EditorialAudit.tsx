@@ -1019,7 +1019,44 @@ export default function EditorialAuditPage() {
                         </Collapsible>
                       )}
 
+                      {/* Sprint 6.1 · Dependências conceituais (via nexus_refs kind=glossary) */}
+                      {(() => {
+                        const deps = Array.from(new Set(
+                          (r.nexus_refs || [])
+                            .filter(n => n?.kind === "glossary" && typeof n?.slug === "string")
+                            .map(n => n.slug as string)
+                            .filter(s => s !== r.slug),
+                        ));
+                        return (
+                          <Collapsible>
+                            <CollapsibleTrigger className="flex w-full items-center gap-1.5 rounded border border-dashed px-2 py-1.5 text-[11px] font-medium text-sky-700 hover:bg-sky-500/5">
+                              <History className="h-3.5 w-3.5" />
+                              Dependências ({deps.length})
+                              <ChevronDown className="ml-auto h-3 w-3" />
+                            </CollapsibleTrigger>
+                            <CollapsibleContent className="mt-1.5 rounded border bg-muted/20 p-2 text-[11px]">
+                              {deps.length === 0 ? (
+                                <p className="text-muted-foreground">Sem dependências mapeadas em <code>nexus_refs</code>.</p>
+                              ) : (
+                                <ul className="grid grid-cols-2 gap-x-3 gap-y-0.5">
+                                  {deps.map(dep => {
+                                    const ok = passesGateSet.has(dep);
+                                    return (
+                                      <li key={dep} className="flex items-center gap-1">
+                                        <span className={ok ? "text-emerald-600" : "text-red-600"}>{ok ? "✔" : "✘"}</span>
+                                        <Link to={`/admin/glossario?slug=${dep}`} className="hover:underline truncate">{dep}</Link>
+                                      </li>
+                                    );
+                                  })}
+                                </ul>
+                              )}
+                            </CollapsibleContent>
+                          </Collapsible>
+                        );
+                      })()}
+
                       <Collapsible>
+
                         <CollapsibleTrigger className="flex w-full items-center gap-1.5 rounded border border-dashed px-2 py-1.5 text-[11px] font-medium text-muted-foreground hover:bg-muted/40">
                           <History className="h-3.5 w-3.5" />
                           Histórico Editorial
