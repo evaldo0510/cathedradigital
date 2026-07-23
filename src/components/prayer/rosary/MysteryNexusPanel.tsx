@@ -1,11 +1,20 @@
 /**
- * MysteryNexusPanel — carrega automaticamente as conexões teológicas do
- * mistério exibido no anúncio: Evangelho principal, passagens paralelas,
- * catecismo, Padre da Igreja e santos que meditaram o mistério.
+ * @deprecated Reader Architecture Rule (COS §10 / v1.1):
+ *   `MysteryNexusPanel` está proibido. Substituir por `NexusPanel` alimentado
+ *   pelo adapter `prayerAutoNexus` — a projeção do mistério vira apenas o
+ *   `output` passado ao componente canônico.
+ *   Ver docs/reader-architecture-master.md e src/components/reader/.
+ *   Será removido na Fase F da Sprint Nexus 2.0.
  *
- * Todo conteúdo vem de `prayer_mysteries.meta` — nunca hardcoded.
- * Integração natural com o Nexus (links SPA).
+ * MysteryNexusPanel — carrega automaticamente as conexões teológicas do
+ * mistério exibido no anúncio.
  */
+if (import.meta.env.DEV) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    '[Cathedra] MysteryNexusPanel é deprecated. Use NexusPanel de @/components/reader com prayerAutoNexus. Ver docs/reader-architecture-master.md',
+  );
+}
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Church, ScrollText, Users, Quote, Landmark, Palette, Library } from 'lucide-react';
