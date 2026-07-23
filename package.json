@@ -105,6 +105,8 @@
     "axe:contrast:tracked-all": "bunx tsx scripts/axe-contrast-run.ts --all-tracked --aggregate",
     "axe:contrast:autofix": "bunx tsx scripts/axe-contrast-run.ts --autofix --aggregate",
     "lh:profile:local": "bun run scripts/lighthouse-run.mjs",
+    "lh:profile:local:unauth": "LH_ALLOW_UNAUTH=1 bun run scripts/lighthouse-run.mjs",
+    "lh:ensure-user": "node scripts/lighthouse-ensure-user.mjs",
     "lh:profile:compare": "node scripts/lhci-compare-commits.mjs"
   },
   "dependencies": {
