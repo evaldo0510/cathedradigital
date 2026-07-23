@@ -383,7 +383,7 @@ const ProfilePage: React.FC = () => {
         <CathedraCard className="p-spacing-xl">
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-spacing-lg">
             <div className="relative w-spacing-4xl h-spacing-4xl group shrink-0">
-              <Avatar className="w-spacing-4xl h-spacing-4xl border-4 border-primary/20">
+              <Avatar className="w-spacing-3xl h-spacing-3xl sm:w-spacing-4xl sm:h-spacing-4xl border-4 border-primary/20 shrink-0">
                 {(() => {
                   const sources = getAvatarSources(avatarUrl);
                   if (!sources) return null;
@@ -395,6 +395,7 @@ const ProfilePage: React.FC = () => {
                       alt={profile.name}
                       loading="lazy"
                       decoding="async"
+                      className="aspect-square h-full w-full object-cover object-center"
                       // @ts-expect-error — atributo válido em HTML mas ainda não tipado por completo
                       fetchpriority="low"
                     />
