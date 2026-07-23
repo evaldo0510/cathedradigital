@@ -205,7 +205,7 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
             className={`flex flex-col items-center justify-center shrink-0 snap-start whitespace-nowrap min-w-[56px] max-w-[64px] h-spacing-3xl rounded-premium-full border transition-all ${
               isSameDay(date, value)
                 ? 'bg-primary border-primary text-primary-foreground shadow-premium shadow-primary/20 scale-110'
-                : 'bg-card border-border text-muted-foreground hover:border-primary/30 hover:text-primary'
+                : 'bg-card border-border text-foreground/75 hover:border-primary/30 hover:text-primary'
             }`}
             aria-label={format(date, "dd 'de' MMMM", { locale: ptBR })}
             aria-pressed={isSameDay(date, value)}
