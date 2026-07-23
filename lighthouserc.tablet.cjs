@@ -6,7 +6,11 @@ const path = require('path');
 module.exports = {
   ci: {
     collect: {
-      url: [(process.env.LH_BASE_URL || 'http://localhost:8080') + '/profile'],
+      url: (process.env.LH_ROUTES || '/profile')
+        .split(',')
+        .map((r) => r.trim())
+        .filter(Boolean)
+        .map((r) => (process.env.LH_BASE_URL || 'http://localhost:8080') + r),
       numberOfRuns: 3,
       puppeteerScript: path.resolve(__dirname, 'scripts/lighthouse-puppeteer-login.mjs'),
       puppeteerLaunchOptions: { args: ['--no-sandbox', '--disable-dev-shm-usage'] },
