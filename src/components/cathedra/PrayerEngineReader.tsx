@@ -1009,19 +1009,89 @@ export const PrayerEngineReader: React.FC<Props> = ({
     );
   }
 
+  // Nexus canônico da oração inteira (usado pelo slot do ReaderShell).
+  const prayerNexus = useMemo(
+    () =>
+      resolvePrayerAutoNexus({
+        slug: prayer.slug,
+        title: prayer.title,
+        category: prayer.category,
+        related_bible: prayer.related_bible,
+        related_catechism: prayer.related_catechism,
+        related_saints: prayer.related_saints,
+        related_glossary: prayer.related_glossary,
+        block_refs: blocks.map((b) => ({
+          bible: b.refs?.bible,
+          catechism: b.refs?.catechism,
+        })),
+      }),
+    [prayer, blocks],
+  );
+
+  // Rota de exceção: MysteryHero (Rosário) toma a tela inteira antes da
+  // dezena — não passa pelo ReaderShell, análogo ao Modo Celebração do Missal.
+  if (heroContent) {
+    return (
+      <>
+        <MobileTopBar kicker={chromeKicker} title={prayer.title} showBack />
+        {heroContent}
+        <div ref={prefetchSentinelRef} aria-hidden className="h-px w-full" />
+        <MobileBottomNav />
+        <ResetDialog open={confirmReset} onOpenChange={setConfirmReset} onConfirm={handleReset} />
+      </>
+    );
+  }
+
   return (
     <>
       <MobileTopBar kicker={chromeKicker} title={prayer.title} showBack />
-      <EditorialReaderChrome
-        kicker={chromeKicker}
-        title={prayer.title}
-        subtitle={prayer.subtitle ?? undefined}
-        backHref="/oracao"
-      />
-      {heroContent ?? content}
-      {/* Sentinela invisível para IntersectionObserver do prefetch adaptativo. */}
+      <ReaderShell
+        hero={
+          <EditorialHero
+            kicker={chromeKicker}
+            title={prayer.title}
+            subtitle={prayer.subtitle ?? undefined}
+            align="center"
+            size="md"
+          />
+        }
+        headerContext={
+          <PrayerContext
+            category={prayer.category ?? undefined}
+            station={
+              currentMystery
+                ? `${activeSection?.title ? activeSection.title + ' · ' : ''}${currentMystery.title}`
+                : undefined
+            }
+            step={
+              !isSimple
+                ? `${cursorIndex + 1} de ${blocks.length}`
+                : undefined
+            }
+          />
+        }
+        contentMaxWidth="max-w-[720px]"
+        ariaLabel={prayer.title}
+        nexus={<NexusPanel output={prayerNexus} />}
+        continuation={
+          isLastOverall && prayerNexus.suggestions.length > 0 ? (
+            <ReaderContinuation
+              context={{
+                kind: 'prayer',
+                id: prayer.slug,
+                graphNodeId: prayerNexus.selfId ?? undefined,
+                meta: { prayerCategory: prayer.category },
+              }}
+              suggestions={prayerNexus.suggestions}
+            />
+          ) : undefined
+        }
+      >
+        {content}
+      </ReaderShell>
       <div ref={prefetchSentinelRef} aria-hidden className="h-px w-full" />
       <MobileBottomNav />
+
       <ResetDialog open={confirmReset} onOpenChange={setConfirmReset} onConfirm={handleReset} />
     </>
   );
