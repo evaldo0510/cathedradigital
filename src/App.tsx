@@ -89,6 +89,9 @@ const Index = lazy(() => import('./pages/Index'));
 const HomeUnified = lazy(() => import('./pages/HomeUnified'));
 const AtriumHome = lazy(() => import('./pages/AtriumHome'));
 const PublicLanding = lazy(() => import('./pages/PublicLanding'));
+import RootGate from './components/cathedra/RootGate';
+import { setLastRoute, resolveAuthHome } from './lib/lastRoute';
+
 const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
 const SpiritualProfile = lazy(() => import('./components/cathedra/SpiritualProfile'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
