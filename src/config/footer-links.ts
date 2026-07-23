@@ -26,8 +26,12 @@ export interface FooterLink {
 /** Links institucionais que aparecem SEMPRE no footer público. */
 export const PUBLIC_FOOTER_LINKS: FooterLink[] = [
   { path: '/about', label: 'Sobre' },
+  { path: '/manifesto', label: 'Manifesto' },
   { path: '/partners', label: 'Parceiros' },
+  { path: '/contato', label: 'Contato' },
+  { path: '/legal', label: 'Centro Legal' },
   { path: '/privacy', label: 'Privacidade' },
+  { path: '/legal/lgpd', label: 'LGPD' },
   { path: '/terms', label: 'Termos' },
   { path: '/transparencia', label: 'Transparência' },
 ];
