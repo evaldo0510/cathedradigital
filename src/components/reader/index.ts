@@ -34,12 +34,15 @@ export {
   JourneyContext,
   CatechesisContext,
   StudyContext,
+  PrayerContext,
   type HeaderContextProps,
   type LiturgicalContextProps,
   type JourneyContextProps,
   type CatechesisContextProps,
   type StudyContextProps,
+  type PrayerContextProps,
 } from './HeaderContext';
+
 export { NexusPanel, type NexusPanelProps } from '@/components/nexus/NexusPanel';
 export { default as ReaderContinuation } from '@/components/shared/ReaderContinuation';
 export { EditorialHero } from '@/components/editorial';
