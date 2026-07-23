@@ -343,7 +343,7 @@ const AtriumHome: React.FC = () => {
                       style={{ width: `${pct}%` }}
                     />
                   </div>
-                  <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-tighter text-stitch-on-surface-variant/70">
+                  <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-tighter text-stitch-on-surface-variant/95">
                     <span>{pct}%</span>
                     <span className="transition-colors group-hover:text-stitch-primary">
                       Retomar

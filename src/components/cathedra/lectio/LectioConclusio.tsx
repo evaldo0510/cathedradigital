@@ -65,14 +65,14 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
         transition={{ delay: 0.5 }}
       >
         <div className="flex items-center gap-spacing-sm px-spacing-lg py-spacing-md rounded-premium bg-card border border-border">
-          <Icons.Clock className="w-spacing-md h-spacing-md text-primary/60" />
+          <Icons.Clock className="w-spacing-md h-spacing-md text-primary/85" />
           <div>
             <p className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Tempo</p>
             <p className="font-mono text-premium-xl font-bold text-foreground">{formatTime(seconds)}</p>
           </div>
         </div>
         <div className="flex items-center gap-spacing-sm px-spacing-lg py-spacing-md rounded-premium bg-card border border-border">
-          <Icons.PenTool className="w-spacing-md h-spacing-md text-primary/60" />
+          <Icons.PenTool className="w-spacing-md h-spacing-md text-primary/85" />
           <div>
             <p className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Reflexões</p>
             <p className="font-mono text-premium-xl font-bold text-foreground">{notesWritten.length}/{STEPS.length}</p>
@@ -88,7 +88,7 @@ const LectioConclusio: React.FC<LectioConclusioProps> = ({ selectedPassage, note
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.7 }}
         >
-          <h3 className="text-center text-premium-xs font-black uppercase tracking-[0.2em] text-primary/60">Suas Reflexões</h3>
+          <h3 className="text-center text-premium-xs font-black uppercase tracking-[0.2em] text-primary/85">Suas Reflexões</h3>
           <div className="space-y-spacing-lg">
             {notesWritten.map(step => (
               <div key={step.id} className="space-y-spacing-xs">

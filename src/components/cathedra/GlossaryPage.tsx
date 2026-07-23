@@ -309,19 +309,19 @@ const GlossaryPage: React.FC = () => {
             <EditorialDivider variant="gold-fade" className="mb-6" />
             <dl className="grid grid-cols-3 gap-6 text-center font-stitch-label text-stitch-label-sm uppercase tracking-[0.22em] text-stitch-on-surface-variant">
               <div>
-                <dt className="text-stitch-secondary/70">Verbetes</dt>
+                <dt className="text-foreground/85">Verbetes</dt>
                 <dd className="mt-1 font-stitch-display text-stitch-display-sm text-stitch-on-background">
                   {filtered.length}
                 </dd>
               </div>
               <div>
-                <dt className="text-stitch-secondary/70">Categorias</dt>
+                <dt className="text-foreground/85">Categorias</dt>
                 <dd className="mt-1 font-stitch-display text-stitch-display-sm text-stitch-on-background">
                   {categories.length - 1}
                 </dd>
               </div>
               <div>
-                <dt className="text-stitch-secondary/70">Publicados</dt>
+                <dt className="text-foreground/85">Publicados</dt>
                 <dd className="mt-1 font-stitch-display text-stitch-display-sm text-stitch-on-background">
                   {terms.filter((t) => t.status === 'published').length}
                 </dd>

@@ -249,7 +249,7 @@ const ProfilePage: React.FC = () => {
         <CathedraButton 
           variant="outline" 
           onClick={() => navigate('/spiritual-profile')}
-          className="rounded-premium-full px-spacing-xl h-spacing-2xl border-primary/20 text-primary/60 font-bold uppercase tracking-widest text-[10px] hover:bg-primary hover:text-primary-foreground transition-all duration-700"
+          className="rounded-premium-full px-spacing-xl h-spacing-2xl border-primary/30 text-primary font-bold uppercase tracking-widest text-[10px] hover:bg-primary hover:text-primary-foreground transition-all duration-700"
         >
           <Icons.Sparkles className="w-spacing-md h-spacing-md mr-spacing-xs" />
           Ver Perfil Espiritual Contemplativo
@@ -546,7 +546,7 @@ const ProfilePage: React.FC = () => {
             <Icons.Church className="w-spacing-md h-spacing-md text-primary" />
             <h3 className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground">Localização Eclesial</h3>
           </div>
-          <p className="text-[10px] text-muted-foreground -mt-spacing-xs">Opcional — ajuda a personalizar sua experiênica.</p>
+          <p className="text-[10px] text-muted-foreground -mt-spacing-xs">Opcional — ajuda a personalizar sua experiência.</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-md">
             <div className="space-y-spacing-2xs">
