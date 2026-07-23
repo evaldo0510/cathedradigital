@@ -294,6 +294,11 @@ const AppLayout: React.FC = () => {
 
   // Enable automatic accessibility check
   useA11yGuard(true);
+
+  // Renovação silenciosa de sessão + "lembrar dispositivo"
+  useEffect(() => { installSessionRenewal(); }, []);
+
+
   
   useEffect(() => {
     const handleGlobalLang = (e: any) => {
