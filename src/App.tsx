@@ -759,7 +759,9 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/nexus-audit" element={<NexusAuditPage />} />
                       <Route path="/admin/editorial-integrity" element={<EditorialIntegrityPage />} />
                       <Route path="/admin/editorial-audit" element={<EditorialAuditPage />} />
+                      <Route path="/admin/editorial-bulk" element={<EditorialBulkPage />} />
                       <Route path="/admin/mission-control" element={<MissionControlPage />} />
+
                       <Route path="/admin/glossary" element={<GlossaryAdmin />} />
                       <Route path="/admin/glossario" element={<GlossaryAdmin />} />
                       <Route path="/admin/pray" element={<PrayerAdmin />} />
