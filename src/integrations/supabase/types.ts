@@ -2404,6 +2404,66 @@ export type Database = {
         }
         Relationships: []
       }
+      editorial_snapshots: {
+        Row: {
+          avg_editorial: number
+          avg_ice: number
+          avg_nexus: number
+          bronze: number
+          captured_at: string
+          gate_failing: number
+          gate_passing: number
+          gold: number
+          id: string
+          module: string
+          per_slug: Json
+          published: number
+          regressions: Json
+          review: number
+          silver: number
+          total: number
+          trigger: string
+        }
+        Insert: {
+          avg_editorial?: number
+          avg_ice?: number
+          avg_nexus?: number
+          bronze?: number
+          captured_at?: string
+          gate_failing?: number
+          gate_passing?: number
+          gold?: number
+          id?: string
+          module?: string
+          per_slug?: Json
+          published?: number
+          regressions?: Json
+          review?: number
+          silver?: number
+          total?: number
+          trigger?: string
+        }
+        Update: {
+          avg_editorial?: number
+          avg_ice?: number
+          avg_nexus?: number
+          bronze?: number
+          captured_at?: string
+          gate_failing?: number
+          gate_passing?: number
+          gold?: number
+          id?: string
+          module?: string
+          per_slug?: Json
+          published?: number
+          regressions?: Json
+          review?: number
+          silver?: number
+          total?: number
+          trigger?: string
+        }
+        Relationships: []
+      }
       glossary: {
         Row: {
           bible_verses: string[] | null
@@ -6490,6 +6550,14 @@ export type Database = {
       }
     }
     Functions: {
+      _glossary_editorial_score: {
+        Args: { g: Database["public"]["Tables"]["glossary"]["Row"] }
+        Returns: number
+      }
+      _glossary_nexus_score: {
+        Args: { g: Database["public"]["Tables"]["glossary"]["Row"] }
+        Returns: number
+      }
       _notif_http_post: {
         Args: {
           p_body: Json
@@ -6934,6 +7002,10 @@ export type Database = {
       cleanup_telemetry_logs:
         | { Args: never; Returns: undefined }
         | { Args: { retention_days?: number }; Returns: undefined }
+      compute_glossary_editorial_snapshot: {
+        Args: { _trigger?: string }
+        Returns: string
+      }
       fn_archive_governance_audit: {
         Args: { p_override_days?: number; p_triggered_by?: string }
         Returns: {
@@ -6973,6 +7045,16 @@ export type Database = {
           payload: Json
           retry_count: number
           status: string
+        }[]
+      }
+      glossary_quality_gate: {
+        Args: { _slug: string }
+        Returns: {
+          editorial: number
+          failing_reasons: string[]
+          ice: number
+          nexus: number
+          passing: boolean
         }[]
       }
       glossary_role_for: { Args: { _uid: string }; Returns: string }
