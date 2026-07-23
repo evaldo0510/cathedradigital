@@ -110,7 +110,7 @@ const PLANOS = [
     description:
       "Logos AI ilimitado, Rosário e Via Sacra Premium, Jornadas Ouro e 50% da mensalidade convertida em doação.",
     cta: "Conhecer PRO",
-    href: "/planos",
+    href: "/pricing",
     icon: Crown,
     accent: true,
   },
@@ -363,7 +363,7 @@ const PublicLanding = () => {
               <li><Link to="/atrium" className="hover:text-secondary">Atrium</Link></li>
               <li><Link to="/jornadas" className="hover:text-secondary">Jornadas</Link></li>
               <li><Link to="/glossario" className="hover:text-secondary">Glossário</Link></li>
-              <li><Link to="/planos" className="hover:text-secondary">Planos PRO</Link></li>
+              <li><Link to="/pricing" className="hover:text-secondary">Planos PRO</Link></li>
               <li><Link to="/login" className="hover:text-secondary">Entrar</Link></li>
             </ul>
           </div>
