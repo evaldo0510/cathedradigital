@@ -19,6 +19,98 @@ import { ESTADOS_BRASIL, ESTADO_NOME, DIOCESES_POR_ESTADO, MOVIMENTOS_PASTORAIS 
 import ContemplativeLayout from './ContemplativeLayout';
 import PremiumAuditTrail from './PremiumAuditTrail';
 
+const STREAK_MILESTONES = [
+  { days: 7, label: 'Chama Constante', badge: '🔥' },
+  { days: 30, label: 'Perseverança', badge: '⏳' },
+  { days: 100, label: 'Centurião da Fé', badge: '🏆' },
+];
+
+const StreakCard: React.FC<{ streak: number; maxStreak: number }> = ({ streak, maxStreak }) => {
+  const nextMilestone = STREAK_MILESTONES.find(m => streak < m.days);
+  const prevMilestone = [...STREAK_MILESTONES].reverse().find(m => streak >= m.days);
+  const base = prevMilestone?.days ?? 0;
+  const target = nextMilestone?.days ?? streak;
+  const progress = nextMilestone ? Math.min(100, ((streak - base) / (target - base)) * 100) : 100;
+  const remaining = nextMilestone ? nextMilestone.days - streak : 0;
+
+  return (
+    <CathedraCard className="p-spacing-xl space-y-spacing-lg">
+      <div className="flex items-start justify-between gap-spacing-md">
+        <div className="flex items-center gap-spacing-md">
+          <div className="w-spacing-3xl h-spacing-3xl rounded-premium-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center shrink-0">
+            <span className="text-premium-2xl" aria-hidden="true">🔥</span>
+          </div>
+          <div>
+            <p className="text-premium-3xl font-black text-foreground leading-none tabular-nums">
+              {streak}
+              <span className="text-premium-sm font-bold text-foreground/75 ml-spacing-2xs">
+                {streak === 1 ? 'dia' : 'dias'}
+              </span>
+            </p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-foreground/75 mt-spacing-2xs">
+              Ofensiva Espiritual
+            </p>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="text-premium-xs font-bold text-primary tabular-nums">{maxStreak}</p>
+          <p className="text-[9px] font-bold uppercase tracking-widest text-foreground/70">Recorde</p>
+        </div>
+      </div>
+
+      {/* Barra até próximo marco */}
+      <div className="space-y-spacing-2xs">
+        <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-widest text-foreground/75">
+          <span>
+            {nextMilestone ? `Rumo a ${nextMilestone.label}` : 'Todos os marcos alcançados'}
+          </span>
+          {nextMilestone && (
+            <span className="text-primary tabular-nums">
+              {remaining} {remaining === 1 ? 'dia' : 'dias'}
+            </span>
+          )}
+        </div>
+        <div className="relative h-spacing-xs bg-muted rounded-premium-full overflow-hidden">
+          <div
+            className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-primary/70 rounded-premium-full transition-all duration-700"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Marcos 7 / 30 / 100 */}
+      <div className="grid grid-cols-3 gap-spacing-sm pt-spacing-2xs">
+        {STREAK_MILESTONES.map(m => {
+          const unlocked = streak >= m.days;
+          return (
+            <div
+              key={m.days}
+              className={`rounded-premium p-spacing-sm text-center transition-all border ${
+                unlocked
+                  ? 'bg-primary/10 border-primary/30'
+                  : 'bg-muted/40 border-border opacity-70'
+              }`}
+            >
+              <p className={`text-premium-lg mb-spacing-2xs ${unlocked ? '' : 'grayscale'}`} aria-hidden="true">
+                {m.badge}
+              </p>
+              <p className="text-premium-sm font-black text-foreground tabular-nums">{m.days}d</p>
+              <p className="text-[9px] font-bold uppercase tracking-wider text-foreground/75 leading-tight mt-spacing-2xs">
+                {m.label}
+              </p>
+              {unlocked && (
+                <p className="text-[9px] font-bold text-primary uppercase tracking-wider mt-spacing-2xs">
+                  Conquistado
+                </p>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </CathedraCard>
+  );
+};
+
 const ProfilePage: React.FC = () => {
   const { user, profile, loading } = useAuth();
   const navigate = useNavigate();
