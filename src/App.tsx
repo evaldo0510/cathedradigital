@@ -88,6 +88,7 @@ const AtriumBuscarPage = lazy(() => import('./pages/AtriumBuscarPage'));
 const Index = lazy(() => import('./pages/Index'));
 const HomeUnified = lazy(() => import('./pages/HomeUnified'));
 const AtriumHome = lazy(() => import('./pages/AtriumHome'));
+const PublicLanding = lazy(() => import('./pages/PublicLanding'));
 const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
 const SpiritualProfile = lazy(() => import('./components/cathedra/SpiritualProfile'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
