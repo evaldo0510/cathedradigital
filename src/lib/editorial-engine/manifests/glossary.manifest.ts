@@ -19,6 +19,12 @@ export const glossaryManifest: EntityManifest = {
   weight: 10,
   ready: true,
   accent: "primary",
+  lifecycle: {
+    version: "1.0",
+    status: "consolidating",
+    certification: false,
+    migration: 0.85,
+  },
   fields: [
     // — Núcleo editorial (contribui p/ editorial_score) —
     { key: "definition",             label: "Definição",             group: "editorial", required: true,  weight: 2 },

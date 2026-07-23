@@ -72,6 +72,14 @@ export interface EntityManifest {
   ready: boolean;
   /** Cor/marca visual (token semântico já existente). */
   accent?: string;
+  /** Ciclo de vida no ecossistema (Onda 2). */
+  lifecycle?: {
+    version: string;
+    status: "placeholder" | "developing" | "consolidating" | "certified";
+    certification: boolean;
+    /** Progresso de migração para o motor genérico (0–1). */
+    migration: number;
+  };
 }
 
 export interface EntitySnapshot {
