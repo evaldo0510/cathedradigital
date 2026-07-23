@@ -10,6 +10,7 @@ import type { EntityManifest } from "../types";
 import { glossaryManifest } from "./glossary.manifest";
 import { saintsManifest } from "./saints.manifest";
 import { journeysManifest } from "./journeys.manifest";
+import { collectionsManifest } from "./collections.manifest";
 import { assertValidManifest, validateManifest } from "../validate-manifest";
 
 /** Placeholder para entidades ainda não plugadas (`ready: false`). */
@@ -26,8 +27,8 @@ const rawRegistry: EntityManifest[] = [
   glossaryManifest,
   saintsManifest,
   journeysManifest,
-  placeholder("prayers",     "Orações",  "Orações",  "Heart",   8),
-  placeholder("collections", "Coleções", "Coleções", "Library", 7),
+  collectionsManifest,
+  placeholder("prayers", "Orações", "Orações", "Heart", 8),
 ];
 
 // Fail-fast: qualquer manifesto inválido derruba o boot do módulo.
@@ -51,5 +52,5 @@ export function auditRegistry() {
   return editorialRegistry.map(m => ({ id: m.id, ...validateManifest(m) }));
 }
 
-export { glossaryManifest, saintsManifest, journeysManifest };
+export { glossaryManifest, saintsManifest, journeysManifest, collectionsManifest };
 
