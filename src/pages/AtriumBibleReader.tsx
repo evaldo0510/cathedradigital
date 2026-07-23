@@ -259,7 +259,7 @@ const BibleLanding: React.FC = () => {
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-stitch-primary/[0.03] to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
                     <div className="relative">
-                      <span className="font-stitch-display text-[48px] italic leading-none text-stitch-secondary/30">
+                      <span className="font-stitch-display text-[48px] italic leading-none text-stitch-secondary/75">
                         {String(i + 1).padStart(2, '0')}
                       </span>
                     </div>

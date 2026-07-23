@@ -163,7 +163,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                       onClick={(e) => isLegitimateClick(e) && navigate(AppRoute.LOGIN)} 
                       variant="ghost"
                       className="h-[44px] md:h-spacing-2xl px-spacing-md md:px-spacing-xl rounded-none border text-[9px] md:text-[10px] uppercase tracking-[0.28em] md:tracking-[0.32em] transition-all bg-transparent hover:bg-[#c9a84c] hover:text-[#0a0a0a]"
-                      style={{ borderColor: '#c9a84c', color: '#c9a84c', fontFamily: 'Inter, sans-serif' }}
+                      style={{ borderColor: '#c9a84c', color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif' }}
                     >
                       {t('enter')}
                     </Button>

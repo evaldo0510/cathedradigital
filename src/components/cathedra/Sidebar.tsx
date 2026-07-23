@@ -222,7 +222,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleNav('/', e)}
               >
-                <span style={{ color: '#c9a84c', fontSize: '10px' }} aria-hidden="true">●</span>
+                <span style={{ color: 'var(--gold-text)', fontSize: '10px' }} aria-hidden="true">●</span>
                 <div className="flex flex-col leading-none gap-1">
                   <h1
                     style={{
@@ -235,7 +235,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                   >
                     CATHEDRA
                   </h1>
-                  <span style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', fontSize: '8px', letterSpacing: '0.4em', textTransform: 'uppercase' }}>
+                  <span style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '8px', letterSpacing: '0.4em', textTransform: 'uppercase' }}>
                     Sacrum Archivum
                   </span>
                 </div>
@@ -247,7 +247,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 size="icon"
                 onClick={onClose}
                 className="rounded-none w-10 h-10 bg-transparent hover:bg-transparent transition-all focus-visible:ring-2 focus-visible:ring-[#c9a84c]/40"
-                style={{ border: '1px solid rgba(201,168,76,0.35)', color: '#c9a84c' }}
+                style={{ border: '1px solid rgba(201,168,76,0.35)', color: 'var(--gold-text)' }}
                 onMouseEnter={(e) => { e.currentTarget.style.background = '#c9a84c'; e.currentTarget.style.color = '#0a0a0a'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = '#c9a84c'; }}
                 aria-label="Fechar menu"
@@ -261,8 +261,8 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 <Collapsible key={section.label} defaultOpen={sectionIdx < 3}>
                   <CollapsibleTrigger asChild>
                     <button className="w-full flex items-center justify-between py-2 px-3 group/trigger hover:bg-[#c9a84c]/[0.05] rounded-none transition-all">
-                      <h3 style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', fontSize: '9px', letterSpacing: '0.4em', textTransform: 'uppercase' }}>— {section.label}</h3>
-                      <Icons.ChevronDown className="w-3 h-3 transition-all group-data-[state=open]:rotate-180" strokeWidth={1.5} style={{ color: '#c9a84c' }} />
+                      <h3 style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '9px', letterSpacing: '0.4em', textTransform: 'uppercase' }}>— {section.label}</h3>
+                      <Icons.ChevronDown className="w-3 h-3 transition-all group-data-[state=open]:rotate-180" strokeWidth={1.5} style={{ color: 'var(--gold-text)' }} />
                     </button>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
@@ -286,8 +286,8 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                  aria-label={`${item.label}${isActive ? ', página atual' : ''}`}
                                 className={`w-full flex items-center justify-start gap-3 px-3 py-2 rounded-none text-[9px] font-medium transition-all duration-300 outline-none h-auto min-h-[40px] border
                                   ${isActive
-                                    ? 'bg-[#c9a84c]/[0.08] text-[#c9a84c] border-[#c9a84c]/40'
-                                    : 'text-foreground/70 hover:bg-[#c9a84c]/[0.04] hover:text-[#c9a84c] border-transparent hover:border-[#c9a84c]/20'}`}
+                                    ? 'bg-[#c9a84c]/[0.08] text-[color:var(--gold-text)] border-[#c9a84c]/40'
+                                    : 'text-foreground/70 hover:bg-[#c9a84c]/[0.04] hover:text-[color:var(--gold-text)] border-transparent hover:border-[#c9a84c]/20'}`}
                               >
                                   <span className={`transition-all duration-300 transform ${isActive ? 'opacity-100 scale-105' : 'opacity-80'}`}>
                                     {item.icon}

@@ -126,14 +126,17 @@ const DIOCESE_URLS: Record<string, string> = {
 };
 
 // Tokens visuais Logos 2030 — noir + dourado como acento
+// GOLD          → borders, backgrounds, ícones, focus ring (fundo escuro/decoração)
+// GOLD_TEXT     → uso quando é color: texto sobre fundo claro (WCAG AA compliant, ratio ~6.8:1)
 const GOLD = '#c9a84c';
+const GOLD_TEXT = '#8a7020';
 const GOLD_SOFT = 'rgba(201,168,76,0.35)';
 const GOLD_HAIR = 'rgba(201,168,76,0.18)';
 const FONT_DISPLAY = "'Cormorant Garamond', ui-serif, Georgia, serif";
 const FONT_BODY = "'Karla', ui-sans-serif, system-ui, sans-serif";
 
 const EYEBROW_STYLE: React.CSSProperties = {
-  color: GOLD,
+  color: GOLD_TEXT,
   fontFamily: FONT_BODY,
   fontSize: '10px',
   fontWeight: 500,
@@ -176,7 +179,7 @@ const FooterSection: React.FC<FooterSectionProps> = ({ title, id, isMobile, open
         <span id={`footer-h-${id}`} style={EYEBROW_STYLE}>{title}</span>
         <Icons.ArrowDown
           className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
-          style={{ color: GOLD }}
+          style={{ color: GOLD_TEXT }}
         />
       </button>
       <div id={`footer-p-${id}`} hidden={!isOpen} className="pb-spacing-lg">
@@ -263,7 +266,7 @@ const Footer: React.FC = React.memo(() => {
           <div className="flex flex-col gap-spacing-lg">
             <div className="flex flex-col gap-2">
               <div className="flex items-baseline gap-2">
-                <span aria-hidden="true" style={{ color: GOLD, fontSize: 10 }}>●</span>
+                <span aria-hidden="true" style={{ color: GOLD_TEXT, fontSize: 10 }}>●</span>
                 <span
                   style={{
                     fontFamily: FONT_DISPLAY,
@@ -279,7 +282,7 @@ const Footer: React.FC = React.memo(() => {
               <span
                 className="pl-4"
                 style={{
-                  color: GOLD,
+                  color: GOLD_TEXT,
                   fontFamily: FONT_BODY,
                   fontSize: 10,
                   fontWeight: 500,
@@ -320,7 +323,7 @@ const Footer: React.FC = React.memo(() => {
                   onClick={() => handleSocialClick(social.platform, social.url)}
                   aria-label={social.platform}
                   className="inline-flex items-center justify-center w-11 h-11 rounded-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
-                  style={{ border: `1px solid ${GOLD_SOFT}`, color: GOLD }}
+                  style={{ border: `1px solid ${GOLD_SOFT}`, color: GOLD_TEXT }}
                   onMouseEnter={(e) => { e.currentTarget.style.background = GOLD; e.currentTarget.style.color = '#0a0a0a'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = GOLD; }}
                 >
@@ -430,7 +433,7 @@ const Footer: React.FC = React.memo(() => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 mt-3 min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
-                    style={{ color: GOLD, fontFamily: FONT_BODY, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase' }}
+                    style={{ color: GOLD_TEXT, fontFamily: FONT_BODY, fontSize: 12, letterSpacing: '0.12em', textTransform: 'uppercase' }}
                   >
                     {lang === 'pt' ? 'Acessar portal' : 'Access portal'}
                     <Icons.ExternalLink className="w-3 h-3" />
@@ -483,7 +486,7 @@ const Footer: React.FC = React.memo(() => {
                     disabled={isSubmitting}
                     aria-label={lang === 'pt' ? 'Inscrever no boletim informativo' : 'Subscribe to newsletter'}
                     className="inline-flex items-center justify-center min-w-[44px] min-h-[44px] px-3 rounded-none transition-colors disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
-                    style={{ border: `1px solid ${GOLD}`, color: GOLD, background: 'transparent' }}
+                    style={{ border: `1px solid ${GOLD}`, color: GOLD_TEXT, background: 'transparent' }}
                     onMouseEnter={(e) => { if (!isSubmitting) { e.currentTarget.style.background = GOLD; e.currentTarget.style.color = '#0a0a0a'; } }}
                     onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = GOLD; }}
                   >
@@ -519,7 +522,7 @@ const Footer: React.FC = React.memo(() => {
                 textTransform: 'uppercase',
               }}
             >
-              © {new Date().getFullYear()} <span style={{ color: GOLD }}>●</span> Cathedra <span style={{ color: GOLD }}>·</span> Omnia ad maiorem Dei gloriam
+              © {new Date().getFullYear()} <span style={{ color: GOLD_TEXT }}>●</span> Cathedra <span style={{ color: GOLD_TEXT }}>·</span> Omnia ad maiorem Dei gloriam
             </p>
             <p
               className="flex items-center gap-2"
@@ -535,7 +538,7 @@ const Footer: React.FC = React.memo(() => {
                 type="button"
                 onClick={() => navigate(AppRoute.ADMIN)}
                 className="cursor-pointer select-none bg-transparent p-0 h-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] transition-colors"
-                style={{ color: GOLD, fontFamily: FONT_DISPLAY, fontStyle: 'italic', fontSize: '0.9375rem' }}
+                style={{ color: GOLD_TEXT, fontFamily: FONT_DISPLAY, fontStyle: 'italic', fontSize: '0.9375rem' }}
               >
                 Evaldo.os
               </button>
@@ -605,7 +608,7 @@ const Footer: React.FC = React.memo(() => {
                   <React.Fragment key={link.label}>
                     {renderLink(link)}
                     {index < visible.length - 1 && (
-                      <span aria-hidden="true" className="select-none" style={{ color: GOLD, opacity: 0.45 }}>·</span>
+                      <span aria-hidden="true" className="select-none" style={{ color: GOLD_TEXT, opacity: 0.45 }}>·</span>
                     )}
                   </React.Fragment>
                 ));
@@ -634,7 +637,7 @@ const Footer: React.FC = React.memo(() => {
                   <Icons.ArrowDown
                     aria-hidden="true"
                     className={`w-3 h-3 transition-transform ${mobileNavExpanded ? 'rotate-180' : ''}`}
-                    style={{ color: GOLD }}
+                    style={{ color: GOLD_TEXT }}
                   />
                 </button>
               )}
@@ -645,7 +648,7 @@ const Footer: React.FC = React.memo(() => {
               onClick={scrollToTop}
               aria-label={lang === 'pt' ? 'Voltar ao topo' : 'Back to top'}
               className="ml-2 inline-flex items-center justify-center w-11 h-11 rounded-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
-              style={{ border: `1px solid ${GOLD_SOFT}`, color: GOLD, background: 'transparent' }}
+              style={{ border: `1px solid ${GOLD_SOFT}`, color: GOLD_TEXT, background: 'transparent' }}
               onMouseEnter={(e) => { e.currentTarget.style.background = GOLD; e.currentTarget.style.color = '#0a0a0a'; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = GOLD; }}
             >

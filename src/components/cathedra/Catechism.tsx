@@ -593,7 +593,7 @@ const Catechism: React.FC = memo(() => {
             <span className="h-px w-10 md:w-16" style={{ backgroundColor: '#c9a84c' }} />
             <span
               className="text-[9px] md:text-[10px] uppercase"
-              style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
+              style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
             >
               Sacra Doctrina
             </span>
@@ -608,7 +608,7 @@ const Catechism: React.FC = memo(() => {
               letterSpacing: '0.01em',
             }}
           >
-            Catecismo<span style={{ color: '#c9a84c' }}>.</span>
+            Catecismo<span style={{ color: 'var(--gold-text)' }}>.</span>
           </h1>
           <p
             className="mx-auto"
@@ -621,14 +621,14 @@ const Catechism: React.FC = memo(() => {
               lineHeight: 1.65,
             }}
           >
-            A doutrina da Igreja em quatro partes — <span style={{ color: '#c9a84c' }}>Credo</span>, <span style={{ color: '#c9a84c' }}>Sacramentos</span>, <span style={{ color: '#c9a84c' }}>Vida em Cristo</span> e <span style={{ color: '#c9a84c' }}>Oração</span>.
+            A doutrina da Igreja em quatro partes — <span style={{ color: 'var(--gold-text)' }}>Credo</span>, <span style={{ color: 'var(--gold-text)' }}>Sacramentos</span>, <span style={{ color: 'var(--gold-text)' }}>Vida em Cristo</span> e <span style={{ color: 'var(--gold-text)' }}>Oração</span>.
           </p>
         </div>
 
         {/* BUSCA */}
         <div className="sticky top-0 z-20 bg-background/85 backdrop-blur-md py-3 -mx-spacing-md px-spacing-md">
           <div className="relative group max-w-2xl mx-auto">
-            <Icons.Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors" style={{ color: '#c9a84c', opacity: 0.6 }} />
+            <Icons.Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors" style={{ color: 'var(--gold-text)', opacity: 0.6 }} />
             <input 
               type="text" 
               placeholder="Buscar por parágrafo (§) ou tema..." 
@@ -672,7 +672,7 @@ const Catechism: React.FC = memo(() => {
                 <div className="flex items-center gap-3">
                   <span
                     className="text-[10px] uppercase shrink-0"
-                    style={{ color: '#c9a84c', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
+                    style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', letterSpacing: '0.32em' }}
                   >
                     {part.part}
                   </span>
@@ -697,7 +697,7 @@ const Catechism: React.FC = memo(() => {
                 >
                   {part.sections.length} seções
                 </p>
-                <Icons.ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" style={{ color: '#c9a84c' }} />
+                <Icons.ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-1" style={{ color: 'var(--gold-text)' }} />
               </div>
             </div>
           ))}

@@ -98,8 +98,8 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
       "flex flex-col items-center justify-center gap-spacing-3xs flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-300 shadow-premium-none border-none hover:bg-transparent px-spacing-0 rounded-premium-none tap-premium group focus-visible:bg-[#c9a84c]/[0.08] focus-visible:ring-1 focus-visible:ring-[#c9a84c]/30 outline-none",
       "min-w-[48px] min-h-[48px]", 
       isActive 
-        ? 'text-[#c9a84c]' 
-        : 'text-foreground/80 hover:text-[#c9a84c]'
+        ? 'text-[color:var(--gold-text)]' 
+        : 'text-foreground/80 hover:text-[color:var(--gold-text)]'
     )}
   >
     {isActive && (
@@ -124,7 +124,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
         className={cn(
           "transition-all",
           shouldReduceMotion ? "duration-0" : "duration-300",
-          isActive ? "text-[#c9a84c] opacity-100 scale-110" : "text-foreground/80 group-hover:text-[#c9a84c] group-active:scale-95"
+          isActive ? "text-[color:var(--gold-text)] opacity-100 scale-110" : "text-foreground/80 group-hover:text-[color:var(--gold-text)] group-active:scale-95"
         )}
         size={18}
         strokeWidth={isActive ? 1.5 : 1.6}
@@ -143,7 +143,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
       className={cn(
         "text-[8px] md:text-[9.5px] font-medium uppercase tracking-[0.28em] leading-none transition-all truncate w-full px-spacing-2xs text-center relative z-10",
         shouldReduceMotion ? "duration-0" : "duration-300",
-        isActive ? 'text-[#c9a84c] font-semibold' : 'text-foreground/80'
+        isActive ? 'text-[color:var(--gold-text)] font-semibold' : 'text-foreground/80'
       )}
     >
       {label}

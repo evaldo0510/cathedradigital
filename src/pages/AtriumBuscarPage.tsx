@@ -271,7 +271,7 @@ const AtriumBuscarPage: React.FC = () => {
                   <div className="absolute left-0 top-0 h-full w-1 origin-top scale-y-0 bg-stitch-secondary transition-transform group-hover:scale-y-100" />
                   <div className="mb-4 flex items-center justify-between">
                     <t.Icon className="h-6 w-6 text-stitch-secondary" />
-                    <span className="font-stitch-display text-[32px] italic text-stitch-secondary/25">
+                    <span className="font-stitch-display text-[32px] italic text-stitch-secondary/75">
                       {String(i + 1).padStart(2, '0')}
                     </span>
                   </div>

@@ -279,7 +279,7 @@ const AtriumHome: React.FC = () => {
                 <div className="absolute left-0 top-0 h-full w-1 origin-top scale-y-0 bg-stitch-secondary transition-transform group-hover:scale-y-100" />
                 <div className="mb-4 flex items-center justify-between">
                   <env.Icon className="h-6 w-6 text-stitch-secondary" />
-                  <span className="font-stitch-display text-[24px] italic text-stitch-secondary/25">
+                  <span className="font-stitch-display text-[24px] italic text-stitch-secondary/75">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                 </div>
@@ -389,7 +389,7 @@ const AtriumHome: React.FC = () => {
                     {r.label}
                   </h3>
                   <div className="mt-6 flex items-center justify-between text-stitch-secondary">
-                    <span className="font-stitch-display text-[24px] italic text-stitch-secondary/25">
+                    <span className="font-stitch-display text-[24px] italic text-stitch-secondary/75">
                       {String(i + 1).padStart(2, '0')}
                     </span>
                     <ArrowForward className="h-4 w-4 transition-transform group-hover:translate-x-1" />
