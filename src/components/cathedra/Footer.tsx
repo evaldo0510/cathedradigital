@@ -541,22 +541,31 @@ const Footer: React.FC = React.memo(() => {
               aria-label={lang === 'pt' ? 'Links institucionais' : 'Institutional links'}
               className="flex flex-wrap items-center gap-x-1 gap-y-1"
             >
-              {APP_ROUTES.filter(r => r.category === 'user' && !r.showInMenu).map((item, index, array) => (
-                <React.Fragment key={item.label}>
-                  <Button
-                    variant="ghost"
-                    onClick={() => navigate(item.path)}
-                    className="text-muted-foreground hover:text-[#c9a84c] transition-colors focus-visible:ring-2 focus-visible:ring-[#c9a84c] outline-none min-h-[44px] px-3 py-2 rounded-none bg-transparent hover:bg-transparent"
-                    style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 500, letterSpacing: '0.28em', textTransform: 'uppercase' }}
-                    aria-label={item.label}
-                  >
-                    {item.label}
-                  </Button>
-                  {(index < array.length - 1 || isAdmin) && (
-                    <span aria-hidden="true" className="select-none" style={{ color: GOLD, opacity: 0.45 }}>·</span>
-                  )}
-                </React.Fragment>
-              ))}
+              {(() => {
+                // Apenas links institucionais públicos no rodapé externo.
+                // Rotas de conta (Perfil Espiritual, Boas-vindas, Design System, Comunidade)
+                // vivem na Área do Usuário — não devem aparecer para visitantes.
+                const PUBLIC_FOOTER_PATHS = ['/about', '/partners', '/privacy', '/terms', '/transparencia'];
+                const items = PUBLIC_FOOTER_PATHS
+                  .map(p => APP_ROUTES.find(r => r.path === p))
+                  .filter((r): r is NonNullable<typeof r> => Boolean(r));
+                return items.map((item, index, array) => (
+                  <React.Fragment key={item.label}>
+                    <Button
+                      variant="ghost"
+                      onClick={() => navigate(item.path)}
+                      className="text-muted-foreground hover:text-[#c9a84c] transition-colors focus-visible:ring-2 focus-visible:ring-[#c9a84c] outline-none min-h-[44px] px-3 py-2 rounded-none bg-transparent hover:bg-transparent"
+                      style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 500, letterSpacing: '0.28em', textTransform: 'uppercase' }}
+                      aria-label={item.label}
+                    >
+                      {item.label}
+                    </Button>
+                    {(index < array.length - 1 || isAdmin) && (
+                      <span aria-hidden="true" className="select-none" style={{ color: GOLD, opacity: 0.45 }}>·</span>
+                    )}
+                  </React.Fragment>
+                ));
+              })()}
               {isAdmin && (
                 <Button
                   variant="ghost"
