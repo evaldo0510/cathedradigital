@@ -1,11 +1,14 @@
-import { Button } from '@/components/ui/button';
+/**
+ * CatechismPopover — adapter fino sobre `ReferencePopover` canônico.
+ *
+ * Reader Architecture Rule (COS §10): este arquivo NÃO pode importar
+ * `@radix-ui/react-popover` nem `@/components/ui/popover` diretamente.
+ * Toda referência inline usa `ReferencePopover`.
+ */
+
 import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
+import { ReferencePopover } from '@/components/reader';
 import { Icons } from '../../constants';
 import { useCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { catechismInternalPath } from '@/lib/nexusNavigation';
@@ -16,10 +19,9 @@ interface CatechismPopoverProps {
   variant?: 'default' | 'mini';
 }
 
-const CatechismPopover: React.FC<CatechismPopoverProps> = memo(({
+const CatechismPopoverBody: React.FC<{ paragraph: number; onNavigate?: (p: number) => void }> = ({
   paragraph,
   onNavigate,
-  variant = 'default',
 }) => {
   const { data, isLoading, isFetched, error } = useCatechismParagraph(paragraph);
   const [showDiag, setShowDiag] = React.useState(false);
@@ -35,116 +37,84 @@ const CatechismPopover: React.FC<CatechismPopoverProps> = memo(({
   const hasIssue = Boolean(err) || (isFetched && !content);
 
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          className={variant === 'mini' 
-            ? "ml-spacing-2xs inline-flex h-spacing-md w-spacing-md items-center justify-center rounded-premium-full bg-primary/10 text-premium-xs font-black text-primary border border-primary/20 hover:bg-primary hover:text-primary-foreground transition-all align-middle"
-            : "px-spacing-xs py-spacing-2xs rounded-premium-full bg-card border border-border text-premium-xs font-bold text-primary hover:bg-primary hover:text-primary-foreground transition-all"}
+    <div className="space-y-spacing-sm">
+      {onNavigate && (
+        <button
+          type="button"
+          onClick={() => onNavigate(paragraph)}
+          className="text-premium-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-spacing-2xs"
         >
-          {variant === 'mini' ? '§' : `§${paragraph}`}
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent
-        side="top"
-        align="start"
-        className="w-spacing-4xl max-h-spacing-4xl overflow-y-auto p-spacing-0 rounded-premium border-primary/20 bg-card shadow-premium"
-      >
-        <div className="p-spacing-sm border-b border-border bg-primary/5 flex items-center justify-between">
-          <div className="flex items-center gap-spacing-xs">
-            <Icons.Cross className="w-spacing-sm h-spacing-sm text-primary" />
-            <span className="text-premium-xs font-black uppercase tracking-wider text-primary">
-              CIC §{paragraph}
-            </span>
-          </div>
-          {onNavigate && (
-            <Button
-              onClick={() => onNavigate(paragraph)}
-              className="text-premium-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-spacing-2xs"
-            >
-              Abrir completo
-              <Icons.ArrowDown className="w-spacing-sm h-spacing-sm -rotate-90" />
-            </Button>
-          )}
+          Abrir completo <Icons.ArrowDown className="w-spacing-sm h-spacing-sm -rotate-90" />
+        </button>
+      )}
+      {isLoading && (
+        <div className="space-y-spacing-xs py-spacing-xs">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="h-spacing-sm bg-muted rounded animate-pulse" style={{ width: `${50 + i * 15}%` }} />
+          ))}
         </div>
-        <div className="p-spacing-sm">
-          {isLoading && (
-            <div className="space-y-spacing-xs py-spacing-xs">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="h-spacing-sm bg-muted rounded animate-pulse" style={{ width: `${50 + i * 15}%` }} />
-              ))}
-            </div>
-          )}
-          {!isLoading && isFetched && content && (
-            <p className="text-premium-xs leading-relaxed text-foreground/90 font-serif">
-              {content.length > 300 ? content.slice(0, 300) + '…' : content}
-            </p>
-          )}
-          {!isLoading && isFetched && !content && (
-            <div className="space-y-spacing-xs">
-              <p className="text-premium-xs text-muted-foreground italic">
-                Texto ainda não importado para o banco oficial.
-              </p>
-              <Link
-                to={catechismInternalPath(paragraph)}
-                className="inline-flex items-center gap-spacing-2xs text-premium-xs font-bold text-primary hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary rounded-sm"
-                data-testid="catechism-open-internal"
-                data-cic-paragraph={paragraph}
-                data-cic-origin="nexus-popover"
-                onClick={() => {
-                  console.info('[CIC link click]', {
-                    origin: 'CatechismPopover',
-                    paragraph,
-                    href: catechismInternalPath(paragraph),
-                    from: typeof window !== 'undefined' ? window.location.pathname + window.location.search : '',
-                  });
-                }}
-              >
-                <Icons.ArrowDown className="w-spacing-sm h-spacing-sm -rotate-90" />
-                Abrir §{paragraph} no Catecismo
-              </Link>
-            </div>
-          )}
+      )}
+      {!isLoading && isFetched && content && (
+        <p className="text-premium-xs leading-relaxed text-foreground/90 font-serif">
+          {content.length > 300 ? content.slice(0, 300) + '…' : content}
+        </p>
+      )}
+      {!isLoading && isFetched && !content && (
+        <div className="space-y-spacing-xs">
+          <p className="text-premium-xs text-muted-foreground italic">
+            Texto ainda não importado para o banco oficial.
+          </p>
+          <Link
+            to={catechismInternalPath(paragraph)}
+            className="inline-flex items-center gap-spacing-2xs text-premium-xs font-bold text-primary hover:underline"
+            data-testid="catechism-open-internal"
+            data-cic-paragraph={paragraph}
+            data-cic-origin="nexus-popover"
+          >
+            <Icons.ArrowDown className="w-spacing-sm h-spacing-sm -rotate-90" />
+            Abrir §{paragraph} no Catecismo
+          </Link>
+        </div>
+      )}
 
-          {!isLoading && hasIssue && (
-            <div className="mt-spacing-sm border-t border-border pt-spacing-xs">
-              <button
-                type="button"
-                onClick={() => setShowDiag(v => !v)}
-                className="text-premium-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-spacing-2xs"
-                data-testid="catechism-diag-toggle"
-              >
-                <Icons.AlertTriangle className="w-spacing-sm h-spacing-sm" />
-                Diagnóstico {showDiag ? '▾' : '▸'}
-              </button>
-              {showDiag && (
-                <dl className="mt-spacing-xs space-y-spacing-2xs text-premium-xs font-mono bg-muted/40 rounded-premium p-spacing-xs">
-                  <div className="flex justify-between gap-spacing-xs">
-                    <dt className="text-muted-foreground">status</dt>
-                    <dd className="text-foreground">{String(diag.status)}</dd>
-                  </div>
-                  <div className="flex justify-between gap-spacing-xs">
-                    <dt className="text-muted-foreground">http</dt>
-                    <dd className="text-foreground">{String(diag.httpStatus)}</dd>
-                  </div>
-                  <div className="flex justify-between gap-spacing-xs">
-                    <dt className="text-muted-foreground">request_id</dt>
-                    <dd className="text-foreground break-all">{diag.requestId}</dd>
-                  </div>
-                  {diag.message && (
-                    <div>
-                      <dt className="text-muted-foreground mb-spacing-2xs">message</dt>
-                      <dd className="text-foreground whitespace-pre-wrap break-words">{diag.message}</dd>
-                    </div>
-                  )}
-                </dl>
+      {!isLoading && hasIssue && (
+        <div className="border-t border-border pt-spacing-xs">
+          <button
+            type="button"
+            onClick={() => setShowDiag(v => !v)}
+            className="text-premium-xs font-bold text-muted-foreground hover:text-primary transition-colors flex items-center gap-spacing-2xs"
+            data-testid="catechism-diag-toggle"
+          >
+            <Icons.AlertTriangle className="w-spacing-sm h-spacing-sm" />
+            Diagnóstico {showDiag ? '▾' : '▸'}
+          </button>
+          {showDiag && (
+            <dl className="mt-spacing-xs space-y-spacing-2xs text-premium-xs font-mono bg-muted/40 rounded-premium p-spacing-xs">
+              <div className="flex justify-between gap-spacing-xs"><dt className="text-muted-foreground">status</dt><dd className="text-foreground">{String(diag.status)}</dd></div>
+              <div className="flex justify-between gap-spacing-xs"><dt className="text-muted-foreground">http</dt><dd className="text-foreground">{String(diag.httpStatus)}</dd></div>
+              <div className="flex justify-between gap-spacing-xs"><dt className="text-muted-foreground">request_id</dt><dd className="text-foreground break-all">{diag.requestId}</dd></div>
+              {diag.message && (
+                <div>
+                  <dt className="text-muted-foreground mb-spacing-2xs">message</dt>
+                  <dd className="text-foreground whitespace-pre-wrap break-words">{diag.message}</dd>
+                </div>
               )}
-            </div>
+            </dl>
           )}
         </div>
-      </PopoverContent>
-    </Popover>
+      )}
+    </div>
   );
-});
+};
+
+const CatechismPopover: React.FC<CatechismPopoverProps> = memo(({ paragraph, onNavigate, variant = 'default' }) => (
+  <ReferencePopover
+    kind="catechism"
+    label={variant === 'mini' ? '§' : `§${paragraph}`}
+    ariaLabel={`Abrir referência: Catecismo §${paragraph}`}
+    title={`CIC §${paragraph}`}
+    renderContent={() => <CatechismPopoverBody paragraph={paragraph} onNavigate={onNavigate} />}
+  />
+));
 
 export default CatechismPopover;
