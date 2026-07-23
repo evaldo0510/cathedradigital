@@ -120,6 +120,25 @@ export const READER_MODULES: readonly ReaderModule[] = [
     status: 'partial',
     blocking: false,
   },
+  // ── Sub-onda C.4 (em andamento) ──────────────────────────────────────
+  {
+    id: 'missal',
+    label: 'Missal Romano',
+    entry: 'src/components/cathedra/MissalPage.tsx',
+    sampleRoutes: ['/missal'],
+    targetScore: 90,
+    status: 'partial',
+    blocking: false,
+  },
+  {
+    id: 'breviary',
+    label: 'Liturgia das Horas',
+    entry: 'src/components/cathedra/BreviaryPage.tsx',
+    sampleRoutes: ['/liturgia-das-horas'],
+    targetScore: 90,
+    status: 'partial',
+    blocking: false,
+  },
 ] as const;
 
 /** Componentes/adaptadores proibidos pelo Reader Architecture Rule. */
@@ -177,6 +196,10 @@ export const GUARDRAIL_ALLOWLIST: readonly string[] = [
   'src/components/cathedra/MagisteriumViewer.tsx',     // Fase D
   'src/components/cathedra/SaintDetail.tsx',           // Fase D
   'src/components/cathedra/PrayerEngineReader.tsx',    // sub-onda C.5
+  'src/components/cathedra/MissalPage.tsx',            // sub-onda C.4
+  'src/components/cathedra/MissaContinuousReader.tsx', // sub-onda C.4
+  'src/components/cathedra/BreviaryPage.tsx',          // sub-onda C.4
+  'src/components/cathedra/BreviaryContinuousReader.tsx', // sub-onda C.4
   // Popovers editoriais legados (ainda usam radix diretamente até migrarem para ReferencePopover)
   'src/components/cathedra/BibleVersePopover.tsx',
   'src/components/cathedra/BibleDictionaryPopover.tsx',

@@ -9,6 +9,19 @@ type: guardian
 Último guardião da arquitetura. Impede fragmentação. Não cria código.
 Rejeita PRs que introduzam duplicatas ou paralelos aos primitivos oficiais.
 
+## Regras permanentes (inegociáveis)
+
+**Regra 1 — Não-duplicação de responsabilidade.**
+Nenhum componente novo pode reproduzir uma responsabilidade já coberta
+por um primitivo oficial. Se existe primitivo, estender via props ou
+render props. Rejeitar qualquer PR que introduza duplicata funcional,
+mesmo que o nome seja diferente.
+
+**Regra 2 — Justificativa obrigatória para não-reuso do ReaderShell.**
+Toda nova tela de leitura deve reutilizar `ReaderShell`. Se o PR não
+reutiliza, exigir justificativa técnica escrita no corpo do PR. Sem
+justificativa aceita → rejeição automática e conversão para `ReaderShell`.
+
 ## Responsabilidades (bloqueantes)
 
 1. **Impedir componentes duplicados** — se já existe primitivo, estender via props.
