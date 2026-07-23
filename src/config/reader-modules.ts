@@ -120,6 +120,25 @@ export const READER_MODULES: readonly ReaderModule[] = [
     status: 'partial',
     blocking: false,
   },
+  // ── Sub-onda C.4 (em andamento) ──────────────────────────────────────
+  {
+    id: 'missal',
+    label: 'Missal Romano',
+    entry: 'src/components/cathedra/MissalPage.tsx',
+    sampleRoutes: ['/missal'],
+    targetScore: 90,
+    status: 'partial',
+    blocking: false,
+  },
+  {
+    id: 'breviary',
+    label: 'Liturgia das Horas',
+    entry: 'src/components/cathedra/BreviaryPage.tsx',
+    sampleRoutes: ['/liturgia-das-horas'],
+    targetScore: 90,
+    status: 'partial',
+    blocking: false,
+  },
 ] as const;
 
 /** Componentes/adaptadores proibidos pelo Reader Architecture Rule. */
