@@ -173,6 +173,58 @@ Status:
 - Executar tarefa de risco alto sem confirmação do usuário.
 - Marcar entrega como concluída sem Engineering Log.
 - Criar skill novo que duplique regras dos 7 especializados — estender o existente.
+- **Adicionar novo comportamento ao núcleo do COS** — deve entrar como plugin (ver §8).
+
+---
+
+## 8. Freeze Protocol (v1.0)
+
+O COS está **congelado**. Após homologação da v1.0, o núcleo só pode mudar em três casos:
+
+1. **Quebra arquitetural** — uma premissa fundamental do fluxo (Preflight → Log) deixou de ser válida.
+2. **Novo tipo de módulo** — surge uma categoria que nenhum plugin existente cobre (ex.: multimídia, gamificação profunda).
+3. **Mudança no fluxo de engenharia** — o próprio ciclo de 6 passos precisa evoluir.
+
+Qualquer outra necessidade → **plugin novo** ou **extensão de plugin existente**. Nunca editar o núcleo por conveniência.
+
+Toda alteração ao núcleo exige:
+- justificativa explícita em uma das 3 categorias acima;
+- bump de versão (`v1.1`, `v2.0`);
+- entrada no `CHANGELOG` do COS em `docs/CATHEDRA-CONSTITUTION.md`.
+
+---
+
+## 9. Manifest Registry (arquivo → plugins)
+
+Mapeamento explícito entre módulos do Cathedra e plugins responsáveis pela validação. O COS consulta este registro no Preflight para saber quais plugins ativar.
+
+| Módulo / sinal | Plugins ativados |
+|---|---|
+| Glossário (`glossary*`, `/admin/glossario`, `/admin/editorial-audit`) | `editorial` + `knowledge` |
+| Rosário / Via Sacra / Orações (`/oracao/*`, `PrayerEngineReader`) | `prayer` + `knowledge` |
+| Missal (`MissaContinuousReader`, `liturgy-*`) | `prayer` + `editorial` |
+| Liturgia das Horas (`BreviaryContinuousReader`) | `prayer` + `editorial` |
+| Santos (`saints`, `/santos/*`) / Patrística / Doutores | `knowledge` + `editorial` |
+| Magistério (`magisterium*`) | `knowledge` |
+| Bíblia (`Bible`, `bible_*`) | `knowledge` + `ux` |
+| Jornadas (`journey_*`) | `knowledge` + `editorial` |
+| Coleções (`collections*`) | `editorial` + `knowledge` |
+| Mission Control (`/admin/mission-control`) | `editorial` |
+| Nexus (`nexus_relations`, `AutoNexusList`) | `knowledge` |
+| Design tokens, Hero, Card, spaces, typography, `/conta/*` | `ux` |
+| RAG / MCP / Semantic Search / Recomendações / Cathedra AI | `ai` |
+
+Skills concretos ativados por plugin:
+
+| Plugin | Skill root | Especializados invocados |
+|---|---|---|
+| `editorial` | `cathedra-plugin-editorial` | `cathedra-glossary-editorial-expert` |
+| `prayer` | `cathedra-plugin-prayer` | `cathedra-prayer-engine-expert`, `cathedra-liturgy-expert` (missal/LH) |
+| `knowledge` | `cathedra-plugin-knowledge` | `cathedra-knowledge-graph-expert`, `cathedra-saints-expert` (santos/patrística) |
+| `ux` | `cathedra-plugin-ux` | `cathedra-design-system-guardian` |
+| `ai` | `cathedra-plugin-ai` | (skills de IA sob demanda) |
+
+`cathedra-guardian` é **sempre** ativado, independente de plugin.
 
 ---
 
@@ -181,6 +233,7 @@ Status:
 - [ ] Preflight declarado
 - [ ] Classificação declarada
 - [ ] Matriz de Impacto declarada
+- [ ] Plugins ativados via Manifest Registry (§9)
 - [ ] Skills co-ativados listados (Guardian incluído)
 - [ ] Tarefa executada respeitando skills carregados
 - [ ] Pós-validação executada
