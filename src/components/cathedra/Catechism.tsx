@@ -255,11 +255,6 @@ const CatechismContent: React.FC<{
             title={`Cathedra — CIC §${paragraph}`}
             passage={{ kind: 'catechism', paragraph }}
           />
-          <div className="mt-spacing-md">
-            <NexusBubbles />
-          </div>
-          <CatechismReaderContinuation paragraph={paragraph} excerpt={data?.content ?? null} />
-
         </div>
       )}
     </div>
