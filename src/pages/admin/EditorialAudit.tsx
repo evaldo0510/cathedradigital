@@ -11,7 +11,7 @@
  *
  * Toda geração via IA rebaixa o verbete para draft.
  */
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -253,16 +253,45 @@ export default function EditorialAuditPage() {
   const [priorityFilter, setPriorityFilter] = useState<"quick_win" | "red" | "orange" | "yellow" | "all">("quick_win");
 
   // Sprint 6.1.1 · Corrigir Bucket em Lote — fila com progresso e retry
-  type BatchTask = { slug: string; term: string; field: Field };
-  type BatchResult = BatchTask & { ok: boolean; error?: string };
+  // Sprint 6.1.1a · Inteligência da Fila — priorização, pause/resume/cancel, checkpoint, métricas, histórico
+  type BatchTask = { slug: string; term: string; field: Field; priority?: number };
+  type BatchResult = BatchTask & { ok: boolean; error?: string; ms?: number };
   const [bucketBatch, setBucketBatch] = useState<{
     running: boolean;
+    paused: boolean;
     total: number;
     done: number;
     current: BatchTask | null;
     results: BatchResult[];
     label: string;
+    jobId?: string;
+    startedAt?: number;
+    finishedAt?: number;
+    iceBefore?: { avg: number; weighted: number };
+    iceAfter?: { avg: number; weighted: number };
+    checkpointAt?: number;
+    tasks?: BatchTask[];
   } | null>(null);
+  const controlRef = useRef<{ paused: boolean; cancelled: boolean }>({ paused: false, cancelled: false });
+  const [resumable, setResumable] = useState<{ tasks: BatchTask[]; label: string; done: number } | null>(null);
+
+  // Sprint 6.1.1a — histórico de operações
+  const [jobs, setJobs] = useState<Array<{
+    id: string; bucket: string; started_at: string; finished_at: string | null;
+    duration_ms: number | null; tasks_total: number; tasks_ok: number; tasks_fail: number;
+    ice_delta: number | null; ice_weighted_before: number | null; ice_weighted_after: number | null;
+    status: string;
+  }>>([]);
+  const loadJobs = useCallback(async () => {
+    const { data } = await (supabase as any)
+      .from("editorial_jobs")
+      .select("id,bucket,started_at,finished_at,duration_ms,tasks_total,tasks_ok,tasks_fail,ice_delta,ice_weighted_before,ice_weighted_after,status")
+      .eq("module", "glossary")
+      .order("started_at", { ascending: false })
+      .limit(10);
+    if (data) setJobs(data as any[]);
+  }, []);
+  useEffect(() => { void loadJobs(); }, [loadJobs]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -444,35 +473,175 @@ export default function EditorialAuditPage() {
     await load();
   }, [filtered, batchField, load]);
 
-  // Sprint 6.1.1 — executa uma fila arbitrária de tarefas (slug×campo)
-  const runQueue = useCallback(async (tasks: BatchTask[], label: string) => {
-    if (tasks.length === 0) { toast.info("Nada a corrigir neste bucket."); return; }
-    if (!confirm(`Corrigir bucket "${label}"?\n\n${tasks.length} tarefa(s) — cada verbete volta para draft após IA.`)) return;
+  // Sprint 6.1.1a — helpers de inteligência da fila
+  const CKPT_KEY = "editorial-audit:checkpoint:v1";
+  const CKPT_EVERY = 5;
 
-    setBucketBatch({ running: true, total: tasks.length, done: 0, current: null, results: [], label });
-    const results: BatchResult[] = [];
-    for (let i = 0; i < tasks.length; i++) {
+  /** Prioridade = doctrinal_weight × max(inbound_refs,1) × missing_count.
+   * Ordena tarefas de modo que verbetes de maior peso doutrinal / mais referenciados sejam corrigidos primeiro. */
+  const prioritizeTasks = useCallback((tasks: BatchTask[]): BatchTask[] => {
+    const idx = new Map<string, { weight: number; inbound: number; missing: number }>();
+    for (const r of priorityRows) {
+      const missing = [r.missing_deep, r.missing_faq, r.missing_logos, r.missing_bible, r.missing_cic, r.missing_fathers].filter(Boolean).length;
+      const weight = rows.find(x => x.slug === r.slug)?.doctrinal_weight ?? 5;
+      idx.set(r.slug, { weight, inbound: r.inbound_refs || 0, missing });
+    }
+    return tasks.map(t => {
+      const m = idx.get(t.slug);
+      const p = m ? m.weight * Math.max(m.inbound, 1) * Math.max(m.missing, 1) : 1;
+      return { ...t, priority: p };
+    }).sort((a, b) => (b.priority ?? 0) - (a.priority ?? 0));
+  }, [priorityRows, rows]);
+
+  const persistCheckpoint = useCallback((jobId: string | undefined, tasks: BatchTask[], results: BatchResult[], label: string, iceBefore: any) => {
+    try {
+      localStorage.setItem(CKPT_KEY, JSON.stringify({
+        jobId, tasks, results, label, iceBefore, savedAt: Date.now(),
+      }));
+    } catch {}
+  }, []);
+  const clearCheckpoint = useCallback(() => { try { localStorage.removeItem(CKPT_KEY); } catch {} }, []);
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(CKPT_KEY);
+      if (!raw) return;
+      const c = JSON.parse(raw);
+      if (Array.isArray(c?.tasks) && Array.isArray(c?.results) && c.results.length < c.tasks.length) {
+        setResumable({ tasks: c.tasks, label: c.label ?? "checkpoint", done: c.results.length });
+      }
+    } catch {}
+  }, []);
+
+  /** Sprint 6.1.1 + 6.1.1a — executa uma fila com priorização, pause/cancel, checkpoint e job de histórico. */
+  const runQueue = useCallback(async (
+    rawTasks: BatchTask[],
+    label: string,
+    opts?: { resumeResults?: BatchResult[]; resumeJobId?: string; skipConfirm?: boolean },
+  ) => {
+    if (rawTasks.length === 0) { toast.info("Nada a corrigir neste bucket."); return; }
+    const tasks = opts?.resumeResults ? rawTasks : prioritizeTasks(rawTasks);
+    const priorPreview = tasks.slice(0, 3).map(t => t.term).join(", ");
+    if (!opts?.skipConfirm && !confirm(
+      `Corrigir bucket "${label}"?\n\n${tasks.length} tarefa(s) — ordenadas por impacto doutrinal.\nPrimeiros: ${priorPreview}\n\nCada verbete volta para draft após IA.`
+    )) return;
+
+    controlRef.current = { paused: false, cancelled: false };
+    const iceBefore = { avg: totals.avg, weighted: totals.avg_weighted };
+    const startedAt = Date.now();
+    const results: BatchResult[] = opts?.resumeResults ? [...opts.resumeResults] : [];
+    const startIdx = results.length;
+
+    // Registrar job no histórico
+    let jobId = opts?.resumeJobId;
+    if (!jobId) {
+      try {
+        const { data: userData } = await supabase.auth.getUser();
+        const { data: jobRow, error: jobErr } = await (supabase as any)
+          .from("editorial_jobs")
+          .insert({
+            module: "glossary",
+            bucket: label,
+            operator: userData?.user?.id,
+            tasks_total: tasks.length,
+            status: "running",
+            ice_before: iceBefore.avg,
+            ice_weighted_before: iceBefore.weighted,
+            metadata: { first_targets: priorPreview },
+          })
+          .select("id")
+          .single();
+        if (!jobErr && jobRow) jobId = (jobRow as any).id;
+      } catch (e) { console.warn("[editorial_jobs] insert falhou", e); }
+    }
+
+    setBucketBatch({
+      running: true, paused: false, total: tasks.length, done: startIdx,
+      current: null, results, label, jobId, startedAt, iceBefore, tasks,
+    });
+
+    for (let i = startIdx; i < tasks.length; i++) {
+      // Pausa
+      while (controlRef.current.paused && !controlRef.current.cancelled) {
+        await new Promise(r => setTimeout(r, 400));
+      }
+      if (controlRef.current.cancelled) break;
+
       const t = tasks[i];
-      setBucketBatch(b => b && ({ ...b, current: t, done: i }));
+      setBucketBatch(b => b && ({ ...b, current: t, done: i, paused: controlRef.current.paused }));
+      const t0 = Date.now();
       try {
         const { data, error } = await supabase.functions.invoke("glossary-generate-deep", {
           body: { slug: t.slug, field: t.field },
         });
         if (error || (data as any)?.error) throw new Error(error?.message ?? (data as any)?.error);
-        results.push({ ...t, ok: true });
+        results.push({ ...t, ok: true, ms: Date.now() - t0 });
       } catch (e: any) {
         console.error(`[bucket-batch] ${t.slug}:${t.field}`, e);
-        results.push({ ...t, ok: false, error: e?.message ?? String(e) });
+        results.push({ ...t, ok: false, error: e?.message ?? String(e), ms: Date.now() - t0 });
       }
       setBucketBatch(b => b && ({ ...b, results: [...results] }));
+
+      // Checkpoint a cada N
+      if ((i + 1) % CKPT_EVERY === 0) {
+        persistCheckpoint(jobId, tasks, results, label, iceBefore);
+        setBucketBatch(b => b && ({ ...b, checkpointAt: Date.now() }));
+      }
+
       await new Promise(r => setTimeout(r, 700));
     }
-    setBucketBatch(b => b && ({ ...b, running: false, done: tasks.length, current: null }));
+
+    const cancelled = controlRef.current.cancelled;
+    const finishedAt = Date.now();
     const ok = results.filter(r => r.ok).length;
-    const fail = results.length - ok;
-    toast[fail === 0 ? "success" : "warning"](`Bucket "${label}" · ${ok} ok · ${fail} falha(s).`);
+    const fail = results.filter(r => !r.ok).length;
+
+    // Recarrega para capturar ICE depois
     await Promise.all([load(), loadStrategy()]);
-  }, [load, loadStrategy]);
+
+    // ICE depois: computa da recarga atual (usa closure após load — usamos setBucketBatch com totals via callback do próximo render é complicado; usamos next totals via re-read)
+    // Como load() atualiza state async, buscamos direto:
+    let iceAfter = { avg: iceBefore.avg, weighted: iceBefore.weighted };
+    try {
+      const { data: g } = await supabase
+        .from("glossary")
+        .select("short_definition,definition,deep_interpretation,etymology,historical_context,practical_application,logos_meditation,faq,bibliography,bible_verses,catechism_references,fathers_refs,magisterium_references,nexus_refs,doctrinal_weight");
+      if (g && g.length) {
+        const scores = g.map((r: any) => scoreOfGroup(computeChecks(r)));
+        const avg = Math.round(scores.reduce((s, n) => s + n, 0) / scores.length);
+        const wSum = g.reduce((s: number, r: any) => s + (r.doctrinal_weight || 1), 0) || 1;
+        const w = Math.round(g.reduce((s: number, r: any, i: number) => s + scores[i] * (r.doctrinal_weight || 1), 0) / wSum);
+        iceAfter = { avg, weighted: w };
+      }
+    } catch {}
+
+    setBucketBatch(b => b && ({
+      ...b, running: false, paused: false, done: results.length,
+      current: null, finishedAt, iceAfter,
+    }));
+
+    // Fecha job
+    if (jobId) {
+      try {
+        await (supabase as any).from("editorial_jobs").update({
+          finished_at: new Date(finishedAt).toISOString(),
+          duration_ms: finishedAt - startedAt,
+          tasks_ok: ok, tasks_fail: fail,
+          ice_after: iceAfter.avg,
+          ice_weighted_after: iceAfter.weighted,
+          ice_delta: Number((iceAfter.weighted - iceBefore.weighted).toFixed(2)),
+          status: cancelled ? "cancelled" : (fail > 0 ? "completed" : "completed"),
+          results: results.map(r => ({ slug: r.slug, field: r.field, ok: r.ok, ms: r.ms, error: r.error })),
+        }).eq("id", jobId);
+      } catch (e) { console.warn("[editorial_jobs] update falhou", e); }
+    }
+
+    clearCheckpoint();
+    setResumable(null);
+    toast[fail === 0 && !cancelled ? "success" : "warning"](
+      `Bucket "${label}" · ${ok} ok · ${fail} falha(s)${cancelled ? " · cancelado" : ""} · ΔICE ${(iceAfter.weighted - iceBefore.weighted).toFixed(1)}`
+    );
+  }, [prioritizeTasks, totals.avg, totals.avg_weighted, load, loadStrategy, persistCheckpoint, clearCheckpoint, loadJobs]);
 
   const buildTasksFromBucket = useCallback((bucketRows: typeof priorityRows): BatchTask[] => {
     const tasks: BatchTask[] = [];
@@ -493,6 +662,31 @@ export default function EditorialAuditPage() {
     if (failed.length === 0) { toast.info("Nenhuma falha para reprocessar."); return; }
     await runQueue(failed, `${bucketBatch.label} · retry`);
   }, [bucketBatch, runQueue]);
+
+  // Sprint 6.1.1a — controles pause / resume / cancel
+  const togglePause = useCallback(() => {
+    controlRef.current.paused = !controlRef.current.paused;
+    setBucketBatch(b => b && ({ ...b, paused: controlRef.current.paused }));
+  }, []);
+  const cancelBatch = useCallback(() => {
+    if (!confirm("Cancelar a execução? Tarefas já feitas serão preservadas.")) return;
+    controlRef.current.cancelled = true;
+    controlRef.current.paused = false;
+  }, []);
+  const resumeFromCheckpoint = useCallback(async () => {
+    if (!resumable) return;
+    const raw = localStorage.getItem(CKPT_KEY);
+    if (!raw) { setResumable(null); return; }
+    try {
+      const c = JSON.parse(raw);
+      await runQueue(c.tasks, c.label, { resumeResults: c.results, resumeJobId: c.jobId, skipConfirm: true });
+    } catch (e: any) {
+      toast.error(`Não foi possível retomar: ${e?.message ?? e}`);
+      clearCheckpoint(); setResumable(null);
+      void loadJobs();
+    }
+  }, [resumable, runQueue, clearCheckpoint]);
+  const discardCheckpoint = useCallback(() => { clearCheckpoint(); setResumable(null); }, [clearCheckpoint]);
 
   // Sprint 6.5 · Selo de Congelamento Editorial
   const freezeCriteria = useMemo(() => {
@@ -810,6 +1004,16 @@ export default function EditorialAuditPage() {
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
+                            {running && (
+                              <>
+                                <Button size="sm" variant="outline" onClick={togglePause} className="h-7 text-xs">
+                                  {bucketBatch?.paused ? "▶ Continuar" : "⏸ Pausar"}
+                                </Button>
+                                <Button size="sm" variant="destructive" onClick={cancelBatch} className="h-7 text-xs">
+                                  ✕ Cancelar
+                                </Button>
+                              </>
+                            )}
                             {bucketBatch && !running && fail > 0 && (
                               <Button size="sm" variant="outline" onClick={retryFailed} className="h-7 text-xs">
                                 <RefreshCw className="mr-1 h-3 w-3" /> Reprocessar {fail} falha(s)
@@ -828,15 +1032,36 @@ export default function EditorialAuditPage() {
                           </div>
                         </div>
 
+                        {/* Sprint 6.1.1a — banner de retomada de checkpoint */}
+                        {!bucketBatch && resumable && (
+                          <div className="mt-3 flex items-center justify-between gap-2 rounded border border-amber-500/40 bg-amber-500/10 p-2 text-xs">
+                            <span>
+                              ⚡ Checkpoint disponível — <b>{resumable.label}</b>: {resumable.done}/{resumable.tasks.length} concluídas.
+                            </span>
+                            <div className="flex gap-1.5">
+                              <Button size="sm" variant="outline" onClick={resumeFromCheckpoint} className="h-6 px-2 text-[10px]">
+                                Retomar
+                              </Button>
+                              <Button size="sm" variant="ghost" onClick={discardCheckpoint} className="h-6 px-2 text-[10px]">
+                                Descartar
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+
                         {bucketBatch && (
                           <div className="mt-3 space-y-2">
                             <div className="flex items-center justify-between text-[11px]">
                               <span className="tabular-nums">
                                 {bucketBatch.done}/{bucketBatch.total}
-                                {bucketBatch.current && running && (
+                                {bucketBatch.paused && <span className="ml-2 text-amber-700">⏸ pausado</span>}
+                                {bucketBatch.current && running && !bucketBatch.paused && (
                                   <span className="ml-2 text-muted-foreground">
                                     → {bucketBatch.current.term} · {fieldLabels[bucketBatch.current.field] ?? bucketBatch.current.field}
                                   </span>
+                                )}
+                                {bucketBatch.checkpointAt && (
+                                  <span className="ml-2 text-emerald-700">✓ checkpoint</span>
                                 )}
                               </span>
                               <span className="text-muted-foreground">
@@ -846,11 +1071,35 @@ export default function EditorialAuditPage() {
                               </span>
                             </div>
                             <Progress value={pct} className="h-1.5" />
+
+                            {/* Sprint 6.1.1a — estatísticas finais */}
+                            {!running && bucketBatch.finishedAt && bucketBatch.startedAt && (() => {
+                              const dur = bucketBatch.finishedAt - bucketBatch.startedAt;
+                              const mm = Math.floor(dur / 60000);
+                              const ss = Math.floor((dur % 60000) / 1000);
+                              const iB = bucketBatch.iceBefore, iA = bucketBatch.iceAfter;
+                              const delta = iA && iB ? iA.weighted - iB.weighted : 0;
+                              return (
+                                <div className="grid grid-cols-2 gap-2 rounded border bg-background/50 p-2 text-[10px] md:grid-cols-4">
+                                  <div><div className="text-muted-foreground">Tempo total</div><div className="font-semibold tabular-nums">{mm}m{ss.toString().padStart(2, "0")}s</div></div>
+                                  <div><div className="text-muted-foreground">ICE antes</div><div className="font-semibold tabular-nums">{iB?.weighted ?? "—"}</div></div>
+                                  <div><div className="text-muted-foreground">ICE depois</div><div className="font-semibold tabular-nums">{iA?.weighted ?? "—"}</div></div>
+                                  <div>
+                                    <div className="text-muted-foreground">Δ ICE ponderado</div>
+                                    <div className={`font-semibold tabular-nums ${delta > 0 ? "text-emerald-700" : delta < 0 ? "text-red-700" : ""}`}>
+                                      {delta > 0 ? "+" : ""}{delta.toFixed(1)}
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })()}
+
                             {!running && bucketBatch.results.length > 0 && (
                               <div className="max-h-32 overflow-y-auto rounded border bg-background/50 p-2 text-[10px] font-mono">
                                 {bucketBatch.results.map((r, i) => (
                                   <div key={i} className={r.ok ? "text-emerald-700" : "text-red-700"}>
                                     {r.ok ? "✓" : "✗"} {r.slug} · {fieldLabels[r.field] ?? r.field}
+                                    {r.ms && <span className="ml-1 opacity-50">{(r.ms / 1000).toFixed(1)}s</span>}
                                     {!r.ok && r.error && <span className="ml-1 opacity-70">— {r.error}</span>}
                                   </div>
                                 ))}
@@ -922,6 +1171,60 @@ export default function EditorialAuditPage() {
               </Card>
             );
           })()}
+
+          {/* Sprint 6.1.1a — Histórico de operações editoriais */}
+          {jobs.length > 0 && (
+            <Card className="mb-6">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm flex items-center gap-2">
+                  <History className="h-4 w-4 text-primary" />
+                  Últimas operações editoriais
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="max-h-64 overflow-y-auto">
+                  <table className="w-full text-xs">
+                    <thead className="sticky top-0 bg-muted/60 text-[10px] uppercase tracking-wider">
+                      <tr>
+                        <th className="px-3 py-2 text-left">Quando</th>
+                        <th className="px-2 py-2 text-left">Bucket</th>
+                        <th className="px-2 py-2 text-right">Tarefas</th>
+                        <th className="px-2 py-2 text-right">✓ / ✗</th>
+                        <th className="px-2 py-2 text-right">Duração</th>
+                        <th className="px-2 py-2 text-right">Δ ICE</th>
+                        <th className="px-2 py-2 text-left">Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                      {jobs.map(j => {
+                        const dur = j.duration_ms ? `${Math.floor(j.duration_ms / 60000)}m${String(Math.floor((j.duration_ms % 60000) / 1000)).padStart(2, "0")}s` : "—";
+                        const delta = j.ice_delta ?? 0;
+                        return (
+                          <tr key={j.id} className="hover:bg-muted/30">
+                            <td className="px-3 py-1.5 text-muted-foreground tabular-nums">{new Date(j.started_at).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}</td>
+                            <td className="px-2 py-1.5">{j.bucket}</td>
+                            <td className="px-2 py-1.5 text-right tabular-nums">{j.tasks_total}</td>
+                            <td className="px-2 py-1.5 text-right tabular-nums">
+                              <span className="text-emerald-700">{j.tasks_ok}</span>
+                              <span className="mx-0.5 text-muted-foreground">/</span>
+                              <span className="text-red-700">{j.tasks_fail}</span>
+                            </td>
+                            <td className="px-2 py-1.5 text-right tabular-nums">{dur}</td>
+                            <td className={`px-2 py-1.5 text-right tabular-nums font-semibold ${delta > 0 ? "text-emerald-700" : delta < 0 ? "text-red-700" : "text-muted-foreground"}`}>
+                              {delta > 0 ? "+" : ""}{Number(delta).toFixed(1)}
+                            </td>
+                            <td className="px-2 py-1.5">
+                              <Badge variant="outline" className="h-4 px-1 text-[9px]">{j.status}</Badge>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
           {/* Sprint 6.6 — Quality Gate (critérios de bloqueio de publicação) */}
           <Card className="mb-6 border-l-4 border-l-primary">
