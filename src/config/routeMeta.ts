@@ -222,6 +222,32 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     description:
       'Política de privacidade da Cathedra: dados coletados, finalidade, base legal, cookies e direitos do titular (LGPD).',
   },
+  '/legal': {
+    title: 'Centro Legal — Cathedra Digital',
+    description:
+      'Documentos institucionais da Cathedra: privacidade, LGPD, termos de uso e transparência reunidos em um único lugar.',
+  },
+  '/legal/privacy': {
+    title: 'Política de Privacidade — Cathedra Digital',
+    description:
+      'Política de privacidade da Cathedra: dados coletados, finalidade, base legal, cookies e direitos do titular (LGPD).',
+    canonicalPath: '/privacy',
+  },
+  '/legal/lgpd': {
+    title: 'LGPD — Conformidade e Direitos do Titular · Cathedra',
+    description:
+      'Como a Cathedra Digital cumpre a Lei nº 13.709/2018: bases legais, direitos do titular, DPO, incidentes e transferência internacional.',
+  },
+  '/manifesto': {
+    title: 'Manifesto da Cathedra — Escritura, Tradição e Oração',
+    description:
+      'A convicção que sustenta a Cathedra Digital: unir Escritura, Tradição, Liturgia, Oração e IA em uma só experiência de fé.',
+  },
+  '/contato': {
+    title: 'Contato — Cathedra Digital',
+    description:
+      'Fale com a Cathedra: suporte, encarregado de dados (LGPD/DPO), parcerias institucionais e imprensa.',
+  },
 
   // ─── Monetização / Planos ─────────────────────────────────────
   '/pricing': {
