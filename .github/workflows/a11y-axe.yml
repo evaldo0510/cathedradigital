@@ -58,15 +58,9 @@ jobs:
           echo "--- summary ---"
           cat reports/a11y/summary.txt || true
 
-      - name: Fail build on new critical/serious violations
+      - name: Strict baseline comparison (exit 1 em qualquer regressão)
         run: |
-          # Guardrail: color-contrast + critical/serious combined
-          fail=$(jq '[.[] | select(.impact=="serious" or .impact=="critical")] | length' reports/a11y/violations.json)
-          echo "Serious+critical: $fail"
-          if [ "$fail" -gt 0 ]; then
-            echo "::error::A11y guardrail failed ($fail serious/critical violations). See artifact 'a11y-report'."
-            exit 1
-          fi
+          python scripts/a11y-compare-baseline.py
 
       - name: Upload report artifact
         if: always()
