@@ -29,6 +29,7 @@ export default function RouteSeo() {
       {description && <meta name="description" content={description} />}
       <link rel="canonical" href={url} />
       <meta property="og:url" content={url} />
+      <meta name="twitter:url" content={url} />
       {title && <meta property="og:title" content={title} />}
       {description && <meta property="og:description" content={description} />}
       {title && <meta name="twitter:title" content={title} />}
