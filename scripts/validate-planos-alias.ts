@@ -16,19 +16,43 @@ const sitemap = fs.readFileSync(path.join(process.cwd(), 'public/sitemap.xml'), 
 if (sitemap.includes(`${ALIAS}<`) || sitemap.includes(`${ALIAS}\n`) || sitemap.match(new RegExp(`>${'https?://[^<]*'}${ALIAS}<`))) {
   errors.push(`sitemap.xml contém ${ALIAS} — alias não deve ser indexado.`);
 }
+if (!sitemap.includes(`${CANONICAL}<`)) {
+  errors.push(`sitemap.xml não contém ${CANONICAL} — destino canônico deve estar indexado.`);
+}
 
 const robots = fs.readFileSync(path.join(process.cwd(), 'public/robots.txt'), 'utf8');
 if (!robots.split('\n').some((l) => l.trim() === `Disallow: ${ALIAS}`)) {
   errors.push(`robots.txt não contém "Disallow: ${ALIAS}".`);
 }
+if (robots.split('\n').some((l) => l.trim() === `Disallow: ${CANONICAL}`)) {
+  errors.push(`robots.txt contém "Disallow: ${CANONICAL}" — destino canônico deve permanecer indexável.`);
+}
 
-const meta = ROUTE_META[ALIAS];
-if (!meta) {
+const aliasMeta = ROUTE_META[ALIAS];
+if (!aliasMeta) {
   errors.push(`ROUTE_META['${ALIAS}'] ausente.`);
 } else {
-  if (!meta.noindex) errors.push(`ROUTE_META['${ALIAS}'].noindex deve ser true.`);
-  if (meta.canonicalPath !== CANONICAL) {
-    errors.push(`ROUTE_META['${ALIAS}'].canonicalPath deve ser '${CANONICAL}' (atual: ${meta.canonicalPath ?? 'undefined'}).`);
+  if (!aliasMeta.noindex) errors.push(`ROUTE_META['${ALIAS}'].noindex deve ser true.`);
+  if (aliasMeta.canonicalPath !== CANONICAL) {
+    errors.push(`ROUTE_META['${ALIAS}'].canonicalPath deve ser '${CANONICAL}' (atual: ${aliasMeta.canonicalPath ?? 'undefined'}).`);
+  }
+}
+
+// Consistência do destino canônico: /pricing precisa ser indexável e self-canonical.
+const canonicalMeta = ROUTE_META[CANONICAL];
+if (!canonicalMeta) {
+  errors.push(`ROUTE_META['${CANONICAL}'] ausente — destino do alias precisa estar mapeado.`);
+} else {
+  if (canonicalMeta.noindex) {
+    errors.push(`ROUTE_META['${CANONICAL}'].noindex deve ser false — destino do alias precisa ser indexável.`);
+  }
+  if (canonicalMeta.canonicalPath && canonicalMeta.canonicalPath !== CANONICAL) {
+    errors.push(
+      `ROUTE_META['${CANONICAL}'].canonicalPath deve ser self (${CANONICAL}) ou undefined; atual: ${canonicalMeta.canonicalPath}.`,
+    );
+  }
+  if (!canonicalMeta.title || !canonicalMeta.description) {
+    errors.push(`ROUTE_META['${CANONICAL}'] precisa de title e description para servir como destino do alias.`);
   }
 }
 
@@ -38,4 +62,5 @@ if (errors.length) {
   process.exit(1);
 }
 
-console.log(`✅ Alias ${ALIAS} desindexado e apontando para ${CANONICAL}.`);
+console.log(`✅ Alias ${ALIAS} desindexado; destino ${CANONICAL} indexável e self-canonical.`);
+
