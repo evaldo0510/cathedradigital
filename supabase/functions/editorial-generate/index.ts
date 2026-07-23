@@ -12,9 +12,7 @@ type Entity = "glossary" | "saints" | "prayers" | "collections" | "journeys";
 
 const ROUTES: Partial<Record<Entity, string>> = {
   glossary: "glossary-generate-deep",
-  // Orações ainda não têm gerador dedicado — o Editorial Engine já rastreia
-  // ICE, gate e cobertura; o gerador entra em sprint futura.
-  prayers: "glossary-generate-deep",
+  prayers: "prayers-generate-deep",
 };
 
 
