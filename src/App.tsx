@@ -89,6 +89,9 @@ const Index = lazy(() => import('./pages/Index'));
 const HomeUnified = lazy(() => import('./pages/HomeUnified'));
 const AtriumHome = lazy(() => import('./pages/AtriumHome'));
 const PublicLanding = lazy(() => import('./pages/PublicLanding'));
+import RootGate from './components/cathedra/RootGate';
+import { setLastRoute, resolveAuthHome } from './lib/lastRoute';
+
 const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
 const SpiritualProfile = lazy(() => import('./components/cathedra/SpiritualProfile'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
@@ -355,7 +358,10 @@ const AppLayout: React.FC = () => {
     setIsSidebarOpen(false);
     // Erro de navegação: Garantir reset de scroll entre rotas no mobile
     window.scrollTo({ top: 0, behavior: 'instant' });
+    // Persistir última rota autenticada para retomar contexto após novo login.
+    setLastRoute(location.pathname);
   }, [location.pathname]);
+
 
   const isDark = settings.theme === 'dark' || settings.theme === 'night';
   const isHighContrast = settings.highContrast;
@@ -512,7 +518,7 @@ const AppLayout: React.FC = () => {
             <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
             <Routes location={location} key={location.pathname}>
 
-              <Route path="/" element={<Suspense fallback={<LoadingFallback />}><PublicLanding /></Suspense>} />
+              <Route path="/" element={<Suspense fallback={<LoadingFallback />}><RootGate /></Suspense>} />
               <Route path="/atrium" element={<Suspense fallback={<LoadingFallback />}><AtriumHome /></Suspense>} />
               <Route path="/planos" element={<Navigate to="/pricing" replace />} />
               <Route path="/home-v3" element={<Suspense fallback={<LoadingFallback />}><HomeUnified /></Suspense>} />
@@ -539,7 +545,7 @@ const AppLayout: React.FC = () => {
               <Route path="/logos" element={<Suspense fallback={<LogosSkeleton />}><LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} /></Suspense>} />
 
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
-              <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate('/')} /></Suspense>} />
+              <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate(resolveAuthHome(), { replace: true })} /></Suspense>} />
               <Route path="/.lovable/oauth/consent" element={<Suspense fallback={<LoadingFallback />}><OAuthConsent /></Suspense>} />
               <Route path="/login" element={<Navigate to="/auth" replace />} />
               <Route path="/reset-password" element={<Suspense fallback={<LoadingFallback />}><ResetPasswordPage /></Suspense>} />
