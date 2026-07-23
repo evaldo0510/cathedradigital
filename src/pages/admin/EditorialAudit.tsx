@@ -275,6 +275,24 @@ export default function EditorialAuditPage() {
   const controlRef = useRef<{ paused: boolean; cancelled: boolean }>({ paused: false, cancelled: false });
   const [resumable, setResumable] = useState<{ tasks: BatchTask[]; label: string; done: number } | null>(null);
 
+  // Sprint 6.1.1a — histórico de operações
+  const [jobs, setJobs] = useState<Array<{
+    id: string; bucket: string; started_at: string; finished_at: string | null;
+    duration_ms: number | null; tasks_total: number; tasks_ok: number; tasks_fail: number;
+    ice_delta: number | null; ice_weighted_before: number | null; ice_weighted_after: number | null;
+    status: string;
+  }>>([]);
+  const loadJobs = useCallback(async () => {
+    const { data } = await (supabase as any)
+      .from("editorial_jobs")
+      .select("id,bucket,started_at,finished_at,duration_ms,tasks_total,tasks_ok,tasks_fail,ice_delta,ice_weighted_before,ice_weighted_after,status")
+      .eq("module", "glossary")
+      .order("started_at", { ascending: false })
+      .limit(10);
+    if (data) setJobs(data as any[]);
+  }, []);
+  useEffect(() => { void loadJobs(); }, [loadJobs]);
+
   const load = useCallback(async () => {
     setLoading(true);
     setError(null);
