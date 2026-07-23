@@ -76,7 +76,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
       >
         <p className="max-w-[95vw] md:max-w-5xl mx-auto font-serif text-premium-xl sm:text-premium-3xl md:text-premium-5xl lg:text-premium-6xl text-foreground/40 italic leading-snug tracking-tight px-spacing-xs md:px-spacing-xl">
           Habite a profundidade do silêncio, <br /> 
-          <span className="text-secondary/70">contemple a clareza da Verdade.</span>
+          <span className="text-secondary">contemple a clareza da Verdade.</span>
         </p>
         <p className="max-w-spacing-2xl mx-auto font-sans text-[9px] md:text-[11px] text-primary/20 uppercase tracking-[0.8em] md:tracking-[1em] font-black leading-relaxed select-none">
           O santuário digital para a sabedoria eterna
@@ -117,7 +117,7 @@ const HeroContent = ({ heroOpacity, heroScale = 1, heroY, onStart }: HeroContent
             size="lg"
             variant="ghost"
             onClick={() => navigate('/biblioteca')}
-            className="w-full md:w-auto min-w-[240px] md:min-w-[300px] text-primary/20 hover:text-primary/60 transition-all duration-1000 rounded-premium-full h-spacing-2xl md:h-spacing-3xl uppercase tracking-[0.4em] text-[9px] md:text-[10px] font-bold"
+            className="w-full md:w-auto min-w-[240px] md:min-w-[300px] text-primary/75 hover:text-primary transition-all duration-1000 rounded-premium-full h-spacing-2xl md:h-spacing-3xl uppercase tracking-[0.4em] text-[9px] md:text-[10px] font-bold"
             aria-label="Iniciar leitura"
           >
             Iniciar leitura
