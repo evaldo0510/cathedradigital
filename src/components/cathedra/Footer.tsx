@@ -126,14 +126,17 @@ const DIOCESE_URLS: Record<string, string> = {
 };
 
 // Tokens visuais Logos 2030 — noir + dourado como acento
+// GOLD          → borders, backgrounds, ícones, focus ring (fundo escuro/decoração)
+// GOLD_TEXT     → uso quando é color: texto sobre fundo claro (WCAG AA compliant, ratio ~6.8:1)
 const GOLD = '#c9a84c';
+const GOLD_TEXT = '#8a7020';
 const GOLD_SOFT = 'rgba(201,168,76,0.35)';
 const GOLD_HAIR = 'rgba(201,168,76,0.18)';
 const FONT_DISPLAY = "'Cormorant Garamond', ui-serif, Georgia, serif";
 const FONT_BODY = "'Karla', ui-sans-serif, system-ui, sans-serif";
 
 const EYEBROW_STYLE: React.CSSProperties = {
-  color: GOLD,
+  color: GOLD_TEXT,
   fontFamily: FONT_BODY,
   fontSize: '10px',
   fontWeight: 500,
