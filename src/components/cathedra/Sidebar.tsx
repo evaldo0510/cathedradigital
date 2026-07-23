@@ -298,7 +298,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                                     {cacheCount}
                                   </span>
                                 )}
-                                {(item as any).pro && <span className="ml-auto text-[7px] font-bold uppercase tracking-widest px-2 py-0.5 flex-shrink-0" style={{ color: '#c9a84c', border: '1px solid rgba(201,168,76,0.4)' }}>PRO</span>}
+                                {/* Badge "PRO" removido da UI de uso — sinalização de plano fica na landing pública / /pricing. */}
                                 {isActive && <motion.div layoutId="sidebar-active" className="ml-auto w-1 h-1 flex-shrink-0" style={{ background: '#c9a84c' }} />}
                               </Button>
                             </li>
