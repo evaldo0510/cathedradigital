@@ -79,9 +79,9 @@ describe("Editorial Engine · Manifest Validation", () => {
   });
 
   it("registry lista as entidades ready registradas hoje", () => {
-    // Estado atual: Glossário (consolidando) + Santos (developing) plugados.
-    // Orações, Coleções e Jornadas ainda são placeholders.
+    // Estado atual: Glossário (consolidando) + Santos + Jornadas (developing) plugados.
+    // Orações e Coleções ainda são placeholders.
     const ready = editorialRegistry.filter(m => m.ready);
-    expect(ready.map(m => m.id).sort()).toEqual(["glossary", "saints"]);
+    expect(ready.map(m => m.id).sort()).toEqual(["glossary", "journeys", "saints"]);
   });
 });

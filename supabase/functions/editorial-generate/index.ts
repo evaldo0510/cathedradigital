@@ -14,6 +14,7 @@ const ROUTES: Partial<Record<Entity, string>> = {
   glossary: "glossary-generate-deep",
 };
 
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   try {
