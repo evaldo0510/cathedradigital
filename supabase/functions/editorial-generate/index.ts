@@ -8,11 +8,12 @@
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
-type Entity = "glossary" | "saints" | "prayers" | "collections" | "journeys";
+type Entity = "glossary" | "saints" | "prayers" | "collections" | "journeys" | "catechism";
 
 const ROUTES: Partial<Record<Entity, string>> = {
   glossary: "glossary-generate-deep",
   prayers: "prayers-generate-deep",
+  catechism: "glossary-generate-deep", // stub · usa gerador editorial genérico até catechism-generate-deep existir
 };
 
 
