@@ -36,7 +36,9 @@ const LandingHeader = () => {
   const navLinks = [
     { name: "Bíblia", href: AppRoute.BIBLE },
     { name: "Catecismo", href: AppRoute.CATECHISM },
-    { name: "Magistério", href: AppRoute.MAGISTERIUM },
+    { name: "Liturgia", href: "/liturgia" },
+    { name: "Orações", href: "/oracao" },
+    { name: "Logos", href: "/logos" },
   ];
 
   const handleNavClick = (href: string) => {
