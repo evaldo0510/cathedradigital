@@ -1,11 +1,9 @@
 /**
  * Login hook do Lighthouse CI (puppeteerScript).
  *
- * Executa antes de cada run: navega ao app, injeta a sessão Supabase
- * salva em .lighthouseci/storage-state/session.json pelo lighthouse-run.mjs.
- *
- * A geração da sessão é feita fora do LHCI (Playwright), pois o LHCI
- * mede a página final, não o fluxo de login.
+ * Se .lighthouseci/storage-state/session.json existir e contiver uma sessão,
+ * restaura localStorage + cookies. Caso contrário (dev/PR sem credenciais),
+ * segue sem autenticar — o Lighthouse mede a rota como visitante.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -16,26 +14,22 @@ export default async (browser, context) => {
   const origin = url.origin;
   const statePath = path.resolve('.lighthouseci/storage-state/session.json');
   if (!fs.existsSync(statePath)) {
-    throw new Error(
-      `[LHCI login] Sessão não encontrada em ${statePath}. Rode scripts/lighthouse-authenticate.ts primeiro.`,
-    );
+    console.log('[LHCI login] Sem session.json — rodando não autenticado.');
+    return;
   }
   const state = JSON.parse(fs.readFileSync(statePath, 'utf8'));
+  if (state.unauthenticated) {
+    console.log(`[LHCI login] Sessão marcada não autenticada (${state.reason}) — pulando restore.`);
+    return;
+  }
 
   const page = await browser.newPage();
   await page.goto(origin, { waitUntil: 'domcontentloaded' });
 
-  // Restaura localStorage (Supabase JS SPA lê a sessão daqui)
   await page.evaluate((entries) => {
-    for (const [key, value] of entries) {
-      window.localStorage.setItem(key, value);
-    }
+    for (const [key, value] of entries) window.localStorage.setItem(key, value);
   }, state.localStorage || []);
 
-  // Restaura cookies (Supabase SSR)
-  if (state.cookies?.length) {
-    await page.setCookie(...state.cookies);
-  }
-
+  if (state.cookies?.length) await page.setCookie(...state.cookies);
   await page.close();
 };
