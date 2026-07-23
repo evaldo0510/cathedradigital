@@ -245,6 +245,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
   '/catecismo': { title: 'Catecismo — Cathedra', description: 'Alias para /catechism.', noindex: true, canonicalPath: '/catechism' },
   '/magisterio': { title: 'Magistério — Cathedra', description: 'Alias para /magisterium.', noindex: true, canonicalPath: '/magisterium' },
   '/search': { title: 'Buscar — Cathedra', description: 'Alias para /buscar.', noindex: true, canonicalPath: '/buscar' },
+  '/planos': { title: 'Planos — Cathedra', description: 'Alias para /pricing.', noindex: true, canonicalPath: '/pricing' },
   '/chat': { title: 'Logos — Cathedra', description: 'Alias para /logos.', noindex: true, canonicalPath: '/logos' },
   '/login': { title: 'Entrar — Cathedra', description: 'Alias para /auth.', noindex: true, canonicalPath: '/auth' },
   '/dashboard': { title: 'Hoje — Cathedra', description: 'Alias para /hoje.', noindex: true, canonicalPath: '/hoje' },
