@@ -1,7 +1,8 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { resolveAuthHome } from '@/lib/lastRoute';
+import { trackEvent } from '@/lib/analytics';
 
 const PublicLanding = lazy(() => import('@/pages/PublicLanding'));
 
