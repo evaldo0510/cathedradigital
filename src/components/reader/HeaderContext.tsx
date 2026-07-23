@@ -225,4 +225,42 @@ export const StudyContext: React.FC<StudyContextProps> = ({
   );
 };
 
+export interface PrayerContextProps {
+  /** Categoria/tradição da oração (ex.: "Rosário Meditativo"). */
+  category?: React.ReactNode;
+  /** Mistério, estação ou dia atual (ex.: "3º Mistério · Coroação de Espinhos"). */
+  station?: React.ReactNode;
+  /** Ritmo/duração estimada. */
+  rhythm?: React.ReactNode;
+  /** Passo dentro da oração (ex.: "12 de 60"). */
+  step?: React.ReactNode;
+  className?: string;
+}
+
+/**
+ * PrayerContext — implementação de HeaderContext para o Prayer Engine.
+ * Alimentado por `usePrayerEngineSession` já resolvido; zero lógica interna.
+ */
+export const PrayerContext: React.FC<PrayerContextProps> = ({
+  category,
+  station,
+  rhythm,
+  step,
+  className,
+}) => {
+  const items: HeaderContextProps['items'] = [];
+  if (station) items.push({ label: 'Neste momento', value: station });
+  if (step) items.push({ label: 'Passo', value: step });
+  if (rhythm) items.push({ label: 'Ritmo', value: rhythm });
+  return (
+    <HeaderContext
+      eyebrow={category}
+      items={items}
+      ariaLabel="Contexto da oração"
+      className={className}
+    />
+  );
+};
+
 export default HeaderContext;
+
