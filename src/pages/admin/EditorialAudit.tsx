@@ -436,6 +436,103 @@ export default function EditorialAuditPage() {
 
       {!loading && !error && (
         <>
+          {/* Sprint 6.6 — Certificação Editorial Permanente */}
+          {(() => {
+            const ice_v = snapshot ? Number(snapshot.avg_ice) : totals.avg;
+            const tier =
+              ice_v >= 95 ? { label: "Ouro", cls: "border-emerald-500/50 bg-gradient-to-br from-emerald-500/15 to-transparent text-emerald-800" }
+              : ice_v >= 85 ? { label: "Prata", cls: "border-sky-500/50 bg-gradient-to-br from-sky-500/15 to-transparent text-sky-800" }
+              : ice_v >= 70 ? { label: "Bronze", cls: "border-amber-500/50 bg-gradient-to-br from-amber-500/15 to-transparent text-amber-800" }
+              : { label: "Revisão", cls: "border-red-500/50 bg-gradient-to-br from-red-500/15 to-transparent text-red-800" };
+            const deltaIce = snapshot && prevSnapshot ? Number(snapshot.avg_ice) - Number(prevSnapshot.avg_ice) : null;
+            return (
+              <Card className={`mb-6 ${tier.cls}`}>
+                <CardContent className="flex flex-wrap items-center gap-6 p-5">
+                  <div className="flex items-center gap-3">
+                    <ShieldCheck className="h-10 w-10" />
+                    <div>
+                      <p className="text-[10px] font-bold uppercase tracking-widest opacity-80">
+                        Cathedra Editorial · Certificação
+                      </p>
+                      <p className="text-2xl font-serif leading-tight">Nível {tier.label}</p>
+                    </div>
+                  </div>
+                  <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                    <div><p className="opacity-70">ICE médio</p>
+                      <p className="text-lg font-bold tabular-nums">{ice_v.toFixed(1)}%
+                        {deltaIce !== null && (
+                          <span className={`ml-1.5 text-[10px] ${deltaIce >= 0 ? "text-emerald-600" : "text-red-600"}`}>
+                            {deltaIce >= 0 ? "▲" : "▼"} {Math.abs(deltaIce).toFixed(1)}
+                          </span>
+                        )}
+                      </p></div>
+                    <div><p className="opacity-70">Quality Gate</p>
+                      <p className="text-lg font-bold tabular-nums">
+                        {snapshot ? `${snapshot.gate_passing}/${snapshot.gate_passing + snapshot.gate_failing}` : "—"}
+                      </p></div>
+                    <div><p className="opacity-70">Regressões</p>
+                      <p className="text-lg font-bold tabular-nums flex items-center gap-1">
+                        {snapshot?.regressions.length ?? 0}
+                        {(snapshot?.regressions.length ?? 0) > 0 && <TrendingDown className="h-4 w-4 text-red-600" />}
+                      </p></div>
+                    <div><p className="opacity-70">Última auditoria</p>
+                      <p className="text-sm font-medium tabular-nums">
+                        {snapshot ? new Date(snapshot.captured_at).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }) : "nunca"}
+                      </p></div>
+                  </div>
+                  <Button onClick={runAudit} disabled={auditing} size="sm" variant="default">
+                    {auditing ? <Loader2 className="h-4 w-4 animate-spin mr-1.5" /> : <RefreshCw className="h-4 w-4 mr-1.5" />}
+                    Executar nova auditoria
+                  </Button>
+                </CardContent>
+                {snapshot && snapshot.regressions.length > 0 && (
+                  <CardContent className="pt-0">
+                    <Collapsible>
+                      <CollapsibleTrigger className="flex w-full items-center gap-1.5 rounded border border-red-500/30 bg-red-500/5 px-2 py-1.5 text-[11px] font-medium text-red-700 hover:bg-red-500/10">
+                        <TrendingDown className="h-3.5 w-3.5" />
+                        {snapshot.regressions.length} verbete(s) perderam qualidade desde a última auditoria
+                        <ChevronDown className="ml-auto h-3 w-3" />
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-1.5 space-y-1 rounded border bg-muted/20 p-2 text-[11px]">
+                        {snapshot.regressions.map(r => (
+                          <div key={r.slug} className="flex items-center justify-between">
+                            <Link to={`/admin/glossario?slug=${r.slug}`} className="font-semibold hover:underline">{r.slug}</Link>
+                            <span className="tabular-nums text-muted-foreground">
+                              ICE {r.ice_prev} → <b className="text-red-700">{r.ice_now}</b>
+                              {r.editorial_delta !== 0 && <span className="ml-2">Ed {r.editorial_delta > 0 ? "+" : ""}{r.editorial_delta}</span>}
+                              {r.nexus_delta !== 0 && <span className="ml-2">Nx {r.nexus_delta > 0 ? "+" : ""}{r.nexus_delta}</span>}
+                            </span>
+                          </div>
+                        ))}
+                      </CollapsibleContent>
+                    </Collapsible>
+                  </CardContent>
+                )}
+              </Card>
+            );
+          })()}
+
+          {/* Sprint 6.6 — Quality Gate (critérios de bloqueio de publicação) */}
+          <Card className="mb-6 border-l-4 border-l-primary">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <ShieldCheck className="h-4 w-4 text-primary" />
+                Quality Gate · publicação bloqueada se falhar
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="text-[11px] text-muted-foreground grid grid-cols-2 md:grid-cols-3 gap-1">
+              <span>· ICE ≥ 85</span>
+              <span>· Editorial ≥ 90</span>
+              <span>· Nexus ≥ 90</span>
+              <span>· Interpretação profunda preenchida</span>
+              <span>· FAQ com ≥3 perguntas</span>
+              <span>· Meditação Logos preenchida</span>
+              <span>· ≥3 referências bíblicas</span>
+              <span>· ≥2 referências do CIC</span>
+              <span>· ≥1 referência patrística</span>
+            </CardContent>
+          </Card>
+
           {/* Sprint 6.5 — Selo de Congelamento */}
           <Card className={`mb-6 ${frozen
             ? "border-sky-500/50 bg-gradient-to-br from-sky-500/10 to-transparent"
