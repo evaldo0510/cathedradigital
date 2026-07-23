@@ -185,3 +185,64 @@ jobs:
           name: playwright-smoke-report
           path: playwright-report
           retention-days: 14
+
+  prod-seo-http:
+    name: Prod SEO HTTP · /planos redirect + /pricing headers + sitemap
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # Roda em push para main (pós-merge = pós-deploy Vercel) e sob demanda.
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    env:
+      PROD_BASE_URL: ${{ vars.PROD_BASE_URL || 'https://www.cathedradigital.com.br' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+      - name: Instalar Chromium (Playwright)
+        run: bunx playwright install --with-deps chromium
+
+      - name: Aguardar deploy Vercel propagar (30s)
+        run: sleep 30
+
+      - name: HTTP checks contra produção (redirect + headers)
+        run: |
+          bunx playwright test \
+            tests/e2e/planos-http-production.spec.ts \
+            --project=chromium
+        env:
+          CI: 'true'
+
+      - name: Curl sanity check · sitemap + robots + /planos
+        run: |
+          set -e
+          echo "→ robots.txt"
+          curl -sSfI "$PROD_BASE_URL/robots.txt" | grep -i 'content-type'
+          curl -sSf  "$PROD_BASE_URL/robots.txt" | grep -q '^Disallow: /planos$' \
+            || (echo "::error::robots.txt sem Disallow: /planos" && exit 1)
+
+          echo "→ sitemap.xml (não pode conter /planos)"
+          if curl -sSf "$PROD_BASE_URL/sitemap.xml" | grep -q '/planos<'; then
+            echo "::error::sitemap.xml expõe /planos"
+            exit 1
+          fi
+
+          echo "→ /planos deve redirect 301/308 para /pricing"
+          code=$(curl -sS -o /dev/null -w '%{http_code}' "$PROD_BASE_URL/planos")
+          loc=$(curl -sSI "$PROD_BASE_URL/planos" | awk 'tolower($1)=="location:"{print $2}' | tr -d '\r')
+          echo "status=$code location=$loc"
+          [[ "$code" =~ ^(301|308)$ ]] || (echo "::error::/planos status inesperado: $code" && exit 1)
+          [[ "$loc" == *"/pricing"* ]] || (echo "::error::/planos Location não aponta para /pricing: $loc" && exit 1)
+
+          echo "→ /pricing deve responder 200"
+          curl -sSfI "$PROD_BASE_URL/pricing" >/dev/null
+
+      - name: Publicar relatório
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-prod-seo-http
+          path: playwright-report
+          retention-days: 14
+
