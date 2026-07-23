@@ -313,7 +313,9 @@ const PublicLanding = () => {
                       onClick={() => navigate(p.href)}
                       size="lg"
                       variant={p.accent ? "default" : "outline"}
-                      className="rounded-full px-6"
+                      className={p.accent
+                        ? "rounded-full px-6 bg-primary !text-primary-foreground hover:bg-primary/90"
+                        : "rounded-full px-6"}
                     >
                       {p.cta}
                       <ArrowRight className="ml-2 h-4 w-4" />
@@ -330,7 +332,7 @@ const PublicLanding = () => {
       <footer className="mt-24 border-t border-border/40 bg-primary text-primary-foreground">
         <div className="app-container py-16 grid gap-12 md:grid-cols-4">
           <div className="md:col-span-2 space-y-4">
-            <h2 className="font-display uppercase tracking-[0.4em] text-secondary text-lg">
+            <h2 className="font-display uppercase tracking-[0.4em] text-lg" style={{ color: 'var(--gold-on-dark)' }}>
               Cathedra Digital
             </h2>
             <p className="text-sm text-primary-foreground/70 max-w-md leading-relaxed">
@@ -343,7 +345,8 @@ const PublicLanding = () => {
           </div>
 
           <div className="space-y-3">
-            <h3 className="text-xs uppercase tracking-[0.3em] text-secondary">
+            <h3 className="text-xs uppercase tracking-[0.3em]" style={{ color: 'var(--gold-on-dark)' }}>
+
               Ambientes
             </h3>
             <ul className="space-y-2 text-sm text-primary-foreground/80">
@@ -356,7 +359,7 @@ const PublicLanding = () => {
           </div>
 
           <div className="space-y-3">
-            <h3 className="text-xs uppercase tracking-[0.3em] text-secondary">
+            <h3 className="text-xs uppercase tracking-[0.3em]" style={{ color: 'var(--gold-on-dark)' }}>
               Cathedra
             </h3>
             <ul className="space-y-2 text-sm text-primary-foreground/80">

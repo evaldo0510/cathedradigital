@@ -25,7 +25,7 @@ const AboutPage: React.FC = () => (
         <a 
           key={link.href} 
           href={link.href}
-          className="flex items-center gap-spacing-xs px-spacing-md py-spacing-xs text-premium-sm font-medium text-muted-foreground/60 hover:text-primary hover:bg-primary/[0.03] rounded-premium-full transition-all"
+          className="flex items-center gap-spacing-xs px-spacing-md py-spacing-xs text-premium-sm font-medium text-foreground/75 hover:text-primary hover:bg-primary/[0.03] rounded-premium-full transition-all"
         >
           {link.icon}
           {link.label}

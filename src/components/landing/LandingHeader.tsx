@@ -70,7 +70,7 @@ const LandingHeader = () => {
           <Icons.Logo className="w-spacing-2xl h-spacing-2xl transition-all duration-1000 group-hover:scale-105" variant="gold" />
           <div className="hidden sm:flex flex-col">
             <h2 className="text-premium-xl font-display font-medium text-primary tracking-[0.4em] uppercase leading-none">CATHEDRA</h2>
-            <span className="text-[8px] font-black uppercase tracking-[0.6em] text-secondary/70 mt-spacing-2xs">Digital Sanctuarium</span>
+            <span className="text-[8px] font-black uppercase tracking-[0.6em] text-secondary mt-spacing-2xs">Digital Sanctuarium</span>
           </div>
         </Link>
 
@@ -156,7 +156,7 @@ const LandingHeader = () => {
           <HomeButton
             variant="ghost"
             size="sm"
-            className={`hidden xs:flex rounded-premium-full px-spacing-md sm:px-spacing-lg shadow-premium-none transition-all ${isScrolled ? 'text-primary' : ''}`}
+            className={`hidden xs:flex rounded-premium-full px-spacing-md sm:px-spacing-lg shadow-premium-none transition-all text-primary`}
             onClick={() => navigate(AppRoute.LOGIN)}
           >
             Começar <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-2xs" />
