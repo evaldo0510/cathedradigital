@@ -280,7 +280,7 @@ const ProfilePage: React.FC = () => {
         <div>
           <h1 className="text-premium-2xl font-black text-foreground">{profile.name || 'Peregrino'}</h1>
           <p className="text-premium-xs text-muted-foreground uppercase tracking-widest font-bold">
-            {profile.is_premium ? '⭐ Erudito PRO' : 'Peregrino'} · Membro desde {memberSince}
+            Peregrino · Membro desde {memberSince}
           </p>
         </div>
       </div>
