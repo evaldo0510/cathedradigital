@@ -81,12 +81,6 @@
     "test:nexus-popover-dismiss": "playwright test tests/e2e/nexus-popover-dismiss.spec.ts",
     "test:bible-cic-link": "playwright test tests/e2e/bible-cic-link.spec.ts",
     "test:bible-internal-a11y": "playwright test tests/e2e/bible-internal-a11y.spec.ts",
-
-
-
-
-
-
     "test:catecismo:a11y": "playwright test tests/e2e/catecismo-a11y-avancado.spec.ts",
     "chromatic": "npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN --playwright",
     "generate:seo": "bun run scripts/generate-sitemap.ts",
@@ -109,7 +103,9 @@
     "axe:contrast": "bunx tsx scripts/axe-contrast-run.ts",
     "axe:contrast:aggregate": "bunx tsx scripts/axe-contrast-heatmap.ts",
     "axe:contrast:tracked-all": "bunx tsx scripts/axe-contrast-run.ts --all-tracked --aggregate",
-    "axe:contrast:autofix": "bunx tsx scripts/axe-contrast-run.ts --autofix --aggregate"
+    "axe:contrast:autofix": "bunx tsx scripts/axe-contrast-run.ts --autofix --aggregate",
+    "lh:profile:local": "bun run scripts/lighthouse-run.mjs",
+    "lh:profile:compare": "node scripts/lhci-compare-commits.mjs"
   },
   "dependencies": {
     "@axe-core/playwright": "^4.11.3",
@@ -227,6 +223,7 @@
     "typescript-eslint": "^8.38.0",
     "vite": "^5.4.19",
     "vitest": "^3.2.4",
-    "vitest-axe": "^0.1.0"
+    "vitest-axe": "^0.1.0",
+    "@lhci/cli": "^0.15.1"
   }
 }
