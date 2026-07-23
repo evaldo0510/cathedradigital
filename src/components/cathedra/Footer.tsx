@@ -8,7 +8,12 @@ import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { SOCIAL_LINKS, EXTERNAL_URLS } from '@/config/site-config';
 import { trackEvent } from '@/lib/analytics';
-import { APP_ROUTES } from '@/config/routes';
+import {
+  PUBLIC_FOOTER_LINKS,
+  CONDITIONAL_FOOTER_LINKS,
+  EXTERNAL_FOOTER_LINKS,
+  type FooterLink,
+} from '@/config/footer-links';
 
 const DIOCESES_BR = [
   'Arquidiocese de São Paulo',
@@ -190,6 +195,7 @@ const Footer: React.FC = React.memo(() => {
   const [selectedDiocese, setSelectedDiocese] = useState(() => localStorage.getItem('cathedra_diocese') || '');
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mobileNavExpanded, setMobileNavExpanded] = useState(false);
 
   const toggleSection = (id: string) => setOpenId(prev => (prev === id ? null : id));
 
@@ -540,55 +546,90 @@ const Footer: React.FC = React.memo(() => {
             <nav
               aria-label={lang === 'pt' ? 'Links institucionais' : 'Institutional links'}
               className="flex flex-wrap items-center gap-x-1 gap-y-1"
+              data-testid="footer-public-nav"
             >
               {(() => {
-                // Apenas links institucionais públicos no rodapé externo.
-                // Rotas de conta (Perfil Espiritual, Boas-vindas, Design System, Comunidade)
-                // vivem na Área do Usuário — não devem aparecer para visitantes.
-                const PUBLIC_FOOTER_PATHS = ['/about', '/partners', '/privacy', '/terms', '/transparencia'];
-                const items = PUBLIC_FOOTER_PATHS
-                  .map(p => APP_ROUTES.find(r => r.path === p))
-                  .filter((r): r is NonNullable<typeof r> => Boolean(r));
-                return items.map((item, index, array) => (
-                  <React.Fragment key={item.label}>
+                // Rodapé mobile compacto: mostra apenas os essenciais + botão "Mais".
+                // No desktop (ou após expandir no mobile) exibe tudo.
+                const isCollapsed = isMobile && !mobileNavExpanded;
+                const conditional: FooterLink[] = CONDITIONAL_FOOTER_LINKS.filter(
+                  (link) => !link.adminOnly || isAdmin,
+                );
+                const allLinks: FooterLink[] = [
+                  ...PUBLIC_FOOTER_LINKS,
+                  ...conditional,
+                  ...EXTERNAL_FOOTER_LINKS,
+                ];
+                const visible = isCollapsed ? PUBLIC_FOOTER_LINKS : allLinks;
+
+                const renderLink = (link: FooterLink) => {
+                  const commonClass =
+                    'text-muted-foreground hover:text-[#c9a84c] transition-colors focus-visible:ring-2 focus-visible:ring-[#c9a84c] outline-none min-h-[44px] px-3 py-2 rounded-none bg-transparent hover:bg-transparent inline-flex items-center';
+                  const commonStyle: React.CSSProperties = {
+                    fontFamily: FONT_BODY,
+                    fontSize: 10,
+                    fontWeight: 500,
+                    letterSpacing: '0.28em',
+                    textTransform: 'uppercase',
+                  };
+                  if (link.href) {
+                    return (
+                      <a
+                        href={link.href}
+                        target={link.external ? '_blank' : undefined}
+                        rel={link.external ? 'noopener noreferrer' : undefined}
+                        className={commonClass}
+                        style={commonStyle}
+                        aria-label={link.ariaLabel ?? link.label}
+                        data-testid={link.adminOnly ? 'footer-admin-link' : undefined}
+                      >
+                        {link.label}
+                      </a>
+                    );
+                  }
+                  return (
                     <Button
                       variant="ghost"
-                      onClick={() => navigate(item.path)}
-                      className="text-muted-foreground hover:text-[#c9a84c] transition-colors focus-visible:ring-2 focus-visible:ring-[#c9a84c] outline-none min-h-[44px] px-3 py-2 rounded-none bg-transparent hover:bg-transparent"
-                      style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 500, letterSpacing: '0.28em', textTransform: 'uppercase' }}
-                      aria-label={item.label}
+                      onClick={() => link.path && navigate(link.path)}
+                      className={commonClass}
+                      style={commonStyle}
+                      aria-label={link.ariaLabel ?? link.label}
+                      data-testid={link.adminOnly ? 'footer-admin-link' : undefined}
                     >
-                      {item.label}
+                      {link.label}
                     </Button>
-                    {(index < array.length - 1 || isAdmin) && (
+                  );
+                };
+
+                return visible.map((link, index) => (
+                  <React.Fragment key={link.label}>
+                    {renderLink(link)}
+                    {index < visible.length - 1 && (
                       <span aria-hidden="true" className="select-none" style={{ color: GOLD, opacity: 0.45 }}>·</span>
                     )}
                   </React.Fragment>
                 ));
               })()}
-              {isAdmin && (
-                <Button
-                  variant="ghost"
-                  data-testid="footer-admin-link"
-                  onClick={() => navigate('/admin/seo')}
-                  className="text-muted-foreground hover:text-[#c9a84c] transition-colors focus-visible:ring-2 focus-visible:ring-[#c9a84c] outline-none min-h-[44px] px-3 py-2 rounded-none bg-transparent hover:bg-transparent"
+
+              {isMobile && (PUBLIC_FOOTER_LINKS.length < (PUBLIC_FOOTER_LINKS.length + EXTERNAL_FOOTER_LINKS.length + CONDITIONAL_FOOTER_LINKS.filter((l) => !l.adminOnly || isAdmin).length)) && (
+                <button
+                  type="button"
+                  onClick={() => setMobileNavExpanded((v) => !v)}
+                  aria-expanded={mobileNavExpanded}
+                  aria-controls="footer-public-nav"
+                  data-testid="footer-mobile-expand"
+                  className="ml-1 inline-flex items-center gap-1 min-h-[44px] px-3 py-2 text-muted-foreground hover:text-[#c9a84c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] transition-colors"
                   style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 500, letterSpacing: '0.28em', textTransform: 'uppercase' }}
-                  aria-label="Painel administrativo"
                 >
-                  Admin
-                </Button>
+                  {mobileNavExpanded
+                    ? (lang === 'pt' ? 'Menos' : 'Less')
+                    : (lang === 'pt' ? 'Mais' : 'More')}
+                  <Icons.ArrowDown
+                    className={`w-3 h-3 transition-transform ${mobileNavExpanded ? 'rotate-180' : ''}`}
+                    style={{ color: GOLD }}
+                  />
+                </button>
               )}
-              <span aria-hidden="true" className="select-none" style={{ color: GOLD, opacity: 0.45 }}>·</span>
-              <a
-                href="https://gpwrpmoniglarqwfyryp.supabase.co/functions/v1/glossary-rss?format=rss"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-[#c9a84c] transition-colors focus-visible:ring-2 focus-visible:ring-[#c9a84c] outline-none min-h-[44px] px-3 py-2 inline-flex items-center"
-                style={{ fontFamily: FONT_BODY, fontSize: 10, fontWeight: 500, letterSpacing: '0.28em', textTransform: 'uppercase' }}
-                aria-label="Feed RSS do Léxico Teológico"
-              >
-                RSS Léxico
-              </a>
             </nav>
 
             <button

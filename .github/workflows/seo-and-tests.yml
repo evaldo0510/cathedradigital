@@ -153,6 +153,21 @@ jobs:
           PLAYWRIGHT_TEST_BASE_URL: http://127.0.0.1:8080
         run: bunx playwright test --project=${{ matrix.project }}
 
+      - name: Capturar diagnóstico /pricing (HTML + JSON-LD) em falha
+        if: failure()
+        env:
+          PLAYWRIGHT_TEST_BASE_URL: http://127.0.0.1:8080
+        run: bun run scripts/capture-pricing-diagnostics.ts || true
+
+      - name: Publicar diagnóstico /pricing (${{ matrix.project }})
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pricing-diagnostics-${{ matrix.project }}
+          path: diagnostics
+          if-no-files-found: warn
+          retention-days: 14
+
       - name: Publicar relatório Playwright (${{ matrix.project }})
         if: always()
         uses: actions/upload-artifact@v4
