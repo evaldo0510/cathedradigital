@@ -1,0 +1,86 @@
+name: Lighthouse — /profile
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'lighthouserc.*.cjs'
+      - 'budgets/**'
+      - 'scripts/lighthouse-**'
+      - 'scripts/lhci-**'
+      - '.github/workflows/lighthouse-profile.yml'
+  push:
+    branches: [main]
+
+jobs:
+  lighthouse:
+    name: LHCI mobile + tablet (authenticated)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      pull-requests: write
+      actions: read
+    env:
+      LH_BASE_URL: http://localhost:8080
+      TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
+      TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install
+        run: bun install --frozen-lockfile
+        env:
+          HUSKY: 0
+
+      - name: Install Playwright browser
+        run: bunx playwright install --with-deps chromium
+
+      - name: Build
+        run: bun run build
+
+      - name: Start preview
+        run: |
+          bunx vite preview --port 8080 --strictPort &
+          echo $! > /tmp/vite.pid
+          for i in $(seq 1 30); do
+            curl -sfo /dev/null http://localhost:8080/ && break
+            sleep 1
+          done
+
+      - name: Verify test user configured
+        run: |
+          if [ -z "$TEST_USER_EMAIL" ] || [ -z "$TEST_USER_PASSWORD" ]; then
+            echo "::error::TEST_USER_EMAIL/TEST_USER_PASSWORD ausentes. Adicione em Settings → Secrets → Actions."
+            exit 1
+          fi
+
+      - name: Run Lighthouse (mobile + tablet)
+        run: node scripts/lighthouse-run.mjs
+
+      - name: Stop preview
+        if: always()
+        run: kill $(cat /tmp/vite.pid) || true
+
+      - name: Upload Lighthouse artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-summary
+          path: .lighthouseci/
+          retention-days: 30
+
+      - name: Compare vs baseline & comment PR
+        if: github.event_name == 'pull_request'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: node scripts/lhci-compare-commits.mjs
