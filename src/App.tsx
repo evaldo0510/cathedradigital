@@ -545,7 +545,7 @@ const AppLayout: React.FC = () => {
               <Route path="/logos" element={<Suspense fallback={<LogosSkeleton />}><LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} /></Suspense>} />
 
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
-              <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate('/')} /></Suspense>} />
+              <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate(resolveAuthHome(), { replace: true })} /></Suspense>} />
               <Route path="/.lovable/oauth/consent" element={<Suspense fallback={<LoadingFallback />}><OAuthConsent /></Suspense>} />
               <Route path="/login" element={<Navigate to="/auth" replace />} />
               <Route path="/reset-password" element={<Suspense fallback={<LoadingFallback />}><ResetPasswordPage /></Suspense>} />
