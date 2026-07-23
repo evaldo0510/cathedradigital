@@ -82,6 +82,34 @@ Classificação: [Editorial, Nexus] (exemplo)
 | Área do usuário (`/conta/*`, sidebar, shell) | `cathedra-design-system-guardian` |
 | Editorial Engine (`src/lib/editorial-engine/**`, manifestos, Mission Control) | (+ expert do módulo tocado) |
 | Fechamento de sprint / onda / feature "pronta" | auditoria bloqueante do Guardian |
+| Qualquer módulo de leitura (Bíblia, CIC, Glossário, Santos, Missal, LH, Orações, Jornadas, Coleções, Magistério) | `cathedra-design-system-guardian` + auditoria da Reader Architecture Rule (§10) |
+
+---
+
+## 10. Reader Architecture Rule (inegociável — congelada em v1.1)
+
+Toda leitura na Cathedra obedece ao **Reader Template Master**:
+
+```
+ReaderShell
+  ├─ EditorialHero
+  ├─ ReaderContent (children)
+  │    └─ ReferencePopover (inline)
+  ├─ NexusPanel
+  └─ ReaderContinuation
+```
+
+Fonte única: `@/components/reader`.
+
+Proibições (bloqueantes, sem exceção):
+
+- **Se existir `ReaderShell`** → proibido criar outro Reader/Shell.
+- **Se existir `NexusPanel`** → proibido criar outro Nexus. Isso inclui, retroativamente: `NexusBubbles`, `MysteryNexusPanel`, `AutoNexusList` local, `NexusFullList` local, `NexusInlinePreview` fora do ReferencePopover, e qualquer "painel de conexões" novo.
+- **Se existir `ReferencePopover`** → proibido criar outro Popover de referência. Isso inclui, retroativamente: `BibleVersePopover`, `BibleDictionaryPopover`, `TagBubble` popover, popover ad-hoc de verbete/santo/CIC.
+- Extensão sempre via props / render props do primitivo canônico. Nunca via componente paralelo.
+- Novos módulos de leitura devem passar pela auditoria de aderência (`docs/reader-architecture-master.md`) antes de merge.
+
+Auditoria de aderência (score por módulo): ver `docs/reader-architecture-master.md`. Meta: **100% em todos os módulos até fim da Sprint Nexus 2.0**.
 
 ---
 
