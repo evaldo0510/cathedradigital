@@ -504,7 +504,6 @@ const Catechism: React.FC = memo(() => {
                   meta: {
                     paragraph: currentParagraph,
                     nextParagraph: currentParagraph + 1,
-                    section: selectedSection.id,
                   },
                 }}
                 suggestions={sectionNexus.suggestions.length > 0 ? sectionNexus.suggestions : undefined}
