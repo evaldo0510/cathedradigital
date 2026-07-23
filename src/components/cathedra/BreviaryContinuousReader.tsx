@@ -22,7 +22,14 @@ import type { PrayerBlock } from '@/types/prayer';
 import type { Prayer } from '@/hooks/usePrayers';
 import type { DailyLiturgy } from '@/core/liturgy/LiturgyProvider';
 import type { HourSlug, LiturgyHoursOfficeRow, OfficePsalmody } from '@/hooks/useLiturgyHoursOffice';
-import ReaderContinuation from '@/components/shared/ReaderContinuation';
+import {
+  ReaderShell,
+  EditorialHero,
+  LiturgicalContext,
+  NexusPanel,
+  ReaderContinuation,
+} from '@/components/reader';
+
 import { resolvePrayerAutoNexus } from '@/core/knowledge/adapters/prayerAutoNexus';
 import { PrayerTTSButton } from './PrayerTTSButton';
 import { LiturgyBlockCard } from './primitives/liturgy/LiturgyBlockCard';
