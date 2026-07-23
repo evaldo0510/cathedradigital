@@ -535,6 +535,159 @@ export default function EditorialAuditPage() {
             );
           })()}
 
+          {/* Sprint 6.6 — Cobertura Doutrinária */}
+          {coverage.length > 0 && (
+            <Card className="mb-6">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Award className="h-4 w-4 text-primary" />
+                  Cobertura Doutrinária · lacunas de conhecimento por área
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {coverage.map(c => {
+                  const pct = Number(c.avg_ice);
+                  const barColor = pct >= 95 ? "bg-emerald-500"
+                    : pct >= 85 ? "bg-sky-500"
+                    : pct >= 70 ? "bg-amber-500"
+                    : "bg-red-500";
+                  return (
+                    <div key={c.area} className="space-y-1">
+                      <div className="flex items-baseline justify-between text-xs">
+                        <span className="font-medium">{c.area}</span>
+                        <span className="tabular-nums text-muted-foreground">
+                          <b className="text-foreground">{pct.toFixed(1)}%</b>
+                          <span className="mx-1.5">·</span>
+                          {c.gate_passing}/{c.total} no gate
+                          <span className="mx-1.5">·</span>
+                          <span className="text-emerald-600">{c.gold}O</span>{" "}
+                          <span className="text-sky-600">{c.silver}P</span>{" "}
+                          <span className="text-amber-600">{c.bronze}B</span>{" "}
+                          <span className="text-red-600">{c.review}R</span>
+                        </span>
+                      </div>
+                      <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
+                        <div className={`h-full ${barColor} transition-all`} style={{ width: `${Math.min(100, Math.max(0, pct))}%` }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Sprint 6.6 — Prioridade de Correção (Fase 1: quick wins) */}
+          {priorityRows.length > 0 && (() => {
+            const buckets = {
+              quick_win: priorityRows.filter(r => r.priority === "quick_win"),
+              red:       priorityRows.filter(r => r.priority === "red"),
+              orange:    priorityRows.filter(r => r.priority === "orange"),
+              yellow:    priorityRows.filter(r => r.priority === "yellow"),
+              all:       priorityRows.filter(r => r.priority !== "ok"),
+            };
+            const shown = buckets[priorityFilter];
+            const badge = (p: string) => {
+              if (p === "quick_win") return "bg-emerald-500/15 text-emerald-700 border-emerald-500/40";
+              if (p === "red")       return "bg-red-500/15 text-red-700 border-red-500/40";
+              if (p === "orange")    return "bg-orange-500/15 text-orange-700 border-orange-500/40";
+              return "bg-yellow-500/15 text-yellow-700 border-yellow-500/40";
+            };
+            const missingLabels = (r: typeof priorityRows[number]) => [
+              r.missing_deep && "deep",
+              r.missing_faq && "faq",
+              r.missing_logos && "logos",
+              r.missing_bible && "bíblia",
+              r.missing_cic && "cic",
+              r.missing_fathers && "patrística",
+            ].filter(Boolean) as string[];
+            return (
+              <Card className="mb-6">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Lightbulb className="h-4 w-4 text-primary" />
+                    Prioridade de Correção · ataque em fases
+                  </CardTitle>
+                  <div className="mt-2 flex flex-wrap gap-1.5">
+                    {([
+                      ["quick_win", `🟢 Quick wins (${buckets.quick_win.length})`],
+                      ["red",       `🔴 Alto impacto (${buckets.red.length})`],
+                      ["orange",    `🟠 Médio (${buckets.orange.length})`],
+                      ["yellow",    `🟡 Baixo (${buckets.yellow.length})`],
+                      ["all",       `Todos abaixo do gate (${buckets.all.length})`],
+                    ] as const).map(([k, label]) => (
+                      <Button
+                        key={k}
+                        size="sm"
+                        variant={priorityFilter === k ? "default" : "outline"}
+                        onClick={() => setPriorityFilter(k as any)}
+                        className="h-7 text-xs"
+                      >
+                        {label}
+                      </Button>
+                    ))}
+                  </div>
+                </CardHeader>
+                <CardContent className="p-0">
+                  {shown.length === 0 ? (
+                    <p className="p-4 text-xs text-muted-foreground text-center">
+                      Nenhum verbete nesta categoria. 🙌
+                    </p>
+                  ) : (
+                    <div className="max-h-[360px] overflow-y-auto">
+                      <table className="w-full text-xs">
+                        <thead className="sticky top-0 bg-muted/60 backdrop-blur text-[10px] uppercase tracking-wider">
+                          <tr>
+                            <th className="px-3 py-2 text-left">Verbete</th>
+                            <th className="px-2 py-2 text-left">Área</th>
+                            <th className="px-2 py-2 text-right">ICE</th>
+                            <th className="px-2 py-2 text-right">Impacto</th>
+                            <th className="px-2 py-2 text-left">Falta</th>
+                            <th className="px-2 py-2"></th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y">
+                          {shown.slice(0, 60).map(r => (
+                            <tr key={r.slug} className="hover:bg-muted/30">
+                              <td className="px-3 py-2">
+                                <div className="flex items-center gap-1.5">
+                                  <span className={`inline-flex items-center rounded border px-1.5 py-0.5 text-[9px] font-semibold ${badge(r.priority)}`}>
+                                    {r.priority === "quick_win" ? "quick" : r.priority}
+                                  </span>
+                                  <span className="font-medium">{r.term}</span>
+                                  {r.status === "draft" && <Badge variant="outline" className="h-4 px-1 text-[9px]">draft</Badge>}
+                                </div>
+                              </td>
+                              <td className="px-2 py-2 text-muted-foreground">{r.area}</td>
+                              <td className="px-2 py-2 text-right tabular-nums font-semibold">{r.ice}</td>
+                              <td className="px-2 py-2 text-right tabular-nums text-muted-foreground">
+                                {r.inbound_refs}× {r.impact_tier === "high" && "🔴"}{r.impact_tier === "medium" && "🟠"}
+                              </td>
+                              <td className="px-2 py-2 text-[10px] text-muted-foreground">
+                                {missingLabels(r).length === 0 ? "—" : missingLabels(r).join(" · ")}
+                              </td>
+                              <td className="px-2 py-2 text-right">
+                                <Button asChild size="sm" variant="ghost" className="h-6 px-2 text-[10px]">
+                                  <Link to={`/admin/glossario?slug=${r.slug}`}>
+                                    Editar <ExternalLink className="ml-1 h-3 w-3" />
+                                  </Link>
+                                </Button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                      {shown.length > 60 && (
+                        <p className="p-2 text-center text-[10px] text-muted-foreground">
+                          … +{shown.length - 60} verbetes. Filtre por prioridade para reduzir.
+                        </p>
+                      )}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            );
+          })()}
+
           {/* Sprint 6.6 — Quality Gate (critérios de bloqueio de publicação) */}
           <Card className="mb-6 border-l-4 border-l-primary">
             <CardHeader className="pb-2">
