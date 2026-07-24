@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { Download, ImageIcon } from 'lucide-react';
+import zipAsset from '@/assets/campaign/cathedra-instagram-ondas.zip.asset.json';
+
 
 interface ArtItem {
   file: string;
@@ -75,8 +77,9 @@ export default function InstagramGalleryPage() {
           Todas as artes geradas para as ondas 1-3. Clique em uma peça para baixar em resolução completa.
         </p>
         <a
-          href="/campaign/cathedra-instagram-ondas.zip"
+          href={zipAsset.url}
           className="inline-flex items-center gap-2 mt-4 px-5 py-2 rounded-full bg-[#0B1F3A] text-[#f5f0e0] text-sm hover:opacity-90"
+
           download
         >
           <Download className="w-4 h-4" aria-hidden />
