@@ -628,6 +628,41 @@ const EditorialClosureRuns: React.FC = () => {
               </Button>
             )}
           </div>
+          <div className="flex flex-wrap items-center gap-2 border-t pt-3">
+            <div className="flex items-center gap-1 text-xs text-muted-foreground mr-1">
+              <Star className="h-3 w-3" /> Presets:
+            </div>
+            {presets.length === 0 && (
+              <span className="text-xs italic text-muted-foreground">nenhum salvo</span>
+            )}
+            {presets.map((p) => (
+              <div key={p.id} className="inline-flex items-center gap-0.5">
+                <Badge
+                  variant="secondary"
+                  className="cursor-pointer hover:bg-primary/20"
+                  onClick={() => applyPreset(p)}
+                  title="Aplicar preset"
+                >
+                  {p.name}
+                </Badge>
+                <Button
+                  size="icon" variant="ghost" className="h-5 w-5"
+                  onClick={() => deletePreset(p.id)}
+                  aria-label={`Remover preset ${p.name}`}
+                >
+                  <Trash2 className="h-3 w-3" />
+                </Button>
+              </div>
+            ))}
+            <Button
+              size="sm" variant="ghost" className="h-7 ml-auto"
+              onClick={() => setPresetDialog(true)}
+              disabled={activeFilterCount === 0 && sortKey === 'started_at' && sortDir === 'desc' && pageSize === 25}
+              title="Salvar filtros, ordenação e paginação atuais como preset"
+            >
+              <Star className="mr-1 h-3.5 w-3.5" /> Salvar preset atual
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           {!loading && runs.length === 0 ? (
