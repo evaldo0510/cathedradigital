@@ -13,6 +13,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Icons } from '@/constants';
+import { resolveNexusHref } from '@/lib/nexusHref';
+
 
 // -------- Padrão Nexus Ouro --------
 const GOLD_TOTAL = 20;
