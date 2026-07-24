@@ -1785,6 +1785,45 @@ export type Database = {
         }
         Relationships: []
       }
+      catechism_import_queue: {
+        Row: {
+          attempts: number
+          created_at: string
+          id: string
+          last_error: string | null
+          paragraph: number
+          processed_at: string | null
+          requested_at: string
+          requested_by: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          attempts?: number
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          paragraph: number
+          processed_at?: string | null
+          requested_at?: string
+          requested_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          attempts?: number
+          created_at?: string
+          id?: string
+          last_error?: string | null
+          paragraph?: number
+          processed_at?: string | null
+          requested_at?: string
+          requested_by?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       catechism_official: {
         Row: {
           aplicacao_pratica: string | null
