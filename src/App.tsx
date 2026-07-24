@@ -216,6 +216,7 @@ const MissionControlPage = lazy(() => import('./pages/admin/MissionControl'));
 const EditorialBulkPage = lazy(() => import('./pages/admin/EditorialBulk'));
 const NexusAdmin = lazy(() => import('./pages/admin/NexusAdmin'));
 const GlossaryAdmin = lazy(() => import('./pages/admin/GlossaryAdmin'));
+const PartnersAdmin = lazy(() => import('./pages/admin/PartnersAdmin'));
 const CatechismImportQueuePage = lazy(() =>
   CATEQUESE_MODULES_ENABLED
     ? import('./modules/catequese').then((m) => ({ default: m.CatechismImportQueue }))
