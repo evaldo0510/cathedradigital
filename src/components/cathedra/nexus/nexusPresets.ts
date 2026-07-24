@@ -1,11 +1,17 @@
 /**
  * Nexus Editorial — presets narrativos.
- * Cada tipo do KnowledgeGraph vira um "capítulo" com voz ativa,
- * respondendo à pergunta "por que este trecho está conectado ao outro?".
+ * Cada CANAL editorial vira um "capítulo" com voz ativa, respondendo à
+ * pergunta "por que este trecho está conectado ao outro?".
  * Zero mudança de dado — só apresentação e microcopy.
+ *
+ * NOTA: `NexusChannel` é distinto do `NexusKind` de `src/types/nexus.ts`.
+ * - `NexusChannel` = agrupamento editorial de UI (bible, catechism, ...).
+ * - `NexusKind`    = tipo de entidade do grafo (bible_verse, catechism_paragraph, ...).
+ * Não fundir. Para href use `resolveNexusHref` (entidade) ou
+ * `nexusChannelToListingHref` (canal → seção).
  */
 
-export type NexusKind =
+export type NexusChannel =
   | 'bible'
   | 'catechism'
   | 'magisterium'
@@ -13,6 +19,9 @@ export type NexusKind =
   | 'father'
   | 'journey'
   | 'theme';
+
+/** @deprecated Use `NexusChannel`. Alias mantido para transição. */
+export type NexusKind = NexusChannel;
 
 export interface NexusKindPreset {
   /** Título editorial da seção — a "voz" que introduz o capítulo. */
@@ -32,7 +41,8 @@ export interface NexusKindPreset {
  * um leigo, sem jargão e sem "conteúdo relacionado".
  * Banidos: "Relacionados", "Ver mais", "Links", "Recursos".
  */
-export const NEXUS_KIND_PRESETS: Record<NexusKind, NexusKindPreset> = {
+export const NEXUS_KIND_PRESETS: Record<NexusChannel, NexusKindPreset> = {
+
   bible: {
     eyebrow: 'A Palavra que abre este caminho',
     whisper: 'A mesma verdade, mais antiga que a Igreja.',
