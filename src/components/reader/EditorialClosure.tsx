@@ -1,0 +1,136 @@
+/**
+ * EditorialClosure — encerramento canônico de toda leitura Cathedra.
+ *
+ * Sequência obrigatória (Constituição Editorial 1.0.0, Cap. IX):
+ *
+ *   Reflexão → Aplicação → Oração → Próxima leitura → Nexus
+ *
+ * Este componente vai DENTRO do slot `continuation` do <ReaderShell/>.
+ * Não substitui `NexusPanel` (que continua no slot `nexus`) — ele
+ * apresenta o convite editorial curto que precede a lista de conexões.
+ *
+ * Regras:
+ *  - Zero domínio: recebe slots já resolvidos.
+ *  - Zero URL hardcoded: `nextHref` deve vir de `resolveNexusHref`.
+ *  - Copy é editorial, não é UI de produto. Não usar "clique", "saiba mais".
+ */
+
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { cn } from '@/lib/utils';
+import { Icons } from '@/constants';
+
+export interface EditorialClosureProps {
+  /** Pergunta interior, sóbria, não retórica. 1 frase. */
+  reflection: string;
+  /** Passo concreto para as próximas 24h. 1 frase curta. */
+  application: string;
+  /** Oração breve (2 a 4 linhas). Texto puro; quebras de linha respeitadas. */
+  prayer: string;
+  /** Próxima leitura sugerida — decisão editorial, não algoritmo cego. */
+  next?: {
+    label: string;
+    href: string;
+    kicker?: string;
+  };
+  className?: string;
+}
+
+/**
+ * Encerramento editorial padrão.
+ *
+ * Uso mínimo:
+ *   <ReaderShell
+ *     hero={...}
+ *     nexus={<NexusPanel ... />}
+ *     continuation={
+ *       <EditorialClosure
+ *         reflection="Onde, hoje, minha inquietude ainda foge do silêncio?"
+ *         application="Reservar dez minutos de silêncio antes do último ofício do dia."
+ *         prayer={`Senhor, dai-me o repouso que só em Vós existe.\nAmém.`}
+ *         next={{ kicker: "Continuar", label: "O combate interior em Agostinho", href: resolveNexusHref(...) }}
+ *       />
+ *     }
+ *   >
+ *     ...
+ *   </ReaderShell>
+ */
+export const EditorialClosure: React.FC<EditorialClosureProps> = ({
+  reflection,
+  application,
+  prayer,
+  next,
+  className,
+}) => {
+  return (
+    <div
+      className={cn(
+        'w-full mx-auto max-w-[68ch]',
+        'flex flex-col gap-spacing-lg',
+        'text-foreground',
+        className,
+      )}
+      data-editorial-closure
+      data-constitution-version="1.0.0"
+    >
+      <ClosureBlock
+        kicker="Reflexão"
+        icon={<Icons.Compass className="w-4 h-4" aria-hidden />}
+      >
+        <p className="text-base leading-relaxed italic">{reflection}</p>
+      </ClosureBlock>
+
+      <ClosureBlock
+        kicker="Aplicação"
+        icon={<Icons.Map className="w-4 h-4" aria-hidden />}
+      >
+        <p className="text-base leading-relaxed">{application}</p>
+      </ClosureBlock>
+
+      <ClosureBlock
+        kicker="Oração"
+        icon={<Icons.Flame className="w-4 h-4" aria-hidden />}
+      >
+        <p className="text-base leading-relaxed whitespace-pre-line text-center">
+          {prayer}
+        </p>
+      </ClosureBlock>
+
+      {next && (
+        <ClosureBlock
+          kicker={next.kicker ?? 'Próxima leitura'}
+          icon={<Icons.BookOpen className="w-4 h-4" aria-hidden />}
+        >
+          <Link
+            to={next.href}
+            className="text-base leading-relaxed underline underline-offset-4 decoration-secondary/60 hover:decoration-secondary transition-colors"
+          >
+            {next.label}
+          </Link>
+        </ClosureBlock>
+      )}
+    </div>
+  );
+};
+
+interface ClosureBlockProps {
+  kicker: string;
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}
+
+const ClosureBlock: React.FC<ClosureBlockProps> = ({ kicker, icon, children }) => (
+  <section className="flex flex-col gap-spacing-xs">
+    <header className="flex items-center gap-spacing-xs text-secondary/80">
+      {icon}
+      <span className="text-xs uppercase tracking-[0.18em] font-medium">
+        {kicker}
+      </span>
+    </header>
+    <div className="pl-[calc(1rem+var(--stitch-spacing-xs,0.5rem))]">
+      {children}
+    </div>
+  </section>
+);
+
+export default EditorialClosure;
