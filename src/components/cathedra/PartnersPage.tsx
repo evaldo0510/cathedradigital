@@ -373,10 +373,24 @@ const PartnersGridSkeleton: React.FC = () => (
 /* Página                                                              */
 /* ------------------------------------------------------------------ */
 
+const PAGE_SIZE = 12;
+
 const PartnersPage: React.FC = () => {
   const [partners, setPartners] = useState<Partner[]>([]);
   const [loading, setLoading] = useState(true);
   const [typeFilter, setTypeFilter] = useState<'all' | PartnerType>('all');
+  const [searchInput, setSearchInput] = useState('');
+  const [search, setSearch] = useState('');
+  const [page, setPage] = useState(0);
+
+  // debounce simples da busca
+  useEffect(() => {
+    const t = setTimeout(() => setSearch(searchInput.trim().toLowerCase()), 250);
+    return () => clearTimeout(t);
+  }, [searchInput]);
+
+  // reset da paginação ao mudar filtros
+  useEffect(() => { setPage(0); }, [typeFilter, search]);
 
   const fetchPartners = useCallback(async () => {
     try {
@@ -400,9 +414,22 @@ const PartnersPage: React.FC = () => {
     fetchPartners();
   }, [fetchPartners]);
 
-  const filtered = useMemo(
-    () => (typeFilter === 'all' ? partners : partners.filter(p => p.partner_type === typeFilter)),
-    [partners, typeFilter],
+  const filtered = useMemo(() => {
+    return partners.filter(p => {
+      if (typeFilter !== 'all' && p.partner_type !== typeFilter) return false;
+      if (search) {
+        const hay = `${p.name} ${p.description ?? ''}`.toLowerCase();
+        if (!hay.includes(search)) return false;
+      }
+      return true;
+    });
+  }, [partners, typeFilter, search]);
+
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const pageSafe = Math.min(page, pageCount - 1);
+  const pageItems = useMemo(
+    () => filtered.slice(pageSafe * PAGE_SIZE, pageSafe * PAGE_SIZE + PAGE_SIZE),
+    [filtered, pageSafe],
   );
 
   const hasPartners = !loading && partners.length > 0;
@@ -424,7 +451,18 @@ const PartnersPage: React.FC = () => {
       />
 
       {hasPartners && (
-        <div className="flex justify-center">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-center gap-spacing-md">
+          <div className="relative w-full md:max-w-sm mx-auto md:mx-0">
+            <Icons.Search className="absolute left-spacing-sm top-1/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground pointer-events-none" />
+            <Input
+              type="search"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              placeholder="Buscar parceiro por nome ou descrição"
+              aria-label="Buscar parceiros"
+              className="pl-spacing-xl h-spacing-xl"
+            />
+          </div>
           <Tabs value={typeFilter} onValueChange={(v) => setTypeFilter(v as typeof typeFilter)}>
             <TabsList>
               <TabsTrigger value="all">Todos</TabsTrigger>
@@ -436,20 +474,47 @@ const PartnersPage: React.FC = () => {
         </div>
       )}
 
-      <section aria-labelledby="partners-list" className="min-h-[400px]">
+      <section aria-labelledby="partners-list" className="min-h-[400px] space-y-spacing-xl">
         <h2 id="partners-list" className="sr-only">Lista de parceiros</h2>
         {loading ? (
           <PartnersGridSkeleton />
         ) : hasPartners ? (
           filtered.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-lg">
-              {filtered.map((partner, i) => (
-                <PartnerCard key={partner.id} partner={partner} index={i} />
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-lg">
+                {pageItems.map((partner, i) => (
+                  <PartnerCard key={partner.id} partner={partner} index={i} />
+                ))}
+              </div>
+              {pageCount > 1 && (
+                <nav className="flex items-center justify-center gap-spacing-md" aria-label="Paginação">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={pageSafe === 0}
+                    onClick={() => setPage(p => Math.max(0, p - 1))}
+                  >
+                    Anterior
+                  </Button>
+                  <span className="text-premium-sm text-muted-foreground" aria-live="polite">
+                    Página {pageSafe + 1} de {pageCount}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={pageSafe >= pageCount - 1}
+                    onClick={() => setPage(p => p + 1)}
+                  >
+                    Próxima
+                  </Button>
+                </nav>
+              )}
+            </>
           ) : (
             <p className="text-center text-muted-foreground py-spacing-3xl">
-              Nenhum parceiro nesta categoria ainda.
+              {search
+                ? `Nenhum parceiro corresponde a "${search}".`
+                : 'Nenhum parceiro nesta categoria ainda.'}
             </p>
           )
         ) : (
