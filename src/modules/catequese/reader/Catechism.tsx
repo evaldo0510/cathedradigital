@@ -61,6 +61,8 @@ import {
 } from '@/components/reader';
 import { resolveCatechismAutoNexus } from '@/core/knowledge/adapters/catechismAutoNexus';
 import { EditorialDivider } from '@/components/editorial';
+import { EditorialClosure } from '@/components/reader/EditorialClosure';
+import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
 
 
 const CatechismContent: React.FC<{ 
@@ -574,18 +576,24 @@ const Catechism: React.FC = memo(() => {
               />
             }
             continuation={
-              <ReaderContinuation
-                context={{
-                  kind: 'catechism',
-                  id: String(currentParagraph),
-                  graphNodeId: sectionNexus.selfId ?? undefined,
-                  meta: {
-                    paragraph: currentParagraph,
-                    nextParagraph: currentParagraph + 1,
-                  },
-                }}
-                suggestions={sectionNexus.suggestions.length > 0 ? sectionNexus.suggestions : undefined}
-              />
+              <div className="flex flex-col gap-spacing-2xl">
+                {(() => {
+                  const closure = resolveEditorialClosure(selectedSection as unknown as { editorial_closure?: unknown });
+                  return closure ? <EditorialClosure {...closure} /> : null;
+                })()}
+                <ReaderContinuation
+                  context={{
+                    kind: 'catechism',
+                    id: String(currentParagraph),
+                    graphNodeId: sectionNexus.selfId ?? undefined,
+                    meta: {
+                      paragraph: currentParagraph,
+                      nextParagraph: currentParagraph + 1,
+                    },
+                  }}
+                  suggestions={sectionNexus.suggestions.length > 0 ? sectionNexus.suggestions : undefined}
+                />
+              </div>
             }
           >
             <div className="w-full editorial-column editorial-section" data-testid={`secao-${selectedSection.id}-conteudo`}>

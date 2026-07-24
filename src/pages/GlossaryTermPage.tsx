@@ -35,6 +35,8 @@ import { useFavorites } from '@/hooks/useFavorites';
 import { cn } from '@/lib/utils';
 import { resolveAutoNexus } from '@/core/knowledge/adapters/glossaryAutoNexus';
 import { BUCKET_LABEL, type ReaderNexusBucket } from '@/core/knowledge/adapters/ReaderAutoNexus';
+import { EditorialClosure } from '@/components/reader/EditorialClosure';
+import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
 
 /* ------------------------------------------------------------------ */
 /* Tipos                                                               */
@@ -733,13 +735,19 @@ const GlossaryTermPage: React.FC = () => {
           )
         }
         continuation={
-          <ReaderContinuation
-            context={{
-              kind: 'glossary-term',
-              id: term.slug ?? term.id,
-              meta: { theme: term.category ?? undefined },
-            }}
-          />
+          <div className="flex flex-col gap-spacing-2xl">
+            {(() => {
+              const closure = resolveEditorialClosure(term as unknown as { editorial_closure?: unknown });
+              return closure ? <EditorialClosure {...closure} /> : null;
+            })()}
+            <ReaderContinuation
+              context={{
+                kind: 'glossary-term',
+                id: term.slug ?? term.id,
+                meta: { theme: term.category ?? undefined },
+              }}
+            />
+          </div>
         }
       >
         {/* Sumário lateral (desktop) + corpo editorial */}

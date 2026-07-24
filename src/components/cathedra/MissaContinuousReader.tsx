@@ -37,6 +37,8 @@ import { PrayerTTSButton } from './PrayerTTSButton';
 import { RitualOptionSelector } from './primitives/liturgy/RitualOptionSelector';
 import { LiturgyRichHeader } from './primitives/liturgy/LiturgyRichHeader';
 import { LiturgyBlockCard } from './primitives/liturgy/LiturgyBlockCard';
+import { EditorialClosure } from '@/components/reader/EditorialClosure';
+import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
 import { MissaClosingActionCard } from './primitives/liturgy/MissaClosingActionCard';
 
 interface Props {
@@ -471,10 +473,16 @@ export const MissaContinuousReader: React.FC<Props> = ({
       ariaLabel="Santa Missa"
       nexus={<NexusPanel output={nexus} />}
       continuation={
-        <ReaderContinuation
-          context={{ kind: 'prayer', id: prayer.id }}
-          suggestions={nexus.suggestions}
-        />
+        <div className="flex flex-col gap-spacing-2xl">
+          {(() => {
+            const closure = resolveEditorialClosure(prayer as unknown as { editorial_closure?: unknown });
+            return closure ? <EditorialClosure {...closure} /> : null;
+          })()}
+          <ReaderContinuation
+            context={{ kind: 'prayer', id: prayer.id }}
+            suggestions={nexus.suggestions}
+          />
+        </div>
       }
     >
       {body}

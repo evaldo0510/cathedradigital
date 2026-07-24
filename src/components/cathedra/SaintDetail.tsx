@@ -32,6 +32,8 @@ import SanctumEditorial, { SanctumCurationBadge } from './SanctumEditorial';
 import { SEO_CONFIG } from '@/config/seo';
 import SaintAILearn from './SaintAILearn';
 import { CATEGORY_LABELS } from './SaintDetail.categories';
+import { EditorialClosure } from '@/components/reader/EditorialClosure';
+import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
 
 // Reexporta para consumidores existentes (Saints.tsx etc.)
 export { CATEGORY_LABELS };
@@ -485,6 +487,14 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               <div className="mb-spacing-lg">
                 <NexusPanel output={nexus} kicker={`Conexões · ${saint.name ?? saint.title ?? ''}`} />
               </div>
+              {(() => {
+                const closure = resolveEditorialClosure(saint as unknown as { editorial_closure?: unknown });
+                return closure ? (
+                  <div className="mb-spacing-2xl">
+                    <EditorialClosure {...closure} />
+                  </div>
+                ) : null;
+              })()}
               <ReaderContinuation
                 context={{
                   kind: 'saint',
