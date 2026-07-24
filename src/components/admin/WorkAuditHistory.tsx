@@ -108,7 +108,23 @@ export const WorkAuditHistory: React.FC<WorkAuditHistoryProps> = ({ workId }) =>
   }
 
   return (
-    <ol className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <p className="text-xs text-muted-foreground">
+          {entries.length} {entries.length === 1 ? 'evento registrado' : 'eventos registrados'}
+        </p>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={() => exportCsv(entries, workId)}
+          className="h-7 gap-1.5 text-xs"
+        >
+          <Download className="w-3.5 h-3.5" aria-hidden /> Exportar CSV
+        </Button>
+      </div>
+      <ol className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
+
       {entries.map((e) => (
         <li
           key={e.id}
