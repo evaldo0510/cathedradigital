@@ -397,6 +397,42 @@ const EditorialClosureRuns: React.FC = () => {
     updateParams({ mode: null, strategy: null, warn: null, q: null, page: 1 });
   }
 
+  async function manualRefresh() {
+    setNewRunIds(new Set());
+    await load({ silent: true });
+  }
+
+  function savePreset() {
+    const name = presetName.trim();
+    if (!name) return;
+    const params: Record<string, string> = {};
+    for (const k of PRESET_KEYS) {
+      const v = searchParams.get(k);
+      if (v && v !== 'all') params[k] = v;
+    }
+    const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const next = [...presets.filter((p) => p.name !== name), { id, name, params }];
+    setPresets(next);
+    savePresets(next);
+    setPresetDialog(false);
+    setPresetName('');
+    sonnerToast.success(`Preset "${name}" salvo`);
+  }
+
+  function applyPreset(p: Preset) {
+    // Zera chaves gerenciáveis e aplica as do preset; sempre volta para página 1.
+    const patch: Record<string, string | number | null> = { page: 1 };
+    for (const k of PRESET_KEYS) patch[k] = p.params[k] ?? null;
+    updateParams(patch);
+    sonnerToast(`Preset "${p.name}" aplicado`);
+  }
+
+  function deletePreset(id: string) {
+    const next = presets.filter((p) => p.id !== id);
+    setPresets(next);
+    savePresets(next);
+  }
+
   const openRun = React.useMemo(
     () => (openRunId ? rows.filter((r) => r.run_id === openRunId) : []),
     [rows, openRunId],
