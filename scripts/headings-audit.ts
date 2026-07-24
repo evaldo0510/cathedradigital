@@ -115,8 +115,15 @@ function auditFile(abs: string) {
   }
 }
 
-const files = globSync('src/pages/**/*.{tsx,jsx}', { cwd: ROOT }).map((p) => resolve(ROOT, p));
+const files = globSync('src/pages/**/*.{tsx,jsx}', { cwd: ROOT })
+  .map((p) => resolve(ROOT, p))
+  // Exclui sub-componentes reutilizáveis colocados dentro de src/pages/**;
+  // páginas de rota terminam em `Page.tsx`. Padrões como `*Panel.tsx`,
+  // `*Card.tsx`, `*Section.tsx`, `*List.tsx` são presentacionais e não são
+  // roteados diretamente — não devem exigir H1 próprio.
+  .filter((f) => !/(Panel|Card|Section|List|Item|Row|Cell|Header|Footer|Sidebar|Widget|Chart|Skeleton|Placeholder|Modal|Dialog|Drawer|Popover|Tooltip|Menu|Toolbar|Nav|Provider|Context|Guard|Layout)\.(tsx|jsx)$/.test(f));
 for (const f of files) auditFile(f);
+
 
 const byKind = findings.reduce<Record<string, number>>((acc, f) => {
   acc[f.kind] = (acc[f.kind] ?? 0) + 1;
