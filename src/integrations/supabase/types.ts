@@ -5116,6 +5116,7 @@ export type Database = {
           image_attribution: string | null
           image_license: string | null
           image_source_url: string | null
+          key_events: Json
           last_scraped_at: string | null
           legacy: string | null
           merged_into: string | null
@@ -5135,6 +5136,7 @@ export type Database = {
           source_url: string | null
           sources: Json
           spiritual_practice: Json
+          spirituality_summary: string | null
           status: string
           timeline: Json
           title: string | null
@@ -5175,6 +5177,7 @@ export type Database = {
           image_attribution?: string | null
           image_license?: string | null
           image_source_url?: string | null
+          key_events?: Json
           last_scraped_at?: string | null
           legacy?: string | null
           merged_into?: string | null
@@ -5194,6 +5197,7 @@ export type Database = {
           source_url?: string | null
           sources?: Json
           spiritual_practice?: Json
+          spirituality_summary?: string | null
           status?: string
           timeline?: Json
           title?: string | null
@@ -5234,6 +5238,7 @@ export type Database = {
           image_attribution?: string | null
           image_license?: string | null
           image_source_url?: string | null
+          key_events?: Json
           last_scraped_at?: string | null
           legacy?: string | null
           merged_into?: string | null
@@ -5253,6 +5258,7 @@ export type Database = {
           source_url?: string | null
           sources?: Json
           spiritual_practice?: Json
+          spirituality_summary?: string | null
           status?: string
           timeline?: Json
           title?: string | null
@@ -8027,6 +8033,7 @@ export type Database = {
           image_attribution: string | null
           image_license: string | null
           image_source_url: string | null
+          key_events: Json
           last_scraped_at: string | null
           legacy: string | null
           merged_into: string | null
@@ -8046,6 +8053,7 @@ export type Database = {
           source_url: string | null
           sources: Json
           spiritual_practice: Json
+          spirituality_summary: string | null
           status: string
           timeline: Json
           title: string | null
