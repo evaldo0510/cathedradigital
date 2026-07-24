@@ -418,6 +418,21 @@ serve(async (req) => {
       fields: perProviderFields,
     };
 
+    // Preview auditável de aliases (mesma deduplicação do fluxo de persistência)
+    const aliasCandidates = outcomes.flatMap((o) =>
+      o.aliases.map((a) => ({ ...a, source: `${o.provider}_langlinks` as unknown as AliasCandidate["source"] })),
+    );
+    const seenPreview = new Set<string>();
+    const aliases_preview = aliasCandidates
+      .filter((a) => a.alias && a.alias.trim() && a.alias.trim().toLowerCase() !== String(saint.name).trim().toLowerCase())
+      .filter((a) => {
+        const k = `${a.language}::${a.alias.trim().toLowerCase()}`;
+        if (seenPreview.has(k)) return false;
+        seenPreview.add(k);
+        return true;
+      })
+      .map((a) => ({ alias: a.alias.trim(), language: a.language, type: a.type, source: a.source }));
+
     const editorial_score = computeEditorialScore(baseRow);
 
     if (Object.keys(aggUpdates).length === 0) {
@@ -435,6 +450,7 @@ serve(async (req) => {
         status: "skipped",
         applied: [],
         skipped: Array.from(aggSkipped),
+        aliases_preview,
         editorial_score,
       });
     }
@@ -446,10 +462,12 @@ serve(async (req) => {
         applied: Array.from(aggApplied),
         skipped: Array.from(aggSkipped),
         updates: aggUpdates,
+        aliases_preview,
         source_metadata: sourceMetadata,
         editorial_score,
       });
     }
+
 
     const { error: upErr } = await admin
       .from("saints")
