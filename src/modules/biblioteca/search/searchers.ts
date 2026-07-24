@@ -86,7 +86,7 @@ async function searchSaints(q: string, limit: number): Promise<RawHit[]> {
   const l = like(q);
   const { data } = await supabase
     .from('saints')
-    .select('id, name, title, bio, category, editorial_completeness')
+    .select('id, name, title, bio, category, content_status')
     .or(`name.ilike.${l},title.ilike.${l},bio.ilike.${l}`)
     .limit(limit);
   return (data ?? []).map((r) => ({
@@ -95,7 +95,7 @@ async function searchSaints(q: string, limit: number): Promise<RawHit[]> {
     title: r.name ?? '',
     subtitle: r.title ?? r.category ?? undefined,
     excerpt: r.bio ? String(r.bio).slice(0, 240) : undefined,
-    editorialStatus: iceFrom((r as { editorial_completeness?: string }).editorial_completeness),
+    editorialStatus: iceFrom(r.content_status),
     href: `/santos/${r.id}`,
     nexusRef: { kind: 'saint', ref: String(r.id) },
   }));
