@@ -1,15 +1,26 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Icons } from '@/constants';
 import { EditorialHero } from '@/components/editorial';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
+import {
+  LOGO_ACCEPT,
+  processLogo,
+  validateLogoFile,
+  objectUrlFromBlob,
+} from '@/lib/partners/logoImage';
+
+type PartnerType = 'institution' | 'company' | 'individual';
 
 interface Partner {
   id: string;
@@ -17,6 +28,7 @@ interface Partner {
   description: string | null;
   logo_url: string | null;
   website_url: string | null;
+  partner_type: PartnerType | null;
 }
 
 type ApplicationForm = {
@@ -24,7 +36,7 @@ type ApplicationForm = {
   contact_email: string;
   description: string;
   website_url: string;
-  logo_url: string;
+  partner_type: PartnerType;
 };
 
 const EMPTY_FORM: ApplicationForm = {
@@ -32,11 +44,17 @@ const EMPTY_FORM: ApplicationForm = {
   contact_email: '',
   description: '',
   website_url: '',
-  logo_url: '',
+  partner_type: 'institution',
+};
+
+const TYPE_LABEL: Record<PartnerType, string> = {
+  institution: 'Instituição',
+  company: 'Empresa',
+  individual: 'Indivíduo',
 };
 
 /* ------------------------------------------------------------------ */
-/* Diálogo único de candidatura — reaproveitado pelos dois CTAs        */
+/* Diálogo único de candidatura                                        */
 /* ------------------------------------------------------------------ */
 
 interface ApplicationDialogProps {
@@ -49,9 +67,50 @@ const ApplicationDialog: React.FC<ApplicationDialogProps> = ({ trigger, idScope 
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState<ApplicationForm>(EMPTY_FORM);
 
+  const [logoFile, setLogoFile] = useState<Blob | null>(null);
+  const [logoExt, setLogoExt] = useState<string>('webp');
+  const [logoContentType, setLogoContentType] = useState<string>('image/webp');
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [logoBusy, setLogoBusy] = useState(false);
+
+  useEffect(() => () => {
+    if (logoPreview) URL.revokeObjectURL(logoPreview);
+  }, [logoPreview]);
+
+  const resetForm = () => {
+    setForm(EMPTY_FORM);
+    setLogoFile(null);
+    setLogoPreview(null);
+    setLogoExt('webp');
+    setLogoContentType('image/webp');
+  };
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const onLogoPick = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // permite re-selecionar mesmo arquivo
+    if (!file) return;
+
+    const err = validateLogoFile(file);
+    if (err) { toast.error(err.message); return; }
+
+    setLogoBusy(true);
+    try {
+      const { blob, extension, contentType } = await processLogo(file);
+      if (logoPreview) URL.revokeObjectURL(logoPreview);
+      setLogoFile(blob);
+      setLogoExt(extension);
+      setLogoContentType(contentType);
+      setLogoPreview(objectUrlFromBlob(blob));
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Falha ao processar imagem.');
+    } finally {
+      setLogoBusy(false);
+    }
   };
 
   const onSubmit = async (e: React.FormEvent) => {
@@ -63,11 +122,44 @@ const ApplicationDialog: React.FC<ApplicationDialogProps> = ({ trigger, idScope 
 
     try {
       setSubmitting(true);
-      const { error } = await supabase.from('partners').insert([{ ...form, status: 'pending' }]);
+
+      // 1) Upload da logo (opcional). Guardamos o *path* no bucket privado
+      //    e a aprovação transforma em signed URL de longa duração.
+      let logoPath: string | null = null;
+      if (logoFile) {
+        const path = `submissions/${crypto.randomUUID()}.${logoExt}`;
+        const { error: upErr } = await supabase.storage
+          .from('partner-logos')
+          .upload(path, logoFile, { contentType: logoContentType, upsert: false });
+        if (upErr) throw upErr;
+        logoPath = path;
+      }
+
+      // 2) Insere candidatura como pending.
+      const { data: inserted, error } = await supabase
+        .from('partners')
+        .insert([{
+          name: form.name.trim(),
+          contact_email: form.contact_email.trim(),
+          description: form.description.trim() || null,
+          website_url: form.website_url.trim() || null,
+          logo_url: logoPath,
+          partner_type: form.partner_type,
+          status: 'pending',
+        } as never])
+        .select('id')
+        .single();
       if (error) throw error;
 
+      // 3) Notifica (best-effort — não bloqueia UI).
+      if (inserted?.id) {
+        supabase.functions
+          .invoke('partner-notify', { body: { partner_id: inserted.id, action: 'received' } })
+          .catch(() => {});
+      }
+
       toast.success('Candidatura recebida. Retornaremos em breve.');
-      setForm(EMPTY_FORM);
+      resetForm();
       setOpen(false);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Erro desconhecido';
@@ -78,9 +170,9 @@ const ApplicationDialog: React.FC<ApplicationDialogProps> = ({ trigger, idScope 
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) resetForm(); }}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[520px] overflow-y-auto max-h-[90dvh]">
+      <DialogContent className="sm:max-w-[560px] overflow-y-auto max-h-[90dvh]">
         <DialogHeader>
           <DialogTitle className="text-premium-2xl">Candidatura de Parceria</DialogTitle>
           <DialogDescription>
@@ -89,14 +181,30 @@ const ApplicationDialog: React.FC<ApplicationDialogProps> = ({ trigger, idScope 
         </DialogHeader>
 
         <form onSubmit={onSubmit} className="space-y-spacing-md pt-spacing-md">
-          <div className="space-y-spacing-xs">
-            <Label htmlFor={`${idScope}-name`}>Nome da Instituição ou Empresa *</Label>
-            <Input id={`${idScope}-name`} name="name" value={form.name} onChange={onChange} placeholder="Ex.: Editora São José" required />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-md">
+            <div className="space-y-spacing-xs">
+              <Label htmlFor={`${idScope}-type`}>Tipo *</Label>
+              <Select
+                value={form.partner_type}
+                onValueChange={(v) => setForm(prev => ({ ...prev, partner_type: v as PartnerType }))}
+              >
+                <SelectTrigger id={`${idScope}-type`}><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="institution">Instituição</SelectItem>
+                  <SelectItem value="company">Empresa</SelectItem>
+                  <SelectItem value="individual">Indivíduo</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-spacing-xs">
+              <Label htmlFor={`${idScope}-email`}>E-mail de Contato *</Label>
+              <Input id={`${idScope}-email`} name="contact_email" type="email" value={form.contact_email} onChange={onChange} placeholder="contato@instituicao.org" required />
+            </div>
           </div>
 
           <div className="space-y-spacing-xs">
-            <Label htmlFor={`${idScope}-email`}>E-mail de Contato *</Label>
-            <Input id={`${idScope}-email`} name="contact_email" type="email" value={form.contact_email} onChange={onChange} placeholder="contato@instituicao.org" required />
+            <Label htmlFor={`${idScope}-name`}>Nome *</Label>
+            <Input id={`${idScope}-name`} name="name" value={form.name} onChange={onChange} placeholder="Ex.: Editora São José" required />
           </div>
 
           <div className="space-y-spacing-xs">
@@ -111,14 +219,33 @@ const ApplicationDialog: React.FC<ApplicationDialogProps> = ({ trigger, idScope 
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-md">
-            <div className="space-y-spacing-xs">
-              <Label htmlFor={`${idScope}-site`}>Site Externo</Label>
-              <Input id={`${idScope}-site`} name="website_url" value={form.website_url} onChange={onChange} placeholder="https://..." />
-            </div>
-            <div className="space-y-spacing-xs">
-              <Label htmlFor={`${idScope}-logo`}>URL da Logo</Label>
-              <Input id={`${idScope}-logo`} name="logo_url" value={form.logo_url} onChange={onChange} placeholder="https://..." />
+          <div className="space-y-spacing-xs">
+            <Label htmlFor={`${idScope}-site`}>Site Externo</Label>
+            <Input id={`${idScope}-site`} name="website_url" value={form.website_url} onChange={onChange} placeholder="https://..." />
+          </div>
+
+          <div className="space-y-spacing-xs">
+            <Label htmlFor={`${idScope}-logo`}>Logo (PNG, JPG, WebP ou SVG · até 2 MB)</Label>
+            <div className="flex items-center gap-spacing-md">
+              <div className="w-spacing-4xl h-spacing-4xl rounded-premium bg-muted/40 flex items-center justify-center overflow-hidden border border-border">
+                {logoPreview ? (
+                  <img src={logoPreview} alt="Prévia da logo" className="max-w-full max-h-full object-contain" />
+                ) : (
+                  <Icons.Image className="w-spacing-lg h-spacing-lg text-muted-foreground/60" />
+                )}
+              </div>
+              <div className="flex-1 space-y-spacing-xs">
+                <Input
+                  id={`${idScope}-logo`}
+                  type="file"
+                  accept={LOGO_ACCEPT}
+                  onChange={onLogoPick}
+                  disabled={logoBusy}
+                />
+                <p className="text-premium-xs text-muted-foreground">
+                  Redimensionamos automaticamente para 512×512 preservando a transparência.
+                </p>
+              </div>
             </div>
           </div>
 
@@ -129,7 +256,7 @@ const ApplicationDialog: React.FC<ApplicationDialogProps> = ({ trigger, idScope 
             </p>
           </div>
 
-          <Button type="submit" className="w-full h-spacing-2xl text-premium-base font-semibold" disabled={submitting}>
+          <Button type="submit" className="w-full h-spacing-2xl text-premium-base font-semibold" disabled={submitting || logoBusy}>
             {submitting ? (
               <>
                 <Icons.Loader className="w-spacing-md h-spacing-md mr-spacing-xs animate-spin" />
@@ -168,6 +295,11 @@ const PartnerCard: React.FC<{ partner: Partner; index: number }> = ({ partner, i
           <div className="w-spacing-3xl h-spacing-3xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
             <Icons.Trophy className="w-spacing-xl h-spacing-xl" />
           </div>
+        )}
+        {partner.partner_type && (
+          <Badge variant="secondary" className="absolute top-spacing-xs right-spacing-xs">
+            {TYPE_LABEL[partner.partner_type]}
+          </Badge>
         )}
       </CardHeader>
       <CardContent className="p-spacing-lg space-y-spacing-sm flex-1">
@@ -229,10 +361,6 @@ const EmptyState: React.FC = () => (
   </motion.div>
 );
 
-/* ------------------------------------------------------------------ */
-/* Grade de parceiros com skeleton                                     */
-/* ------------------------------------------------------------------ */
-
 const PartnersGridSkeleton: React.FC = () => (
   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-lg">
     {[0, 1, 2].map(i => (
@@ -248,13 +376,15 @@ const PartnersGridSkeleton: React.FC = () => (
 const PartnersPage: React.FC = () => {
   const [partners, setPartners] = useState<Partner[]>([]);
   const [loading, setLoading] = useState(true);
+  const [typeFilter, setTypeFilter] = useState<'all' | PartnerType>('all');
 
   const fetchPartners = useCallback(async () => {
     try {
       setLoading(true);
       const { data, error } = await supabase
-        .from('public_partners' as any)
-        .select('id, name, description, logo_url, website_url')
+        .from('partners')
+        .select('id, name, description, logo_url, website_url, partner_type')
+        .eq('status', 'approved')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -269,6 +399,11 @@ const PartnersPage: React.FC = () => {
   useEffect(() => {
     fetchPartners();
   }, [fetchPartners]);
+
+  const filtered = useMemo(
+    () => (typeFilter === 'all' ? partners : partners.filter(p => p.partner_type === typeFilter)),
+    [partners, typeFilter],
+  );
 
   const hasPartners = !loading && partners.length > 0;
 
@@ -288,16 +423,35 @@ const PartnersPage: React.FC = () => {
         subtitle="Instituições, editoras e comunidades que caminham conosco na difusão da Fé e da Cultura Católica através do Cathedra."
       />
 
+      {hasPartners && (
+        <div className="flex justify-center">
+          <Tabs value={typeFilter} onValueChange={(v) => setTypeFilter(v as typeof typeFilter)}>
+            <TabsList>
+              <TabsTrigger value="all">Todos</TabsTrigger>
+              <TabsTrigger value="institution">Instituições</TabsTrigger>
+              <TabsTrigger value="company">Empresas</TabsTrigger>
+              <TabsTrigger value="individual">Indivíduos</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+      )}
+
       <section aria-labelledby="partners-list" className="min-h-[400px]">
         <h2 id="partners-list" className="sr-only">Lista de parceiros</h2>
         {loading ? (
           <PartnersGridSkeleton />
         ) : hasPartners ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-lg">
-            {partners.map((partner, i) => (
-              <PartnerCard key={partner.id} partner={partner} index={i} />
-            ))}
-          </div>
+          filtered.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-lg">
+              {filtered.map((partner, i) => (
+                <PartnerCard key={partner.id} partner={partner} index={i} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-center text-muted-foreground py-spacing-3xl">
+              Nenhum parceiro nesta categoria ainda.
+            </p>
+          )
         ) : (
           <EmptyState />
         )}
