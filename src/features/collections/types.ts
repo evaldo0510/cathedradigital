@@ -51,6 +51,9 @@ export interface CollectionMetadata {
   related_slugs?: string[];
   /** Reflexão final exibida ao completar 100% da trilha. */
   final_reflection?: string;
+  [k: string]: unknown;
+}
+
 
 export interface Collection {
   id: string;
