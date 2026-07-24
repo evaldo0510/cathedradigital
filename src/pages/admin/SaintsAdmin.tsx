@@ -12,6 +12,7 @@ import { Icons } from '@/constants';
 import SourceAttribution from '@/components/cathedra/SourceAttribution';
 import SaintsAuditPanel from '@/components/admin/SaintsAuditPanel';
 import SaintsReimportRunsPanel from '@/components/admin/SaintsReimportRunsPanel';
+import SaintsEnrichmentPanel from '@/components/admin/SaintsEnrichmentPanel';
 
 interface SaintRow {
   id: string;
@@ -412,6 +413,7 @@ const SaintsAdmin: React.FC = () => {
         </CardContent>
       </Card>
 
+      <SaintsEnrichmentPanel />
       <SaintsReimportRunsPanel onApplied={load} />
       <SaintsAuditPanel />
 
