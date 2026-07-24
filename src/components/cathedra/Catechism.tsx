@@ -54,6 +54,7 @@ import {
   EditorialHero,
   NexusPanel,
   ReaderContinuation,
+  CatechesisContext,
 } from '@/components/reader';
 import { resolveCatechismAutoNexus } from '@/core/knowledge/adapters/catechismAutoNexus';
 import { EditorialDivider } from '@/components/editorial';
