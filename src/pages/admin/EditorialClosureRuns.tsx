@@ -913,6 +913,36 @@ const EditorialClosureRuns: React.FC = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Save preset */}
+      <Dialog open={presetDialog} onOpenChange={(o) => { if (!o) { setPresetDialog(false); setPresetName(''); } }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Salvar preset de filtros</DialogTitle>
+            <DialogDescription>
+              Armazena ordenação, tamanho de página e todos os filtros ativos (modo, strategy, warnings, busca).
+              Presets ficam no seu navegador.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="preset-name">Nome</Label>
+            <Input
+              id="preset-name"
+              value={presetName}
+              onChange={(e) => setPresetName(e.target.value)}
+              placeholder="Ex: Apenas dry-runs com ≥5 warnings"
+              autoFocus
+              onKeyDown={(e) => { if (e.key === 'Enter') savePreset(); }}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setPresetDialog(false); setPresetName(''); }}>
+              Cancelar
+            </Button>
+            <Button onClick={savePreset} disabled={!presetName.trim()}>Salvar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
