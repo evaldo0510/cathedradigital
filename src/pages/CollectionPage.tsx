@@ -30,6 +30,7 @@ import { useCollection } from '@/features/collections/useCollection';
 import { useCollectionProgress } from '@/features/collections/useCollectionProgress';
 import { collectionAutoNexus } from '@/features/collections/collectionAutoNexus';
 import { CollectionProgressBar } from '@/features/collections/CollectionProgressBar';
+import { CollectionCompletionCTA } from '@/features/collections/CollectionCompletionCTA';
 import type {
   CollectionItem,
   CollectionItemType,
