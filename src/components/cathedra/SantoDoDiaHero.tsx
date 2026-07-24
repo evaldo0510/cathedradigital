@@ -188,17 +188,17 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
         <div className="absolute inset-x-0 bottom-0 p-spacing-md sm:p-spacing-lg md:p-spacing-2xl">
 
           <div className="max-w-3xl space-y-spacing-sm">
-            <p className="text-premium-xs font-black uppercase tracking-[0.28em] text-secondary">
+            <p className="text-premium-xs font-black uppercase tracking-[0.24em] sm:tracking-[0.28em] text-secondary line-clamp-2">
               Sanctorum · Santo do Dia · {dateLabel}
             </p>
             <h2
               id="santo-do-dia-title"
-              className="font-serif font-bold text-foreground text-premium-3xl md:text-premium-4xl leading-[1.05]"
+              className="font-serif font-bold text-foreground text-premium-2xl sm:text-premium-3xl md:text-premium-4xl leading-[1.1] md:leading-[1.05] break-words line-clamp-3"
             >
               {saint.name}
             </h2>
             {saint.title && (
-              <p className="font-serif italic text-primary text-premium-lg md:text-premium-xl leading-snug">
+              <p className="font-serif italic text-primary text-premium-base sm:text-premium-lg md:text-premium-xl leading-snug break-words line-clamp-2">
                 {saint.title}
               </p>
             )}
@@ -210,7 +210,7 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
               <span className="px-spacing-sm py-spacing-2xs rounded-premium-full bg-secondary/60 text-secondary-foreground text-premium-xs font-black uppercase tracking-widest">
                 {seculo}
               </span>
-              <span className="px-spacing-sm py-spacing-2xs rounded-premium-full border border-primary/30 text-primary text-premium-xs font-black uppercase tracking-widest">
+              <span className="px-spacing-sm py-spacing-2xs rounded-premium-full border border-primary/30 text-primary text-premium-xs font-black uppercase tracking-widest max-w-full truncate">
                 Virtude · {virtude}
               </span>
             </div>
@@ -219,14 +219,14 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
       </div>
 
       {/* Ficha editorial em blocos */}
-      <div className="p-spacing-lg md:p-spacing-2xl space-y-spacing-2xl">
+      <div className="p-spacing-md sm:p-spacing-lg md:p-spacing-2xl space-y-spacing-xl md:space-y-spacing-2xl">
         {/* Modo de leitura — nav de seções + toggle expandir/recolher */}
         <div
-          className="sticky top-[64px] z-10 -mx-spacing-lg md:-mx-spacing-2xl px-spacing-lg md:px-spacing-2xl py-spacing-xs backdrop-blur bg-card/85 border-b border-border/60 flex items-center justify-between gap-spacing-sm"
+          className="sticky top-[64px] z-10 -mx-spacing-md sm:-mx-spacing-lg md:-mx-spacing-2xl px-spacing-md sm:px-spacing-lg md:px-spacing-2xl py-spacing-xs backdrop-blur bg-card/85 border-b border-border/60 flex items-center justify-between gap-spacing-sm"
           role="toolbar"
           aria-label="Modo de leitura da ficha"
         >
-          <nav aria-label="Seções da ficha" className="flex-1 min-w-0 overflow-x-auto">
+          <nav aria-label="Seções da ficha" className="flex-1 min-w-0 overflow-x-auto no-scrollbar">
             <ul className="flex items-center gap-spacing-2xs">
               {sectionNav
                 .filter((s) => s.enabled)
@@ -235,7 +235,7 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
                     <button
                       type="button"
                       onClick={() => scrollToSection(s.key)}
-                      className="px-spacing-sm py-spacing-2xs rounded-premium-full border border-border/60 text-premium-xs font-black uppercase tracking-widest text-foreground/80 hover:text-primary hover:border-primary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                      className="inline-flex items-center justify-center min-h-11 px-spacing-sm py-spacing-2xs rounded-premium-full border border-border/60 text-premium-xs font-black uppercase tracking-widest text-foreground/80 hover:text-primary hover:border-primary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background whitespace-nowrap"
                     >
                       {s.label}
                     </button>
@@ -246,6 +246,7 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
           <Button
             variant="ghost"
             size="sm"
+            className="shrink-0 min-h-11"
             onClick={toggleExpanded}
             aria-expanded={expanded}
             aria-controls="santo-do-dia-vida"
@@ -253,12 +254,12 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
             {expanded ? (
               <>
                 <Icons.ChevronUp className="w-spacing-md h-spacing-md" />
-                Recolher
+                <span className="hidden sm:inline">Recolher</span>
               </>
             ) : (
               <>
                 <Icons.ChevronDown className="w-spacing-md h-spacing-md" />
-                Expandir leitura
+                <span className="hidden sm:inline">Expandir leitura</span>
               </>
             )}
           </Button>
@@ -359,7 +360,7 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
           id="santo-do-dia-meditacao"
           ref={(el) => { sectionRefs.current.meditacao = el; }}
           aria-labelledby="bloco-meditacao"
-          className="rounded-[2rem] border border-primary/15 bg-primary/5 p-spacing-xl space-y-spacing-sm scroll-mt-32"
+          className="rounded-[1.5rem] md:rounded-[2rem] border border-primary/15 bg-primary/5 p-spacing-lg md:p-spacing-xl space-y-spacing-sm scroll-mt-32"
         >
           <h3
             id="bloco-meditacao"
