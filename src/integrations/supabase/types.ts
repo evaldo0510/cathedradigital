@@ -2033,6 +2033,7 @@ export type Database = {
           content: string
           created_at: string | null
           editorial_author: string | null
+          editorial_closure: Json | null
           editorial_reviewed_at: string | null
           editorial_reviewer: string | null
           editorial_status:
@@ -2056,6 +2057,7 @@ export type Database = {
           content: string
           created_at?: string | null
           editorial_author?: string | null
+          editorial_closure?: Json | null
           editorial_reviewed_at?: string | null
           editorial_reviewer?: string | null
           editorial_status?:
@@ -2079,6 +2081,7 @@ export type Database = {
           content?: string
           created_at?: string | null
           editorial_author?: string | null
+          editorial_closure?: Json | null
           editorial_reviewed_at?: string | null
           editorial_reviewer?: string | null
           editorial_status?:
@@ -2897,6 +2900,7 @@ export type Database = {
           definition: string
           doctrinal_weight: number
           editorial_author: string | null
+          editorial_closure: Json | null
           editorial_completeness: string
           editorial_reviewed_at: string | null
           editorial_reviewer: string | null
@@ -2946,6 +2950,7 @@ export type Database = {
           definition: string
           doctrinal_weight?: number
           editorial_author?: string | null
+          editorial_closure?: Json | null
           editorial_completeness?: string
           editorial_reviewed_at?: string | null
           editorial_reviewer?: string | null
@@ -2995,6 +3000,7 @@ export type Database = {
           definition?: string
           doctrinal_weight?: number
           editorial_author?: string | null
+          editorial_closure?: Json | null
           editorial_completeness?: string
           editorial_reviewed_at?: string | null
           editorial_reviewer?: string | null
@@ -4843,6 +4849,7 @@ export type Database = {
           created_at: string
           duration_min: number | null
           editorial_author: string | null
+          editorial_closure: Json | null
           editorial_reviewed_at: string | null
           editorial_reviewer: string | null
           editorial_status:
@@ -4886,6 +4893,7 @@ export type Database = {
           created_at?: string
           duration_min?: number | null
           editorial_author?: string | null
+          editorial_closure?: Json | null
           editorial_reviewed_at?: string | null
           editorial_reviewer?: string | null
           editorial_status?:
@@ -4929,6 +4937,7 @@ export type Database = {
           created_at?: string
           duration_min?: number | null
           editorial_author?: string | null
+          editorial_closure?: Json | null
           editorial_reviewed_at?: string | null
           editorial_reviewer?: string | null
           editorial_status?:
@@ -5596,6 +5605,7 @@ export type Database = {
           cover_image_url: string | null
           created_at: string
           editorial_author: string | null
+          editorial_closure: Json | null
           editorial_reviewed_at: string | null
           editorial_reviewer: string | null
           editorial_score: number
@@ -5631,6 +5641,7 @@ export type Database = {
           cover_image_url?: string | null
           created_at?: string
           editorial_author?: string | null
+          editorial_closure?: Json | null
           editorial_reviewed_at?: string | null
           editorial_reviewer?: string | null
           editorial_score?: number
@@ -5666,6 +5677,7 @@ export type Database = {
           cover_image_url?: string | null
           created_at?: string
           editorial_author?: string | null
+          editorial_closure?: Json | null
           editorial_reviewed_at?: string | null
           editorial_reviewer?: string | null
           editorial_score?: number
@@ -5783,6 +5795,7 @@ export type Database = {
           curiosities: string[]
           died: string | null
           editorial_author: string | null
+          editorial_closure: Json | null
           editorial_reviewed_at: string | null
           editorial_reviewer: string | null
           editorial_score: number
@@ -5854,6 +5867,7 @@ export type Database = {
           curiosities?: string[]
           died?: string | null
           editorial_author?: string | null
+          editorial_closure?: Json | null
           editorial_reviewed_at?: string | null
           editorial_reviewer?: string | null
           editorial_score?: number
@@ -5925,6 +5939,7 @@ export type Database = {
           curiosities?: string[]
           died?: string | null
           editorial_author?: string | null
+          editorial_closure?: Json | null
           editorial_reviewed_at?: string | null
           editorial_reviewer?: string | null
           editorial_score?: number
@@ -8701,6 +8716,7 @@ export type Database = {
           definition: string
           doctrinal_weight: number
           editorial_author: string | null
+          editorial_closure: Json | null
           editorial_completeness: string
           editorial_reviewed_at: string | null
           editorial_reviewer: string | null
@@ -8831,6 +8847,7 @@ export type Database = {
           curiosities: string[]
           died: string | null
           editorial_author: string | null
+          editorial_closure: Json | null
           editorial_reviewed_at: string | null
           editorial_reviewer: string | null
           editorial_score: number
