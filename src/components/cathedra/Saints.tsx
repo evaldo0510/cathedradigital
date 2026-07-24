@@ -462,15 +462,14 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                     )}
                   </>
                 ) : (
-                  <div className="text-center py-spacing-3xl bg-muted/20 rounded-[2.5rem] border border-dashed border-border space-y-spacing-md">
-                    <Icons.Star className="w-spacing-2xl h-spacing-2xl text-muted-foreground/60 mx-auto" />
-                    <div className="space-y-spacing-xs">
-                      <p className="text-premium-lg font-serif italic text-muted-foreground">O céu está repleto de heróis silenciosos.</p>
-                      <p className="text-premium-xs text-muted-foreground/60 max-w-spacing-xs mx-auto">
-                        Embora não tenhamos um santo específico catalogado para hoje em nossa base, milhares de almas celebram na glória de Deus.
-                      </p>
-                    </div>
-                  </div>
+                  <section className="text-center py-spacing-3xl space-y-spacing-md border-y border-secondary/40">
+                    <p className="text-premium-xs font-black uppercase tracking-[0.22em] text-secondary">Sanctorum</p>
+                    <Icons.Star className="w-spacing-2xl h-spacing-2xl text-secondary/60 mx-auto" />
+                    <h3 className="font-serif text-premium-2xl text-foreground italic">O céu está repleto de heróis silenciosos.</h3>
+                    <p className="text-premium-sm font-serif italic text-muted-foreground max-w-xl mx-auto px-spacing-md">
+                      Embora não tenhamos um santo específico catalogado para hoje em nossa base, milhares de almas celebram na glória de Deus.
+                    </p>
+                  </section>
                 )}
               </div>
             </motion.div>
