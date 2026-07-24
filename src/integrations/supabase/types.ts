@@ -8712,6 +8712,14 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      saints_advance_editorial_stage: {
+        Args: {
+          _next_status: Database["public"]["Enums"]["editorial_status_enum"]
+          _note?: string
+          _saint_id: string
+        }
+        Returns: Json
+      }
       saints_correction_priority: {
         Args: never
         Returns: {

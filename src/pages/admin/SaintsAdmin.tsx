@@ -13,6 +13,7 @@ import SourceAttribution from '@/components/cathedra/SourceAttribution';
 import SaintsAuditPanel from '@/components/admin/SaintsAuditPanel';
 import SaintsReimportRunsPanel from '@/components/admin/SaintsReimportRunsPanel';
 import SaintsEnrichmentPanel from '@/components/admin/SaintsEnrichmentPanel';
+import DoctorReviewQueue from '@/components/admin/DoctorReviewQueue';
 
 interface SaintRow {
   id: string;
@@ -413,6 +414,7 @@ const SaintsAdmin: React.FC = () => {
         </CardContent>
       </Card>
 
+      <DoctorReviewQueue />
       <SaintsEnrichmentPanel />
       <SaintsReimportRunsPanel onApplied={load} />
       <SaintsAuditPanel />
