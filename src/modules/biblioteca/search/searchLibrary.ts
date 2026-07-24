@@ -106,9 +106,9 @@ export async function searchLibrary(
     }
   });
 
-  // 3. Enriquecimento Nexus (1 batch bidirecional).
+  // 3. Enriquecimento Nexus (1 batch bidirecional). Falha silenciosa.
   const nexusMap = options.withNexus !== false
-    ? await enrichWithNexus(hits)
+    ? await enrichWithNexus(hits).catch(() => new Map<string, NexusSummary>())
     : new Map<string, NexusSummary>();
 
   // 4. Compor `LibraryResult` com score híbrido + campos AI.

@@ -182,28 +182,27 @@ const AtriumBibliotecaPage: React.FC = () => {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
-            {COLLECTIONS.map((c, i) => (
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+            {COLLECTIONS.map((c) => (
               <Link
                 key={c.title}
                 to={c.to}
-                className="group flex cursor-pointer flex-col border border-stitch-outline-variant/10 bg-stitch-surface-container-lowest p-6 transition-all hover:border-stitch-secondary/40 hover:shadow-xl hover:shadow-black/[0.04]"
+                className="group flex cursor-pointer flex-col gap-3 rounded-lg border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-4 transition-all hover:border-stitch-secondary/40 hover:shadow-md md:p-5"
               >
-                <div className="mb-6 flex aspect-[3/4] w-full items-center justify-center overflow-hidden border border-stitch-outline-variant/20 bg-stitch-surface">
-                  <div className="relative flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-stitch-primary to-stitch-primary/70 text-stitch-primary-foreground transition-transform duration-700 group-hover:scale-105">
-                    <span className="font-stitch-display text-[64px] italic text-stitch-secondary-fixed/40">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <c.Icon className="absolute h-10 w-10 opacity-80" />
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-stitch-primary to-stitch-primary/70 text-stitch-primary-foreground shadow-sm transition-transform duration-500 group-hover:scale-105">
+                    <c.Icon className="h-5 w-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <h3 className="truncate font-stitch-display text-[16px] leading-tight text-stitch-primary transition-colors group-hover:text-stitch-secondary md:text-[18px]">
+                      {c.title}
+                    </h3>
+                    <p className="mt-0.5 truncate font-stitch-body text-[10px] font-bold uppercase tracking-[0.12em] text-stitch-on-surface-variant md:text-[11px]">
+                      {c.meta}
+                    </p>
                   </div>
                 </div>
-                <h3 className="font-stitch-display text-[20px] leading-tight text-stitch-primary transition-colors group-hover:text-stitch-secondary">
-                  {c.title}
-                </h3>
-                <p className="mt-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant">
-                  {c.meta}
-                </p>
-                <p className="mt-4 font-stitch-body text-[14px] leading-relaxed text-stitch-on-surface-variant">
+                <p className="line-clamp-2 font-stitch-body text-[13px] leading-relaxed text-stitch-on-surface-variant">
                   {c.description}
                 </p>
               </Link>

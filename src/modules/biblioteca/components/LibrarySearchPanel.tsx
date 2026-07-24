@@ -11,7 +11,8 @@
  *
  * Sem cards paralelos, sem tokens de skin — tudo em tokens semânticos.
  */
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Loader2, Search as SearchIcon, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -30,6 +31,8 @@ export interface LibrarySearchPanelProps {
   className?: string;
   /** Se true, mostra tabela de módulos + títulos por bucket. Default true. */
   groupByModule?: boolean;
+  /** Se true, sincroniza `?q=` na URL. Default true. */
+  syncUrl?: boolean;
 }
 
 export function LibrarySearchPanel({
@@ -37,10 +40,44 @@ export function LibrarySearchPanel({
   autoFocus,
   className,
   groupByModule = true,
+  syncUrl = true,
 }: LibrarySearchPanelProps) {
-  const [query, setQuery] = useState('');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const urlQuery = syncUrl ? (searchParams.get('q') ?? '') : '';
+  const [query, setQuery] = useState(urlQuery);
   const [active, setActive] = useState<LibraryModule[]>([]);
   const { searches, rememberSearch, rememberOpen, clearSearches } = useSearchHistory();
+  const sectionRef = useRef<HTMLElement>(null);
+  const lastUrlQuery = useRef(urlQuery);
+
+  // URL → estado (permite entrar direto via `?q=` ou vindo dos temas)
+  useEffect(() => {
+    if (!syncUrl) return;
+    if (urlQuery !== lastUrlQuery.current) {
+      lastUrlQuery.current = urlQuery;
+      setQuery(urlQuery);
+      if (urlQuery.length >= 2) {
+        sectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }, [urlQuery, syncUrl]);
+
+  // Estado → URL (com debounce leve para não poluir o histórico)
+  useEffect(() => {
+    if (!syncUrl) return;
+    const t = window.setTimeout(() => {
+      const trimmed = query.trim();
+      const current = searchParams.get('q') ?? '';
+      if (trimmed === current) return;
+      const next = new URLSearchParams(searchParams);
+      if (trimmed.length >= 2) next.set('q', trimmed);
+      else next.delete('q');
+      lastUrlQuery.current = trimmed;
+      setSearchParams(next, { replace: true });
+    }, 400);
+    return () => window.clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, syncUrl]);
 
   const types = active.length === 0 ? 'all' : active;
   const { data, isFetching, error, debouncedQuery } = useLibrarySearch({
@@ -73,7 +110,8 @@ export function LibrarySearchPanel({
 
   return (
     <section
-      className={cn('rounded-xl border border-border bg-card p-4 md:p-6', className)}
+      ref={sectionRef}
+      className={cn('rounded-xl border border-border bg-card p-4 md:p-6 scroll-mt-24', className)}
       aria-label="Busca da Biblioteca"
     >
       <div className="relative">
