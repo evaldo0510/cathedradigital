@@ -212,7 +212,7 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
               onClick={() => change(date, 'strip')}
               className={cn(
                 'group relative flex flex-col items-center justify-center shrink-0 snap-start whitespace-nowrap',
-                'w-14 sm:w-16 h-16 sm:h-[4.5rem] p-0 rounded-premium-lg border-2 transition-all',
+                'w-14 sm:w-16 h-16 sm:h-[4.5rem] p-0 rounded-premium-md border-2 transition-all',
                 'focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
                 active
                   ? 'bg-primary border-primary text-primary-foreground shadow-premium shadow-primary/25'
