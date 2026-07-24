@@ -1,22 +1,32 @@
 import React from 'react';
 import { Icons } from '../../../constants';
-import type { Saint } from '@/data/saints';
+import type { Saint, SaintBiographyBlocks } from '@/data/saints';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from '../BibleVersePopover';
 import CatechismPopover from '../CatechismPopover';
 
-const NARRATIVE_BLOCKS: Array<{
-  key: keyof NonNullable<Saint['biographyFull']>;
+type BlockKey = keyof SaintBiographyBlocks;
+
+interface JourneyStep {
+  key: BlockKey | 'conversao_text' | 'missao_text' | 'heranca_text';
   label: string;
   icon: keyof typeof Icons;
-}> = [
-  { key: 'origem',       label: 'A origem',           icon: 'MapPin' },
-  { key: 'chamado',      label: 'O chamado',          icon: 'Sparkles' },
-  { key: 'missao',       label: 'A missão',           icon: 'Route' },
-  { key: 'fidelidade',   label: 'A fidelidade',       icon: 'Shield' },
-  { key: 'testemunho',   label: 'O testemunho',       icon: 'Flame' },
-  { key: 'heranca',      label: 'A herança espiritual', icon: 'Crown' },
-  { key: 'aprendizado',  label: 'O que aprendemos hoje', icon: 'Lightbulb' },
+  jsonbKey?: BlockKey;          // preferred source (biography_full)
+  textFallback?: keyof Saint;   // TEXT column used only if JSONB block missing
+}
+
+/**
+ * Ordem canônica da jornada espiritual (Sprint 3.2.2):
+ * Origem → Chamado → Conversão → Missão → Testemunho → Legado → Aprendemos hoje.
+ */
+const JOURNEY: JourneyStep[] = [
+  { key: 'origem',      label: 'A origem',                icon: 'MapPin',    jsonbKey: 'origem' },
+  { key: 'chamado',     label: 'O chamado de Deus',       icon: 'Sparkles',  jsonbKey: 'chamado' },
+  { key: 'conversao',   label: 'A conversão',             icon: 'Flame',     jsonbKey: 'conversao', textFallback: 'conversionStory' },
+  { key: 'missao',      label: 'A missão',                icon: 'Route',     jsonbKey: 'missao',    textFallback: 'mission' },
+  { key: 'testemunho',  label: 'O testemunho',            icon: 'Shield',    jsonbKey: 'testemunho' },
+  { key: 'heranca',     label: 'O legado espiritual',     icon: 'Crown',     jsonbKey: 'heranca',   textFallback: 'legacy' },
+  { key: 'aprendizado', label: 'O que aprendemos hoje',   icon: 'Lightbulb', jsonbKey: 'aprendizado' },
 ];
 
 const renderRich = (text: string) =>
@@ -36,47 +46,69 @@ const SectionTitle: React.FC<{ icon: keyof typeof Icons; children: React.ReactNo
   );
 };
 
-const NarrativeBlock: React.FC<{ icon: keyof typeof Icons; label: string; text: string }> = ({ icon, label, text }) => {
+const JourneyStepBlock: React.FC<{
+  index: number;
+  total: number;
+  icon: keyof typeof Icons;
+  label: string;
+  text: string;
+}> = ({ index, total, icon, label, text }) => {
   const Icon = Icons[icon] as any;
+  const isLast = index === total - 1;
   return (
-    <article className="space-y-spacing-sm max-w-[68ch]">
-      <header className="flex items-center gap-spacing-sm text-primary">
-        {Icon && <Icon className="w-spacing-md h-spacing-md" aria-hidden="true" />}
-        <h4 className="text-premium-xs font-black uppercase tracking-[0.22em] text-primary/80">
-          {label}
-        </h4>
-      </header>
-      <p className="font-serif text-premium-md leading-[1.75] text-foreground/90">
-        {renderRich(text)}
-      </p>
-    </article>
+    <li className="relative">
+      <article className="space-y-spacing-sm max-w-[68ch]">
+        <header className="flex items-center gap-spacing-sm text-primary">
+          <span
+            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-primary/30 bg-primary/5 text-primary"
+            aria-hidden="true"
+          >
+            {Icon ? <Icon className="w-4 h-4" /> : <span className="text-xs font-bold">{index + 1}</span>}
+          </span>
+          <h4 className="text-premium-xs font-black uppercase tracking-[0.22em] text-primary/80">
+            {label}
+          </h4>
+        </header>
+        <p className="font-serif text-premium-md leading-[1.75] text-foreground/90">
+          {renderRich(text)}
+        </p>
+      </article>
+      {!isLast && (
+        <div className="flex justify-start pl-4 pt-spacing-md pb-spacing-sm" aria-hidden="true">
+          <span className="text-primary/40 text-lg leading-none">↓</span>
+        </div>
+      )}
+    </li>
   );
 };
 
 /**
- * SaintLife — biografia narrativa do santo.
- * Renderiza: contexto histórico + blocos JSONB (biographyFull) + complementos TEXT
- * (conversionStory, mission, legacy) SEM substituir conteúdo editorial já existente.
+ * SaintLife — biografia narrativa do santo como jornada espiritual.
+ *
+ * Renderiza (Sprint 3.2.2):
+ *  - Contexto histórico (século + narrativa)
+ *  - Síntese espiritual (spirituality_summary) como abertura destacada
+ *  - Jornada em 7 capítulos conectados: origem → chamado → conversão →
+ *    missão → testemunho → legado → aprendemos hoje.
+ *
+ * Prioriza JSONB (biography_full); usa TEXT (conversionStory/mission/legacy)
+ * apenas quando o bloco JSONB correspondente está ausente. Nunca sobrescreve
+ * conteúdo editorial existente.
  */
 const SaintLife: React.FC<{ saint: Saint }> = ({ saint }) => {
   const bio = saint.biographyFull || {};
-  const filledBlocks = NARRATIVE_BLOCKS.filter(b => (bio as any)[b.key]?.trim?.());
-  const filledLabels = new Set(filledBlocks.map(b => b.label));
+
+  const steps = JOURNEY.map(step => {
+    const jsonbText = step.jsonbKey ? (bio[step.jsonbKey] || '').trim() : '';
+    const fallbackText = step.textFallback ? ((saint[step.textFallback] as string | undefined) || '').trim() : '';
+    const text = jsonbText || fallbackText;
+    return text ? { ...step, text } : null;
+  }).filter((s): s is JourneyStep & { text: string } => !!s);
+
   const hasHistorical = !!saint.historicalContext?.trim();
+  const hasSpirituality = !!saint.spiritualitySummary?.trim();
 
-  // Complementos TEXT — só entram quando não duplicam label já preenchido no JSONB.
-  const complements: Array<{ label: string; icon: keyof typeof Icons; text: string }> = [];
-  if (saint.conversionStory?.trim() && !filledLabels.has('O chamado')) {
-    complements.push({ label: 'A conversão', icon: 'Sparkles', text: saint.conversionStory });
-  }
-  if (saint.mission?.trim() && !filledLabels.has('A missão')) {
-    complements.push({ label: 'A missão', icon: 'Route', text: saint.mission });
-  }
-  if (saint.legacy?.trim() && !filledLabels.has('A herança espiritual')) {
-    complements.push({ label: 'O legado', icon: 'Crown', text: saint.legacy });
-  }
-
-  if (!hasHistorical && !saint.century && filledBlocks.length === 0 && complements.length === 0) {
+  if (!hasHistorical && !saint.century && steps.length === 0 && !hasSpirituality) {
     return null;
   }
 
@@ -84,7 +116,9 @@ const SaintLife: React.FC<{ saint: Saint }> = ({ saint }) => {
     <>
       {(hasHistorical || saint.century) && (
         <section className="space-y-spacing-md">
-          <SectionTitle icon="Clock">Contexto histórico{saint.century ? ` · Século ${saint.century}` : ''}</SectionTitle>
+          <SectionTitle icon="Clock">
+            Contexto histórico{saint.century ? ` · Século ${saint.century}` : ''}
+          </SectionTitle>
           {hasHistorical && (
             <p className="font-serif text-premium-md leading-relaxed text-foreground/90 max-w-[68ch]">
               {renderRich(saint.historicalContext!)}
@@ -93,19 +127,32 @@ const SaintLife: React.FC<{ saint: Saint }> = ({ saint }) => {
         </section>
       )}
 
-      {(filledBlocks.length > 0 || complements.length > 0) && (
-        <section className="space-y-spacing-xl" aria-label="Capítulos da vida">
-          {filledBlocks.map(block => (
-            <NarrativeBlock
-              key={block.key}
-              icon={block.icon}
-              label={block.label}
-              text={(bio as any)[block.key]}
-            />
-          ))}
-          {complements.map(c => (
-            <NarrativeBlock key={c.label} icon={c.icon} label={c.label} text={c.text} />
-          ))}
+      {hasSpirituality && (
+        <section aria-label="Síntese espiritual">
+          <blockquote className="max-w-[68ch] border-l-2 border-primary/40 bg-primary/[0.03] px-spacing-md py-spacing-sm">
+            <SectionTitle icon="Heart">Síntese espiritual</SectionTitle>
+            <p className="mt-spacing-sm font-serif italic text-premium-md leading-[1.75] text-foreground/90">
+              {renderRich(saint.spiritualitySummary!)}
+            </p>
+          </blockquote>
+        </section>
+      )}
+
+      {steps.length > 0 && (
+        <section className="space-y-spacing-md" aria-label="Capítulos da vida">
+          <SectionTitle icon="BookOpen">A jornada</SectionTitle>
+          <ol className="space-y-spacing-lg list-none pl-0">
+            {steps.map((step, i) => (
+              <JourneyStepBlock
+                key={step.key}
+                index={i}
+                total={steps.length}
+                icon={step.icon}
+                label={step.label}
+                text={step.text}
+              />
+            ))}
+          </ol>
         </section>
       )}
     </>
