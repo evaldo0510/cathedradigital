@@ -420,7 +420,7 @@ serve(async (req) => {
 
     // Preview auditável de aliases (mesma deduplicação do fluxo de persistência)
     const aliasCandidates = outcomes.flatMap((o) =>
-      o.aliases.map((a) => ({ ...a, source: `${o.provider}_langlinks` as unknown as AliasCandidate["source"] })),
+      o.aliases.map((a) => ({ ...a, _providerSource: `${o.provider}_langlinks` })),
     );
     const seenPreview = new Set<string>();
     const aliases_preview = aliasCandidates
@@ -431,7 +431,8 @@ serve(async (req) => {
         seenPreview.add(k);
         return true;
       })
-      .map((a) => ({ alias: a.alias.trim(), language: a.language, type: a.type, source: a.source }));
+      .map((a) => ({ alias: a.alias.trim(), language: a.language, type: a.type, source: a._providerSource }));
+
 
     const editorial_score = computeEditorialScore(baseRow);
 
