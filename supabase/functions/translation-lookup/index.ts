@@ -85,14 +85,19 @@ export async function handleRequest(req: Request, deps: LookupDeps = defaultDeps
       if (!data) return j({ error: 'translation_not_found' }, 404);
       tRow = data;
     } else {
+      // P0.2.1 — Fonte única da verdade. Nunca "silent-pick" via
+      // select is_primary=true. Sempre via RPC canônica.
+      const { data: primary, error: rpcErr } = await supabase.rpc('get_active_primary_translation');
+      if (rpcErr) return j({ error: 'db_error', reason: rpcErr.message }, 500);
+      const primaryRow = Array.isArray(primary) && primary.length > 0 ? primary[0] : null;
+      if (!primaryRow) return j({ error: 'no_active_primary_translation' }, 503);
+      // Recupera provider (não retornado pela RPC) para o gate PCL abaixo.
       const { data, error } = await supabase
         .from('bible_translation_sources')
         .select('id, provider, pcl_status, code')
-        .eq('is_primary', true)
-        .eq('pcl_status', 'active')
+        .eq('id', primaryRow.id)
         .maybeSingle();
-      if (error) return j({ error: 'db_error', reason: error.message }, 500);
-      if (!data) return j({ error: 'no_active_primary_translation' }, 503);
+      if (error || !data) return j({ error: 'no_active_primary_translation' }, 503);
       tRow = data;
       tId = data.id;
     }

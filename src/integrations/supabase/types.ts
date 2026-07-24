@@ -7771,6 +7771,17 @@ export type Database = {
         Args: { p_scan_id: string }
         Returns: number
       }
+      get_active_primary_translation: {
+        Args: never
+        Returns: {
+          code: string
+          id: string
+          name: string
+          pcl_status: string
+          status: string
+          translation: string
+        }[]
+      }
       get_correlation_trail: {
         Args: { _cid: string; _include_responses?: boolean }
         Returns: {
