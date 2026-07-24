@@ -489,6 +489,13 @@ const Catechism: React.FC = memo(() => {
                 parchment
               />
             }
+            headerContext={
+              <CatechesisContext
+                moduleTitle="Catecismo da Igreja Católica"
+                section={selectedSection.title}
+                level={selectedPart.part}
+              />
+            }
             nexus={
               <NexusPanel
                 output={sectionNexus}
