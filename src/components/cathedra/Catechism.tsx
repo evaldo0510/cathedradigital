@@ -136,7 +136,8 @@ const CatechismContent: React.FC<{
 
   const segments = useMemo(() => {
     if (!data?.content || data.status === 'not_cached') return [];
-    return parseTheologicalReferences(data.content);
+    const normalized = normalizeCatechismText(data.content);
+    return parseTheologicalReferences(normalized);
   }, [data?.content, data?.status]);
 
   if (!isVisible) {
