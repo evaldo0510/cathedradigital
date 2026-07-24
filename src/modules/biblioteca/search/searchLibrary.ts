@@ -34,22 +34,10 @@ import type {
 
 const EMPTY_NEXUS: NexusSummary = { total: 0, byKind: {} };
 
-const NEXUS_TO_MODULE: Partial<Record<string, LibraryModule>> = {
-  glossary: 'glossary',
-  bible: 'bible',
-  catechism: 'catechism',
-  saint: 'saints',
-  prayer: 'prayers',
-  collection: 'collections',
-  journey: 'journeys',
-  magisterium: 'magisterium',
-  patristic: 'patristics',
-  liturgy: 'liturgy',
-};
-
 const keyOf = (kind: string, ref: string) => `${kind}:${ref}`;
 const keyOfHit = (h: RawHit) =>
   h.nexusRef ? keyOf(h.nexusRef.kind, h.nexusRef.ref) : `${h.type}:${h.id}`;
+
 
 export async function searchLibrary(
   options: LibrarySearchOptions,
