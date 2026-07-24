@@ -70,11 +70,14 @@ const BibleVersePopoverBody: React.FC<BodyProps> = ({ abbr, chapter, verse, onNa
 
       if (incoming.length === 0) {
         console.warn('[BibleVersePopover] empty verses payload', { correlationId, data });
-        setErrorMsg(prev => prev || 'Texto indisponível para esta passagem.');
+        setErrorMsg(prev => prev || 'Este trecho ainda não foi importado na tradução disponível. A Bíblia está em reconstrução.');
       } else if (verse) {
         const idx = incoming.findIndex((v: any) => Number(v.number) === Number(verse));
         if (idx === -1) {
-          setVerses(incoming.slice(0, 3));
+          // P0.2.0 — Contenção: não mascarar ausência com "primeiros versículos".
+          // Informar honestamente que aquele versículo não existe na base atual.
+          setErrorMsg(`Versículo ${verse} ainda não disponível nesta tradução. Bíblia em reconstrução.`);
+          setVerses([]);
         } else {
           const start = Math.max(0, idx - 1);
           const end = Math.min(incoming.length, idx + 3);
