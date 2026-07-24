@@ -54,16 +54,15 @@ const WHITELIST: MergePair[] = [
 ];
 
 // ─── psql helpers ────────────────────────────────────────────────
-function psql(sql: string): unknown[] {
-  const raw = execSync(`psql -Aqt -F"\u0001" -c ${JSON.stringify(sql)}`, {
-    encoding: "utf-8",
-  });
+function psql(sql: string): string[][] {
+  const raw = execSync(`psql -Aqt -F$'\\x01'`, { input: sql, encoding: "utf-8" });
   return raw
     .trim()
     .split("\n")
     .filter(Boolean)
-    .map((line) => line.split("\u0001"));
+    .map((line) => line.split("\x01"));
 }
+
 
 // ─── Validação ───────────────────────────────────────────────────
 function validate() {
