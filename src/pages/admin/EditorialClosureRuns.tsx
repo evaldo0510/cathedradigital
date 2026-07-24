@@ -178,6 +178,11 @@ const EditorialClosureRuns: React.FC = () => {
   const [newRunIds, setNewRunIds] = React.useState<Set<string>>(new Set());
   const knownRunIdsRef = React.useRef<Set<string>>(new Set());
   const [nowTick, setNowTick] = React.useState(0);
+  const [realtimeConnected, setRealtimeConnected] = React.useState(false);
+  const [presets, setPresets] = React.useState<Preset[]>([]);
+  const [presetDialog, setPresetDialog] = React.useState(false);
+  const [presetName, setPresetName] = React.useState('');
+  const suppressToastRef = React.useRef(true); // suprime toast na primeira carga
 
 
   const [searchParams, setSearchParams] = useSearchParams();
