@@ -78,8 +78,14 @@ export const EditorialClosure: React.FC<EditorialClosureProps> = ({
   application,
   prayer,
   next,
+  nexus,
+  source,
   className,
 }) => {
+  const nexusLinks = (nexus ?? [])
+    .map((item) => ({ item, href: resolveNexusHref(item.kind, item.ref) }))
+    .filter((x): x is { item: EditorialClosureNexusItem; href: string } => !!x.href);
+
   return (
     <div
       className={cn(
@@ -90,6 +96,7 @@ export const EditorialClosure: React.FC<EditorialClosureProps> = ({
       )}
       data-editorial-closure
       data-constitution-version="1.0.0"
+      data-closure-source={source ?? 'cathedra-editorial'}
     >
       <ClosureBlock
         kicker="Reflexão"
@@ -113,6 +120,31 @@ export const EditorialClosure: React.FC<EditorialClosureProps> = ({
           {prayer}
         </p>
       </ClosureBlock>
+
+      {nexusLinks.length > 0 && (
+        <ClosureBlock
+          kicker="Conexões"
+          icon={<Icons.Link className="w-4 h-4" aria-hidden />}
+        >
+          <ul className="flex flex-col gap-spacing-xs">
+            {nexusLinks.map(({ item, href }) => (
+              <li key={`${item.kind}:${item.ref}`}>
+                <Link
+                  to={href}
+                  className="text-base leading-relaxed underline underline-offset-4 decoration-secondary/60 hover:decoration-secondary transition-colors"
+                >
+                  {item.label}
+                </Link>
+                {item.note && (
+                  <span className="ml-2 text-sm text-muted-foreground">
+                    — {item.note}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </ClosureBlock>
+      )}
 
       {next && (
         <ClosureBlock
