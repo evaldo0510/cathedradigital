@@ -138,7 +138,7 @@ const CatechismContent: React.FC<{
 
   const normalization = useMemo(() => {
     if (!data?.content || data.status === 'not_cached') return null;
-    return normalizeCatechismTextWithReport(data.content);
+    return normalizeCatechismTextCached(paragraph, data.content);
   }, [data?.content, data?.status]);
 
   const segments = useMemo(() => {
