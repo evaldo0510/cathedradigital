@@ -227,15 +227,9 @@ function extractFromWikitext(wt: string): Partial<NormalizedSaint> {
     },
   );
 
-  // 2) Remove templates residuais recursivamente (inclui {{Citar web|...}}, aninhados)
-  let prev: string;
-  do {
-    prev = pre;
-    pre = pre.replace(/\{\{[^{}]*\}\}/g, " ");
-  } while (pre !== prev);
-
-  // 3) Corta refs <ref>...</ref>
+  // 2) Corta refs (não removemos {{Info/...}} para preservar os campos do infobox).
   pre = pre.replace(/<ref[^>]*>[\s\S]*?<\/ref>/gi, " ").replace(/<ref[^>]*\/>/g, " ");
+
 
   const grab = (key: string): string | undefined => {
     // Consome wikilinks como unidade para não quebrar em `|`
