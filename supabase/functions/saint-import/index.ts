@@ -106,15 +106,19 @@ async function fetchWikipediaPT(name: string): Promise<ImportOutcome | null> {
     { alias: s.title, language: "pt", type: "alt", source: "wikipedia" },
   ];
 
-  // Enriquecimento via infobox + langlinks + imageinfo numa única chamada agregada
+  // Enriquecimento via infobox + langlinks + imageinfo numa única chamada agregada.
+  // Usa o título resolvido pelo summary (s.title) + redirects=1 para lidar com
+  // "São Francisco de Assis" → "Francisco de Assis", "Teresinha" → "Teresa de Lisieux", etc.
   try {
-    const infoRes = await fetch(
-      `https://pt.wikipedia.org/w/api.php?action=query&prop=revisions|langlinks|pageimages&rvprop=content&rvsection=0&lllimit=50&piprop=name&titles=${title}&format=json&formatversion=2&origin=*`,
-      { headers: { "User-Agent": WIKI_UA } },
-    );
-    if (infoRes.ok) {
+    const resolvedTitle = encodeURIComponent((s.title ?? name).replace(/\s+/g, "_"));
+    const infoUrl = `https://pt.wikipedia.org/w/api.php?action=query&prop=revisions|langlinks|pageimages&rvprop=content&rvsection=0&lllimit=50&piprop=name&redirects=1&titles=${resolvedTitle}&format=json&formatversion=2&origin=*`;
+    const infoRes = await fetch(infoUrl, { headers: { "User-Agent": WIKI_UA } });
+    if (!infoRes.ok) {
+      console.warn(`saint-import: wiki enrich HTTP ${infoRes.status} for ${s.title}`);
+    } else {
       const infoJson = await infoRes.json();
       const page = infoJson?.query?.pages?.[0];
+      if (!page) console.warn(`saint-import: no page in enrich response for ${s.title}`);
       const wikitext: string = page?.revisions?.[0]?.content ?? "";
       Object.assign(data, extractFromWikitext(wikitext));
 
@@ -129,6 +133,7 @@ async function fetchWikipediaPT(name: string): Promise<ImportOutcome | null> {
           source: "wikipedia",
         });
       }
+      console.log(`saint-import: ${s.title} langlinks=${langlinks.length} pageimage=${page?.pageimage ?? "none"} wt=${wikitext.length}`);
 
       // Licença real via Commons imageinfo
       const pageimage: string | undefined = page?.pageimage;
@@ -139,12 +144,16 @@ async function fetchWikipediaPT(name: string): Promise<ImportOutcome | null> {
           data.image_source_url = commons.descriptionurl ?? data.image_source_url;
           if (commons.license) data.image_license = commons.license;
           if (commons.attribution) data.image_attribution = commons.attribution;
+        } else {
+          console.warn(`saint-import: commons imageinfo empty for ${pageimage}`);
         }
       }
     }
-  } catch (_) {
-    /* opcional */
+  } catch (e) {
+    console.warn(`saint-import: enrich failed for ${s.title}:`, String(e));
   }
+
+
 
   return { provider: "wikipedia-pt", confidence: 80, data, sourceUrl, aliases };
 }
