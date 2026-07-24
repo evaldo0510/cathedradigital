@@ -70,14 +70,10 @@ export async function getWorkBySlug(
   saintSlug: string,
   workSlug: string
 ): Promise<SaintWork | null> {
-  // saintSlug pode ser id direto — tentamos ambos por compatibilidade
-  const { data: saintRow } = await supabase
-    .from('saints')
-    .select('id')
-    .or(`id.eq.${saintSlug},slug.eq.${saintSlug}`)
-    .maybeSingle();
+  // Na Cathedra atual `saints.id` é o próprio slug (TEXT). Não existe coluna `slug`.
+  // Usamos o parâmetro `saintSlug` diretamente como id.
+  const saintId = saintSlug;
 
-  const saintId = saintRow?.id ?? saintSlug;
 
   const { data, error } = await supabase
     .from(WORKS_TABLE)
