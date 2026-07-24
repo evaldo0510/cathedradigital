@@ -49,10 +49,8 @@ vi.mock('./RitualDoDia', () => ({
   default: () => <div data-testid="ritual-do-dia" />
 }));
 
-// Mock NexusBubbles
-vi.mock('./NexusBubbles', () => ({
-  default: () => <div data-testid="nexus-bubbles" />
-}));
+// (C0.4.b) NexusBubbles removido; HojePage não consome mais o componente.
+
 
 // Mock HomeMainDoors
 vi.mock('./HomeMainDoors', () => ({
