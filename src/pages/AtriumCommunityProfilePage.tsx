@@ -8,6 +8,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, Heart, MessageCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAvatarUrl } from '@/lib/avatar';
 
 type Profile = {
   id: string;

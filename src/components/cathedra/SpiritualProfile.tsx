@@ -11,6 +11,7 @@ import { getLevelInfo } from '@/lib/levels';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Database } from '@/integrations/supabase/types';
+import { useAvatarUrl } from '@/lib/avatar';
 
 type UserHistory = Database['public']['Tables']['user_history']['Row'];
 type JourneyProgressRow = Database['public']['Tables']['journey_progress']['Row'] & { journeys: { title: string } | null };
