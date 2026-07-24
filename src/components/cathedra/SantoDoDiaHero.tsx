@@ -219,14 +219,14 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
       </div>
 
       {/* Ficha editorial em blocos */}
-      <div className="p-spacing-lg md:p-spacing-2xl space-y-spacing-2xl">
+      <div className="p-spacing-md sm:p-spacing-lg md:p-spacing-2xl space-y-spacing-xl md:space-y-spacing-2xl">
         {/* Modo de leitura — nav de seções + toggle expandir/recolher */}
         <div
-          className="sticky top-[64px] z-10 -mx-spacing-lg md:-mx-spacing-2xl px-spacing-lg md:px-spacing-2xl py-spacing-xs backdrop-blur bg-card/85 border-b border-border/60 flex items-center justify-between gap-spacing-sm"
+          className="sticky top-[64px] z-10 -mx-spacing-md sm:-mx-spacing-lg md:-mx-spacing-2xl px-spacing-md sm:px-spacing-lg md:px-spacing-2xl py-spacing-xs backdrop-blur bg-card/85 border-b border-border/60 flex items-center justify-between gap-spacing-sm"
           role="toolbar"
           aria-label="Modo de leitura da ficha"
         >
-          <nav aria-label="Seções da ficha" className="flex-1 min-w-0 overflow-x-auto">
+          <nav aria-label="Seções da ficha" className="flex-1 min-w-0 overflow-x-auto no-scrollbar">
             <ul className="flex items-center gap-spacing-2xs">
               {sectionNav
                 .filter((s) => s.enabled)
@@ -235,7 +235,7 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
                     <button
                       type="button"
                       onClick={() => scrollToSection(s.key)}
-                      className="px-spacing-sm py-spacing-2xs rounded-premium-full border border-border/60 text-premium-xs font-black uppercase tracking-widest text-foreground/80 hover:text-primary hover:border-primary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+                      className="inline-flex items-center justify-center min-h-11 px-spacing-sm py-spacing-2xs rounded-premium-full border border-border/60 text-premium-xs font-black uppercase tracking-widest text-foreground/80 hover:text-primary hover:border-primary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background whitespace-nowrap"
                     >
                       {s.label}
                     </button>
@@ -246,6 +246,7 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
           <Button
             variant="ghost"
             size="sm"
+            className="shrink-0 min-h-11"
             onClick={toggleExpanded}
             aria-expanded={expanded}
             aria-controls="santo-do-dia-vida"
@@ -253,12 +254,12 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
             {expanded ? (
               <>
                 <Icons.ChevronUp className="w-spacing-md h-spacing-md" />
-                Recolher
+                <span className="hidden sm:inline">Recolher</span>
               </>
             ) : (
               <>
                 <Icons.ChevronDown className="w-spacing-md h-spacing-md" />
-                Expandir leitura
+                <span className="hidden sm:inline">Expandir leitura</span>
               </>
             )}
           </Button>
