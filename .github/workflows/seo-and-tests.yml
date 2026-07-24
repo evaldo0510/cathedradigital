@@ -85,6 +85,43 @@ jobs:
           if-no-files-found: warn
           retention-days: 14
 
+  gsc-meta-gate:
+    name: GSC meta tag gate (build + published HTML)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - run: bun install --frozen-lockfile
+
+      - name: Build (gera dist/index.html)
+        run: bunx vite build
+
+      - name: Verificar sitemap.xml e robots.txt no domínio publicado
+        run: bun run scripts/check-sitemap-robots.ts --max=200
+        continue-on-error: true
+
+      - name: Validar meta google-site-verification (build + publicado)
+        # Enquanto o token real do Search Console não estiver colado em index.html,
+        # mantenha --allow-placeholder. Assim que trocar o placeholder pelo token
+        # real, REMOVA --allow-placeholder para bloquear regressões no deploy.
+        run: bun run scripts/validate-gsc-meta.ts --file=dist/index.html --url=https://www.cathedradigital.com.br --allow-placeholder
+
+      - name: Publicar relatórios
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gsc-meta-reports
+          path: |
+            reports/seo/sitemap-robots-check.json
+            reports/seo/sitemap-robots-check.md
+          if-no-files-found: warn
+          retention-days: 14
+
+
+
   nexus-perf:
     name: Nexus perf guardrail
     runs-on: ubuntu-latest
