@@ -72,9 +72,22 @@ const CatechismContent: React.FC<{
   const { settings } = useReadingSettings();
   const { markPending, clearPending } = useCatechismPending();
 
+  // Pré-carrega uma janela de §§ vizinhos (±5) em background para reduzir latência
+  // ao navegar. `prefetch` é idempotente e reaproveita cache do React Query;
+  // quando o § não existe no banco, dispara o enfileiramento automático via edge.
   useEffect(() => {
-    if (isVisible && paragraph < 2865) prefetch(paragraph + 1);
+    if (!isVisible) return;
+    const offsets = [1, 2, 3, 4, 5, -1, -2];
+    const handles: number[] = [];
+    offsets.forEach((off, idx) => {
+      const target = paragraph + off;
+      if (target < 1 || target > 2865) return;
+      // Escalona para não competir com o fetch do § atual
+      handles.push(window.setTimeout(() => prefetch(target), 120 + idx * 180));
+    });
+    return () => handles.forEach(clearTimeout);
   }, [paragraph, prefetch, isVisible]);
+
 
   // Sincroniza este parágrafo com o painel de pendências da seção.
   useEffect(() => {
@@ -255,18 +268,26 @@ const CatechismContent: React.FC<{
           <CatechismPopover key={i} paragraph={seg.paragraph} />
         ) : (
           <ReactMarkdown key={i} components={{
-            p: (props) => {
-              const h = highlights.find(n => n.paragraph === paragraph && n.highlight_color);
-              if (h) {
+              p: (props) => {
+                const h = highlights.find(n => n.paragraph === paragraph && n.highlight_color);
+                if (h) {
+                  return (
+                    <p
+                      onClick={() => onHighlightClick?.(h)}
+                      className={`highlight-${h.highlight_color} px-spacing-2xs py-spacing-2xs mb-spacing-md last:mb-0 rounded-premium-sm cursor-pointer hover:brightness-95 transition-all leading-relaxed`}
+                    >
+                      {props.children}
+                    </p>
+                  );
+                }
                 return (
-                  <span onClick={() => onHighlightClick?.(h)} className={`highlight-${h.highlight_color} px-spacing-2xs rounded-premium-sm cursor-pointer hover:brightness-95 transition-all`}>
+                  <p className="mb-spacing-md last:mb-0 leading-relaxed">
                     {props.children}
-                  </span>
+                  </p>
                 );
-              }
-              return <span>{props.children}</span>;
-            },
-          }}>{seg.value}</ReactMarkdown>
+              },
+            }}>{seg.value}</ReactMarkdown>
+
         )
       )}
       {data?.content && (
