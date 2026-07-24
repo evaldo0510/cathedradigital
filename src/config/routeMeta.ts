@@ -454,6 +454,28 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
     },
   },
   {
+    test: /^\/biblioteca\/escritos$/,
+    meta: {
+      title: 'Biblioteca Patrística — Escritos dos Santos | Cathedra',
+      description: 'Obras dos Padres, Doutores e místicos da Igreja: Confissões, Suma Teológica, Imitação de Cristo e mais — leitor premium com anotações.',
+      canonicalPath: '/biblioteca/escritos',
+    },
+  },
+  {
+    test: /^\/biblioteca\/escritos\/[^/]+\/[^/]+$/,
+    meta: {
+      title: 'Obra Patrística — Biblioteca Cathedra',
+      description: 'Sumário da obra patrística com abstract, licença editorial, capítulos e leitor contínuo integrado ao Nexus Theologicus.',
+    },
+  },
+  {
+    test: /^\/biblioteca\/escritos\/[^/]+\/[^/]+\/capitulo\/[^/]+$/,
+    meta: {
+      title: 'Capítulo — Biblioteca Patrística Cathedra',
+      description: 'Leitor premium de capítulo patrístico com notas editoriais, referências bíblicas e conexões teológicas.',
+    },
+  },
+  {
     test: /^\/(admin|dev)(\/|$)/,
     meta: {
       title: 'Admin — Cathedra',
