@@ -43,6 +43,48 @@ export interface WorkAuditHistoryProps {
   workId: string;
 }
 
+/** Escape CSV cell: wrap in quotes, double-up embedded quotes. */
+function csvCell(v: unknown): string {
+  const s = v == null ? '' : String(v);
+  return `"${s.replace(/"/g, '""')}"`;
+}
+
+function exportCsv(entries: SaintWorksAuditEntry[], workId: string) {
+  const header = [
+    'data_iso',
+    'acao',
+    'de_status',
+    'para_status',
+    'campos_alterados',
+    'capitulo_id',
+    'ator_email',
+    'ator_id',
+    'notas',
+  ];
+  const rows = entries.map((e) => [
+    e.created_at,
+    ACTION_LABEL[e.action] ?? e.action,
+    e.from_status ?? '',
+    e.to_status ?? '',
+    (e.changed_fields ?? []).join('|'),
+    e.chapter_id ?? '',
+    e.actor_email ?? '',
+    e.actor_id ?? '',
+    (e.notes ?? '').replace(/\s+/g, ' ').trim(),
+  ]);
+  const csv = [header, ...rows].map((r) => r.map(csvCell).join(',')).join('\r\n');
+  // BOM para Excel reconhecer UTF-8.
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `auditoria_obra_${workId}_${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 export const WorkAuditHistory: React.FC<WorkAuditHistoryProps> = ({ workId }) => {
   const { data: entries = [], isLoading } = useQuery({
     queryKey: ['saint_works_audit', workId],
