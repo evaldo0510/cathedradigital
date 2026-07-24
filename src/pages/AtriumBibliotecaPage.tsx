@@ -18,12 +18,12 @@ import {
   Sparkles,
   Network,
   ArrowRight,
-  Search as SearchIcon,
 } from 'lucide-react';
 import { AppRoute } from '@/types';
 import { useBibliotecaRecents } from '@/hooks/useBibliotecaState';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
+import { LibrarySearchPanel, LibraryThemesBlock } from '@/modules/biblioteca';
 
 type Collection = {
   title: string;
