@@ -193,41 +193,46 @@ async function fetchCommonsImageInfo(fileName: string): Promise<CommonsImage | n
 function extractFromWikitext(wt: string): Partial<NormalizedSaint> {
   if (!wt) return {};
 
-  // Limpa templates comuns de data preservando o texto interno relevante.
-  //  {{dtln|1181|9|26}} -> "1181-09-26"
-  //  {{Data de nascimento|1181|9|26|...}} -> "1181-09-26"
-  //  {{Nowrap|...}} / {{lang|xx|...}} -> conteúdo interno
-  const cleanTemplates = (raw: string): string => {
-    let s = raw;
-    s = s.replace(/\{\{\s*(?:dtln|dnbr|dmbr|Data de (?:nascimento|morte|falecimento)|nascimento(?:\s+e\s+idade)?|morte(?:\s+e\s+idade)?)\s*\|([^}]+)\}\}/gi, (_m, args) => {
+  // 1) Preserva templates de data convertendo-os para texto simples ANTES do strip global.
+  let pre = wt.replace(
+    /\{\{\s*(?:dtln|dnbr|dmbr|Data de (?:nascimento|morte|falecimento)|nascimento(?:\s+e\s+idade)?|morte(?:\s+e\s+idade)?)\s*\|([^}]+)\}\}/gi,
+    (_m, args) => {
       const parts = String(args).split("|").map((p: string) => p.trim()).filter(Boolean);
       const nums = parts.filter((p: string) => /^\d+$/.test(p));
-      if (nums.length >= 3) {
-        const [y, mo, d] = nums;
-        return `${y.padStart(4, "0")}-${mo.padStart(2, "0")}-${d.padStart(2, "0")}`;
-      }
+      if (nums.length >= 3) return `${nums[0].padStart(4, "0")}-${nums[1].padStart(2, "0")}-${nums[2].padStart(2, "0")}`;
       if (nums.length === 1) return nums[0];
       return parts.join(" ");
-    });
-    s = s.replace(/\{\{\s*(?:nowrap|lang|langx|small|nobr)\s*\|([^}]+)\}\}/gi, (_m, args) => {
+    },
+  );
+  pre = pre.replace(
+    /\{\{\s*(?:nowrap|lang|langx|small|nobr)\s*\|([^}]+)\}\}/gi,
+    (_m, args) => {
       const parts = String(args).split("|");
       return parts[parts.length - 1].trim();
-    });
-    // Remove templates residuais simples
-    s = s.replace(/\{\{[^{}]*\}\}/g, " ");
-    return s;
-  };
+    },
+  );
+
+  // 2) Remove templates residuais recursivamente (inclui {{Citar web|...}}, aninhados)
+  let prev: string;
+  do {
+    prev = pre;
+    pre = pre.replace(/\{\{[^{}]*\}\}/g, " ");
+  } while (pre !== prev);
+
+  // 3) Corta refs <ref>...</ref>
+  pre = pre.replace(/<ref[^>]*>[\s\S]*?<\/ref>/gi, " ").replace(/<ref[^>]*\/>/g, " ");
 
   const grab = (key: string): string | undefined => {
-    // Consome wikilinks e templates como uma unidade para não quebrar em `|`
-    const re = new RegExp(`\\|\\s*${key}\\s*=\\s*((?:\\[\\[[^\\]]*\\]\\]|\\{\\{[^}]*\\}\\}|[^\\n|])+)`, "i");
-    const m = wt.match(re);
+    // Consome wikilinks como unidade para não quebrar em `|`
+    const re = new RegExp(`\\|\\s*${key}\\s*=\\s*((?:\\[\\[[^\\]]*\\]\\]|[^\\n|])+)`, "i");
+    const m = pre.match(re);
     if (!m) return undefined;
-    let v = cleanTemplates(m[1]);
+    let v = m[1];
     v = v.replace(/\[\[([^\]|]+\|)?([^\]]+)\]\]/g, "$2").replace(/<[^>]+>/g, "").replace(/'{2,}/g, "").trim();
-    v = v.replace(/\s{2,}/g, " ");
+    v = v.replace(/\s{2,}/g, " ").replace(/[\s,;]+$/g, "").trim();
     return v || undefined;
   };
+
 
 
   const grabAny = (...keys: string[]) => {
