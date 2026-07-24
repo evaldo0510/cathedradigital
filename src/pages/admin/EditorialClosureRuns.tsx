@@ -147,6 +147,23 @@ function runsToCSV(list: RunSummary[]): string {
   return [header.join(','), ...lines].join('\n');
 }
 
+// ---------------- Filter presets (localStorage) ----------------
+type Preset = { id: string; name: string; params: Record<string, string> };
+const PRESETS_KEY = 'editorial-closure-runs:presets:v1';
+const PRESET_KEYS = ['sort', 'order', 'size', 'mode', 'strategy', 'warn', 'q'] as const;
+
+function loadPresets(): Preset[] {
+  try {
+    const raw = localStorage.getItem(PRESETS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter((p) => p && typeof p.name === 'string') : [];
+  } catch { return []; }
+}
+function savePresets(list: Preset[]) {
+  try { localStorage.setItem(PRESETS_KEY, JSON.stringify(list)); } catch { /* ignore */ }
+}
+
 const EditorialClosureRuns: React.FC = () => {
   const [loading, setLoading] = React.useState(true);
   const [rows, setRows] = React.useState<LogRow[]>([]);
