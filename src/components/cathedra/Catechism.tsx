@@ -282,6 +282,13 @@ const CatechismContent: React.FC<{
       "prose prose-lg dark:prose-invert max-w-none transition-all",
       settings.reduceAnimations ? "duration-0" : "duration-300"
     )}>
+      {normalization && data?.content && (
+        <CatechismNormalizationDiff
+          paragraph={paragraph}
+          original={data.content}
+          report={normalization}
+        />
+      )}
       {segments.map((seg, i) =>
         seg.type === 'bibleRef' && seg.abbr ? (
           <BibleVersePopover key={i} abbr={seg.abbr} chapter={seg.chapter!} verse={seg.verse} label={seg.value} onNavigate={onNavigateToBible} />
