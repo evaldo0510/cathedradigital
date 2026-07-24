@@ -17,6 +17,7 @@ import type { SaintWork, SaintWorkChapter } from '@/types/saintWorks';
 import { SAINT_WORK_CATEGORY_LABELS } from '@/types/saintWorks';
 import { ReaderShell } from '@/components/reader';
 import { EditorialHero } from '@/components/editorial';
+import { EditorialCredits } from '@/components/biblioteca/EditorialCredits';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
 
@@ -189,6 +190,15 @@ const SaintWorkReaderPage: React.FC = () => {
           className="prose prose-lg dark:prose-invert max-w-none font-serif leading-relaxed"
           dangerouslySetInnerHTML={{ __html: chapter.body_html }}
         />
+        <div className="max-w-[68ch] mx-auto">
+          <EditorialCredits
+            isPublicDomain={work.is_public_domain}
+            license={work.license}
+            translationCredit={work.translation_credit}
+            sourceUrl={work.source_url}
+            compact
+          />
+        </div>
       </ReaderShell>
     </main>
   );

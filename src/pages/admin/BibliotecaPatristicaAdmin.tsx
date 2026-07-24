@@ -14,7 +14,8 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { ExternalLink, Loader2, Pencil, BookOpen } from 'lucide-react';
+import { ExternalLink, Loader2, Pencil, BookOpen, History } from 'lucide-react';
+import { WorkAuditHistory } from '@/components/admin/WorkAuditHistory';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -398,6 +399,13 @@ function EditWorkDialog({ work, onClose, onSave, saving }: EditWorkDialogProps) 
           <div className="border-t pt-4 text-sm text-muted-foreground flex items-center gap-2">
             <BookOpen className="w-4 h-4" />
             <span>{work.chapter_count} capítulo(s) · edite via SQL enquanto o editor de capítulos não estiver disponível.</span>
+          </div>
+
+          <div className="border-t pt-4 space-y-2">
+            <div className="flex items-center gap-2 text-sm font-medium">
+              <History className="w-4 h-4" /> Histórico editorial
+            </div>
+            <WorkAuditHistory workId={work.id} />
           </div>
         </div>
 

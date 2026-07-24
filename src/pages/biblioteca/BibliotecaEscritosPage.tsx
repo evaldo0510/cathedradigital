@@ -76,6 +76,17 @@ const BibliotecaEscritosPage: React.FC = () => {
         size="lg"
       />
 
+      <div className="max-w-4xl mx-auto px-spacing-md pt-spacing-md">
+        <Link
+          to="/biblioteca/escritos/busca"
+          className="flex items-center gap-2 w-full p-3 bg-card border border-border rounded-premium hover:border-primary/40 hover:shadow-sm transition-all text-muted-foreground hover:text-foreground"
+        >
+          <Icons.Search className="w-4 h-4" aria-hidden />
+          <span className="text-premium-sm">Buscar por autor, obra ou palavras dentro dos capítulos…</span>
+        </Link>
+      </div>
+
+
       <div className="max-w-4xl mx-auto px-spacing-md py-spacing-xl space-y-spacing-2xl">
         {loading && (
           <p className="text-center text-muted-foreground">Carregando obras...</p>

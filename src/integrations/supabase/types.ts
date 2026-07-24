@@ -5219,6 +5219,63 @@ export type Database = {
           },
         ]
       }
+      saint_works_audit: {
+        Row: {
+          action: string
+          actor_email: string | null
+          actor_id: string | null
+          changed_fields: string[]
+          chapter_id: string | null
+          created_at: string
+          from_status: Database["public"]["Enums"]["saint_work_status"] | null
+          id: string
+          notes: string | null
+          to_status: Database["public"]["Enums"]["saint_work_status"] | null
+          work_id: string
+        }
+        Insert: {
+          action: string
+          actor_email?: string | null
+          actor_id?: string | null
+          changed_fields?: string[]
+          chapter_id?: string | null
+          created_at?: string
+          from_status?: Database["public"]["Enums"]["saint_work_status"] | null
+          id?: string
+          notes?: string | null
+          to_status?: Database["public"]["Enums"]["saint_work_status"] | null
+          work_id: string
+        }
+        Update: {
+          action?: string
+          actor_email?: string | null
+          actor_id?: string | null
+          changed_fields?: string[]
+          chapter_id?: string | null
+          created_at?: string
+          from_status?: Database["public"]["Enums"]["saint_work_status"] | null
+          id?: string
+          notes?: string | null
+          to_status?: Database["public"]["Enums"]["saint_work_status"] | null
+          work_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saint_works_audit_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "saint_work_chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "saint_works_audit_work_id_fkey"
+            columns: ["work_id"]
+            isOneToOne: false
+            referencedRelation: "saint_works"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       saints: {
         Row: {
           ai_reflection: Json | null
@@ -7103,6 +7160,7 @@ export type Database = {
       }
     }
     Functions: {
+      _current_actor_email: { Args: never; Returns: string }
       _glossary_editorial_score: {
         Args: { g: Database["public"]["Tables"]["glossary"]["Row"] }
         Returns: number
@@ -8141,6 +8199,24 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      search_patristic_library: {
+        Args: { page_number?: number; page_size?: number; search_query: string }
+        Returns: {
+          category: string
+          chapter_id: string
+          chapter_order: number
+          chapter_title: string
+          rank: number
+          saint_id: string
+          saint_name: string
+          snippet: string
+          total_count: number
+          work_id: string
+          work_slug: string
+          work_title: string
+          year_written: number
+        }[]
       }
       search_saints_fuzzy: {
         Args: { result_limit?: number; search_query: string }
