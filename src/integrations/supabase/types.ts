@@ -4956,6 +4956,53 @@ export type Database = {
         }
         Relationships: []
       }
+      saint_import_logs: {
+        Row: {
+          confidence: number | null
+          created_at: string
+          fields_skipped: string[]
+          fields_updated: string[]
+          id: string
+          message: string | null
+          payload: Json
+          provider: string
+          saint_id: string
+          status: string
+        }
+        Insert: {
+          confidence?: number | null
+          created_at?: string
+          fields_skipped?: string[]
+          fields_updated?: string[]
+          id?: string
+          message?: string | null
+          payload?: Json
+          provider: string
+          saint_id: string
+          status: string
+        }
+        Update: {
+          confidence?: number | null
+          created_at?: string
+          fields_skipped?: string[]
+          fields_updated?: string[]
+          id?: string
+          message?: string | null
+          payload?: Json
+          provider?: string
+          saint_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saint_import_logs_saint_id_fkey"
+            columns: ["saint_id"]
+            isOneToOne: false
+            referencedRelation: "saints"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       saint_prayers_links: {
         Row: {
           created_at: string
@@ -4998,10 +5045,12 @@ export type Database = {
       saints: {
         Row: {
           ai_reflection: Json | null
+          alternate_names: string[]
           bible_refs: Json | null
           bio: string | null
           bio_source_url: string | null
           biography_full: Json
+          birthplace: string | null
           born: string | null
           catechism_refs: number[] | null
           category: string | null
@@ -5014,6 +5063,7 @@ export type Database = {
           created_at: string | null
           curiosities: string[]
           died: string | null
+          editorial_score: number
           feast_day: string | null
           feast_day_num: number | null
           feast_month: number | null
@@ -5022,6 +5072,9 @@ export type Database = {
           iconography: Json
           id: string
           image: string | null
+          image_attribution: string | null
+          image_license: string | null
+          image_source_url: string | null
           last_scraped_at: string | null
           legacy: string | null
           miracles: Json
@@ -5031,8 +5084,11 @@ export type Database = {
           patronages: string[]
           prayer: string | null
           prayer_source_url: string | null
+          protected_fields: string[]
           quotes: string[] | null
           quotes_rich: Json
+          religious_order: string | null
+          source_metadata: Json
           source_name: string | null
           source_url: string | null
           sources: Json
@@ -5046,10 +5102,12 @@ export type Database = {
         }
         Insert: {
           ai_reflection?: Json | null
+          alternate_names?: string[]
           bible_refs?: Json | null
           bio?: string | null
           bio_source_url?: string | null
           biography_full?: Json
+          birthplace?: string | null
           born?: string | null
           catechism_refs?: number[] | null
           category?: string | null
@@ -5062,6 +5120,7 @@ export type Database = {
           created_at?: string | null
           curiosities?: string[]
           died?: string | null
+          editorial_score?: number
           feast_day?: string | null
           feast_day_num?: number | null
           feast_month?: number | null
@@ -5070,6 +5129,9 @@ export type Database = {
           iconography?: Json
           id: string
           image?: string | null
+          image_attribution?: string | null
+          image_license?: string | null
+          image_source_url?: string | null
           last_scraped_at?: string | null
           legacy?: string | null
           miracles?: Json
@@ -5079,8 +5141,11 @@ export type Database = {
           patronages?: string[]
           prayer?: string | null
           prayer_source_url?: string | null
+          protected_fields?: string[]
           quotes?: string[] | null
           quotes_rich?: Json
+          religious_order?: string | null
+          source_metadata?: Json
           source_name?: string | null
           source_url?: string | null
           sources?: Json
@@ -5094,10 +5159,12 @@ export type Database = {
         }
         Update: {
           ai_reflection?: Json | null
+          alternate_names?: string[]
           bible_refs?: Json | null
           bio?: string | null
           bio_source_url?: string | null
           biography_full?: Json
+          birthplace?: string | null
           born?: string | null
           catechism_refs?: number[] | null
           category?: string | null
@@ -5110,6 +5177,7 @@ export type Database = {
           created_at?: string | null
           curiosities?: string[]
           died?: string | null
+          editorial_score?: number
           feast_day?: string | null
           feast_day_num?: number | null
           feast_month?: number | null
@@ -5118,6 +5186,9 @@ export type Database = {
           iconography?: Json
           id?: string
           image?: string | null
+          image_attribution?: string | null
+          image_license?: string | null
+          image_source_url?: string | null
           last_scraped_at?: string | null
           legacy?: string | null
           miracles?: Json
@@ -5127,8 +5198,11 @@ export type Database = {
           patronages?: string[]
           prayer?: string | null
           prayer_source_url?: string | null
+          protected_fields?: string[]
           quotes?: string[] | null
           quotes_rich?: Json
+          religious_order?: string | null
+          source_metadata?: Json
           source_name?: string | null
           source_url?: string | null
           sources?: Json
@@ -7868,10 +7942,12 @@ export type Database = {
         Args: { result_limit?: number; search_query: string }
         Returns: {
           ai_reflection: Json | null
+          alternate_names: string[]
           bible_refs: Json | null
           bio: string | null
           bio_source_url: string | null
           biography_full: Json
+          birthplace: string | null
           born: string | null
           catechism_refs: number[] | null
           category: string | null
@@ -7884,6 +7960,7 @@ export type Database = {
           created_at: string | null
           curiosities: string[]
           died: string | null
+          editorial_score: number
           feast_day: string | null
           feast_day_num: number | null
           feast_month: number | null
@@ -7892,6 +7969,9 @@ export type Database = {
           iconography: Json
           id: string
           image: string | null
+          image_attribution: string | null
+          image_license: string | null
+          image_source_url: string | null
           last_scraped_at: string | null
           legacy: string | null
           miracles: Json
@@ -7901,8 +7981,11 @@ export type Database = {
           patronages: string[]
           prayer: string | null
           prayer_source_url: string | null
+          protected_fields: string[]
           quotes: string[] | null
           quotes_rich: Json
+          religious_order: string | null
+          source_metadata: Json
           source_name: string | null
           source_url: string | null
           sources: Json
