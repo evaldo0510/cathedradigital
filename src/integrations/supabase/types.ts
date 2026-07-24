@@ -2724,6 +2724,7 @@ export type Database = {
           entity_id: string
           entity_table: string
           id: string
+          run_id: string | null
           strategy: string
           warnings: Json
         }
@@ -2736,6 +2737,7 @@ export type Database = {
           entity_id: string
           entity_table: string
           id?: string
+          run_id?: string | null
           strategy: string
           warnings?: Json
         }
@@ -2748,6 +2750,7 @@ export type Database = {
           entity_id?: string
           entity_table?: string
           id?: string
+          run_id?: string | null
           strategy?: string
           warnings?: Json
         }
@@ -8571,11 +8574,18 @@ export type Database = {
       }
       mask_ip: { Args: { ip: string }; Returns: string }
       migrate_editorial_closure_legacy: {
-        Args: { _dry_run?: boolean }
+        Args: {
+          _dry_run?: boolean
+          _ids?: string[]
+          _run_id?: string
+          _since?: string
+          _tables?: string[]
+        }
         Returns: {
           discarded: number
           entity_table: string
           normalized: number
+          run_id: string
           scanned: number
           unchanged: number
         }[]
@@ -8667,6 +8677,15 @@ export type Database = {
         Returns: undefined
       }
       resolve_user_id_by_email: { Args: { _email: string }; Returns: string }
+      rollback_editorial_closure_migration: {
+        Args: { _run_id: string }
+        Returns: {
+          conflicted: number
+          entity_table: string
+          restored: number
+          skipped: number
+        }[]
+      }
       run_manual_security_scan: { Args: never; Returns: string }
       run_saints_enrichment_heuristic: {
         Args: { p_limit?: number }
