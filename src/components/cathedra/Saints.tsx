@@ -286,21 +286,59 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
 
 
         <div className="flex justify-center overflow-x-auto pb-spacing-md no-scrollbar">
-          <div className="bg-secondary/50 p-spacing-2xs rounded-premium flex gap-spacing-2xs min-w-max" role="tablist" aria-label="Modos de visualização dos santos">
-            {viewModes.map((mode, idx) => (
-              <Button
-                key={mode}
-                {...getTabProps(`tab-${mode}`, `panel-${mode}`, viewMode === mode, `px-spacing-md md:px-spacing-lg py-spacing-xs rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none ${
-                  viewMode === mode ? 'bg-background text-foreground shadow-premium-md' : 'text-muted-foreground hover:text-foreground'
-                }`)}
-                onClick={() => setViewMode(mode)}
-                onKeyDown={(e) => handleTabKeyDown(e, idx, viewModes.length, (newIdx) => setViewMode(viewModes[newIdx]), 'tab-')}
-              >
-                {mode === 'daily' ? 'Hoje' : mode === 'filtros' ? 'Filtros' : mode === 'all' ? 'Todos' : mode === 'writers' ? 'Escritores' : mode === 'popes' ? 'Papas' : mode === 'cloud' ? 'Nuvem' : 'Buscar'}
-              </Button>
-            ))}
+          <div
+            className="flex items-center gap-spacing-lg md:gap-spacing-xl min-w-max border-y border-secondary/40 px-spacing-md py-spacing-xs"
+            role="tablist"
+            aria-label="Modos de visualização dos santos"
+          >
+            {viewModes.map((mode, idx) => {
+              const isActive = viewMode === mode;
+              return (
+                <button
+                  key={mode}
+                  type="button"
+                  {...getTabProps(
+                    `tab-${mode}`,
+                    `panel-${mode}`,
+                    isActive,
+                    `relative bg-transparent px-0 py-spacing-3xs text-premium-xs font-black uppercase tracking-[0.22em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                      isActive
+                        ? 'text-primary'
+                        : 'text-muted-foreground hover:text-foreground'
+                    }`,
+                  )}
+                  onClick={() => setViewMode(mode)}
+                  onKeyDown={(e) =>
+                    handleTabKeyDown(e, idx, viewModes.length, (newIdx) =>
+                      setViewMode(viewModes[newIdx]),
+                    'tab-')
+                  }
+                >
+                  <span>
+                    {mode === 'daily'
+                      ? 'Hoje'
+                      : mode === 'filtros'
+                      ? 'Filtros'
+                      : mode === 'all'
+                      ? 'Todos'
+                      : mode === 'writers'
+                      ? 'Escritores'
+                      : mode === 'popes'
+                      ? 'Papas'
+                      : mode === 'cloud'
+                      ? 'Nuvem'
+                      : 'Buscar'}
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className={`pointer-events-none absolute -bottom-[6px] left-1/2 h-[2px] -translate-x-1/2 bg-secondary transition-all duration-300 ${
+                      isActive ? 'w-full opacity-100' : 'w-0 opacity-0'
+                    }`}
+                  />
+                </button>
+              );
+            })}
           </div>
-
         </div>
 
         <AnimatePresence mode="wait">
