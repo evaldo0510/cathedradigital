@@ -102,27 +102,39 @@ async function fetchWikipediaPT(name: string): Promise<ImportOutcome | null> {
     image_attribution: image ? `Wikipedia PT — ${s.title}` : undefined,
   };
 
-  // Enriquecimento via infobox (MediaWiki API `parse`): datas, ordem, país
+  const aliases: AliasCandidate[] = [
+    { alias: s.title, language: "pt", type: "alt", source: "wikipedia" },
+  ];
+
+  // Enriquecimento via infobox + langlinks numa única chamada
   try {
     const infoRes = await fetch(
-      `https://pt.wikipedia.org/w/api.php?action=parse&page=${title}&prop=wikitext&section=0&format=json&origin=*`,
+      `https://pt.wikipedia.org/w/api.php?action=query&prop=revisions|langlinks&rvprop=content&rvsection=0&lllimit=50&lllang=&titles=${title}&format=json&formatversion=2&origin=*`,
       { headers: { "User-Agent": WIKI_UA } },
     );
     if (infoRes.ok) {
       const infoJson = await infoRes.json();
-      const wikitext: string = infoJson?.parse?.wikitext?.["*"] ?? "";
+      const page = infoJson?.query?.pages?.[0];
+      const wikitext: string = page?.revisions?.[0]?.content ?? "";
       Object.assign(data, extractFromWikitext(wikitext));
+
+      const langlinks: Array<{ lang: string; title: string }> = page?.langlinks ?? [];
+      const wanted = new Set(["es", "en", "la", "it", "fr", "de"]);
+      for (const ll of langlinks) {
+        if (!wanted.has(ll.lang) || !ll.title) continue;
+        aliases.push({
+          alias: ll.title,
+          language: ll.lang,
+          type: ll.lang === "la" ? "latin" : "translation",
+          source: "wikipedia",
+        });
+      }
     }
   } catch (_) {
     /* opcional */
   }
 
-  return {
-    provider: "wikipedia-pt",
-    confidence: 80,
-    data,
-    sourceUrl,
-  };
+  return { provider: "wikipedia-pt", confidence: 80, data, sourceUrl, aliases };
 }
 
 function extractFromWikitext(wt: string): Partial<NormalizedSaint> {
