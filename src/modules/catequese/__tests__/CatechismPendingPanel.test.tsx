@@ -2,7 +2,7 @@ import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, cleanup } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import CatechismPendingPanel from './CatechismPendingPanel';
+import CatechismPendingPanel from '../components/CatechismPendingPanel';
 import { CatechismPendingProvider, useCatechismPending } from '@/contexts/CatechismPendingContext';
 
 class RO {

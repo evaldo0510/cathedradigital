@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import CatechismPopover from './CatechismPopover';
+import CatechismPopover from '../components/CatechismPopover';
 
 vi.mock('@/hooks/useCatechismParagraph', () => ({
   useCatechismParagraph: () => ({

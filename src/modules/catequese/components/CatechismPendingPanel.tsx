@@ -10,7 +10,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Icons } from '../../constants';
+import { Icons } from '@/constants';
 import { useCatechismPending } from '@/contexts/CatechismPendingContext';
 import { fetchCatechismParagraph, CatechismFetchError } from '@/hooks/useCatechismParagraph';
 
