@@ -105,6 +105,9 @@ import { setLastRoute, resolveAuthHome } from './lib/lastRoute';
 const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
 const SpiritualProfile = lazy(() => import('./components/cathedra/SpiritualProfile'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
+const BibliotecaEscritosPage = lazy(() => import('./pages/biblioteca/BibliotecaEscritosPage'));
+const SaintWorkOverviewPage = lazy(() => import('./pages/biblioteca/SaintWorkOverviewPage'));
+const SaintWorkReaderPage = lazy(() => import('./pages/biblioteca/SaintWorkReaderPage'));
 
 const HojePage = lazy(() => import('./components/cathedra/HojePage'));
 const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
@@ -671,6 +674,11 @@ const AppLayout: React.FC = () => {
 
               {/* Biblioteca — acervos (hubs por módulo) */}
               <Route path="/biblioteca/acervo/:slug" element={<Suspense fallback={<LoadingFallback />}><BibliotecaAcervoPage /></Suspense>} />
+              {/* Sprint E1 — Biblioteca Patrística */}
+              <Route path="/biblioteca/escritos" element={<Suspense fallback={<LoadingFallback />}><BibliotecaEscritosPage /></Suspense>} />
+              <Route path="/biblioteca/escritos/:autor/:obra" element={<Suspense fallback={<LoadingFallback />}><SaintWorkOverviewPage /></Suspense>} />
+              <Route path="/biblioteca/escritos/:autor/:obra/capitulo/:ordem" element={<Suspense fallback={<LoadingFallback />}><SaintWorkReaderPage /></Suspense>} />
+
 
               {/* Jornadas */}
               <Route path="/jornadas" element={<Suspense fallback={<LoadingFallback />}><AtriumJornadasPage /></Suspense>} />
