@@ -1828,30 +1828,60 @@ export type Database = {
       bible_verses: {
         Row: {
           chapter_id: string
+          constitution_version: string | null
           created_at: string
+          editorial_author: string | null
+          editorial_reviewed_at: string | null
+          editorial_reviewer: string | null
+          editorial_status:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version: number | null
+          ice_score: number | null
           id: string
           number: number
           text: string
           translation_id: string
           updated_at: string
+          voice_version: string | null
         }
         Insert: {
           chapter_id: string
+          constitution_version?: string | null
           created_at?: string
+          editorial_author?: string | null
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
+          ice_score?: number | null
           id?: string
           number: number
           text: string
           translation_id: string
           updated_at?: string
+          voice_version?: string | null
         }
         Update: {
           chapter_id?: string
+          constitution_version?: string | null
           created_at?: string
+          editorial_author?: string | null
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
+          ice_score?: number | null
           id?: string
           number?: number
           text?: string
           translation_id?: string
           updated_at?: string
+          voice_version?: string | null
         }
         Relationships: [
           {
@@ -1999,42 +2029,72 @@ export type Database = {
       catechism_official: {
         Row: {
           aplicacao_pratica: string | null
+          constitution_version: string | null
           content: string
           created_at: string | null
+          editorial_author: string | null
+          editorial_reviewed_at: string | null
+          editorial_reviewer: string | null
+          editorial_status:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version: number | null
           exercicio: string | null
           explicacao: string | null
+          ice_score: number | null
           interpretacao_profunda: string | null
           paragraph: number
           reflexao_final: string | null
           slug: string
           status: string
           texto_base: string | null
+          voice_version: string | null
         }
         Insert: {
           aplicacao_pratica?: string | null
+          constitution_version?: string | null
           content: string
           created_at?: string | null
+          editorial_author?: string | null
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
           exercicio?: string | null
           explicacao?: string | null
+          ice_score?: number | null
           interpretacao_profunda?: string | null
           paragraph: number
           reflexao_final?: string | null
           slug: string
           status?: string
           texto_base?: string | null
+          voice_version?: string | null
         }
         Update: {
           aplicacao_pratica?: string | null
+          constitution_version?: string | null
           content?: string
           created_at?: string | null
+          editorial_author?: string | null
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
           exercicio?: string | null
           explicacao?: string | null
+          ice_score?: number | null
           interpretacao_profunda?: string | null
           paragraph?: number
           reflexao_final?: string | null
           slug?: string
           status?: string
           texto_base?: string | null
+          voice_version?: string | null
         }
         Relationships: []
       }
@@ -2217,10 +2277,19 @@ export type Database = {
       collections: {
         Row: {
           category: string
+          constitution_version: string | null
           cover: string | null
           created_at: string
           description: string | null
+          editorial_author: string | null
+          editorial_reviewed_at: string | null
+          editorial_reviewer: string | null
+          editorial_status:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version: number | null
           featured: boolean
+          ice_score: number | null
           id: string
           metadata: Json
           nexus_refs: Json
@@ -2229,13 +2298,23 @@ export type Database = {
           subtitle: string | null
           title: string
           updated_at: string
+          voice_version: string | null
         }
         Insert: {
           category?: string
+          constitution_version?: string | null
           cover?: string | null
           created_at?: string
           description?: string | null
+          editorial_author?: string | null
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
           featured?: boolean
+          ice_score?: number | null
           id?: string
           metadata?: Json
           nexus_refs?: Json
@@ -2244,13 +2323,23 @@ export type Database = {
           subtitle?: string | null
           title: string
           updated_at?: string
+          voice_version?: string | null
         }
         Update: {
           category?: string
+          constitution_version?: string | null
           cover?: string | null
           created_at?: string
           description?: string | null
+          editorial_author?: string | null
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
           featured?: boolean
+          ice_score?: number | null
           id?: string
           metadata?: Json
           nexus_refs?: Json
@@ -2259,6 +2348,7 @@ export type Database = {
           subtitle?: string | null
           title?: string
           updated_at?: string
+          voice_version?: string | null
         }
         Relationships: []
       }
@@ -2687,6 +2777,54 @@ export type Database = {
         }
         Relationships: []
       }
+      editorial_pipeline_events: {
+        Row: {
+          actor: string | null
+          constitution_version: string | null
+          created_at: string
+          entity_id: string
+          entity_table: string
+          from_status:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          ice_score: number | null
+          id: string
+          notes: string | null
+          to_status: Database["public"]["Enums"]["editorial_status_enum"]
+          voice_version: string | null
+        }
+        Insert: {
+          actor?: string | null
+          constitution_version?: string | null
+          created_at?: string
+          entity_id: string
+          entity_table: string
+          from_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          ice_score?: number | null
+          id?: string
+          notes?: string | null
+          to_status: Database["public"]["Enums"]["editorial_status_enum"]
+          voice_version?: string | null
+        }
+        Update: {
+          actor?: string | null
+          constitution_version?: string | null
+          created_at?: string
+          entity_id?: string
+          entity_table?: string
+          from_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          ice_score?: number | null
+          id?: string
+          notes?: string | null
+          to_status?: Database["public"]["Enums"]["editorial_status_enum"]
+          voice_version?: string | null
+        }
+        Relationships: []
+      }
       editorial_snapshots: {
         Row: {
           avg_editorial: number
@@ -2753,15 +2891,24 @@ export type Database = {
           bibliography: Json | null
           catechism_references: string[] | null
           category: string | null
+          constitution_version: string | null
           created_at: string
           deep_interpretation: string | null
           definition: string
           doctrinal_weight: number
+          editorial_author: string | null
           editorial_completeness: string
+          editorial_reviewed_at: string | null
+          editorial_reviewer: string | null
+          editorial_status:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version: number | null
           etymology: string | null
           faq: Json | null
           fathers_refs: string[] | null
           historical_context: string | null
+          ice_score: number | null
           id: string
           interpretation: string | null
           journey_id: string | null
@@ -2786,21 +2933,31 @@ export type Database = {
           term: string
           updated_at: string
           version: number
+          voice_version: string | null
         }
         Insert: {
           bible_verses?: string[] | null
           bibliography?: Json | null
           catechism_references?: string[] | null
           category?: string | null
+          constitution_version?: string | null
           created_at?: string
           deep_interpretation?: string | null
           definition: string
           doctrinal_weight?: number
+          editorial_author?: string | null
           editorial_completeness?: string
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
           etymology?: string | null
           faq?: Json | null
           fathers_refs?: string[] | null
           historical_context?: string | null
+          ice_score?: number | null
           id?: string
           interpretation?: string | null
           journey_id?: string | null
@@ -2825,21 +2982,31 @@ export type Database = {
           term: string
           updated_at?: string
           version?: number
+          voice_version?: string | null
         }
         Update: {
           bible_verses?: string[] | null
           bibliography?: Json | null
           catechism_references?: string[] | null
           category?: string | null
+          constitution_version?: string | null
           created_at?: string
           deep_interpretation?: string | null
           definition?: string
           doctrinal_weight?: number
+          editorial_author?: string | null
           editorial_completeness?: string
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
           etymology?: string | null
           faq?: Json | null
           fathers_refs?: string[] | null
           historical_context?: string | null
+          ice_score?: number | null
           id?: string
           interpretation?: string | null
           journey_id?: string | null
@@ -2864,6 +3031,7 @@ export type Database = {
           term?: string
           updated_at?: string
           version?: number
+          voice_version?: string | null
         }
         Relationships: [
           {
@@ -3131,11 +3299,20 @@ export type Database = {
       itineraria: {
         Row: {
           category: string | null
+          constitution_version: string | null
           cover_url: string | null
           created_at: string
           description: string | null
           difficulty: string | null
+          editorial_author: string | null
+          editorial_reviewed_at: string | null
+          editorial_reviewer: string | null
+          editorial_status:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version: number | null
           estimated_days: number | null
+          ice_score: number | null
           icon: string | null
           id: string
           is_active: boolean | null
@@ -3146,14 +3323,24 @@ export type Database = {
           tags: string[] | null
           title: string
           updated_at: string
+          voice_version: string | null
         }
         Insert: {
           category?: string | null
+          constitution_version?: string | null
           cover_url?: string | null
           created_at?: string
           description?: string | null
           difficulty?: string | null
+          editorial_author?: string | null
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
           estimated_days?: number | null
+          ice_score?: number | null
           icon?: string | null
           id?: string
           is_active?: boolean | null
@@ -3164,14 +3351,24 @@ export type Database = {
           tags?: string[] | null
           title: string
           updated_at?: string
+          voice_version?: string | null
         }
         Update: {
           category?: string | null
+          constitution_version?: string | null
           cover_url?: string | null
           created_at?: string
           description?: string | null
           difficulty?: string | null
+          editorial_author?: string | null
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
           estimated_days?: number | null
+          ice_score?: number | null
           icon?: string | null
           id?: string
           is_active?: boolean | null
@@ -3182,6 +3379,7 @@ export type Database = {
           tags?: string[] | null
           title?: string
           updated_at?: string
+          voice_version?: string | null
         }
         Relationships: []
       }
@@ -3410,14 +3608,23 @@ export type Database = {
         Row: {
           category: string
           closing_message: string | null
+          constitution_version: string | null
           cover_url: string | null
           created_at: string
           description: string
           difficulty: string
+          editorial_author: string | null
+          editorial_reviewed_at: string | null
+          editorial_reviewer: string | null
+          editorial_status:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version: number | null
           estimated_days: number
           hero_image_url: string | null
           hero_kicker: string | null
           hero_quote: string | null
+          ice_score: number | null
           icon: string
           id: string
           is_active: boolean
@@ -3430,18 +3637,28 @@ export type Database = {
           tags: string[] | null
           title: string
           updated_at: string
+          voice_version: string | null
         }
         Insert: {
           category?: string
           closing_message?: string | null
+          constitution_version?: string | null
           cover_url?: string | null
           created_at?: string
           description?: string
           difficulty?: string
+          editorial_author?: string | null
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
           estimated_days?: number
           hero_image_url?: string | null
           hero_kicker?: string | null
           hero_quote?: string | null
+          ice_score?: number | null
           icon?: string
           id?: string
           is_active?: boolean
@@ -3454,18 +3671,28 @@ export type Database = {
           tags?: string[] | null
           title: string
           updated_at?: string
+          voice_version?: string | null
         }
         Update: {
           category?: string
           closing_message?: string | null
+          constitution_version?: string | null
           cover_url?: string | null
           created_at?: string
           description?: string
           difficulty?: string
+          editorial_author?: string | null
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
           estimated_days?: number
           hero_image_url?: string | null
           hero_kicker?: string | null
           hero_quote?: string | null
+          ice_score?: number | null
           icon?: string
           id?: string
           is_active?: boolean
@@ -3478,6 +3705,7 @@ export type Database = {
           tags?: string[] | null
           title?: string
           updated_at?: string
+          voice_version?: string | null
         }
         Relationships: []
       }
@@ -4608,14 +4836,23 @@ export type Database = {
           blocks: Json
           catechism_refs: number[]
           category: Database["public"]["Enums"]["prayer_category"]
+          constitution_version: string | null
           content: string
           content_latin: string | null
           content_status: Database["public"]["Enums"]["content_curation_status"]
           created_at: string
           duration_min: number | null
+          editorial_author: string | null
+          editorial_reviewed_at: string | null
+          editorial_reviewer: string | null
+          editorial_status:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version: number | null
           engine_version: number
           estimated_seconds: number
           explanation: string | null
+          ice_score: number | null
           id: string
           is_published: boolean
           kicker: string | null
@@ -4632,6 +4869,7 @@ export type Database = {
           tags: string[]
           title: string
           updated_at: string
+          voice_version: string | null
         }
         Insert: {
           audio_language?: string | null
@@ -4641,14 +4879,23 @@ export type Database = {
           blocks?: Json
           catechism_refs?: number[]
           category: Database["public"]["Enums"]["prayer_category"]
+          constitution_version?: string | null
           content: string
           content_latin?: string | null
           content_status?: Database["public"]["Enums"]["content_curation_status"]
           created_at?: string
           duration_min?: number | null
+          editorial_author?: string | null
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
           engine_version?: number
           estimated_seconds?: number
           explanation?: string | null
+          ice_score?: number | null
           id?: string
           is_published?: boolean
           kicker?: string | null
@@ -4665,6 +4912,7 @@ export type Database = {
           tags?: string[]
           title: string
           updated_at?: string
+          voice_version?: string | null
         }
         Update: {
           audio_language?: string | null
@@ -4674,14 +4922,23 @@ export type Database = {
           blocks?: Json
           catechism_refs?: number[]
           category?: Database["public"]["Enums"]["prayer_category"]
+          constitution_version?: string | null
           content?: string
           content_latin?: string | null
           content_status?: Database["public"]["Enums"]["content_curation_status"]
           created_at?: string
           duration_min?: number | null
+          editorial_author?: string | null
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
           engine_version?: number
           estimated_seconds?: number
           explanation?: string | null
+          ice_score?: number | null
           id?: string
           is_published?: boolean
           kicker?: string | null
@@ -4698,6 +4955,7 @@ export type Database = {
           tags?: string[]
           title?: string
           updated_at?: string
+          voice_version?: string | null
         }
         Relationships: []
       }
@@ -5253,7 +5511,16 @@ export type Database = {
         Row: {
           body_html: string
           body_plain: string
+          constitution_version: string | null
           created_at: string
+          editorial_author: string | null
+          editorial_reviewed_at: string | null
+          editorial_reviewer: string | null
+          editorial_status:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version: number | null
+          ice_score: number | null
           id: string
           metadata: Json
           order: number
@@ -5261,12 +5528,22 @@ export type Database = {
           subtitle: string | null
           title: string
           updated_at: string
+          voice_version: string | null
           work_id: string
         }
         Insert: {
           body_html: string
           body_plain?: string
+          constitution_version?: string | null
           created_at?: string
+          editorial_author?: string | null
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
+          ice_score?: number | null
           id?: string
           metadata?: Json
           order: number
@@ -5274,12 +5551,22 @@ export type Database = {
           subtitle?: string | null
           title: string
           updated_at?: string
+          voice_version?: string | null
           work_id: string
         }
         Update: {
           body_html?: string
           body_plain?: string
+          constitution_version?: string | null
           created_at?: string
+          editorial_author?: string | null
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
+          ice_score?: number | null
           id?: string
           metadata?: Json
           order?: number
@@ -5287,6 +5574,7 @@ export type Database = {
           subtitle?: string | null
           title?: string
           updated_at?: string
+          voice_version?: string | null
           work_id?: string
         }
         Relationships: [
@@ -5304,9 +5592,18 @@ export type Database = {
           abstract: string | null
           category: Database["public"]["Enums"]["saint_work_category"]
           chapter_count: number
+          constitution_version: string | null
           cover_image_url: string | null
           created_at: string
+          editorial_author: string | null
+          editorial_reviewed_at: string | null
+          editorial_reviewer: string | null
           editorial_score: number
+          editorial_status:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version: number | null
+          ice_score: number | null
           id: string
           is_public_domain: boolean
           language: string
@@ -5323,15 +5620,25 @@ export type Database = {
           total_reading_minutes: number
           translation_credit: string | null
           updated_at: string
+          voice_version: string | null
           year_written: number | null
         }
         Insert: {
           abstract?: string | null
           category?: Database["public"]["Enums"]["saint_work_category"]
           chapter_count?: number
+          constitution_version?: string | null
           cover_image_url?: string | null
           created_at?: string
+          editorial_author?: string | null
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
           editorial_score?: number
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
+          ice_score?: number | null
           id?: string
           is_public_domain?: boolean
           language?: string
@@ -5348,15 +5655,25 @@ export type Database = {
           total_reading_minutes?: number
           translation_credit?: string | null
           updated_at?: string
+          voice_version?: string | null
           year_written?: number | null
         }
         Update: {
           abstract?: string | null
           category?: Database["public"]["Enums"]["saint_work_category"]
           chapter_count?: number
+          constitution_version?: string | null
           cover_image_url?: string | null
           created_at?: string
+          editorial_author?: string | null
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
           editorial_score?: number
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
+          ice_score?: number | null
           id?: string
           is_public_domain?: boolean
           language?: string
@@ -5373,6 +5690,7 @@ export type Database = {
           total_reading_minutes?: number
           translation_credit?: string | null
           updated_at?: string
+          voice_version?: string | null
           year_written?: number | null
         }
         Relationships: [
@@ -5456,6 +5774,7 @@ export type Database = {
           category: string | null
           century: number | null
           church_doc_refs: Json | null
+          constitution_version: string | null
           content_hash: string | null
           content_status: Database["public"]["Enums"]["saint_content_status"]
           conversion_story: string | null
@@ -5463,12 +5782,20 @@ export type Database = {
           created_at: string | null
           curiosities: string[]
           died: string | null
+          editorial_author: string | null
+          editorial_reviewed_at: string | null
+          editorial_reviewer: string | null
           editorial_score: number
+          editorial_status:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version: number | null
           feast_day: string | null
           feast_day_num: number | null
           feast_month: number | null
           full_bio: string | null
           historical_context: string | null
+          ice_score: number | null
           iconography: Json
           id: string
           image: string | null
@@ -5502,6 +5829,7 @@ export type Database = {
           updated_at: string | null
           virtues: string[] | null
           vocation: string | null
+          voice_version: string | null
           works: Json | null
         }
         Insert: {
@@ -5517,6 +5845,7 @@ export type Database = {
           category?: string | null
           century?: number | null
           church_doc_refs?: Json | null
+          constitution_version?: string | null
           content_hash?: string | null
           content_status?: Database["public"]["Enums"]["saint_content_status"]
           conversion_story?: string | null
@@ -5524,12 +5853,20 @@ export type Database = {
           created_at?: string | null
           curiosities?: string[]
           died?: string | null
+          editorial_author?: string | null
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
           editorial_score?: number
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
           feast_day?: string | null
           feast_day_num?: number | null
           feast_month?: number | null
           full_bio?: string | null
           historical_context?: string | null
+          ice_score?: number | null
           iconography?: Json
           id: string
           image?: string | null
@@ -5563,6 +5900,7 @@ export type Database = {
           updated_at?: string | null
           virtues?: string[] | null
           vocation?: string | null
+          voice_version?: string | null
           works?: Json | null
         }
         Update: {
@@ -5578,6 +5916,7 @@ export type Database = {
           category?: string | null
           century?: number | null
           church_doc_refs?: Json | null
+          constitution_version?: string | null
           content_hash?: string | null
           content_status?: Database["public"]["Enums"]["saint_content_status"]
           conversion_story?: string | null
@@ -5585,12 +5924,20 @@ export type Database = {
           created_at?: string | null
           curiosities?: string[]
           died?: string | null
+          editorial_author?: string | null
+          editorial_reviewed_at?: string | null
+          editorial_reviewer?: string | null
           editorial_score?: number
+          editorial_status?:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version?: number | null
           feast_day?: string | null
           feast_day_num?: number | null
           feast_month?: number | null
           full_bio?: string | null
           historical_context?: string | null
+          ice_score?: number | null
           iconography?: Json
           id?: string
           image?: string | null
@@ -5624,6 +5971,7 @@ export type Database = {
           updated_at?: string | null
           virtues?: string[] | null
           vocation?: string | null
+          voice_version?: string | null
           works?: Json | null
         }
         Relationships: [
@@ -7326,6 +7674,10 @@ export type Database = {
       }
     }
     Functions: {
+      _apply_editorial_columns: {
+        Args: { _table: unknown }
+        Returns: undefined
+      }
       _current_actor_email: { Args: never; Returns: string }
       _glossary_editorial_score: {
         Args: { g: Database["public"]["Tables"]["glossary"]["Row"] }
@@ -8343,15 +8695,24 @@ export type Database = {
           bibliography: Json | null
           catechism_references: string[] | null
           category: string | null
+          constitution_version: string | null
           created_at: string
           deep_interpretation: string | null
           definition: string
           doctrinal_weight: number
+          editorial_author: string | null
           editorial_completeness: string
+          editorial_reviewed_at: string | null
+          editorial_reviewer: string | null
+          editorial_status:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version: number | null
           etymology: string | null
           faq: Json | null
           fathers_refs: string[] | null
           historical_context: string | null
+          ice_score: number | null
           id: string
           interpretation: string | null
           journey_id: string | null
@@ -8376,6 +8737,7 @@ export type Database = {
           term: string
           updated_at: string
           version: number
+          voice_version: string | null
         }[]
         SetofOptions: {
           from: "*"
@@ -8389,14 +8751,23 @@ export type Database = {
         Returns: {
           category: string
           closing_message: string | null
+          constitution_version: string | null
           cover_url: string | null
           created_at: string
           description: string
           difficulty: string
+          editorial_author: string | null
+          editorial_reviewed_at: string | null
+          editorial_reviewer: string | null
+          editorial_status:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version: number | null
           estimated_days: number
           hero_image_url: string | null
           hero_kicker: string | null
           hero_quote: string | null
+          ice_score: number | null
           icon: string
           id: string
           is_active: boolean
@@ -8409,6 +8780,7 @@ export type Database = {
           tags: string[] | null
           title: string
           updated_at: string
+          voice_version: string | null
         }[]
         SetofOptions: {
           from: "*"
@@ -8450,6 +8822,7 @@ export type Database = {
           category: string | null
           century: number | null
           church_doc_refs: Json | null
+          constitution_version: string | null
           content_hash: string | null
           content_status: Database["public"]["Enums"]["saint_content_status"]
           conversion_story: string | null
@@ -8457,12 +8830,20 @@ export type Database = {
           created_at: string | null
           curiosities: string[]
           died: string | null
+          editorial_author: string | null
+          editorial_reviewed_at: string | null
+          editorial_reviewer: string | null
           editorial_score: number
+          editorial_status:
+            | Database["public"]["Enums"]["editorial_status_enum"]
+            | null
+          editorial_version: number | null
           feast_day: string | null
           feast_day_num: number | null
           feast_month: number | null
           full_bio: string | null
           historical_context: string | null
+          ice_score: number | null
           iconography: Json
           id: string
           image: string | null
@@ -8496,6 +8877,7 @@ export type Database = {
           updated_at: string | null
           virtues: string[] | null
           vocation: string | null
+          voice_version: string | null
           works: Json | null
         }[]
         SetofOptions: {
@@ -8560,6 +8942,13 @@ export type Database = {
         | "primary"
         | "archived"
       content_curation_status: "stub" | "partial" | "complete"
+      editorial_status_enum:
+        | "draft"
+        | "doctrinal_review"
+        | "editorial_review"
+        | "ice_pending"
+        | "published"
+        | "archived"
       prayer_category:
         | "fundamentais"
         | "marianas"
@@ -8737,6 +9126,14 @@ export const Constants = {
         "archived",
       ],
       content_curation_status: ["stub", "partial", "complete"],
+      editorial_status_enum: [
+        "draft",
+        "doctrinal_review",
+        "editorial_review",
+        "ice_pending",
+        "published",
+        "archived",
+      ],
       prayer_category: [
         "fundamentais",
         "marianas",
