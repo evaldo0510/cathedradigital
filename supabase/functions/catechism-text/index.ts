@@ -87,12 +87,29 @@ serve(async (req: Request) => {
       });
     }
 
+    // Não encontrado — enfileirar importação sob demanda (Sprint C0.4 · plano C)
+    try {
+      await fetch(`${supabaseUrl}/rest/v1/catechism_import_queue`, {
+        method: 'POST',
+        headers: {
+          apikey: serviceKey,
+          Authorization: `Bearer ${serviceKey}`,
+          'Content-Type': 'application/json',
+          Prefer: 'resolution=ignore-duplicates',
+          'x-correlation-id': cid,
+        },
+        body: JSON.stringify({ paragraph, status: 'pending' }),
+      });
+    } catch (enqueueError) {
+      log.error('enqueue_failed', { err: String(enqueueError) });
+    }
+
     return json({
       paragraph,
-      status: 'not_found',
-      code: 'not_found',
-      error: `Parágrafo §${paragraph} não encontrado no banco de dados oficial.`,
-    }, 200);
+      status: 'queued',
+      code: 'queued_for_import',
+      message: `Parágrafo §${paragraph} enfileirado para importação. Volte em instantes.`,
+    }, 202);
   } catch (error) {
     log.error('unhandled', { err: String(error) });
     return json({ error: 'Erro interno. Tente novamente.', code: 'internal_error' }, 500);
