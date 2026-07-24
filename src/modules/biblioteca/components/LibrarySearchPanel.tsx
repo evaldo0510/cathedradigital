@@ -110,7 +110,8 @@ export function LibrarySearchPanel({
 
   return (
     <section
-      className={cn('rounded-xl border border-border bg-card p-4 md:p-6', className)}
+      ref={sectionRef}
+      className={cn('rounded-xl border border-border bg-card p-4 md:p-6 scroll-mt-24', className)}
       aria-label="Busca da Biblioteca"
     >
       <div className="relative">
