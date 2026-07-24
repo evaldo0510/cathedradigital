@@ -142,6 +142,17 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
       throw new CatechismFetchError(paragraph, 'not_found', `Parágrafo §${paragraph} não disponível no banco oficial.`, 404);
     }
 
+    // Enfileirado sob demanda — devolver marcador para o hook fazer polling
+    if (parsed.status === 'queued' || parsed.code === 'queued_for_import') {
+      logCatechismDiag({ paragraph, step: 'edge_hit', meta: { source: 'queued' } });
+      return {
+        paragraph,
+        content: parsed.message || `Parágrafo §${paragraph} está sendo importado.`,
+        language: 'pt',
+        status: 'queued',
+      };
+    }
+
     const result: CatechismParagraph = {
       paragraph: parsed.paragraph || paragraph,
       content: parsed.content || `Parágrafo §${paragraph} — conteúdo não disponível.`,
@@ -171,6 +182,9 @@ export const fetchCatechismParagraph = async (paragraph: number, forceGenerate =
   }
 };
 
+export const isCatechismParagraphImporting = (data?: CatechismParagraph | null) =>
+  data?.status === 'queued';
+
 export const useCatechismParagraph = (paragraph: number, enabled = true) => {
   return useQuery({
     queryKey: ['catechism-paragraph', paragraph],
@@ -185,6 +199,10 @@ export const useCatechismParagraph = (paragraph: number, enabled = true) => {
       return failureCount < 1;
     },
     retryDelay: 2000,
+    // Enquanto o § estiver enfileirado, refazer consulta a cada 4s até o worker concluir.
+    refetchInterval: (query) =>
+      isCatechismParagraphImporting(query.state.data as CatechismParagraph | undefined) ? 4000 : false,
+    refetchIntervalInBackground: false,
     enabled,
   });
 };
