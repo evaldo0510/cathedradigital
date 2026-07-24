@@ -109,7 +109,6 @@ const BibliotecaEscritosPage = lazy(() => import('./pages/biblioteca/BibliotecaE
 const BibliotecaBuscaPage = lazy(() => import('./pages/biblioteca/BibliotecaBuscaPage'));
 const SaintWorkOverviewPage = lazy(() => import('./pages/biblioteca/SaintWorkOverviewPage'));
 const SaintWorkReaderPage = lazy(() => import('./pages/biblioteca/SaintWorkReaderPage'));
-const BibliotecaCatolicaPage = lazy(() => import('./pages/biblioteca/BibliotecaCatolicaPage'));
 const BibliotecaCatolicaAcervoPage = lazy(() => import('./pages/biblioteca/BibliotecaCatolicaAcervoPage'));
 const AcervoHomePage = lazy(() => import('./pages/acervo/AcervoHomePage'));
 
