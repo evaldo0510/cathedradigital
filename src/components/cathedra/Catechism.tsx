@@ -268,18 +268,26 @@ const CatechismContent: React.FC<{
           <CatechismPopover key={i} paragraph={seg.paragraph} />
         ) : (
           <ReactMarkdown key={i} components={{
-            p: (props) => {
-              const h = highlights.find(n => n.paragraph === paragraph && n.highlight_color);
-              if (h) {
+              p: (props) => {
+                const h = highlights.find(n => n.paragraph === paragraph && n.highlight_color);
+                if (h) {
+                  return (
+                    <p
+                      onClick={() => onHighlightClick?.(h)}
+                      className={`highlight-${h.highlight_color} px-spacing-2xs py-spacing-2xs mb-spacing-md last:mb-0 rounded-premium-sm cursor-pointer hover:brightness-95 transition-all leading-relaxed`}
+                    >
+                      {props.children}
+                    </p>
+                  );
+                }
                 return (
-                  <span onClick={() => onHighlightClick?.(h)} className={`highlight-${h.highlight_color} px-spacing-2xs rounded-premium-sm cursor-pointer hover:brightness-95 transition-all`}>
+                  <p className="mb-spacing-md last:mb-0 leading-relaxed">
                     {props.children}
-                  </span>
+                  </p>
                 );
-              }
-              return <span>{props.children}</span>;
-            },
-          }}>{seg.value}</ReactMarkdown>
+              },
+            }}>{seg.value}</ReactMarkdown>
+
         )
       )}
       {data?.content && (
