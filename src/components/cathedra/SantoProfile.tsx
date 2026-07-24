@@ -6,6 +6,8 @@ import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import { CATEGORY_LABELS } from './SaintDetail.categories';
+import SaintVirtues from './sanctum/SaintVirtues';
+
 
 /**
  * SantoProfile — Perfil editorial reutilizável de um Santo.
