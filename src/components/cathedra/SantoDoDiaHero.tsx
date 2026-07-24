@@ -169,10 +169,10 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
       aria-labelledby="santo-do-dia-title"
     >
       {/* Molduras editoriais douradas nos cantos (Pergaminho Sacro) */}
-      <span aria-hidden="true" className="pointer-events-none absolute top-spacing-sm left-spacing-sm w-spacing-xl h-spacing-xl border-t-2 border-l-2 border-secondary/50 z-20" />
-      <span aria-hidden="true" className="pointer-events-none absolute top-spacing-sm right-spacing-sm w-spacing-xl h-spacing-xl border-t-2 border-r-2 border-secondary/50 z-20" />
-      <span aria-hidden="true" className="pointer-events-none absolute bottom-spacing-sm left-spacing-sm w-spacing-xl h-spacing-xl border-b-2 border-l-2 border-secondary/50 z-20" />
-      <span aria-hidden="true" className="pointer-events-none absolute bottom-spacing-sm right-spacing-sm w-spacing-xl h-spacing-xl border-b-2 border-r-2 border-secondary/50 z-20" />
+      <span aria-hidden="true" className="pointer-events-none absolute top-spacing-2xs left-spacing-2xs sm:top-spacing-sm sm:left-spacing-sm w-spacing-md h-spacing-md sm:w-spacing-xl sm:h-spacing-xl border-t-2 border-l-2 border-secondary/50 z-20" />
+      <span aria-hidden="true" className="pointer-events-none absolute top-spacing-2xs right-spacing-2xs sm:top-spacing-sm sm:right-spacing-sm w-spacing-md h-spacing-md sm:w-spacing-xl sm:h-spacing-xl border-t-2 border-r-2 border-secondary/50 z-20" />
+      <span aria-hidden="true" className="pointer-events-none absolute bottom-spacing-2xs left-spacing-2xs sm:bottom-spacing-sm sm:left-spacing-sm w-spacing-md h-spacing-md sm:w-spacing-xl sm:h-spacing-xl border-b-2 border-l-2 border-secondary/50 z-20" />
+      <span aria-hidden="true" className="pointer-events-none absolute bottom-spacing-2xs right-spacing-2xs sm:bottom-spacing-sm sm:right-spacing-sm w-spacing-md h-spacing-md sm:w-spacing-xl sm:h-spacing-xl border-b-2 border-r-2 border-secondary/50 z-20" />
       {/* Hero — imagem + overlay editorial */}
       <div className="relative">
         <div className="relative h-[38vh] min-h-[320px] md:h-[52vh] md:min-h-[420px] w-full overflow-hidden">
@@ -185,7 +185,8 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
           <div className="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-transparent" />
         </div>
 
-        <div className="absolute inset-x-0 bottom-0 p-spacing-lg md:p-spacing-2xl">
+        <div className="absolute inset-x-0 bottom-0 p-spacing-md sm:p-spacing-lg md:p-spacing-2xl">
+
           <div className="max-w-3xl space-y-spacing-sm">
             <p className="text-premium-xs font-black uppercase tracking-[0.28em] text-secondary">
               Sanctorum · Santo do Dia · {dateLabel}
