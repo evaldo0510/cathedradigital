@@ -231,6 +231,7 @@ export default function BibliotecaPatristicaAdmin() {
                   <TableHead>Obra</TableHead>
                   <TableHead>Autor</TableHead>
                   <TableHead>Categoria</TableHead>
+                  <TableHead>Ficha</TableHead>
                   <TableHead>Licença</TableHead>
                   <TableHead>Cap.</TableHead>
                   <TableHead>Status</TableHead>
@@ -247,6 +248,17 @@ export default function BibliotecaPatristicaAdmin() {
                     <TableCell className="text-sm">{w.saint_id}</TableCell>
                     <TableCell className="text-sm">
                       {SAINT_WORK_CATEGORY_LABELS[w.category] ?? w.category}
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          w.ficha_completeness === 'complete' ? 'default'
+                            : w.ficha_completeness === 'minimal' ? 'secondary'
+                            : 'outline'
+                        }
+                      >
+                        {SAINT_WORK_FICHA_COMPLETENESS_LABELS[w.ficha_completeness]}
+                      </Badge>
                     </TableCell>
                     <TableCell className="text-xs">
                       {w.is_public_domain && (
