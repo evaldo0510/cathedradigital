@@ -318,6 +318,9 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
         {/* Sanctorum 2.0 — capítulos editoriais, timeline, iconografia, vida espiritual */}
         <SanctumEditorial saint={saint} />
 
+        {/* Aprenda com este Santo — reflexão IA cacheada */}
+        <SaintAILearn saint={saint} />
+
         {/* Deep Content - Textos e Livros */}
         <DeepContentSection 
           content={saint as any} 

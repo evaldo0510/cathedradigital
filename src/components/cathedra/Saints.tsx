@@ -29,6 +29,7 @@ import { SanctorumDateNav } from './SanctorumDateNav';
 import SanctorumClampNotice from './SanctorumClampNotice';
 import SantoDoDiaHero from './SantoDoDiaHero';
 import SantoDoDiaHeroSkeleton, { SantoDoDiaSecondaryListSkeleton } from './SantoDoDiaHeroSkeleton';
+import SaintsFilters from './SaintsFilters';
 import { toISODateLocal, resolveSanctorumDateParam } from '@/lib/sanctorumDate';
 import { trackEvent } from '@/lib/analytics';
 
@@ -46,8 +47,8 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
   const [autoReflect, setAutoReflect] = useState(false);
   const [search, setSearch] = useState('');
   const { handleKeyDown: handleTabKeyDown } = useTabNavigation();
-  const [viewMode, setViewMode] = useState<'daily' | 'search' | 'all' | 'writers' | 'popes' | 'cloud'>('daily');
-  const viewModes = ['daily', 'all', 'writers', 'popes', 'cloud', 'search'] as const;
+  const [viewMode, setViewMode] = useState<'daily' | 'filtros' | 'search' | 'all' | 'writers' | 'popes' | 'cloud'>('daily');
+  const viewModes = ['daily', 'filtros', 'all', 'writers', 'popes', 'cloud', 'search'] as const;
   const [isSearchingGlobal, setIsSearchingGlobal] = useState(false);
   const [globalResults, setGlobalResults] = useState<Saint[]>([]);
   const { id } = useParams();
@@ -295,7 +296,7 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                 onClick={() => setViewMode(mode)}
                 onKeyDown={(e) => handleTabKeyDown(e, idx, viewModes.length, (newIdx) => setViewMode(viewModes[newIdx]), 'tab-')}
               >
-                {mode === 'daily' ? 'Hoje' : mode === 'all' ? 'Todos' : mode === 'writers' ? 'Escritores' : mode === 'popes' ? 'Papas' : mode === 'cloud' ? 'Nuvem' : 'Buscar'}
+                {mode === 'daily' ? 'Hoje' : mode === 'filtros' ? 'Filtros' : mode === 'all' ? 'Todos' : mode === 'writers' ? 'Escritores' : mode === 'popes' ? 'Papas' : mode === 'cloud' ? 'Nuvem' : 'Buscar'}
               </Button>
             ))}
           </div>
