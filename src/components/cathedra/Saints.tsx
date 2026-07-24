@@ -441,17 +441,17 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                               key={saint.id}
                               type="button"
                               onClick={() => handleOpenSaint(saint, false)}
-                              className="group text-left border-l-2 border-secondary/40 hover:border-secondary pl-spacing-md py-spacing-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60"
+                              className="group text-left border-l-2 border-secondary/40 hover:border-secondary pl-spacing-md pr-spacing-xs py-spacing-sm min-h-11 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm"
                               aria-label={`Abrir ficha de ${saint.name}`}
                             >
-                              <p className="text-premium-xs font-black uppercase tracking-[0.22em] text-secondary mb-spacing-3xs">
+                              <p className="text-premium-xs font-black uppercase tracking-[0.22em] text-secondary mb-spacing-3xs line-clamp-1">
                                 {CATEGORY_LABELS[saint.category] || 'Testemunha da Fé'}
                               </p>
-                              <h4 className="font-serif text-premium-lg text-foreground leading-tight group-hover:text-primary transition-colors">
+                              <h4 className="font-serif text-premium-base sm:text-premium-lg text-foreground leading-snug group-hover:text-primary transition-colors line-clamp-2 break-words">
                                 {saint.name}
                               </h4>
                               {saint.title && (
-                                <p className="text-premium-sm text-muted-foreground font-serif italic mt-spacing-3xs line-clamp-2">
+                                <p className="text-premium-sm text-muted-foreground font-serif italic mt-spacing-3xs line-clamp-2 break-words">
                                   {saint.title}
                                 </p>
                               )}
