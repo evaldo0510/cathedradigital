@@ -120,6 +120,7 @@ export default function BibliotecaPatristicaAdmin() {
   const update = useUpdateWork();
 
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [fichaFilter, setFichaFilter] = useState<SaintWorkFichaCompleteness | 'all'>('all');
   const [q, setQ] = useState('');
   const [editing, setEditing] = useState<SaintWork | null>(null);
 
@@ -127,13 +128,14 @@ export default function BibliotecaPatristicaAdmin() {
     const needle = q.trim().toLowerCase();
     return works.filter(w => {
       if (statusFilter !== 'all' && w.status !== statusFilter) return false;
+      if (fichaFilter !== 'all' && w.ficha_completeness !== fichaFilter) return false;
       if (needle) {
         const hay = `${w.title} ${w.saint_id} ${w.slug}`.toLowerCase();
         if (!hay.includes(needle)) return false;
       }
       return true;
     });
-  }, [works, statusFilter, q]);
+  }, [works, statusFilter, fichaFilter, q]);
 
   const stats = useMemo(() => {
     const by: Record<SaintWorkStatus, number> = { draft: 0, in_review: 0, published: 0, archived: 0 };
