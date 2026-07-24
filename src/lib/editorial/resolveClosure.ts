@@ -1,14 +1,25 @@
 /**
  * resolveClosure — normaliza um row de conteúdo em props do EditorialClosure.
  *
- * Toda tabela editorial (glossary, saints, prayers, catechism_official,
- * saint_works) recebeu a coluna `editorial_closure JSONB` no formato:
- *   { reflection, application, prayer, next?: { label, href, kicker? } }
+ * Formato canônico (Constituição Editorial 1.0.0):
+ *   {
+ *     reflection: string,
+ *     application: string,
+ *     prayer: string,
+ *     next?: { label, href, kicker? },
+ *     nexus?: [{ kind|type, ref|id|slug, label|title, note? }],
+ *     source?: string
+ *   }
  *
- * Este helper aceita qualquer objeto (row de banco, DTO, mock) e devolve
- * as props tipadas — ou `null` quando a peça ainda não tem closure editorial.
- * Assim os leitores renderizam `<EditorialClosure>` apenas quando existe
- * conteúdo curado (nunca placeholders vazios ou genéricos de IA).
+ * FALLBACKS suportados (não quebrar leituras legadas):
+ *   - `editorial_closure` como STRING contendo JSON → parseia
+ *   - `editorial_closure` como STRING pura → vira `reflection`
+ *   - Aliases PT-BR: reflexao/meditacao, aplicacao/acao, oracao/prece
+ *   - Aliases genéricos: text/conclusion/closure → reflection
+ *   - `next.url` ⇢ `next.href`
+ *   - Campos parciais: renderiza os presentes; retorna null só se TUDO faltar
+ *
+ * Nunca lança exceção — retorna `null` quando o dado é irrecuperável.
  */
 import type {
   EditorialClosureProps,
@@ -33,6 +44,42 @@ const VALID_KINDS: NexusKind[] = [
   'liturgy',
   'other',
 ];
+
+const REFLECTION_KEYS = ['reflection', 'reflexao', 'reflexão', 'meditation', 'meditacao', 'meditação', 'text', 'conclusion', 'closure'];
+const APPLICATION_KEYS = ['application', 'aplicacao', 'aplicação', 'action', 'acao', 'ação', 'practice', 'pratica', 'prática'];
+const PRAYER_KEYS = ['prayer', 'oracao', 'oração', 'prece', 'oratio'];
+
+function pickString(obj: Record<string, unknown>, keys: string[]): string {
+  for (const k of keys) {
+    const v = obj[k];
+    if (typeof v === 'string' && v.trim()) return v.trim();
+  }
+  return '';
+}
+
+function coerceToObject(raw: unknown): Record<string, unknown> | null {
+  if (!raw) return null;
+  if (typeof raw === 'string') {
+    const trimmed = raw.trim();
+    if (!trimmed) return null;
+    // Tenta JSON; se falhar, trata como reflexão pura.
+    if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+          return parsed as Record<string, unknown>;
+        }
+      } catch {
+        /* fallthrough */
+      }
+    }
+    return { reflection: trimmed };
+  }
+  if (typeof raw === 'object' && !Array.isArray(raw)) {
+    return raw as Record<string, unknown>;
+  }
+  return null;
+}
 
 function parseNexus(raw: unknown): EditorialClosureNexusItem[] | undefined {
   if (!Array.isArray(raw)) return undefined;
@@ -60,31 +107,43 @@ function parseNexus(raw: unknown): EditorialClosureNexusItem[] | undefined {
   return items.length > 0 ? items : undefined;
 }
 
+function parseNext(raw: unknown): EditorialClosureProps['next'] | undefined {
+  if (!raw || typeof raw !== 'object') return undefined;
+  const n = raw as Record<string, unknown>;
+  const label = typeof n.label === 'string' ? n.label : typeof n.title === 'string' ? n.title : '';
+  const href = typeof n.href === 'string' ? n.href : typeof n.url === 'string' ? n.url : '';
+  if (!label || !href) return undefined;
+  return {
+    label,
+    href,
+    kicker: typeof n.kicker === 'string' ? n.kicker : undefined,
+  };
+}
+
 export function resolveEditorialClosure(
   source: ClosureLike | null | undefined,
 ): EditorialClosureProps | null {
-  const raw = source?.editorial_closure;
-  if (!raw || typeof raw !== 'object') return null;
+  try {
+    const c = coerceToObject(source?.editorial_closure);
+    if (!c) return null;
 
-  const c = raw as Record<string, unknown>;
-  const reflection = typeof c.reflection === 'string' ? c.reflection.trim() : '';
-  const application = typeof c.application === 'string' ? c.application.trim() : '';
-  const prayer = typeof c.prayer === 'string' ? c.prayer.trim() : '';
+    const reflection = pickString(c, REFLECTION_KEYS);
+    const application = pickString(c, APPLICATION_KEYS);
+    const prayer = pickString(c, PRAYER_KEYS);
 
-  if (!reflection || !application || !prayer) return null;
+    const next = parseNext(c.next);
+    const nexus = parseNexus(c.nexus);
+    const closureSource = typeof c.source === 'string' ? c.source : undefined;
 
-  const nextRaw = c.next as Record<string, unknown> | undefined;
-  const next =
-    nextRaw && typeof nextRaw.label === 'string' && typeof nextRaw.href === 'string'
-      ? {
-          label: nextRaw.label,
-          href: nextRaw.href,
-          kicker: typeof nextRaw.kicker === 'string' ? nextRaw.kicker : undefined,
-        }
-      : undefined;
+    // Só descarta se NADA aproveitável existir (nem texto, nem próxima, nem nexus).
+    if (!reflection && !application && !prayer && !next && !nexus) return null;
 
-  const nexus = parseNexus(c.nexus);
-  const closureSource = typeof c.source === 'string' ? c.source : undefined;
-
-  return { reflection, application, prayer, next, nexus, source: closureSource };
+    return { reflection, application, prayer, next, nexus, source: closureSource };
+  } catch (err) {
+    // Nunca deixa a leitura quebrar por causa de closure malformado.
+    if (typeof console !== 'undefined') {
+      console.warn('[resolveEditorialClosure] closure ignorado por erro:', err);
+    }
+    return null;
+  }
 }
