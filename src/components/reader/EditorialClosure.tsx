@@ -35,12 +35,12 @@ export interface EditorialClosureNexusItem {
 }
 
 export interface EditorialClosureProps {
-  /** Pergunta interior, sóbria, não retórica. 1 frase. */
-  reflection: string;
-  /** Passo concreto para as próximas 24h. 1 frase curta. */
-  application: string;
-  /** Oração breve (2 a 4 linhas). Texto puro; quebras de linha respeitadas. */
-  prayer: string;
+  /** Pergunta interior, sóbria, não retórica. 1 frase. Opcional em rows legados. */
+  reflection?: string;
+  /** Passo concreto para as próximas 24h. 1 frase curta. Opcional em rows legados. */
+  application?: string;
+  /** Oração breve (2 a 4 linhas). Texto puro; quebras de linha respeitadas. Opcional em rows legados. */
+  prayer?: string;
   /** Próxima leitura sugerida — decisão editorial, não algoritmo cego. */
   next?: {
     label: string;
