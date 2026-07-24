@@ -16,7 +16,7 @@ import { AppRoute } from '@/types';
 import { Skeleton } from '@/components/ui/skeleton';
 import SEOHead from '@/components/SEOHead';
 import { BubbleTag, getTagIcon } from './BubbleTag';
-import { TagBubble } from './NexusBubbles';
+import { TagBubble } from './ThemeChip';
 import { useRovingTabindex } from './TabUtils';
 import Relatio from './Relatio';
 
