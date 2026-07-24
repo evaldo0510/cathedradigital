@@ -36,27 +36,27 @@ const VALID_KINDS: NexusKind[] = [
 
 function parseNexus(raw: unknown): EditorialClosureNexusItem[] | undefined {
   if (!Array.isArray(raw)) return undefined;
-  const items = raw
-    .map((entry) => {
-      if (!entry || typeof entry !== 'object') return null;
-      const e = entry as Record<string, unknown>;
-      const kind = e.kind ?? e.type;
-      const ref = e.ref ?? e.id ?? e.slug;
-      const label = e.label ?? e.title;
-      if (
-        typeof kind !== 'string' ||
-        !VALID_KINDS.includes(kind as NexusKind) ||
-        typeof ref !== 'string' ||
-        !ref ||
-        typeof label !== 'string' ||
-        !label
-      ) {
-        return null;
-      }
-      const note = typeof e.note === 'string' ? e.note : undefined;
-      return { kind: kind as NexusKind, ref, label, note };
-    })
-    .filter((x): x is EditorialClosureNexusItem => x !== null);
+  const items: EditorialClosureNexusItem[] = [];
+  for (const entry of raw) {
+    if (!entry || typeof entry !== 'object') continue;
+    const e = entry as Record<string, unknown>;
+    const kind = e.kind ?? e.type;
+    const ref = e.ref ?? e.id ?? e.slug;
+    const label = e.label ?? e.title;
+    if (
+      typeof kind !== 'string' ||
+      !VALID_KINDS.includes(kind as NexusKind) ||
+      typeof ref !== 'string' ||
+      !ref ||
+      typeof label !== 'string' ||
+      !label
+    ) {
+      continue;
+    }
+    const item: EditorialClosureNexusItem = { kind: kind as NexusKind, ref, label };
+    if (typeof e.note === 'string') item.note = e.note;
+    items.push(item);
+  }
   return items.length > 0 ? items : undefined;
 }
 
