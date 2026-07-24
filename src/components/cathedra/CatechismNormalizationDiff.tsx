@@ -41,17 +41,89 @@ function lineDiff(a: string, b: string): Array<{ kind: 'same' | 'del' | 'add'; t
 }
 
 /**
- * Painel dev-only que mostra o diff entre texto original e normalizado.
- * Renderizado apenas quando `import.meta.env.DEV && report.changed`.
+ * Habilitado quando:
+ *  - `import.meta.env.DEV`, OU
+ *  - a URL contém `?debug=normalizer` (permite ativar em produção sem recompilar).
  */
+function isDebugEnabled(): boolean {
+  if (import.meta.env.DEV) return true;
+  if (typeof window === 'undefined') return false;
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const v = params.get('debug');
+    return v === 'normalizer' || v === 'all' || v === '1';
+  } catch {
+    return false;
+  }
+}
+
+function downloadBlob(filename: string, mime: string, content: string) {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 500);
+}
+
+function buildJsonReport(paragraph: number, original: string, report: NormalizationReport) {
+  return JSON.stringify(
+    {
+      paragraph,
+      generatedAt: new Date().toISOString(),
+      durationMs: Number(report.durationMs.toFixed(4)),
+      changed: report.changed,
+      totalChanges: Object.values(report.changes).reduce((s, v) => s + v, 0),
+      originalLength: report.originalLength,
+      normalizedLength: report.normalizedLength,
+      changes: report.changes,
+      original,
+      normalized: report.text,
+    },
+    null,
+    2
+  );
+}
+
+function buildCsvReport(paragraph: number, report: NormalizationReport): string {
+  const header = [
+    'paragraph',
+    'generated_at',
+    'duration_ms',
+    'changed',
+    'original_length',
+    'normalized_length',
+    ...Object.keys(report.changes),
+  ];
+  const row = [
+    paragraph,
+    new Date().toISOString(),
+    report.durationMs.toFixed(4),
+    report.changed ? 'true' : 'false',
+    report.originalLength,
+    report.normalizedLength,
+    ...Object.values(report.changes),
+  ];
+  return `${header.join(',')}\n${row.join(',')}`;
+}
+
 export const CatechismNormalizationDiff: React.FC<Props> = ({ paragraph, original, report }) => {
+  const enabled = React.useMemo(() => isDebugEnabled(), []);
   const [open, setOpen] = React.useState(false);
 
-  if (!import.meta.env.DEV || !report.changed) return null;
+  const diff = React.useMemo(
+    () => (enabled && report.changed ? lineDiff(original, report.text) : []),
+    [enabled, original, report.text, report.changed]
+  );
 
-  const diff = React.useMemo(() => lineDiff(original, report.text), [original, report.text]);
+  if (!enabled || !report.changed) return null;
+
   const changeEntries = (Object.entries(report.changes) as Array<[keyof NormalizationChanges, number]>)
     .filter(([, v]) => v > 0);
+  const total = changeEntries.reduce((s, [, v]) => s + v, 0);
 
   return (
     <details
@@ -61,8 +133,7 @@ export const CatechismNormalizationDiff: React.FC<Props> = ({ paragraph, origina
       data-testid={`catechism-normalization-diff-${paragraph}`}
     >
       <summary className="cursor-pointer select-none px-spacing-sm py-spacing-2xs text-amber-900 dark:text-amber-200">
-        [DEV] Normalizador alterou §{paragraph} —{' '}
-        {changeEntries.reduce((s, [, v]) => s + v, 0)} correções ·{' '}
+        [DEBUG] Normalizador alterou §{paragraph} — {total} correções ·{' '}
         {report.durationMs.toFixed(2)}ms · {report.originalLength}→{report.normalizedLength} chars
       </summary>
 
@@ -76,6 +147,37 @@ export const CatechismNormalizationDiff: React.FC<Props> = ({ paragraph, origina
               {LABELS[k]}: {v}
             </span>
           ))}
+        </div>
+
+        <div className="flex gap-1 pt-1">
+          <button
+            type="button"
+            onClick={() =>
+              downloadBlob(
+                `catechism-normalizer-${paragraph}.json`,
+                'application/json',
+                buildJsonReport(paragraph, original, report)
+              )
+            }
+            className="rounded border border-amber-500/40 px-2 py-0.5 text-[10px] hover:bg-amber-500/10"
+            data-testid={`catechism-normalization-export-json-${paragraph}`}
+          >
+            Exportar JSON
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              downloadBlob(
+                `catechism-normalizer-${paragraph}.csv`,
+                'text/csv',
+                buildCsvReport(paragraph, report)
+              )
+            }
+            className="rounded border border-amber-500/40 px-2 py-0.5 text-[10px] hover:bg-amber-500/10"
+            data-testid={`catechism-normalization-export-csv-${paragraph}`}
+          >
+            Exportar CSV
+          </button>
         </div>
 
         <div className="max-h-64 overflow-auto rounded border border-amber-500/20 bg-background/60">
