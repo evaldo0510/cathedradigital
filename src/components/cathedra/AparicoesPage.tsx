@@ -174,7 +174,18 @@ const AparicoesPage: React.FC = () => {
 
   // Overview
   return (
-    <div className="w-full space-y-spacing-xl">
+    <ReaderShell
+      contentMaxWidth="max-w-none"
+      ariaLabel="Aparições de Nossa Senhora"
+      hero={
+        <EditorialHero
+          kicker="Aparições Marianas"
+          title="Aparições de Nossa Senhora"
+          subtitle="As principais manifestações da Mãe de Deus ao longo da história, aprovadas pela Igreja Católica."
+        />
+      }
+    >
+      <div className="w-full space-y-spacing-xl">
       {/* Header */}
       <div className="text-center space-y-spacing-sm">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
@@ -259,6 +270,7 @@ const AparicoesPage: React.FC = () => {
         </p>
       </div>
     </div>
+    </ReaderShell>
   );
 };
 
