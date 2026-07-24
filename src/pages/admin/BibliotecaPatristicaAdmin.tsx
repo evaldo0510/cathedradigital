@@ -76,10 +76,24 @@ function useAllWorks() {
   });
 }
 
+type WorkPatch = {
+  title?: string;
+  original_title?: string | null;
+  abstract?: string | null;
+  category?: SaintWorkCategory;
+  year_written?: number | null;
+  license?: string | null;
+  source_url?: string | null;
+  translation_credit?: string | null;
+  cover_image_url?: string | null;
+  is_public_domain?: boolean;
+  status?: SaintWorkStatus;
+};
+
 function useUpdateWork() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (patch: Partial<SaintWork> & { id: string }) => {
+    mutationFn: async (patch: WorkPatch & { id: string }) => {
       const { id, ...rest } = patch;
       const { data, error } = await supabase
         .from('saint_works')
