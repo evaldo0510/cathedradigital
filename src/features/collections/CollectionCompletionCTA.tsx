@@ -96,13 +96,10 @@ export const CollectionCompletionCTA: React.FC<Props> = ({
             </h3>
             <div className="space-y-spacing-xs">
               {suggestions.map((s) => (
-                <EditorialSurface
+                <Link
                   key={s.slug}
-                  tier="lowest"
-                  interactive
-                  as={Link as unknown as 'a'}
                   to={`/colecoes/${s.slug}`}
-                  className="flex items-center gap-spacing-sm p-spacing-sm group"
+                  className="group flex items-center gap-spacing-sm p-spacing-sm rounded-xl border border-border/60 bg-card/60 hover:bg-primary/5 hover:border-primary/30 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 >
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 text-primary">
                     <ScrollText className="w-5 h-5" aria-hidden />
@@ -121,7 +118,7 @@ export const CollectionCompletionCTA: React.FC<Props> = ({
                     className="w-4 h-4 text-primary group-hover:translate-x-1 transition-transform flex-shrink-0"
                     aria-hidden
                   />
-                </EditorialSurface>
+                </Link>
               ))}
             </div>
           </div>
