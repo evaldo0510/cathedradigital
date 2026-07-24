@@ -259,7 +259,95 @@ export default function CatechismImportQueuePage() {
         </Card>
       </div>
 
+      {errorGroups.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-destructive" />
+              Erros agrupados ({errorGroups.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {errorGroups.map((g) => (
+              <div
+                key={g.key}
+                className="flex items-start justify-between gap-3 rounded-md border p-3"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-medium truncate" title={g.sample}>
+                    {g.sample}
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {g.count} ocorrência(s) · §{g.paragraphs.slice(0, 8).join(", §")}
+                    {g.paragraphs.length > 8 ? ` +${g.paragraphs.length - 8}` : ""}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      requeueIds(
+                        rows
+                          .filter((r) => r.status === "error" && normalizeErrorKey(r.last_error) === g.key)
+                          .map((r) => r.id),
+                      )
+                    }
+                  >
+                    <RotateCcw className="mr-2 h-3 w-3" />
+                    Re-enfileirar
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => runWorker(g.paragraphs.slice(0, 20))}
+                    disabled={running}
+                  >
+                    <Play className="mr-2 h-3 w-3" />
+                    Reprocessar
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Contagem por faixa (parte / capítulo)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {rangeCounts.length === 0 ? (
+            <p className="text-sm text-muted-foreground">Nenhuma solicitação registrada ainda.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {rangeCounts.map((r) => (
+                <div key={r.label} className="flex items-center justify-between rounded border px-3 py-2 text-sm">
+                  <div className="min-w-0">
+                    <div className="truncate font-medium">{r.label}</div>
+                    <div className="text-[10px] uppercase text-muted-foreground">{r.part}</div>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs shrink-0">
+                    <span title="Total">{r.total}</span>
+                    {r.completed > 0 && (
+                      <Badge variant="default" className="h-5">{r.completed} ok</Badge>
+                    )}
+                    {r.pending > 0 && (
+                      <Badge variant="secondary" className="h-5">{r.pending} pend</Badge>
+                    )}
+                    {r.error > 0 && (
+                      <Badge variant="destructive" className="h-5">{r.error} err</Badge>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+
         <CardHeader className="flex flex-row items-center justify-between gap-3 flex-wrap">
           <CardTitle className="text-base">Solicitações</CardTitle>
           <div className="flex items-center gap-2">
