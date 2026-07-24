@@ -177,7 +177,7 @@ export default function AxeContrastReport() {
   if (error) {
     return (
       <div className="p-spacing-lg space-y-spacing-sm">
-        <h1 className="text-premium-2xl text-foreground">axe-core · color-contrast</h1>
+        <h2 className="text-premium-2xl text-foreground">axe-core · color-contrast</h2>
         <p className="text-muted-foreground">
           Não foi possível carregar <code>{SUMMARY_URL}</code>: {error}
         </p>

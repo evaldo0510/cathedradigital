@@ -112,7 +112,7 @@ const PartnersAdmin: React.FC = () => {
   if (!isAdmin) {
     return (
       <div className="max-w-xl mx-auto py-24 px-6 text-center space-y-3">
-        <h1 className="text-2xl font-semibold">Sem permissão</h1>
+        <h2 className="text-2xl font-semibold">Sem permissão</h2>
         <p className="text-muted-foreground">Este painel é restrito a administradores do Cathedra.</p>
       </div>
     );

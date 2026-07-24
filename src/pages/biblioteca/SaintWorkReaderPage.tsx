@@ -175,7 +175,7 @@ const SaintWorkReaderPage: React.FC = () => {
   if (notFound || !work || !chapter) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center gap-spacing-md p-spacing-lg">
-        <h1 className="text-premium-lg font-serif">Capítulo não encontrado</h1>
+        <h2 className="text-premium-lg font-serif">Capítulo não encontrado</h2>
         <Button asChild variant="outline">
           <Link to={`/biblioteca/escritos/${autor}/${obra}`}>Voltar à obra</Link>
         </Button>

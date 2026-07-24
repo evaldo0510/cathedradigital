@@ -335,9 +335,9 @@ const AtriumHome: React.FC = () => {
                       <Icon className="h-6 w-6" />
                     </div>
                     <div>
-                      <h4 className="font-stitch-body text-[14px] font-medium text-stitch-primary">
+                      <h3 className="font-stitch-body text-[14px] font-medium text-stitch-primary">
                         {item.label}
-                      </h4>
+                      </h3>
                       <p className="text-xs text-stitch-on-surface-variant">
                         {item.kind}
                       </p>

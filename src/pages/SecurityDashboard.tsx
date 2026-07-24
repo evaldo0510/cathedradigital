@@ -328,7 +328,7 @@ const SecurityDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg py-spacing-md">
             <div className="space-y-spacing-md">
               <div className="space-y-spacing-2xs">
-                <h4 className="text-[10px] font-black uppercase tracking-widest opacity-60">Informações de Contexto</h4>
+                <h2 className="text-[10px] font-black uppercase tracking-widest opacity-60">Informações de Contexto</h2>
                 <div className="bg-muted/30 p-spacing-md rounded-premium space-y-spacing-xs border border-border/20">
                   <div className="flex justify-between text-premium-xs">
                     <span className="font-bold">Evento:</span>
@@ -346,7 +346,7 @@ const SecurityDashboard = () => {
               </div>
 
               <div className="space-y-spacing-2xs">
-                <h4 className="text-[10px] font-black uppercase tracking-widest opacity-60">Descrição</h4>
+                <h2 className="text-[10px] font-black uppercase tracking-widest opacity-60">Descrição</h2>
                 <div className="bg-muted/30 p-spacing-md rounded-premium text-premium-sm border border-border/20 italic font-serif">
                   {selectedLog?.description}
                 </div>
@@ -354,7 +354,7 @@ const SecurityDashboard = () => {
             </div>
 
             <div className="space-y-spacing-2xs">
-              <h4 className="text-[10px] font-black uppercase tracking-widest opacity-60">Conteúdo (Payload) / Metadados</h4>
+              <h2 className="text-[10px] font-black uppercase tracking-widest opacity-60">Conteúdo (Payload) / Metadados</h2>
               <pre className="bg-zinc-950 text-zinc-50 p-spacing-md rounded-premium text-[11px] font-mono overflow-auto max-h-[300px] border border-white/5">
                 {JSON.stringify(selectedLog?.metadata, null, 2)}
               </pre>
