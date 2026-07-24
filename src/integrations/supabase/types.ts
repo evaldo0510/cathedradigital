@@ -5474,6 +5474,7 @@ export type Database = {
       }
       saint_import_logs: {
         Row: {
+          canonical_id: string | null
           confidence: number | null
           created_at: string
           fields_skipped: string[]
@@ -5482,10 +5483,12 @@ export type Database = {
           message: string | null
           payload: Json
           provider: string
+          redirected_from: string | null
           saint_id: string
           status: string
         }
         Insert: {
+          canonical_id?: string | null
           confidence?: number | null
           created_at?: string
           fields_skipped?: string[]
@@ -5494,10 +5497,12 @@ export type Database = {
           message?: string | null
           payload?: Json
           provider: string
+          redirected_from?: string | null
           saint_id: string
           status: string
         }
         Update: {
+          canonical_id?: string | null
           confidence?: number | null
           created_at?: string
           fields_skipped?: string[]
@@ -5506,6 +5511,7 @@ export type Database = {
           message?: string | null
           payload?: Json
           provider?: string
+          redirected_from?: string | null
           saint_id?: string
           status?: string
         }
