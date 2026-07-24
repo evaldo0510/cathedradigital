@@ -7,8 +7,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { RefreshCw, RotateCcw, Play } from "lucide-react";
+import { RefreshCw, RotateCcw, Play, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
+import { CATECHISM_RANGES, rangeForParagraph, normalizeErrorKey } from "@/lib/catechismRanges";
 
 type QueueStatus = "pending" | "processing" | "completed" | "error";
 
