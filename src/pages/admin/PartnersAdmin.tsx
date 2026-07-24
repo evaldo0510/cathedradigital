@@ -59,7 +59,16 @@ const PartnersAdmin: React.FC = () => {
         .select('id, name, description, logo_url, website_url, contact_email, partner_type, status, created_at')
         .order('created_at', { ascending: false });
       if (error) throw error;
-      return (data as PartnerRow[]) ?? [];
+      const rows = (data as PartnerRow[]) ?? [];
+      // Resolve preview signed URLs para logos ainda em bucket privado.
+      const withPreview = await Promise.all(rows.map(async r => {
+        if (!r.logo_url || r.logo_url.startsWith('http')) return r;
+        const { data: signed } = await supabase.storage
+          .from('partner-logos')
+          .createSignedUrl(r.logo_url, 60 * 30);
+        return { ...r, _preview: signed?.signedUrl ?? null } as PartnerRow & { _preview?: string | null };
+      }));
+      return withPreview;
     },
   });
 
