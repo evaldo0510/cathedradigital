@@ -220,6 +220,27 @@ const CatechismContent: React.FC<{
     );
   }
 
+  // Enfileirado para importação: worker está buscando o texto oficial; o hook faz polling.
+  if (data?.status === 'queued') {
+    return (
+      <div
+        role="status"
+        aria-live="polite"
+        data-testid={`catechism-importing-${paragraph}`}
+        className="reader-text bg-muted/30 border border-dashed border-primary/20 rounded-premium p-spacing-md font-serif text-premium-sm italic text-muted-foreground space-y-spacing-xs"
+      >
+        <div className="flex items-center gap-spacing-xs not-italic font-display tracking-[0.1em] uppercase text-premium-xs text-primary/60">
+          <Icons.Catechism className="w-spacing-sm h-spacing-sm animate-pulse" />
+          Importando §{paragraph}…
+        </div>
+        <p>
+          Estamos buscando o texto oficial deste parágrafo no arquivo da Santa Sé.
+          Ele aparecerá automaticamente em instantes.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className={cn(
       "reader-text text-foreground/90 font-size-", settings.fontSize, 

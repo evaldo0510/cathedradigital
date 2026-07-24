@@ -1788,9 +1788,11 @@ export type Database = {
       catechism_import_queue: {
         Row: {
           attempts: number
+          attempts_log: Json
           created_at: string
           id: string
           last_error: string | null
+          next_attempt_at: string | null
           paragraph: number
           processed_at: string | null
           requested_at: string
@@ -1800,9 +1802,11 @@ export type Database = {
         }
         Insert: {
           attempts?: number
+          attempts_log?: Json
           created_at?: string
           id?: string
           last_error?: string | null
+          next_attempt_at?: string | null
           paragraph: number
           processed_at?: string | null
           requested_at?: string
@@ -1812,9 +1816,11 @@ export type Database = {
         }
         Update: {
           attempts?: number
+          attempts_log?: Json
           created_at?: string
           id?: string
           last_error?: string | null
+          next_attempt_at?: string | null
           paragraph?: number
           processed_at?: string | null
           requested_at?: string
