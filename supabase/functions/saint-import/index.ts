@@ -568,7 +568,7 @@ serve(async (req) => {
         seen.add(k);
         return true;
       })
-      .map((a) => ({ saint_id: saintId, alias: a.alias.trim(), language: a.language, type: a.type, source: a.source }));
+      .map((a) => ({ saint_id: canonicalId, alias: a.alias.trim(), language: a.language, type: a.type, source: a.source }));
 
 
     let aliases_inserted = 0;
@@ -576,19 +576,22 @@ serve(async (req) => {
       const { error: aErr, count } = await admin
         .from("saint_aliases")
         .upsert(aliasRows, { onConflict: "saint_id,alias_norm,language", ignoreDuplicates: true, count: "exact" });
-      if (aErr) console.warn(`saint-import: alias upsert failed for ${saintId}:`, aErr.message);
+      if (aErr) console.warn(`saint-import: alias upsert failed for ${canonicalId}:`, aErr.message);
       else aliases_inserted = count ?? aliasRows.length;
     }
 
     await admin.from("saint_import_logs").insert({
-      saint_id: saintId,
+      saint_id: canonicalId,
+      canonical_id: canonicalId,
+      redirected_from: redirectedFrom,
       provider: outcomes.map((o) => o.provider).join(","),
       status: "success",
       fields_updated: Array.from(aggApplied),
       fields_skipped: Array.from(aggSkipped),
       confidence: bestConfidence,
-      payload: { ...sourceMetadata, aliases_inserted },
+      payload: { ...sourceMetadata, aliases_inserted, redirected_from: redirectedFrom },
     });
+
 
     return json({
       ok: true,
