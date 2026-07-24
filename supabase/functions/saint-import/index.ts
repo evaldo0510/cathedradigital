@@ -542,11 +542,13 @@ serve(async (req) => {
         editorial_score,
         last_scraped_at: new Date().toISOString(),
       })
-      .eq("id", saintId);
+      .eq("id", canonicalId);
 
     if (upErr) {
       await admin.from("saint_import_logs").insert({
-        saint_id: saintId,
+        saint_id: canonicalId,
+        canonical_id: canonicalId,
+        redirected_from: redirectedFrom,
         provider: outcomes.map((o) => o.provider).join(","),
         status: "error",
         message: upErr.message,
@@ -554,6 +556,7 @@ serve(async (req) => {
       });
       return json({ error: "update_failed", details: upErr.message }, 500);
     }
+
 
     // Upsert aliases (idempotente via UNIQUE saint_id+alias_norm+language)
     const seen = new Set<string>();
