@@ -131,8 +131,8 @@ const SpiritualProfile: React.FC = () => {
             <div className="absolute inset-0 rounded-premium-full border border-primary/10 animate-pulse" />
             <div className="absolute -inset-spacing-md rounded-premium-full border border-primary/5 animate-slow-spin" />
             <div className="w-full h-full rounded-premium-full bg-primary/5 flex items-center justify-center overflow-hidden border border-primary/10">
-              {profile.avatar_url ? (
-                <img src={profile.avatar_url} alt={profile.name} className="w-full h-full object-cover opacity-80" />
+              {avatarSrc ? (
+                <img src={avatarSrc} alt={profile.name} className="w-full h-full object-cover opacity-80" loading="lazy" decoding="async" />
               ) : (
                 <Icons.User className="w-spacing-2xl h-spacing-2xl text-primary/60" strokeWidth={0.5} />
               )}

@@ -46,6 +46,7 @@ const AtriumCommunityProfilePage: React.FC = () => {
   const [stats, setStats] = useState({ posts: 0, likes: 0 });
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const avatarSrc = useAvatarUrl(profile?.avatar_url, 128);
 
   const fetch = useCallback(async () => {
     if (!userId) return;
@@ -129,11 +130,13 @@ const AtriumCommunityProfilePage: React.FC = () => {
           </Link>
 
           <header className="rounded-2xl border border-border bg-card p-6 flex items-center gap-4">
-            {profile.avatar_url ? (
+            {avatarSrc ? (
               <img
-                src={profile.avatar_url}
+                src={avatarSrc}
                 alt={profile.name}
                 className="w-16 h-16 rounded-full object-cover"
+                loading="lazy"
+                decoding="async"
               />
             ) : (
               <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center font-bold text-xl text-foreground">
