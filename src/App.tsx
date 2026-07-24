@@ -688,9 +688,15 @@ const AppLayout: React.FC = () => {
               <Route path="/biblioteca/escritos/:autor/:obra" element={<Suspense fallback={<LoadingFallback />}><SaintWorkOverviewPage /></Suspense>} />
               <Route path="/biblioteca/escritos/:autor/:obra/capitulo/:ordem" element={<Suspense fallback={<LoadingFallback />}><SaintWorkReaderPage /></Suspense>} />
 
-              {/* Biblioteca Católica — frente unificada (Escritos + Padres + Doutores + Clássicos + Magistério) */}
-              <Route path="/biblioteca/catolica" element={<Suspense fallback={<LoadingFallback />}><BibliotecaCatolicaPage /></Suspense>} />
-              <Route path="/biblioteca/catolica/acervo" element={<Suspense fallback={<LoadingFallback />}><BibliotecaCatolicaAcervoPage /></Suspense>} />
+              {/* Biblioteca Católica — frente unificada (legado; redirect para /acervo) */}
+              <Route path="/biblioteca/catolica" element={<Navigate to="/acervo" replace />} />
+              <Route path="/biblioteca/catolica/acervo" element={<Navigate to="/acervo/lista" replace />} />
+
+              {/* Acervo Cathedra — hub unificado do conhecimento católico */}
+              <Route path="/acervo" element={<Suspense fallback={<LoadingFallback />}><AcervoHomePage /></Suspense>} />
+              <Route path="/acervo/lista" element={<Suspense fallback={<LoadingFallback />}><BibliotecaCatolicaAcervoPage /></Suspense>} />
+
+
 
 
               {/* Jornadas */}
