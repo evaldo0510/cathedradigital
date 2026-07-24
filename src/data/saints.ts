@@ -120,9 +120,13 @@ export interface Saint extends Partial<DeepContent> {
   vocation?: string;
   aiReflection?: SaintAIReflection;
   // Onda 2 — complementos editoriais (TEXT)
+  // Onda 2 — complementos editoriais (TEXT)
   conversionStory?: string;
   mission?: string;
   legacy?: string;
+  // Sprint 3.2.1 — narrativa espiritual
+  spiritualitySummary?: string;
+  keyEvents?: SaintKeyEvent[];
 }
 
 
