@@ -36,6 +36,19 @@ export interface LibraryResult {
 
   /** Relevância textual bruta (0-100), usada em diagnóstico. */
   textRelevance?: number;
+
+  /** Estimativa de leitura em minutos (quando disponível). */
+  readingMinutes?: number;
+
+  // ── Campos AI-ready (B.1.4). Vazios agora; preenchidos pelo MCP depois. ──
+  /** Similaridade semântica (0-1) vinda de embeddings. */
+  semanticScore?: number;
+  /** Justificativa curta gerada pela IA ("Aparece em §§ 232-267 do CIC"). */
+  reason?: string;
+  /** Conceitos teológicos detectados no match. */
+  matchedConcepts?: string[];
+  /** Sinônimos/aliases da entidade. */
+  aliases?: string[];
 }
 
 export interface LibrarySearchOptions {

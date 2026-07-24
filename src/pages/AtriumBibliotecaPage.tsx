@@ -18,12 +18,12 @@ import {
   Sparkles,
   Network,
   ArrowRight,
-  Search as SearchIcon,
 } from 'lucide-react';
 import { AppRoute } from '@/types';
 import { useBibliotecaRecents } from '@/hooks/useBibliotecaState';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
+import { LibrarySearchPanel, LibraryThemesBlock } from '@/modules/biblioteca';
 
 type Collection = {
   title: string;
@@ -89,29 +89,35 @@ const AtriumBibliotecaPage: React.FC = () => {
       <main className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
         {/* ─── Hero editorial ─────────────────────────────────────────── */}
         <section className="border-b border-stitch-secondary/10 pb-8">
-          <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
-            <div className="max-w-2xl">
-              <span className="mb-2 block font-stitch-body text-[12px] font-bold uppercase tracking-[0.32em] text-stitch-secondary">
-                Archival Collection
-              </span>
-              <h1 className="font-stitch-display text-[32px] italic leading-[40px] text-stitch-primary md:text-[48px] md:leading-[56px] md:tracking-[-0.02em]">
-                Biblioteca
-              </h1>
-              <p className="mt-4 font-stitch-body text-[20px] leading-[32px] text-stitch-on-surface-variant">
-                Navegue pelos ecos sagrados de dois milênios. Dos Padres
-                Apostólicos ao Magistério contemporâneo, explore a sabedoria
-                curada da Igreja.
-              </p>
-            </div>
-            <Link
-              to={AppRoute.BUSCAR}
-              className="group relative flex w-full items-center gap-3 rounded-lg border border-stitch-outline-variant/40 bg-stitch-surface-container-low px-4 py-2.5 text-[14px] font-medium text-stitch-on-surface-variant transition-all hover:border-stitch-secondary md:w-64"
-            >
-              <SearchIcon className="h-5 w-5 shrink-0" />
-              <span className="font-stitch-body">Pesquisar o acervo…</span>
-            </Link>
+          <div className="max-w-2xl">
+            <span className="mb-2 block font-stitch-body text-[12px] font-bold uppercase tracking-[0.32em] text-stitch-secondary">
+              Archival Collection
+            </span>
+            <h1 className="font-stitch-display text-[32px] italic leading-[40px] text-stitch-primary md:text-[48px] md:leading-[56px] md:tracking-[-0.02em]">
+              Biblioteca
+            </h1>
+            <p className="mt-4 font-stitch-body text-[20px] leading-[32px] text-stitch-on-surface-variant">
+              Navegue pelos ecos sagrados de dois milênios. Dos Padres
+              Apostólicos ao Magistério contemporâneo, explore a sabedoria
+              curada da Igreja.
+            </p>
           </div>
         </section>
+
+        {/* ─── Busca Unificada (B.1.3) ─────────────────────────────── */}
+        <section className="pt-8">
+          <LibrarySearchPanel />
+        </section>
+
+        {/* ─── Descobrir por tema (B.1.3) ──────────────────────────── */}
+        <section className="pt-12">
+          <h2 className="mb-4 font-stitch-display text-[24px] font-semibold leading-[32px] text-stitch-primary">
+            Descobrir por tema
+          </h2>
+          <LibraryThemesBlock />
+        </section>
+
+
 
         {/* ─── Continue Reading ───────────────────────────────────────── */}
         {recents.length > 0 && (
