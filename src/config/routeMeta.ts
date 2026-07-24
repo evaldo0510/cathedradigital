@@ -447,6 +447,13 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
     },
   },
   {
+    test: /^\/biblioteca\/acervo\/[^/]+$/,
+    meta: {
+      title: 'Acervo — Biblioteca Cathedra',
+      description: 'Coleção editorial da Biblioteca Cathedra com temas, filtros e itens paginados por nível de formação.',
+    },
+  },
+  {
     test: /^\/(admin|dev)(\/|$)/,
     meta: {
       title: 'Admin — Cathedra',

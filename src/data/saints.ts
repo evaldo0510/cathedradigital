@@ -116,6 +116,13 @@ export interface Saint extends Partial<DeepContent> {
 export interface SaintAIReflectionTeaching {
   title: string;
   body: string;
+  source?: string;
+}
+
+export interface SaintAIReflectionCitation {
+  type: 'quote' | 'work' | 'biography' | 'virtue';
+  text: string;
+  used_in?: 'summary' | 'teaching' | 'meditation' | 'prayer';
 }
 
 export interface SaintAIReflection {
@@ -123,7 +130,9 @@ export interface SaintAIReflection {
   summary: string;
   teachings: SaintAIReflectionTeaching[];
   meditation: string;
+  meditation_sources?: string[];
   prayer: string;
+  citations?: SaintAIReflectionCitation[];
   model?: string;
   provider?: string;
   generated_at?: string;

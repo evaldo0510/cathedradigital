@@ -16,7 +16,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { generateText, NoObjectGeneratedError, Output } from "npm:ai";
 import { z } from "npm:zod";
 
-const EDITORIAL_VERSION = 1;
+const EDITORIAL_VERSION = 2;
 const AI_PROVIDER = "lovable-ai-gateway";
 const AI_MODEL = "google/gemini-2.5-flash";
 
@@ -25,9 +25,16 @@ const reflectionSchema = z.object({
   teachings: z.array(z.object({
     title: z.string(),
     body: z.string(),
+    source: z.string().optional(),
   })),
   meditation: z.string(),
+  meditation_sources: z.array(z.string()).optional(),
   prayer: z.string(),
+  citations: z.array(z.object({
+    type: z.enum(["quote", "work", "biography", "virtue"]),
+    text: z.string(),
+    used_in: z.enum(["summary", "teaching", "meditation", "prayer"]).optional(),
+  })).optional(),
 });
 
 type Reflection = z.infer<typeof reflectionSchema>;
@@ -48,9 +55,10 @@ Regras invioláveis:
 - Se um dado faltar, seja discreto — não preencha com genérico.
 - Tom contemplativo, sereno, sem clichês modernos, sem "IA falando".
 - Deixe implícito que é uma reflexão baseada nos textos e ensinamentos do santo.
-- Meditação: 3–4 parágrafos, ancorada nos escritos do santo.
+- Meditação: 3–4 parágrafos, ancorada nos escritos do santo. Preencha meditation_sources com os trechos/obras que fundamentaram a meditação (curto, verbatim ou paráfrase mínima).
 - Oração: composta na primeira pessoa, no espírito do santo, sem invenções.
-- Ensinamentos: 3 a 5 itens, cada um com título curto (2–5 palavras) e corpo enxuto.
+- Ensinamentos: 3 a 5 itens, cada um com título curto (2–5 palavras), corpo enxuto e, quando possível, "source" apontando a frase/obra que o embasa (trecho curto ou nome da obra).
+- Citações: preencha o array "citations" listando os trechos concretos (frases, obras, virtudes ou biografia) que você efetivamente usou como base, marcando em qual seção foram aplicados. Não invente citações.
 - Idioma: português (Brasil).`;
 
 function buildUserPrompt(saint: Record<string, unknown>): string {
@@ -183,7 +191,9 @@ Deno.serve(async (req) => {
     summary: output.summary,
     teachings: output.teachings,
     meditation: output.meditation,
+    meditation_sources: output.meditation_sources ?? [],
     prayer: output.prayer,
+    citations: output.citations ?? [],
     model: AI_MODEL,
     provider: AI_PROVIDER,
     generated_at: new Date().toISOString(),
