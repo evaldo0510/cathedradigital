@@ -527,8 +527,11 @@ serve(async (req) => {
         aliases_preview,
         source_metadata: sourceMetadata,
         editorial_score,
+        canonical_id: canonicalId,
+        redirected_from: redirectedFrom,
       });
     }
+
 
 
     const { error: upErr } = await admin
