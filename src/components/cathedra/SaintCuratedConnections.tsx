@@ -69,7 +69,7 @@ function Section({
   title,
   relations,
 }: {
-  icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
+  icon: LucideIcon;
   title: string;
   relations: NexusRelation[];
 }) {
