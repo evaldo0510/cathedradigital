@@ -574,10 +574,14 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
               className="space-y-spacing-xl outline-none"
               tabIndex={0}
             >
-              <div className="text-center space-y-spacing-xs">
-                <p className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Nuvem de Testemunhas</p>
-                <p className="text-premium-sm text-muted-foreground italic font-serif">"Estamos cercados de tão grande nuvem de testemunhas..." — Heb 12,1</p>
-              </div>
+              <header className="max-w-spacing-2xl mx-auto px-spacing-md space-y-spacing-sm text-center">
+                <p className="text-premium-xs font-black uppercase tracking-[0.22em] text-secondary">Nuvem de Testemunhas</p>
+                <h2 className="font-serif text-premium-3xl text-foreground">Comunhão dos Santos</h2>
+                <div aria-hidden="true" className="mx-auto h-px w-16 bg-secondary/60" />
+                <p className="font-serif italic text-premium-sm text-muted-foreground">
+                  "Estamos cercados de tão grande nuvem de testemunhas…" — Hebreus 12,1
+                </p>
+              </header>
 
               <div className="flex flex-wrap justify-center gap-spacing-sm max-w-spacing-4xl mx-auto" role="list">
                 {displaySaints.map((saint, i) => (
