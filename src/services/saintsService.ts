@@ -204,6 +204,8 @@ export const formatSaint = (dbSaint: any): Saint => {
 };
 
 // ── v3 — Filtros combinados da Biblioteca dos Santos ───────────
+export type SaintsSortOption = 'name-asc' | 'name-desc' | 'feast-asc' | 'feast-desc';
+
 export interface SaintsFilterInput {
   query?: string;
   category?: string;         // apostle | martyr | doctor | pope | founder ...
@@ -212,12 +214,21 @@ export interface SaintsFilterInput {
   virtue?: string;
   vocation?: string;
   limit?: number;
+  offset?: number;
+  sort?: SaintsSortOption;
+}
+
+export interface SaintsAdvancedResult {
+  items: Saint[];
+  total: number;
 }
 
 export const searchSaintsAdvanced = async (
   filters: SaintsFilterInput,
-): Promise<Saint[]> => {
-  let q = supabase.from('saints').select(LIST_COLUMNS + ', century, country, vocation');
+): Promise<SaintsAdvancedResult> => {
+  let q = supabase
+    .from('saints')
+    .select(LIST_COLUMNS + ', century, country, vocation', { count: 'exact' });
 
   if (filters.category) q = q.eq('category', filters.category);
   if (filters.century) q = q.eq('century', filters.century);
@@ -229,14 +240,38 @@ export const searchSaintsAdvanced = async (
     q = q.or(`name.ilike.%${t}%,title.ilike.%${t}%`);
   }
 
-  q = q.order('name').limit(filters.limit ?? 60);
+  const sort = filters.sort ?? 'name-asc';
+  switch (sort) {
+    case 'name-desc':
+      q = q.order('name', { ascending: false });
+      break;
+    case 'feast-asc':
+      q = q
+        .order('feast_month', { ascending: true, nullsFirst: false })
+        .order('feast_day_num', { ascending: true, nullsFirst: false })
+        .order('name');
+      break;
+    case 'feast-desc':
+      q = q
+        .order('feast_month', { ascending: false, nullsFirst: false })
+        .order('feast_day_num', { ascending: false, nullsFirst: false })
+        .order('name');
+      break;
+    case 'name-asc':
+    default:
+      q = q.order('name', { ascending: true });
+  }
 
-  const { data, error } = await q;
+  const limit = filters.limit ?? 24;
+  const offset = filters.offset ?? 0;
+  q = q.range(offset, offset + limit - 1);
+
+  const { data, error, count } = await q;
   if (error) {
     console.error('searchSaintsAdvanced error:', error);
-    return [];
+    return { items: [], total: 0 };
   }
-  return (data || []).map(formatSaint);
+  return { items: (data || []).map(formatSaint), total: count ?? 0 };
 };
 
 export const getSaintsFilterFacets = async (): Promise<{
