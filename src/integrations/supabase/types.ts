@@ -5647,6 +5647,7 @@ export type Database = {
       saint_works: {
         Row: {
           abstract: string | null
+          access_type: Database["public"]["Enums"]["saint_work_access_type"]
           category: Database["public"]["Enums"]["saint_work_category"]
           chapter_count: number
           constitution_version: string | null
@@ -5661,6 +5662,8 @@ export type Database = {
             | Database["public"]["Enums"]["editorial_status_enum"]
             | null
           editorial_version: number | null
+          external_source_label: string | null
+          external_url: string | null
           ice_score: number | null
           id: string
           is_public_domain: boolean
@@ -5683,6 +5686,7 @@ export type Database = {
         }
         Insert: {
           abstract?: string | null
+          access_type?: Database["public"]["Enums"]["saint_work_access_type"]
           category?: Database["public"]["Enums"]["saint_work_category"]
           chapter_count?: number
           constitution_version?: string | null
@@ -5697,6 +5701,8 @@ export type Database = {
             | Database["public"]["Enums"]["editorial_status_enum"]
             | null
           editorial_version?: number | null
+          external_source_label?: string | null
+          external_url?: string | null
           ice_score?: number | null
           id?: string
           is_public_domain?: boolean
@@ -5719,6 +5725,7 @@ export type Database = {
         }
         Update: {
           abstract?: string | null
+          access_type?: Database["public"]["Enums"]["saint_work_access_type"]
           category?: Database["public"]["Enums"]["saint_work_category"]
           chapter_count?: number
           constitution_version?: string | null
@@ -5733,6 +5740,8 @@ export type Database = {
             | Database["public"]["Enums"]["editorial_status_enum"]
             | null
           editorial_version?: number | null
+          external_source_label?: string | null
+          external_url?: string | null
           ice_score?: number | null
           id?: string
           is_public_domain?: boolean
@@ -9067,6 +9076,11 @@ export type Database = {
         | "eucaristica"
         | "confissao_defuntos"
       saint_content_status: "stub" | "partial" | "complete"
+      saint_work_access_type:
+        | "internal"
+        | "official_external"
+        | "public_domain"
+        | "licensed"
       saint_work_category:
         | "patristica"
         | "escolastica"
@@ -9253,6 +9267,12 @@ export const Constants = {
         "confissao_defuntos",
       ],
       saint_content_status: ["stub", "partial", "complete"],
+      saint_work_access_type: [
+        "internal",
+        "official_external",
+        "public_domain",
+        "licensed",
+      ],
       saint_work_category: [
         "patristica",
         "escolastica",
