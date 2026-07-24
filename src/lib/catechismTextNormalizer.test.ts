@@ -3,7 +3,7 @@ import { normalizeCatechismText } from './catechismTextNormalizer';
 
 describe('normalizeCatechismText', () => {
   it('remove caracteres invisíveis e NBSP', () => {
-    const input = '\uFEFFPalavra\u00A0da\u200BSanta Sé.';
+    const input = '\uFEFFPalavra\u00A0da Santa\u200B Sé.';
     expect(normalizeCatechismText(input)).toBe('Palavra da Santa Sé.');
   });
 
