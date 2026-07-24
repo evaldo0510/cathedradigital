@@ -200,7 +200,12 @@ export const formatSaint = (dbSaint: any): Saint => {
     country: dbSaint.country ?? undefined,
     vocation: dbSaint.vocation ?? undefined,
     aiReflection: parseJson(dbSaint.ai_reflection, undefined),
+    // Onda 2 — complementos editoriais (TEXT)
+    conversionStory: dbSaint.conversion_story ?? undefined,
+    mission: dbSaint.mission ?? undefined,
+    legacy: dbSaint.legacy ?? undefined,
   };
+
 };
 
 // ── v3 — Filtros combinados da Biblioteca dos Santos ───────────
