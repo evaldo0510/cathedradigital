@@ -194,10 +194,12 @@ export const GUARDRAIL_ALLOWLIST: readonly string[] = [
   'src/components/reader/ReferencePopover.tsx',
   // ── Baseline Fase C: consumidores legados aguardando migração.
   //    Remover ao concluir a sub-onda de cada módulo (ver docs/reader-template-master-fase-c.md).
-  'src/components/cathedra/BibleReader.tsx',           // sub-onda C.4
-  'src/components/cathedra/JornadaStepPage.tsx',       // Fase D
-  'src/components/cathedra/MagisteriumViewer.tsx',     // Fase D
-  'src/components/cathedra/SaintDetail.tsx',           // Fase D
+  //    C0.4 concluída: Bible/Journey/Magisterium/Saint migrados de NexusBubbles → NexusPanel.
+  //    Temas ainda importa TagBubble (chip inline) — resolvido em C0.4.b (→ ReferencePopover).
+  'src/components/cathedra/TemasPage.tsx',              // C0.4.b (TagBubble → ReferencePopover)
+  'src/components/cathedra/TemaDetailPage.tsx',         // C0.4.b (TagBubble → ReferencePopover)
+  'src/components/cathedra/NexusBubbles.test.tsx',      // teste do próprio deprecado (removido em Fase D)
+  'src/components/cathedra/NexusBubbles.interaction.test.tsx',
   'src/components/cathedra/MissalPage.tsx',            // sub-onda C.4
   'src/components/cathedra/MissaContinuousReader.tsx', // sub-onda C.4
   'src/components/cathedra/BreviaryPage.tsx',          // sub-onda C.4
