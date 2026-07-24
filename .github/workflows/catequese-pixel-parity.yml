@@ -1,0 +1,55 @@
+name: Catequese · Pixel Parity (CQ-1.3)
+
+on:
+  pull_request:
+    paths:
+      - 'src/modules/catequese/**'
+      - 'src/components/cathedra/Catechism*.tsx'
+      - 'src/pages/AtriumCatechismReader.tsx'
+      - 'src/pages/CatechismExplorer.tsx'
+      - 'src/pages/admin/CatechismImportQueue.tsx'
+      - 'src/App.tsx'
+      - 'tests/e2e/catequese-baseline.spec.ts'
+      - 'scripts/catequese-pixel-parity.ts'
+      - '.github/workflows/catequese-pixel-parity.yml'
+  push:
+    branches: [main]
+
+concurrency:
+  group: catequese-parity-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pixel-parity:
+    name: Pixel parity flag=0 vs flag=1
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CI: 'true'
+      HEADLESS: 'true'
+      CATEQUESE_PARITY_MAX_RATIO: '0.001'
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Install Playwright Chromium
+        run: bunx playwright install --with-deps chromium
+
+      - name: Run pixel-parity (flag=0 ↔ flag=1)
+        run: bun run scripts/catequese-pixel-parity.ts
+
+      - name: Upload parity report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: catequese-pixel-parity
+          path: |
+            reports/catequese/parity/**
+            .tmp/catequese-parity/**
+          retention-days: 14
