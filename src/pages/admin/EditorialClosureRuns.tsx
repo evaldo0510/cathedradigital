@@ -85,6 +85,14 @@ function groupRuns(rows: LogRow[]): RunSummary[] {
   );
 }
 
+function formatRelative(date: Date): string {
+  const diff = Math.max(0, Math.floor((Date.now() - date.getTime()) / 1000));
+  if (diff < 5) return 'agora';
+  if (diff < 60) return `há ${diff}s`;
+  if (diff < 3600) return `há ${Math.floor(diff / 60)}min`;
+  return `há ${Math.floor(diff / 3600)}h`;
+}
+
 function fmtDate(iso: string): string {
   try {
     return new Date(iso).toLocaleString('pt-BR', {
