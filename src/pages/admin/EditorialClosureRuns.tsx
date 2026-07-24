@@ -184,8 +184,9 @@ const EditorialClosureRuns: React.FC = () => {
     }, { replace: true });
   }, [setSearchParams]);
 
-  const load = React.useCallback(async () => {
-    setLoading(true);
+  const load = React.useCallback(async (opts: { silent?: boolean } = {}) => {
+    if (opts.silent) setRefreshing(true);
+    else setLoading(true);
     const { data, error } = await supabase
       .from('editorial_closure_migration_log')
       .select('*')
@@ -193,14 +194,62 @@ const EditorialClosureRuns: React.FC = () => {
       .limit(2000);
     if (error) {
       toast({ title: 'Falha ao carregar logs', description: error.message, variant: 'destructive' });
-      setRows([]);
+      if (!opts.silent) setRows([]);
     } else {
-      setRows((data ?? []) as unknown as LogRow[]);
+      const fresh = (data ?? []) as unknown as LogRow[];
+      setRows(fresh);
+      setLastUpdatedAt(new Date());
+      // Diff de run_ids para destacar novas runs no refresh silencioso
+      const currentIds = new Set<string>();
+      for (const r of fresh) if (r.run_id) currentIds.add(r.run_id);
+      if (opts.silent && knownRunIdsRef.current.size > 0) {
+        const added = new Set<string>();
+        for (const id of currentIds) if (!knownRunIdsRef.current.has(id)) added.add(id);
+        if (added.size > 0) {
+          setNewRunIds((prev) => {
+            const next = new Set(prev);
+            for (const id of added) next.add(id);
+            return next;
+          });
+        }
+      }
+      knownRunIdsRef.current = currentIds;
     }
-    setLoading(false);
+    if (opts.silent) setRefreshing(false);
+    else setLoading(false);
   }, []);
 
   React.useEffect(() => { void load(); }, [load]);
+
+  // Polling: preserva filtros/ordenação/página (state em URL), pausa em aba oculta
+  // e enquanto houver diálogo aberto para não interferir na interação.
+  const pollPaused = openRunId !== null || rollbackTarget !== null || rollingBack;
+  React.useEffect(() => {
+    if (!autoRefresh || pollPaused) return;
+    const tick = () => {
+      if (typeof document !== 'undefined' && document.visibilityState !== 'visible') return;
+      void load({ silent: true });
+    };
+    const id = window.setInterval(tick, Math.max(5, intervalSec) * 1000);
+    return () => window.clearInterval(id);
+  }, [autoRefresh, intervalSec, pollPaused, load]);
+
+  // Retoma imediatamente quando a aba volta a ficar visível
+  React.useEffect(() => {
+    if (!autoRefresh) return;
+    const onVis = () => {
+      if (document.visibilityState === 'visible' && !pollPaused) void load({ silent: true });
+    };
+    document.addEventListener('visibilitychange', onVis);
+    return () => document.removeEventListener('visibilitychange', onVis);
+  }, [autoRefresh, pollPaused, load]);
+
+  // Atualiza label "há Xs" sem redisparar fetch
+  React.useEffect(() => {
+    const id = window.setInterval(() => setNowTick((n) => n + 1), 15000);
+    return () => window.clearInterval(id);
+  }, []);
+
 
   const runs = React.useMemo(() => groupRuns(rows), [rows]);
 
