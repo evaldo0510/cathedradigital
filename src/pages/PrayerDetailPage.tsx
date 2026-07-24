@@ -2,20 +2,22 @@
  * PrayerDetailPage — leitor de uma oração.
  *
  * Sprint CAT-12 item 2. Rota `/oracao/:slug`.
- * - EditorialReaderChrome + hero editorial
+ * - ReaderShell (Reader Template Master) + hero editorial
  * - Conteúdo em português + latim (quando houver)
  * - Explicação teológica e meditação (quando houver)
  * - Favorito (bible_favorites via useDevotionalFavorites)
  * - ReaderContinuation (kind='prayer') sugerindo próxima oração
  * - Referências: Bíblia, Catecismo, santos, glossário
+ *
+ * C0.3.a — Prayer Engine unificado ao Reader Template Master.
+ * Zero uso de EditorialReaderChrome; toda leitura passa por ReaderShell.
  */
 import React, { useEffect, useMemo, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { Loader2, Star, Clock, BookOpen, Church, ArrowLeft, Minus, Plus } from 'lucide-react';
-import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
+import { ReaderShell, ReaderContinuation } from '@/components/reader';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
-import ReaderContinuation from '@/components/shared/ReaderContinuation';
 import { Button } from '@/components/ui/button';
 import { usePrayer, usePrayers, PRAYER_CATEGORY_LABEL } from '@/hooks/usePrayers';
 import { useDevotionalFavorites } from '@/hooks/useDevotionalFavorites';
