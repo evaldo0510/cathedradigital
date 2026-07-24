@@ -146,6 +146,7 @@ const ProfilePage: React.FC = () => {
   const [activityFilter, setActivityFilter] = useState<'all' | ActivityKind>('all');
   const [activityPage, setActivityPage] = useState(1);
   const [exportingPdf, setExportingPdf] = useState(false);
+  const avatarDisplay = useAvatarUrl(avatarUrl, 192);
 
   useEffect(() => {
     if (!loading && !user) navigate(AppRoute.LOGIN);
@@ -383,23 +384,17 @@ const ProfilePage: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-spacing-lg">
             <div className="relative w-spacing-4xl h-spacing-4xl group shrink-0">
               <Avatar className="w-spacing-3xl h-spacing-3xl sm:w-spacing-4xl sm:h-spacing-4xl border-4 border-primary/20 shrink-0">
-                {(() => {
-                  const sources = getAvatarSources(avatarUrl);
-                  if (!sources) return null;
-                  return (
-                    <AvatarImage
-                      src={sources.src}
-                      srcSet={sources.srcSet}
-                      sizes={sources.sizes}
-                      alt={profile.name}
-                      loading="lazy"
-                      decoding="async"
-                      className="aspect-square h-full w-full object-cover object-center"
-                      // @ts-expect-error — atributo válido em HTML mas ainda não tipado por completo
-                      fetchpriority="low"
-                    />
-                  );
-                })()}
+                {avatarDisplay ? (
+                  <AvatarImage
+                    src={avatarDisplay}
+                    alt={profile.name}
+                    loading="lazy"
+                    decoding="async"
+                    className="aspect-square h-full w-full object-cover object-center"
+                    // @ts-expect-error — atributo válido em HTML mas ainda não tipado por completo
+                    fetchpriority="low"
+                  />
+                ) : null}
                 <AvatarFallback className="text-premium-2xl font-black bg-foreground text-background">{initials}</AvatarFallback>
               </Avatar>
               <button
