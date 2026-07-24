@@ -106,15 +106,19 @@ async function fetchWikipediaPT(name: string): Promise<ImportOutcome | null> {
     { alias: s.title, language: "pt", type: "alt", source: "wikipedia" },
   ];
 
-  // Enriquecimento via infobox + langlinks + imageinfo numa única chamada agregada
+  // Enriquecimento via infobox + langlinks + imageinfo numa única chamada agregada.
+  // Usa o título resolvido pelo summary (s.title) + redirects=1 para lidar com
+  // "São Francisco de Assis" → "Francisco de Assis", "Teresinha" → "Teresa de Lisieux", etc.
   try {
-    const infoRes = await fetch(
-      `https://pt.wikipedia.org/w/api.php?action=query&prop=revisions|langlinks|pageimages&rvprop=content&rvsection=0&lllimit=50&piprop=name&titles=${title}&format=json&formatversion=2&origin=*`,
-      { headers: { "User-Agent": WIKI_UA } },
-    );
-    if (infoRes.ok) {
+    const resolvedTitle = encodeURIComponent((s.title ?? name).replace(/\s+/g, "_"));
+    const infoUrl = `https://pt.wikipedia.org/w/api.php?action=query&prop=revisions|langlinks|pageimages&rvprop=content&rvsection=0&lllimit=50&piprop=name&redirects=1&titles=${resolvedTitle}&format=json&formatversion=2&origin=*`;
+    const infoRes = await fetch(infoUrl, { headers: { "User-Agent": WIKI_UA } });
+    if (!infoRes.ok) {
+      console.warn(`saint-import: wiki enrich HTTP ${infoRes.status} for ${s.title}`);
+    } else {
       const infoJson = await infoRes.json();
       const page = infoJson?.query?.pages?.[0];
+      if (!page) console.warn(`saint-import: no page in enrich response for ${s.title}`);
       const wikitext: string = page?.revisions?.[0]?.content ?? "";
       Object.assign(data, extractFromWikitext(wikitext));
 
@@ -129,6 +133,7 @@ async function fetchWikipediaPT(name: string): Promise<ImportOutcome | null> {
           source: "wikipedia",
         });
       }
+      console.log(`saint-import: ${s.title} langlinks=${langlinks.length} pageimage=${page?.pageimage ?? "none"} wt=${wikitext.length}`);
 
       // Licença real via Commons imageinfo
       const pageimage: string | undefined = page?.pageimage;
@@ -139,12 +144,16 @@ async function fetchWikipediaPT(name: string): Promise<ImportOutcome | null> {
           data.image_source_url = commons.descriptionurl ?? data.image_source_url;
           if (commons.license) data.image_license = commons.license;
           if (commons.attribution) data.image_attribution = commons.attribution;
+        } else {
+          console.warn(`saint-import: commons imageinfo empty for ${pageimage}`);
         }
       }
     }
-  } catch (_) {
-    /* opcional */
+  } catch (e) {
+    console.warn(`saint-import: enrich failed for ${s.title}:`, String(e));
   }
+
+
 
   return { provider: "wikipedia-pt", confidence: 80, data, sourceUrl, aliases };
 }
@@ -184,40 +193,60 @@ async function fetchCommonsImageInfo(fileName: string): Promise<CommonsImage | n
 function extractFromWikitext(wt: string): Partial<NormalizedSaint> {
   if (!wt) return {};
 
-  // Limpa templates comuns de data preservando o texto interno relevante.
-  //  {{dtln|1181|9|26}} -> "1181-09-26"
-  //  {{Data de nascimento|1181|9|26|...}} -> "1181-09-26"
-  //  {{Nowrap|...}} / {{lang|xx|...}} -> conteúdo interno
-  const cleanTemplates = (raw: string): string => {
-    let s = raw;
-    s = s.replace(/\{\{\s*(?:dtln|dnbr|dmbr|Data de (?:nascimento|morte|falecimento)|nascimento(?:\s+e\s+idade)?|morte(?:\s+e\s+idade)?)\s*\|([^}]+)\}\}/gi, (_m, args) => {
-      const parts = String(args).split("|").map((p: string) => p.trim()).filter(Boolean);
-      const nums = parts.filter((p: string) => /^\d+$/.test(p));
-      if (nums.length >= 3) {
-        const [y, mo, d] = nums;
-        return `${y.padStart(4, "0")}-${mo.padStart(2, "0")}-${d.padStart(2, "0")}`;
-      }
-      if (nums.length === 1) return nums[0];
-      return parts.join(" ");
-    });
-    s = s.replace(/\{\{\s*(?:nowrap|lang|langx|small|nobr)\s*\|([^}]+)\}\}/gi, (_m, args) => {
-      const parts = String(args).split("|");
-      return parts[parts.length - 1].trim();
-    });
-    // Remove templates residuais simples
-    s = s.replace(/\{\{[^{}]*\}\}/g, " ");
-    return s;
+  // 1) Preserva templates de data convertendo-os para texto simples ANTES do strip global.
+  //    Inclui dni, dnil, morte, Data de nascimento/morte/falecimento e variantes "e idade".
+  const dateTemplateRe = /\{\{\s*(?:dtln|dni|dnil|dnbr|dmbr|morte|falecimento|Data de (?:nascimento|morte|falecimento)|(?:nascimento|morte|falecimento)(?:\s+e\s+idade)?)\s*\|([^{}]+)\}\}/gi;
+  const applyDateTemplate = (_m: string, args: string) => {
+    const parts = String(args).split("|").map((p) => p.trim()).filter(Boolean);
+    const nums = parts.filter((p) => /^\d+$/.test(p)).map((n) => n);
+    if (nums.length >= 3) {
+      const [a, b, c] = nums.slice(0, 3);
+      const na = Number(a), nc = Number(c);
+      // Detecta o ano: normalmente é o maior número (>31). dni usa d|m|a → c é ano.
+      // Data de nascimento usa a|m|d → a é ano.
+      let year: string, month: string, day: string;
+      if (nc > 31 || c.length === 4) { year = c; month = b; day = a; }
+      else if (na > 31 || a.length === 4) { year = a; month = b; day = c; }
+      else { return `${a}-${b}-${c}`; }
+      return `${year.padStart(4, "0")}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
+    }
+    if (nums.length === 1) return nums[0];
+    return parts.join(" ");
   };
 
+  // Aplica iterativamente para lidar com templates aninhados (ex.: {{nowrap|{{morte|...}}}})
+  let pre = wt;
+  let prevDate: string;
+  do {
+    prevDate = pre;
+    pre = pre.replace(dateTemplateRe, applyDateTemplate);
+  } while (pre !== prevDate);
+
+  pre = pre.replace(
+
+    /\{\{\s*(?:nowrap|lang|langx|small|nobr)\s*\|([^}]+)\}\}/gi,
+    (_m, args) => {
+      const parts = String(args).split("|");
+      return parts[parts.length - 1].trim();
+    },
+  );
+
+  // 2) Corta refs (não removemos {{Info/...}} para preservar os campos do infobox).
+  pre = pre.replace(/<ref[^>]*>[\s\S]*?<\/ref>/gi, " ").replace(/<ref[^>]*\/>/g, " ");
+
+
   const grab = (key: string): string | undefined => {
-    const re = new RegExp(`\\|\\s*${key}\\s*=\\s*((?:[^\\n|]|\\{\\{[^}]*\\}\\})+)`, "i");
-    const m = wt.match(re);
+    // Consome wikilinks como unidade para não quebrar em `|`
+    const re = new RegExp(`\\|\\s*${key}\\s*=\\s*((?:\\[\\[[^\\]]*\\]\\]|[^\\n|])+)`, "i");
+    const m = pre.match(re);
     if (!m) return undefined;
-    let v = cleanTemplates(m[1]);
+    let v = m[1];
     v = v.replace(/\[\[([^\]|]+\|)?([^\]]+)\]\]/g, "$2").replace(/<[^>]+>/g, "").replace(/'{2,}/g, "").trim();
-    v = v.replace(/\s{2,}/g, " ");
+    v = v.replace(/\s{2,}/g, " ").replace(/[\s,;]+$/g, "").trim();
     return v || undefined;
   };
+
+
 
   const grabAny = (...keys: string[]) => {
     for (const k of keys) {
