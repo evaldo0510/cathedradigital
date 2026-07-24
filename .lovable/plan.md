@@ -1,135 +1,85 @@
-# Sprint B.1 — Refinamento da Biblioteca Cathedra
+# Fase 2 — Santos como Biblioteca Viva
 
-**Escopo:** transformar `/biblioteca` no hub único de descoberta, sem criar módulos novos e sem quebrar a arquitetura homologada até C0.5.b. Toda a implementação reutiliza `EditorialCard`, `EditorialHero`, `ReaderShell`, `NexusPanel`, `ReferencePopover` e tabelas já existentes.
-
-**Fora do escopo (adiado para C0.6+):** ICE Universal (badge/score/manifest para Bíblia/Missal/LH/Coleções/Jornadas), IA Cathedra, offline, peregrinação, Sprint K.
+Escopo grande. Vou quebrar em 4 ondas sequenciais, cada uma certificável isoladamente (COS). Peço aprovação onda a onda para não misturar frentes.
 
 ---
 
-## Diagnóstico rápido (feito antes do plano)
+## Onda 1 — Fundação de dados + acessibilidade
 
-- `/biblioteca` hoje = `AtriumBibliotecaPage` estático + `/biblioteca-legacy` (tabs, filtros por eixo, arrays hardcoded).
-- Busca cross-módulo parcial: `GlobalSearchPage` cobre **5 domínios** (santos, glossário, comunidade, temas, jornadas) via RPCs `search_*_fuzzy`. Faltam: bíblia, catecismo, magistério, orações, coleções, patrística.
-- `EditorialCard` (compound: `.Eyebrow/.Title/.Description/.References/.Media/.CTA`) já é oficial e tem 3 densidades — **base para todos os cards**.
-- Recents/favoritos hoje = `localStorage`. Já existem tabelas DB genéricas por `content_type`: `reading_marks`, `user_history`, `bible_favorites` (chave `content_type`).
-- ICE Badge / score não existem como componente nem coluna (`ice_score` = 0 hits). Só `editorial_completeness` (glossário). B.1 introduz badge **derivado** de `editorial_completeness` — o **score numérico** entra na C0.6.
-- Tabelas de conteúdo prontas: `glossary`, `catechism_official`, `saints`, `prayers`, `collections`, `journeys`, `spiritual_contents` (magistério provável), `themes`, `tags`, `content_tags`.
-- `HomeUnified` já usa padrão adapter-driven (`atriumAdapters`) — B.1 segue o mesmo shape.
+**Banco (migração única):**
+- `saint_works` (id, saint_id, title, description, type, language, public_url, source, is_public_domain, order_index, created_at)
+- `saint_quotes` (id, saint_id, text, source, work, year, order_index)
+- `saint_timeline_events` (id, saint_id, year, year_label, title, description, kind, order_index)
+- `saint_virtues` (id, saint_id, virtue, order_index) — vocabulário controlado inicial
+- `saint_prayers_links` (id, saint_id, prayer_id, relation) — relação com `prayers` v2 (do santo / ao santo / novena / ladainha)
+- `saint_sources` (id, saint_id, label, url, kind)
+- Colunas novas em `saints`: `full_biography` (text), `historical_context` (text), `conversion_story` (text), `mission` (text), `legacy` (text)
+- GRANTs + RLS (leitura pública; escrita só editor/admin via `has_role`)
+
+**Acessibilidade (fecha a dívida do turno anterior):**
+- `aria-expanded` / `aria-controls` nos toggles do hero e tabs
+- Ordem de foco revisada em `/santos` e `/santos/:slug`
+- Rodar axe local + corrigir apontamentos
+- Skip-link "pular para conteúdo" no ReaderShell da ficha
+- Rótulos ARIA em prev/next dia, tabs de modo, botão calendário
+
+Sem UI nova de conteúdo ainda — só schema + a11y.
 
 ---
 
-## Ondas (sequenciais, cada uma auditável)
+## Onda 2 — Componentes da ficha (leitura)
 
-### Onda B.1.1 — Fundação (adapters, tipos, unified card)
+Criar em `src/modules/santos/components/`:
+- `SaintLife.tsx` — seção expansível (história/contexto/conversão/missão/legado)
+- `SaintTimeline.tsx` — linha do tempo vertical editorial
+- `SaintWorks.tsx` — aba "Escritos" com lazy + paginação; botão "Ler obra" (externo por ora)
+- `SaintQuotes.tsx` — cards de frases
+- `SaintVirtues.tsx` — grade de virtudes com chips
+- `SaintPrayers.tsx` — aba "Orações" (consome `prayers` v2 via `saint_prayers_links`)
+- `SaintSources.tsx` — bibliografia
+- `SaintRelated.tsx` — cards horizontais (via `nexus_relations`)
+- `SaintAIReflection.tsx` — bloco "Reflexão Espiritual" oculto por flag `ai_reflection_enabled`
 
-- Criar `src/modules/biblioteca/types.ts` com `LibraryItem` unificado:
-  `{ id, module, title, slug, summary, category?, themes?, ice?, nexusCount?, readingMinutes?, href, badge?, updatedAt? }`.
-- Criar `src/modules/biblioteca/adapters/` (um arquivo por domínio: `glossary.ts`, `bible.ts`, `catechism.ts`, `saints.ts`, `prayers.ts`, `collections.ts`, `journeys.ts`, `magisterium.ts`, `patristics.ts`, `liturgy.ts`). Cada adapter expõe `list({ limit, offset, filters })` e `resolveHref(item)`. Reusa hooks/RPCs existentes; não introduz Edge Functions nem tabelas.
-- Criar `LibraryCard` **como wrapper fino de `EditorialCard`** (não substitui). Recebe `LibraryItem` e monta `.Eyebrow` (ícone + módulo), `.Title`, `.Description`, `.References` (tema + ICE + Nexus + tempo), `.CTA`. Zero markup próprio de card.
-- Criar `IceBadge` (novo componente coeso, único badge editorial) derivado de `editorial_completeness` (`draft | review | complete`). Sem `ice_score` numérico nesta sprint.
-- Governança: `scripts/biblioteca-card-audit.ts` — falha se qualquer página da Biblioteca renderizar card fora de `LibraryCard`/`EditorialCard`.
+Reorganização da `SaintDetailPage`:
+- Tabs: Vida · Escritos · Frases · Orações · Fontes
+- Nexus/Related no rodapé
+- Tudo dentro do `ReaderShell` existente (sem chrome novo — Regra 1 do Guardian)
 
-### Onda B.1.2 — Busca unificada (extensão do GlobalSearchPage)
+SEO por rota: JSON-LD `Person` (schema.org não tem `Saint`; uso `Person` + `additionalType` ex.: `http://dbpedia.org/ontology/Saint`), meta title/description, canonical, OG.
 
-- Novo hook `useLibrarySearch(query, { modules, themes })` que **estende** `useFuzzySearch` chamando em paralelo:
-  - RPCs existentes: `search_saints_fuzzy`, `search_glossary_fuzzy`, `search_tags_fuzzy`, `search_journeys_fuzzy`.
-  - Novos RPCs mínimos (via `supabase--migration`): `search_catechism_fuzzy`, `search_collections_fuzzy`, `search_prayers_fuzzy`, `search_magisterium_fuzzy`, `search_bible_fuzzy` — todos SECURITY DEFINER retornando `id, title, snippet, rank, module` com `GRANT EXECUTE TO anon, authenticated`.
-- Cada resultado normalizado em `LibraryItem` via adapters da B.1.1.
-- Filtros instantâneos (módulo, tema, `editorial_completeness`) client-side sobre o resultado consolidado; debounce 200ms; ordenação por `rank`.
-- Substitui a tab-per-domain de `GlobalSearchPage` por lista unificada com `LibraryCard`. `GlobalSearchPage` original é mantido como shim compatível com `/buscar` legado.
+---
 
-### Onda B.1.3 — Hub `/biblioteca` (visualizações inteligentes)
+## Onda 3 — População inicial + admin
 
-- Reescrever `AtriumBibliotecaPage` para consumir os adapters. Estrutura:
-  - `EditorialHero` (kicker "Biblioteca", título, subtítulo, meta com estatísticas).
-  - Barra de busca (chama `useLibrarySearch`, resultados inline).
-  - Chips de filtro por módulo (13 módulos) e por tema (13 temas fixos: Deus, Trindade, Sacramentos, Maria, Igreja, Liturgia, Moral, Vida Espiritual, Oração, Santos, Escatologia, Catequese, Escritura).
-  - Trilhas: **Continuar leitura** (`reading_marks` DESC), **Recentes** (`user_history`), **Favoritos** (`bible_favorites` cross-module), **Mais estudados** (heurística por `user_history` GROUP BY content_id LIMIT 20), **Recomendados** (por tema do último item aberto), **Descobertas** (últimos publicados/atualizados).
-  - Cada trilha é um `<section>` com `LibraryCard` virtualizado via `react-window` (já disponível no projeto? confirmar; se não, `Intersection Observer` + paginação manual).
-- Migra recents do `localStorage` (`useBibliotecaRecents`) para `user_history` DB-backed, com fallback ao localStorage para anônimos.
-- `/biblioteca-legacy` mantido durante 1 sprint como escape hatch, com banner "esta é a versão legada".
+- Painel `/admin/santos/:id/editorial` para editar novos campos (obras, frases, timeline, virtudes, fontes, links de oração)
+- Seed curado (não IA) para 20 santos-âncora já enriquecidos (Agostinho, Tomás, Bento, Francisco, Teresa d'Ávila, etc.) com obras de domínio público (Vatican.va, Documenta Catholica Omnia)
+- `saint_sources` preenchido para esses 20
+- Nexus: garantir ≥3 relações por santo âncora
 
-### Onda B.1.4 — Temas & Jornadas (visões cruzadas)
+---
 
-- Novas rotas dentro do hub (não novas páginas soltas):
-  - `/biblioteca?tema=<slug>` — usa `themes` + `theme_contents` + fallback por `content_tags` para agregar itens de todos os módulos naquele tema.
-  - `/biblioteca?jornada=<slug>` — agrupa por tempo litúrgico (Advento, Quaresma, Páscoa, Pentecostes, Ano Litúrgico) e trilhas de iniciação/sacramentos, resolvidos via `journeys.category`.
-- Hub de estudos lateral (desktop ≥lg): componente `LibraryStudyRail` com "Referências relacionadas" (Nexus do item ativo via `NexusPanel`), "Próximo estudo" (do adapter recomendador), "Progresso" (`journey_progress` + `collection_progress` agregados). Não aparece em mobile — usa o rodapé `ReaderContinuation` já existente.
+## Onda 4 — Leitor interno de obras (o diferencial que você levantou)
 
-### Onda B.1.5 — Performance, estatísticas, homologação
+Só depois das ondas 1–3 certificadas.
 
-- Estatísticas no `EditorialHero.meta`: publicados / com selo `complete` / módulos homologados (lê `docs/c0-homologation-checklist.md`). Sem novo dashboard.
-- Performance:
-  - Virtualização em toda lista >30 itens.
-  - Prefetch do próximo item ao hover de `LibraryCard`.
-  - Cache TanStack Query com `staleTime` 5min por adapter.
-  - Paginação infinita via `useInfiniteQuery`.
-- Auditoria bloqueante `scripts/biblioteca-audit.ts`:
-  - 0 imports de componentes de card legados (`SearchResultCard`, `CathedraCard`) dentro de `src/modules/biblioteca/` e `src/pages/AtriumBibliotecaPage.tsx`.
-  - `LibraryCard` presente em toda seção.
-  - Search hook cobre os 9+ módulos.
-- Teste estático `src/test/biblioteca.static.test.ts` + spec E2E `tests/e2e/biblioteca.spec.ts` (busca, filtros, continuar leitura, tema, jornada).
-- Integrar as duas auditorias ao `.github/workflows/seo-and-tests.yml`.
+- `saint_work_texts` (work_id, chapter, section, content, embedding) para obras em domínio público
+- Rota `/santos/:slug/obras/:workSlug` usando `ReaderShell`
+- Busca textual (Postgres FTS pt) — semântica (embeddings) fica para sprint seguinte
+- Nexus automático de trechos → Bíblia/CIC/santos via `AutoNexusList`
+- Piloto: **Confissões** de Agostinho + **Regra** de Bento
 
 ---
 
 ## Detalhes técnicos
 
-### Estrutura de pastas
-
-```text
-src/modules/biblioteca/
-  types.ts
-  adapters/
-    index.ts
-    glossary.ts   bible.ts   catechism.ts   saints.ts
-    prayers.ts    collections.ts   journeys.ts
-    magisterium.ts   patristics.ts   liturgy.ts
-  hooks/
-    useLibrarySearch.ts
-    useLibraryTrail.ts       # Continuar / Recentes / Favoritos / etc.
-    useLibraryStats.ts
-  components/
-    LibraryCard.tsx          # wrapper de EditorialCard
-    LibraryFilters.tsx
-    LibraryTrail.tsx
-    LibraryStudyRail.tsx
-    IceBadge.tsx
-```
-
-### Banco
-
-- Migrações apenas para RPCs de busca faltantes (fuzzy `catechism`, `collections`, `prayers`, `magisterium`, `bible`). Sem novas tabelas nem colunas. `GRANT EXECUTE` para `anon`/`authenticated` em cada função.
-- `user_history` já existe e é usado para "Recentes" cross-módulo. `reading_marks` já é usado para "Continuar leitura". Nenhuma migração de dados.
-
-### Compatibilidade
-
-- `/library`, `/biblioteca`, `/biblioteca-legacy`, `/buscar` preservados.
-- `SearchResultCard` mantido apenas dentro de `GlobalSearchPage` legado, com JSDoc `@deprecated — usar LibraryCard`.
-- `CathedraCard` fora do escopo (é card de dashboard, não da Biblioteca).
-
-### Riscos
-
-- **Alto** apenas na Onda B.1.2 (RPCs novas). Reversível: cada migração cria função nova, sem alterar existentes; rollback = `DROP FUNCTION IF EXISTS`.
-- **Baixo** nas demais ondas.
-
-### Critério de aceite (fim da B.1.5)
-
-- `/biblioteca` é a única porta de descoberta, cobrindo 13 módulos.
-- Busca unificada retorna resultados de ≥ 9 domínios em ≤ 400ms (dataset atual).
-- Todo item renderizado é `LibraryCard` sobre `EditorialCard`.
-- `scripts/biblioteca-audit.ts` verde no CI.
-- Zero regressão em Reader/Prayer/Chrome (auditorias C0.3/C0.4/C0.5/C0.5.b continuam verdes).
-- Pronta para receber ICE Universal (C0.6) sem refatoração adicional.
+- Segue COS v1.3, Reader Architecture Rule, Design System Guardian (EditorialCard/EditorialHero/tokens).
+- Zero componente novo se `EditorialCard` variante resolve.
+- `AutoNexusList` para relações; `resolveNexusHref` para links internos.
+- Performance: `React.lazy` nas abas Escritos/Orações; paginação server-side em `saint_works` (10/página).
+- Todas as tabelas com `GRANT SELECT ON ... TO anon` (leitura pública) + `GRANT ALL TO authenticated/service_role` conforme papel.
 
 ---
 
-## Como valido no fim de cada onda
+## Aprovação
 
-1. `bunx tsx scripts/biblioteca-*-audit.ts` verde.
-2. `bunx vitest run src/test/biblioteca.static.test.ts` verde.
-3. `tsgo --noEmit` sem erros nos arquivos tocados.
-4. Playwright: `/biblioteca` responde em ≤ 400ms na busca.
-5. Engineering Log padrão COS ao fim de cada onda.
-
-Confirmar para eu abrir a **Onda B.1.1** já.
+Confirma que começo pela **Onda 1** (schema + a11y, sem UI de conteúdo nova)? Se preferir invertida (a11y primeiro isolada, schema depois), também topo.
