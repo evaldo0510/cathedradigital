@@ -2,10 +2,14 @@ export type CollectionItemType =
   | 'glossary'
   | 'prayer'
   | 'saint'
+  | 'saint_work'
   | 'bible'
   | 'liturgy'
   | 'catechism'
+  | 'magisterium'
   | 'journey';
+
+export type CollectionLevel = 'iniciante' | 'intermediario' | 'avancado';
 
 export type CollectionProgressStatus =
   | 'not_started'
@@ -30,6 +34,22 @@ export interface CollectionItem {
   metadata: CollectionItemMetadata;
 }
 
+/**
+ * Metadados editoriais persistidos em `collections.metadata` (jsonb).
+ * Sprint Coleções Temáticas · Onda 1 — extensão aditiva, sem migração.
+ */
+export interface CollectionMetadata {
+  space?: string;
+  eyebrow?: string;
+  /** Descrição editorial curta do objetivo da trilha. */
+  editorial_goal?: string;
+  /** Tempo estimado total de leitura (minutos). */
+  estimated_minutes?: number;
+  /** Nível pedagógico. */
+  level?: CollectionLevel;
+  [k: string]: unknown;
+}
+
 export interface Collection {
   id: string;
   slug: string;
@@ -41,7 +61,7 @@ export interface Collection {
   status: 'draft' | 'review' | 'published' | 'archived';
   featured: boolean;
   nexus_refs: unknown[];
-  metadata: Record<string, unknown> & { space?: string; eyebrow?: string };
+  metadata: CollectionMetadata;
 }
 
 export interface CollectionWithItems {
