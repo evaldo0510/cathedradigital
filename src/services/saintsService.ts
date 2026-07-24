@@ -196,5 +196,76 @@ export const formatSaint = (dbSaint: any): Saint => {
     spiritualPractice: parseJson(dbSaint.spiritual_practice, {}),
     quotesRich: parseJson(dbSaint.quotes_rich, []),
     contentStatus: dbSaint.content_status ?? 'stub',
+    // v3 — Biblioteca Viva
+    country: dbSaint.country ?? undefined,
+    vocation: dbSaint.vocation ?? undefined,
+    aiReflection: parseJson(dbSaint.ai_reflection, undefined),
+  };
+};
+
+// ── v3 — Filtros combinados da Biblioteca dos Santos ───────────
+export interface SaintsFilterInput {
+  query?: string;
+  category?: string;         // apostle | martyr | doctor | pope | founder ...
+  century?: number;
+  country?: string;
+  virtue?: string;
+  vocation?: string;
+  limit?: number;
+}
+
+export const searchSaintsAdvanced = async (
+  filters: SaintsFilterInput,
+): Promise<Saint[]> => {
+  let q = supabase.from('saints').select(LIST_COLUMNS + ', century, country, vocation');
+
+  if (filters.category) q = q.eq('category', filters.category);
+  if (filters.century) q = q.eq('century', filters.century);
+  if (filters.country) q = q.ilike('country', `%${filters.country}%`);
+  if (filters.vocation) q = q.ilike('vocation', `%${filters.vocation}%`);
+  if (filters.virtue) q = q.contains('virtues', [filters.virtue]);
+  if (filters.query && filters.query.trim()) {
+    const t = filters.query.trim();
+    q = q.or(`name.ilike.%${t}%,title.ilike.%${t}%`);
+  }
+
+  q = q.order('name').limit(filters.limit ?? 60);
+
+  const { data, error } = await q;
+  if (error) {
+    console.error('searchSaintsAdvanced error:', error);
+    return [];
+  }
+  return (data || []).map(formatSaint);
+};
+
+export const getSaintsFilterFacets = async (): Promise<{
+  countries: string[];
+  vocations: string[];
+  virtues: string[];
+  centuries: number[];
+}> => {
+  const { data } = await supabase
+    .from('saints')
+    .select('country, vocation, virtues, century')
+    .limit(2000);
+
+  const countries = new Set<string>();
+  const vocations = new Set<string>();
+  const virtues = new Set<string>();
+  const centuries = new Set<number>();
+
+  for (const row of data || []) {
+    if (row.country) countries.add(row.country);
+    if (row.vocation) vocations.add(row.vocation);
+    if (row.century) centuries.add(row.century);
+    if (Array.isArray(row.virtues)) row.virtues.forEach((v: string) => v && virtues.add(v));
+  }
+
+  return {
+    countries: [...countries].sort((a, b) => a.localeCompare(b, 'pt-BR')),
+    vocations: [...vocations].sort((a, b) => a.localeCompare(b, 'pt-BR')),
+    virtues: [...virtues].sort((a, b) => a.localeCompare(b, 'pt-BR')),
+    centuries: [...centuries].sort((a, b) => a - b),
   };
 };
