@@ -216,6 +216,7 @@ const MissionControlPage = lazy(() => import('./pages/admin/MissionControl'));
 const EditorialBulkPage = lazy(() => import('./pages/admin/EditorialBulk'));
 const NexusAdmin = lazy(() => import('./pages/admin/NexusAdmin'));
 const GlossaryAdmin = lazy(() => import('./pages/admin/GlossaryAdmin'));
+const PartnersAdmin = lazy(() => import('./pages/admin/PartnersAdmin'));
 const CatechismImportQueuePage = lazy(() =>
   CATEQUESE_MODULES_ENABLED
     ? import('./modules/catequese').then((m) => ({ default: m.CatechismImportQueue }))
@@ -690,6 +691,7 @@ const AppLayout: React.FC = () => {
               <Route path="/checkout/result" element={<Suspense fallback={<LoadingFallback />}><CheckoutResultPage /></Suspense>} />
               <Route path="/transactions" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><UserTransactionsPage /></AuthGuard></Suspense>} />
               <Route path="/partners" element={<Suspense fallback={<LoadingFallback />}><PartnersPage /></Suspense>} />
+              <Route path="/admin/parceiros" element={<Suspense fallback={<LoadingFallback />}><PartnersAdmin /></Suspense>} />
               <Route path="/transparencia" element={<Suspense fallback={<LoadingFallback />}><TransparencyPage /></Suspense>} />
 
               {/* Institucional */}
