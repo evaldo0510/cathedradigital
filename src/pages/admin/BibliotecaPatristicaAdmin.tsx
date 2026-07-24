@@ -37,8 +37,12 @@ import type {
   SaintWork,
   SaintWorkStatus,
   SaintWorkCategory,
+  SaintWorkFichaCompleteness,
 } from '@/types/saintWorks';
-import { SAINT_WORK_CATEGORY_LABELS } from '@/types/saintWorks';
+import {
+  SAINT_WORK_CATEGORY_LABELS,
+  SAINT_WORK_FICHA_COMPLETENESS_LABELS,
+} from '@/types/saintWorks';
 
 const STATUS_LABEL: Record<SaintWorkStatus, string> = {
   draft: 'Rascunho',
@@ -116,6 +120,7 @@ export default function BibliotecaPatristicaAdmin() {
   const update = useUpdateWork();
 
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [fichaFilter, setFichaFilter] = useState<SaintWorkFichaCompleteness | 'all'>('all');
   const [q, setQ] = useState('');
   const [editing, setEditing] = useState<SaintWork | null>(null);
 
@@ -123,13 +128,14 @@ export default function BibliotecaPatristicaAdmin() {
     const needle = q.trim().toLowerCase();
     return works.filter(w => {
       if (statusFilter !== 'all' && w.status !== statusFilter) return false;
+      if (fichaFilter !== 'all' && w.ficha_completeness !== fichaFilter) return false;
       if (needle) {
         const hay = `${w.title} ${w.saint_id} ${w.slug}`.toLowerCase();
         if (!hay.includes(needle)) return false;
       }
       return true;
     });
-  }, [works, statusFilter, q]);
+  }, [works, statusFilter, fichaFilter, q]);
 
   const stats = useMemo(() => {
     const by: Record<SaintWorkStatus, number> = { draft: 0, in_review: 0, published: 0, archived: 0 };
@@ -196,6 +202,18 @@ export default function BibliotecaPatristicaAdmin() {
             </SelectContent>
           </Select>
         </div>
+        <div className="min-w-[180px]">
+          <Label>Ficha editorial</Label>
+          <Select value={fichaFilter} onValueChange={(v: SaintWorkFichaCompleteness | 'all') => setFichaFilter(v)}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas</SelectItem>
+              {(Object.keys(SAINT_WORK_FICHA_COMPLETENESS_LABELS) as SaintWorkFichaCompleteness[]).map(f => (
+                <SelectItem key={f} value={f}>{SAINT_WORK_FICHA_COMPLETENESS_LABELS[f]}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <Card>
@@ -213,6 +231,7 @@ export default function BibliotecaPatristicaAdmin() {
                   <TableHead>Obra</TableHead>
                   <TableHead>Autor</TableHead>
                   <TableHead>Categoria</TableHead>
+                  <TableHead>Ficha</TableHead>
                   <TableHead>Licença</TableHead>
                   <TableHead>Cap.</TableHead>
                   <TableHead>Status</TableHead>
@@ -229,6 +248,17 @@ export default function BibliotecaPatristicaAdmin() {
                     <TableCell className="text-sm">{w.saint_id}</TableCell>
                     <TableCell className="text-sm">
                       {SAINT_WORK_CATEGORY_LABELS[w.category] ?? w.category}
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          w.ficha_completeness === 'complete' ? 'default'
+                            : w.ficha_completeness === 'minimal' ? 'secondary'
+                            : 'outline'
+                        }
+                      >
+                        {SAINT_WORK_FICHA_COMPLETENESS_LABELS[w.ficha_completeness]}
+                      </Badge>
                     </TableCell>
                     <TableCell className="text-xs">
                       {w.is_public_domain && (

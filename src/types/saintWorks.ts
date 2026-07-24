@@ -54,6 +54,22 @@ export const SAINT_WORK_CATEGORY_LABELS: Record<SaintWorkCategory, string> = {
   liturgica: 'Litúrgica',
 };
 
+export type SaintWorkReadingLevel = 'beginner' | 'intermediate' | 'advanced';
+
+export const SAINT_WORK_READING_LEVEL_LABELS: Record<SaintWorkReadingLevel, string> = {
+  beginner: 'Iniciante',
+  intermediate: 'Intermediário',
+  advanced: 'Avançado',
+};
+
+export type SaintWorkFichaCompleteness = 'stub' | 'minimal' | 'complete';
+
+export const SAINT_WORK_FICHA_COMPLETENESS_LABELS: Record<SaintWorkFichaCompleteness, string> = {
+  stub: 'Rascunho',
+  minimal: 'Ficha mínima',
+  complete: 'Ficha completa',
+};
+
 export interface SaintWork {
   id: string;
   saint_id: string;
@@ -81,6 +97,15 @@ export interface SaintWork {
   external_url: string | null;
   /** Rótulo humano da fonte externa (ex.: "Vatican.va", "CCEL"). */
   external_source_label: string | null;
+  /* --- Ficha editorial mínima (Sprint SW-1.3) --- */
+  synopsis: string | null;
+  historical_context: string | null;
+  why_it_matters: string | null;
+  main_themes: string[] | null;
+  recommended_audience: string | null;
+  reading_level: SaintWorkReadingLevel | null;
+  editorial_closure: Record<string, unknown> | null;
+  ficha_completeness: SaintWorkFichaCompleteness;
   created_at: string;
   updated_at: string;
   published_at: string | null;
