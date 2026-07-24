@@ -183,7 +183,7 @@ const BibliotecaBuscaPage: React.FC = () => {
                       {h.saint_name ?? h.saint_id}
                       {h.year_written ? ` · c. ${h.year_written}` : ''}
                     </p>
-                    <h3 className="text-premium-md font-serif font-bold text-foreground group-hover:text-primary transition-colors leading-tight">
+                    <h2 className="text-premium-md font-serif font-bold text-foreground group-hover:text-primary transition-colors leading-tight">
                       {h.work_title}
                       {h.chapter_title && (
                         <>

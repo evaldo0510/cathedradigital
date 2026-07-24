@@ -326,7 +326,7 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
               <Icons.RefreshCcw className={`w-spacing-md h-spacing-md text-primary ${isScanningAll ? 'animate-spin' : ''}`} />
             </div>
             <div>
-              <h3 className="font-medium">Auditoria de Rotas ({pages.length})</h3>
+              <h2 className="font-medium">Auditoria de Rotas ({pages.length})</h2>
               <p className="text-premium-sm text-muted-foreground">O cache de imagens é invalidado mensalmente.</p>
             </div>
           </div>
@@ -485,9 +485,9 @@ ${page.keywords ? `<meta name="keywords" content="${page.keywords}">` : ''}
                           
                           {(page.status === 'missing' || !page.title || !page.description) && (
                             <div className="p-spacing-md bg-amber-500/10 border border-amber-500/20 rounded-premium-lg">
-                              <h4 className="text-premium-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-widest mb-spacing-xs flex items-center gap-spacing-xs">
+                              <h3 className="text-premium-xs font-bold text-amber-700 dark:text-amber-400 uppercase tracking-widest mb-spacing-xs flex items-center gap-spacing-xs">
                                 <Icons.AlertCircle className="w-spacing-sm h-spacing-sm" /> Sugestões de Melhoria
-                              </h4>
+                              </h3>
                               <ul className="text-[11px] text-amber-800 dark:text-amber-300 space-y-spacing-2xs list-disc pl-spacing-md">
                                 {!page.title && <li>O título está ausente. Use o componente SEOHead para definir um título único.</li>}
                                 {page.title && (page.title.length + 18) > 60 && <li>O título está muito longo e será cortado no Google. Reduza para menos de 60 caracteres.</li>}

@@ -303,9 +303,9 @@ const PublicLanding = () => {
                         {p.kicker}
                       </span>
                     </div>
-                    <h3 className="font-serif italic text-3xl md:text-4xl text-primary leading-tight mb-4">
+                    <h2 className="font-serif italic text-3xl md:text-4xl text-primary leading-tight mb-4">
                       {p.title}
-                    </h3>
+                    </h2>
                     <p className="text-base text-muted-foreground leading-relaxed mb-8">
                       {p.description}
                     </p>

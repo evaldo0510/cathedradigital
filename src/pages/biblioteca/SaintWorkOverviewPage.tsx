@@ -67,7 +67,7 @@ const SaintWorkOverviewPage: React.FC = () => {
   if (notFound || !work) {
     return (
       <main className="min-h-screen flex flex-col items-center justify-center gap-spacing-md p-spacing-lg">
-        <h1 className="text-premium-lg font-serif">Obra não encontrada</h1>
+        <h2 className="text-premium-lg font-serif">Obra não encontrada</h2>
         <p className="text-muted-foreground text-center max-w-md">
           A obra "{obra}" de "{autor}" não está disponível na Biblioteca Patrística.
         </p>
