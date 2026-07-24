@@ -25,7 +25,7 @@ import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import { resolveSaintAutoNexus } from '@/core/knowledge/adapters/saintAutoNexus';
 import { NexusPanel } from '@/components/reader';
 import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
-import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
+import { ReaderToolbar } from '@/components/reader';
 import SanctumEditorial, { SanctumCurationBadge } from './SanctumEditorial';
 import { SEO_CONFIG } from '@/config/seo';
 
@@ -209,7 +209,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
       {/* Content Area */}
       <div className="flex-1 overflow-y-auto no-scrollbar">
         {!legacy && (
-          <EditorialReaderChrome
+          <ReaderToolbar
             kicker={`Sanctorum · ${CATEGORY_LABELS[saint.category] || saint.category}`}
             title={saint.name}
             subtitle={saint.title}

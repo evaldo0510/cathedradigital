@@ -25,9 +25,9 @@ import {
   EditorialGoldMarker,
   EditorialQuote,
 } from '@/components/editorial/primitives';
-import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
 import {
   ReaderShell,
+  ReaderToolbar,
   NexusPanel,
   ReaderContinuation,
 } from '@/components/reader';
@@ -638,7 +638,7 @@ const GlossaryTermPage: React.FC = () => {
         </script>
       </Helmet>
 
-      <EditorialReaderChrome
+      <ReaderToolbar
         kicker="Cathedra · Léxico"
         title={term.term}
         subtitle={term.category ?? undefined}

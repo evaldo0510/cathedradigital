@@ -5,7 +5,7 @@
 
 import React, { Suspense, lazy, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
-import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
+import { ReaderToolbar } from '@/components/reader';
 import { MAGISTERIUM_CATEGORIES } from '@/data/magisterium-urls';
 import { AppRoute } from '@/types';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
@@ -37,7 +37,7 @@ const AtriumMagisteriumViewer: React.FC = () => {
   return (
     <>
       <MobileTopBar kicker={kicker} title={meta?.title ?? 'Magistério'} showBack />
-      <EditorialReaderChrome
+      <ReaderToolbar
         kicker={kicker}
         title={title}
         subtitle={subtitle}

@@ -16,7 +16,7 @@ import { buildBibleUrl } from '@/lib/bibleUrl';
 import { AppRoute } from '@/types';
 import BibleReadGate from '@/components/cathedra/BibleReadGate';
 import { BibleSkeleton } from '@/components/cathedra/RouteSkeletons';
-import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
+import { ReaderToolbar } from '@/components/reader';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import {
@@ -89,7 +89,7 @@ const AtriumBibleReader: React.FC = () => {
             </button>
           }
         />
-        <EditorialReaderChrome
+        <ReaderToolbar
           kicker="Cathedra · Lectio Divina"
           title={title}
           subtitle={subtitle}
