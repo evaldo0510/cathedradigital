@@ -9,6 +9,7 @@ import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
 import MagisteriumPopover from './MagisteriumPopover';
 import DeepContentSection from './DeepContentSection';
+import { ReaderShell, EditorialHero } from '@/components/reader';
 
 interface DogmaRef {
   type: 'bible' | 'catechism' | 'magisterium';
