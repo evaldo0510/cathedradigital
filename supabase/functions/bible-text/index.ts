@@ -270,23 +270,24 @@ function metric(event: string, fields: Record<string, unknown>) {
 // Fontes
 // =========================================================================
 
-// Cache em memória para o id+code da tradução primária (atualiza a cada hora).
+// P0.2.1 — Fonte única da verdade: RPC `get_active_primary_translation`.
+// Cache em memória curto (5 min) para reduzir latência sem mascarar
+// mudanças de governança. Nunca faz "silent-pick" por is_primary.
 let _primaryTranslationCache: { id: string; code: string; expires: number } | null = null;
 async function resolvePrimaryTranslation(): Promise<{ id: string; code: string } | null> {
   const now = Date.now();
   if (_primaryTranslationCache && _primaryTranslationCache.expires > now) {
     return { id: _primaryTranslationCache.id, code: _primaryTranslationCache.code };
   }
-  const { data } = await supabase
-    .from('bible_translation_sources')
-    .select('id, code')
-    .eq('is_primary', true)
-    .order('created_at', { ascending: true })
-    .limit(1)
-    .maybeSingle();
-  if (!data?.id) return null;
-  _primaryTranslationCache = { id: data.id, code: data.code, expires: now + 3_600_000 };
-  return { id: data.id, code: data.code };
+  const { data, error } = await supabase.rpc('get_active_primary_translation');
+  if (error) {
+    console.warn('[bible-text] get_active_primary_translation error', error);
+    return null;
+  }
+  const row = Array.isArray(data) && data.length > 0 ? data[0] : null;
+  if (!row?.id) return null;
+  _primaryTranslationCache = { id: row.id, code: row.code, expires: now + 300_000 };
+  return { id: row.id, code: row.code };
 }
 
 async function resolveTranslationCode(translationId: string): Promise<string | null> {
