@@ -24,6 +24,10 @@ import { useBibliotecaRecents } from '@/hooks/useBibliotecaState';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import { LibrarySearchPanel, LibraryThemesBlock } from '@/modules/biblioteca';
+import collectionSagradaEscritura from '@/assets/collections/sagrada-escritura.jpg';
+import collectionCatecismo from '@/assets/collections/catecismo.jpg';
+import collectionMagisterio from '@/assets/collections/magisterio.jpg';
+import collectionSantosPadres from '@/assets/collections/santos-padres.jpg';
 
 type Collection = {
   title: string;
@@ -31,6 +35,7 @@ type Collection = {
   description: string;
   to: string;
   Icon: React.ComponentType<{ className?: string }>;
+  image: string;
 };
 
 const COLLECTIONS: Collection[] = [
@@ -40,6 +45,7 @@ const COLLECTIONS: Collection[] = [
     description: 'Antigo e Novo Testamento, com anotações e Nexus contextual.',
     to: AppRoute.BIBLE,
     Icon: BookOpen,
+    image: collectionSagradaEscritura,
   },
   {
     title: 'Catecismo',
@@ -47,6 +53,7 @@ const COLLECTIONS: Collection[] = [
     description: 'A doutrina da Igreja organizada e interconectada.',
     to: AppRoute.CATECHISM,
     Icon: BookMarked,
+    image: collectionCatecismo,
   },
   {
     title: 'Magistério',
@@ -54,6 +61,7 @@ const COLLECTIONS: Collection[] = [
     description: 'Documentos pontifícios que definem o dogma através dos séculos.',
     to: AppRoute.MAGISTERIUM,
     Icon: Gavel,
+    image: collectionMagisterio,
   },
   {
     title: 'Santos & Padres',
@@ -61,6 +69,7 @@ const COLLECTIONS: Collection[] = [
     description: 'Testemunhos e obras dos Padres e Doutores da Igreja.',
     to: AppRoute.SAINTS,
     Icon: Sparkles,
+    image: collectionSantosPadres,
   },
 ];
 
@@ -187,24 +196,33 @@ const AtriumBibliotecaPage: React.FC = () => {
               <Link
                 key={c.title}
                 to={c.to}
-                className="group flex cursor-pointer flex-col gap-3 rounded-lg border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-4 transition-all hover:border-stitch-secondary/40 hover:shadow-md md:p-5"
+                className="group flex cursor-pointer flex-col overflow-hidden rounded-lg border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest transition-all hover:border-stitch-secondary/40 hover:shadow-lg"
               >
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-gradient-to-br from-stitch-primary to-stitch-primary/70 text-stitch-primary-foreground shadow-sm transition-transform duration-500 group-hover:scale-105">
-                    <c.Icon className="h-5 w-5" />
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="truncate font-stitch-display text-[16px] leading-tight text-stitch-primary transition-colors group-hover:text-stitch-secondary md:text-[18px]">
-                      {c.title}
-                    </h3>
-                    <p className="mt-0.5 truncate font-stitch-body text-[10px] font-bold uppercase tracking-[0.12em] text-stitch-on-surface-variant md:text-[11px]">
-                      {c.meta}
-                    </p>
+                <div className="relative aspect-[4/3] overflow-hidden bg-stitch-primary">
+                  <img
+                    src={c.image}
+                    alt={c.title}
+                    width={800}
+                    height={600}
+                    loading="lazy"
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-stitch-primary/70 via-stitch-primary/10 to-transparent" />
+                  <div className="absolute left-3 top-3 flex h-8 w-8 items-center justify-center rounded-md bg-stitch-primary/85 text-stitch-primary-foreground backdrop-blur-sm">
+                    <c.Icon className="h-4 w-4" />
                   </div>
                 </div>
-                <p className="line-clamp-2 font-stitch-body text-[13px] leading-relaxed text-stitch-on-surface-variant">
-                  {c.description}
-                </p>
+                <div className="flex flex-col gap-1.5 p-4 md:p-5">
+                  <h3 className="font-stitch-display text-[16px] leading-tight text-stitch-primary transition-colors group-hover:text-stitch-secondary md:text-[18px]">
+                    {c.title}
+                  </h3>
+                  <p className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.12em] text-stitch-on-surface-variant md:text-[11px]">
+                    {c.meta}
+                  </p>
+                  <p className="mt-1 line-clamp-2 font-stitch-body text-[13px] leading-relaxed text-stitch-on-surface-variant">
+                    {c.description}
+                  </p>
+                </div>
               </Link>
             ))}
           </div>
