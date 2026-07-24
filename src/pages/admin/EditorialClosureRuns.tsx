@@ -460,12 +460,12 @@ const EditorialClosureRuns: React.FC = () => {
               <div className="flex items-center gap-2">
                 <Button
                   size="sm" variant="outline"
-                  onClick={() => setPage(1)}
+                  onClick={() => updateParams({ page: 1 })}
                   disabled={currentPage <= 1}
                 >« Primeira</Button>
                 <Button
                   size="sm" variant="outline"
-                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  onClick={() => updateParams({ page: Math.max(1, currentPage - 1) })}
                   disabled={currentPage <= 1}
                 >‹ Anterior</Button>
                 <span className="tabular-nums text-muted-foreground px-2">
@@ -473,12 +473,12 @@ const EditorialClosureRuns: React.FC = () => {
                 </span>
                 <Button
                   size="sm" variant="outline"
-                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  onClick={() => updateParams({ page: Math.min(totalPages, currentPage + 1) })}
                   disabled={currentPage >= totalPages}
                 >Próxima ›</Button>
                 <Button
                   size="sm" variant="outline"
-                  onClick={() => setPage(totalPages)}
+                  onClick={() => updateParams({ page: totalPages })}
                   disabled={currentPage >= totalPages}
                 >Última »</Button>
               </div>
