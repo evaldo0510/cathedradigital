@@ -90,9 +90,11 @@ const COLLECTION_TO_NEXUS: Record<string, NexusKind> = {
   glossary: 'glossary',
   prayer: 'prayer',
   saint: 'saint',
+  saint_work: 'saint_work',
   bible: 'bible_verse',
   liturgy: 'liturgy',
   catechism: 'catechism_paragraph',
+  magisterium: 'magisterium_doc',
   journey: 'journey',
 };
 
