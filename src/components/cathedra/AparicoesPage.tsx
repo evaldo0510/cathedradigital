@@ -27,7 +27,18 @@ const AparicoesPage: React.FC = () => {
   if (selectedApparition) {
     const isFav = isFavorite('aparicao', selectedApparition.title);
     return (
-      <div className="w-full space-y-spacing-lg">
+      <ReaderShell
+        contentMaxWidth="max-w-none"
+        ariaLabel={`Aparição — ${selectedApparition.title}`}
+        hero={
+          <EditorialHero
+            kicker={`${selectedApparition.country} · ${selectedApparition.year}`}
+            title={selectedApparition.title}
+            subtitle={selectedApparition.location}
+          />
+        }
+      >
+        <div className="w-full space-y-spacing-lg">
         {/* Back + Header */}
         <div className="flex items-center gap-spacing-md">
           <Button onClick={() => setSelectedApparition(null)} className="p-spacing-xs rounded-premium-full bg-card border border-border hover:bg-primary/10 transition-all">
@@ -156,7 +167,8 @@ const AparicoesPage: React.FC = () => {
             )}
           </motion.div>
         </AnimatePresence>
-      </div>
+        </div>
+      </ReaderShell>
     );
   }
 
