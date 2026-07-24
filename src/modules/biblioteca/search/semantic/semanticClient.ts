@@ -154,55 +154,79 @@ class ConceptGraphSearcher implements SemanticSearcher {
 
     // 3. Expansão: para cada âncora, pega até N relações no nexus_relations
     //    (bidirecional). Uma única query batch por direção.
+    // `source_ref`/`target_ref` são JSONB (`{slug}` p/ glossary). Filtramos
+    // por `->>slug` e falhamos em silêncio se a query rejeitar — o hit
+    // âncora (glossary) já foi empurrado acima.
     const anchorRefs = anchorList.map((a) => a.slug);
-    const [asSource, asTarget] = await Promise.all([
-      supabase
-        .from('nexus_relations')
-        .select('source_ref, target_kind, target_ref, relation_type, note')
-        .eq('source_kind', 'glossary')
-        .in('source_ref', anchorRefs)
-        .limit(maxRelated),
-      supabase
-        .from('nexus_relations')
-        .select('target_ref, source_kind, source_ref, relation_type, note')
-        .eq('target_kind', 'glossary')
-        .in('target_ref', anchorRefs)
-        .limit(maxRelated),
-    ]);
-
+    const list = anchorRefs.map((v) => `"${v.replace(/"/g, '\\"')}"`).join(',');
     const titleByAnchor = new Map(anchorList.map((a) => [a.slug, a.term]));
 
-    for (const row of asSource.data ?? []) {
-      const mod = NEXUS_TO_MODULE[row.target_kind as string];
-      if (!mod) continue;
-      const anchorTerm = titleByAnchor.get(row.source_ref as string) ?? 'conceito';
-      pushHit({
-        type: mod,
-        kind: String(row.target_kind),
-        ref: String(row.target_ref),
-        title: `${row.target_kind}:${row.target_ref}`,
-        score: 0.55,
-        reason: row.note
-          ? String(row.note)
-          : `Relacionado a "${anchorTerm}" via ${row.relation_type ?? 'nexus'}.`,
-        matchedConcepts: [anchorTerm],
-      });
-    }
-    for (const row of asTarget.data ?? []) {
-      const mod = NEXUS_TO_MODULE[row.source_kind as string];
-      if (!mod) continue;
-      const anchorTerm = titleByAnchor.get(row.target_ref as string) ?? 'conceito';
-      pushHit({
-        type: mod,
-        kind: String(row.source_kind),
-        ref: String(row.source_ref),
-        title: `${row.source_kind}:${row.source_ref}`,
-        score: 0.5,
-        reason: row.note
-          ? String(row.note)
-          : `Citado a partir de "${anchorTerm}".`,
-        matchedConcepts: [anchorTerm],
-      });
+    const extractRef = (json: unknown): string | undefined => {
+      if (!json || typeof json !== 'object') return undefined;
+      const obj = json as Record<string, unknown>;
+      for (const k of ['slug', 'ref'] as const) {
+        const v = obj[k];
+        if (typeof v === 'string' && v.length > 0) return v;
+      }
+      return undefined;
+    };
+
+    try {
+      const [asSource, asTarget] = await Promise.all([
+        supabase
+          .from('nexus_relations')
+          .select('source_ref, target_kind, target_ref, relation_type, note')
+          .eq('source_kind', 'glossary')
+          .filter('source_ref->>slug', 'in', `(${list})`)
+          .limit(maxRelated),
+        supabase
+          .from('nexus_relations')
+          .select('target_ref, source_kind, source_ref, relation_type, note')
+          .eq('target_kind', 'glossary')
+          .filter('target_ref->>slug', 'in', `(${list})`)
+          .limit(maxRelated),
+      ]);
+
+      for (const row of asSource.data ?? []) {
+        const mod = NEXUS_TO_MODULE[row.target_kind as string];
+        if (!mod) continue;
+        const anchor = extractRef(row.source_ref) ?? '';
+        const target = extractRef(row.target_ref) ?? '';
+        if (!target) continue;
+        const anchorTerm = titleByAnchor.get(anchor) ?? 'conceito';
+        pushHit({
+          type: mod,
+          kind: String(row.target_kind),
+          ref: target,
+          title: `${row.target_kind}:${target}`,
+          score: 0.55,
+          reason: row.note
+            ? String(row.note)
+            : `Relacionado a "${anchorTerm}" via ${row.relation_type ?? 'nexus'}.`,
+          matchedConcepts: [anchorTerm],
+        });
+      }
+      for (const row of asTarget.data ?? []) {
+        const mod = NEXUS_TO_MODULE[row.source_kind as string];
+        if (!mod) continue;
+        const anchor = extractRef(row.target_ref) ?? '';
+        const source = extractRef(row.source_ref) ?? '';
+        if (!source) continue;
+        const anchorTerm = titleByAnchor.get(anchor) ?? 'conceito';
+        pushHit({
+          type: mod,
+          kind: String(row.source_kind),
+          ref: source,
+          title: `${row.source_kind}:${source}`,
+          score: 0.5,
+          reason: row.note
+            ? String(row.note)
+            : `Citado a partir de "${anchorTerm}".`,
+          matchedConcepts: [anchorTerm],
+        });
+      }
+    } catch (err) {
+      if (import.meta.env.DEV) console.warn('[semanticClient] expansão nexus falhou', err);
     }
 
     return Array.from(hits.values()).sort((a, b) => b.score - a.score);
