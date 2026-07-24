@@ -1497,6 +1497,116 @@ export type Database = {
           },
         ]
       }
+      bible_phase_books: {
+        Row: {
+          abbrev: string
+          expected_chapters: number
+          ordinal: number
+          phase: Database["public"]["Enums"]["bible_import_phase"]
+        }
+        Insert: {
+          abbrev: string
+          expected_chapters: number
+          ordinal: number
+          phase: Database["public"]["Enums"]["bible_import_phase"]
+        }
+        Update: {
+          abbrev?: string
+          expected_chapters?: number
+          ordinal?: number
+          phase?: Database["public"]["Enums"]["bible_import_phase"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bible_phase_books_abbrev_fkey"
+            columns: ["abbrev"]
+            isOneToOne: true
+            referencedRelation: "bible_books"
+            referencedColumns: ["abbrev"]
+          },
+          {
+            foreignKeyName: "bible_phase_books_abbrev_fkey"
+            columns: ["abbrev"]
+            isOneToOne: true
+            referencedRelation: "nexus_chapter_coverage"
+            referencedColumns: ["book_abbr"]
+          },
+        ]
+      }
+      bible_translation_phase_status: {
+        Row: {
+          certified_at: string | null
+          certified_by: string | null
+          check_continuity: boolean
+          check_navigation: boolean
+          check_nexus: boolean
+          check_popovers: boolean
+          check_reader: boolean
+          check_references: boolean
+          check_verses: boolean
+          created_at: string
+          ice_score: number | null
+          id: string
+          import_completed_at: string | null
+          import_started_at: string | null
+          notes: string | null
+          phase: Database["public"]["Enums"]["bible_import_phase"]
+          status: Database["public"]["Enums"]["bible_phase_status"]
+          translation_id: string
+          updated_at: string
+        }
+        Insert: {
+          certified_at?: string | null
+          certified_by?: string | null
+          check_continuity?: boolean
+          check_navigation?: boolean
+          check_nexus?: boolean
+          check_popovers?: boolean
+          check_reader?: boolean
+          check_references?: boolean
+          check_verses?: boolean
+          created_at?: string
+          ice_score?: number | null
+          id?: string
+          import_completed_at?: string | null
+          import_started_at?: string | null
+          notes?: string | null
+          phase: Database["public"]["Enums"]["bible_import_phase"]
+          status?: Database["public"]["Enums"]["bible_phase_status"]
+          translation_id: string
+          updated_at?: string
+        }
+        Update: {
+          certified_at?: string | null
+          certified_by?: string | null
+          check_continuity?: boolean
+          check_navigation?: boolean
+          check_nexus?: boolean
+          check_popovers?: boolean
+          check_reader?: boolean
+          check_references?: boolean
+          check_verses?: boolean
+          created_at?: string
+          ice_score?: number | null
+          id?: string
+          import_completed_at?: string | null
+          import_started_at?: string | null
+          notes?: string | null
+          phase?: Database["public"]["Enums"]["bible_import_phase"]
+          status?: Database["public"]["Enums"]["bible_phase_status"]
+          translation_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bible_translation_phase_status_translation_id_fkey"
+            columns: ["translation_id"]
+            isOneToOne: false
+            referencedRelation: "bible_translation_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bible_translation_sources: {
         Row: {
           attribution: string
@@ -7782,6 +7892,25 @@ export type Database = {
           translation: string
         }[]
       }
+      get_bible_phase_summary: {
+        Args: never
+        Returns: {
+          actual_books: number
+          actual_chapters: number
+          actual_verses: number
+          certified_at: string
+          expected_books: number
+          expected_chapters: number
+          ice_score: number
+          is_primary: boolean
+          phase: Database["public"]["Enums"]["bible_import_phase"]
+          status: Database["public"]["Enums"]["bible_phase_status"]
+          translation_code: string
+          translation_id: string
+          translation_name: string
+          translation_status: string
+        }[]
+      }
       get_correlation_trail: {
         Args: { _cid: string; _include_responses?: boolean }
         Returns: {
@@ -7805,6 +7934,18 @@ export type Database = {
           payload: Json
           retry_count: number
           status: string
+        }[]
+      }
+      get_translation_progress: {
+        Args: { _translation_id: string }
+        Returns: {
+          actual_books: number
+          actual_chapters: number
+          actual_verses: number
+          expected_books: number
+          expected_chapters: number
+          phase: Database["public"]["Enums"]["bible_import_phase"]
+          status: Database["public"]["Enums"]["bible_phase_status"]
         }[]
       }
       glossary_correction_priority: {
@@ -8332,6 +8473,18 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user" | "editor" | "reviewer"
+      bible_import_phase:
+        | "A_pentateuco"
+        | "B_historicos"
+        | "C_sapienciais"
+        | "D_profetas"
+        | "E_novo_testamento"
+      bible_phase_status:
+        | "pending"
+        | "importing"
+        | "imported"
+        | "certified"
+        | "rejected"
       content_curation_status: "stub" | "partial" | "complete"
       prayer_category:
         | "fundamentais"
@@ -8485,6 +8638,20 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user", "editor", "reviewer"],
+      bible_import_phase: [
+        "A_pentateuco",
+        "B_historicos",
+        "C_sapienciais",
+        "D_profetas",
+        "E_novo_testamento",
+      ],
+      bible_phase_status: [
+        "pending",
+        "importing",
+        "imported",
+        "certified",
+        "rejected",
+      ],
       content_curation_status: ["stub", "partial", "complete"],
       prayer_category: [
         "fundamentais",
