@@ -38,7 +38,7 @@ const summary = psql(`
     COUNT(*) FILTER (WHERE status='success') AS success,
     COUNT(*) FILTER (WHERE status='skipped') AS skipped,
     COUNT(*) FILTER (WHERE status='error') AS errors,
-    COUNT(DISTINCT canonical_id) AS distinct_canonicals,
+    COUNT(DISTINCT COALESCE(canonical_id, saint_id)) AS distinct_canonicals,
     COUNT(*) FILTER (WHERE redirected_from IS NOT NULL) AS redirected,
     ROUND(AVG(confidence)::numeric, 1) AS avg_confidence
   FROM saint_import_logs
@@ -82,7 +82,7 @@ const remainingDupes = psql(`
     FROM saints WHERE category='santo' AND (merged_into IS NULL OR merged_into = '')
       AND (editorial_status IS NULL OR editorial_status <> 'archived')
   )
-  SELECT d.doctor_slug, s.santo_slug, s.santo_name, COALESCE(s.editorial_status, '—') AS status
+  SELECT d.doctor_slug, s.santo_slug, s.santo_name, COALESCE(s.editorial_status::text, '—') AS status
   FROM doctors d JOIN santos s ON s.core_slug = d.doctor_slug
   ORDER BY d.doctor_slug
 `) as string[][];
