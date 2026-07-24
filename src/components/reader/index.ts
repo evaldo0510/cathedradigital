@@ -23,6 +23,7 @@
  */
 
 export { ReaderShell, type ReaderShellProps } from './ReaderShell';
+export { ReaderToolbar, type ReaderToolbarProps } from './ReaderToolbar';
 export {
   ReferencePopover,
   type ReferencePopoverProps,

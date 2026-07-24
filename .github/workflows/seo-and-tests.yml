@@ -37,6 +37,11 @@ jobs:
       - name: Nexus Unification — Auditoria C0.4
         run: bunx tsx scripts/nexus-unification-audit.ts
 
+      - name: Reader Chrome Final — Auditoria C0.5
+        run: bunx tsx scripts/reader-chrome-audit.ts
+
+
+
       - name: Benchmark do normalizador do Catecismo (budget-gated)
         env:
           NORM_BUDGET_PER_MS: '2'

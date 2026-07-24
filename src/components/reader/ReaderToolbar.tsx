@@ -1,10 +1,16 @@
 /**
- * EditorialReaderChrome — barra editorial (Stitch, tela Reader v2 detalhado).
+ * ReaderToolbar — barra editorial canônica do Reader Template Master.
  *
  * Sticky strip com:
- *  - Kicker CATHEDRA · LECTIO + breadcrumb
+ *  - Kicker + breadcrumb + título/subtítulo
  *  - Ações: fonte, modo foco (immersive), compartilhar
- * Não substitui a lógica dos leitores existentes — apenas os enquadra.
+ *
+ * Substitui o legado `@/components/editorial/EditorialReaderChrome`
+ * (C0.5.a). Convive com `ReaderShell` (barra sticky) sem duplicar layout:
+ * NÃO renderiza corpo de leitura, apenas o chrome utilitário.
+ *
+ * Regra COS §10 — Reader Architecture Rule:
+ *   Único toolbar de leitura permitido no Reader Template Master.
  */
 
 import React, { useCallback } from 'react';
@@ -16,7 +22,7 @@ import { cn } from '@/lib/utils';
 type FontSize = 'small' | 'medium' | 'large' | 'extra-large';
 const FONT_ORDER: FontSize[] = ['small', 'medium', 'large', 'extra-large'];
 
-interface Props {
+export interface ReaderToolbarProps {
   kicker?: string;
   title: string;
   subtitle?: string;
@@ -25,7 +31,7 @@ interface Props {
   className?: string;
 }
 
-const EditorialReaderChrome: React.FC<Props> = ({
+export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
   kicker = 'Cathedra · Lectio',
   title,
   subtitle,
@@ -68,6 +74,7 @@ const EditorialReaderChrome: React.FC<Props> = ({
       )}
       role="region"
       aria-label="Barra editorial do leitor"
+      data-reader-toolbar
     >
       <div className="mx-auto flex w-full max-w-[1120px] items-center gap-3 px-4 py-2 md:px-8">
         {backHref && (
@@ -97,18 +104,18 @@ const EditorialReaderChrome: React.FC<Props> = ({
         </div>
 
         <div className="flex shrink-0 items-center gap-1">
-          <ChromeButton
+          <ToolbarButton
             label={`Tamanho da fonte (${settings.fontSize})`}
             onClick={cycleFont}
             icon={<Type className="h-4 w-4" />}
           />
-          <ChromeButton
+          <ToolbarButton
             label={settings.immersiveMode ? 'Sair do modo foco' : 'Modo foco'}
             onClick={toggleFocus}
             active={settings.immersiveMode}
             icon={<Focus className="h-4 w-4" />}
           />
-          <ChromeButton
+          <ToolbarButton
             label="Compartilhar"
             onClick={share}
             icon={<Share2 className="h-4 w-4" />}
@@ -120,7 +127,7 @@ const EditorialReaderChrome: React.FC<Props> = ({
   );
 };
 
-const ChromeButton: React.FC<{
+const ToolbarButton: React.FC<{
   label: string;
   onClick: () => void;
   icon: React.ReactNode;
@@ -143,4 +150,4 @@ const ChromeButton: React.FC<{
   </button>
 );
 
-export default EditorialReaderChrome;
+export default ReaderToolbar;

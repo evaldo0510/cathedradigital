@@ -20,7 +20,7 @@ interface MobileReaderChromeProps {
 
 /**
  * MobileReaderChrome — barra superior compacta para Readers em mobile.
- * Variante do EditorialReaderChrome desktop; hierarquia kicker + título + meta,
+ * Variante mobile do `ReaderToolbar`; hierarquia kicker + título + meta,
  * com ações de tipografia, foco e compartilhamento.
  */
 export function MobileReaderChrome({
