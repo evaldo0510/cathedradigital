@@ -5151,6 +5151,57 @@ export type Database = {
         }
         Relationships: []
       }
+      saints_enrichment_runs: {
+        Row: {
+          country_hits: number
+          errors: Json
+          finished_at: string | null
+          id: string
+          kind: string
+          limit_n: number | null
+          processed: number
+          remaining_missing_country: number
+          remaining_missing_vocation: number
+          started_at: string
+          status: string
+          triggered_by: string | null
+          updated: number
+          vocation_hits: number
+        }
+        Insert: {
+          country_hits?: number
+          errors?: Json
+          finished_at?: string | null
+          id?: string
+          kind?: string
+          limit_n?: number | null
+          processed?: number
+          remaining_missing_country?: number
+          remaining_missing_vocation?: number
+          started_at?: string
+          status?: string
+          triggered_by?: string | null
+          updated?: number
+          vocation_hits?: number
+        }
+        Update: {
+          country_hits?: number
+          errors?: Json
+          finished_at?: string | null
+          id?: string
+          kind?: string
+          limit_n?: number | null
+          processed?: number
+          remaining_missing_country?: number
+          remaining_missing_vocation?: number
+          started_at?: string
+          status?: string
+          triggered_by?: string | null
+          updated?: number
+          vocation_hits?: number
+        }
+        Relationships: []
+      }
       saints_reimport_runs: {
         Row: {
           applied_summary: Json | null
@@ -7592,6 +7643,31 @@ export type Database = {
       }
       resolve_user_id_by_email: { Args: { _email: string }; Returns: string }
       run_manual_security_scan: { Args: never; Returns: string }
+      run_saints_enrichment_heuristic: {
+        Args: { p_limit?: number }
+        Returns: {
+          country_hits: number
+          errors: Json
+          finished_at: string | null
+          id: string
+          kind: string
+          limit_n: number | null
+          processed: number
+          remaining_missing_country: number
+          remaining_missing_vocation: number
+          started_at: string
+          status: string
+          triggered_by: string | null
+          updated: number
+          vocation_hits: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "saints_enrichment_runs"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       saints_correction_priority: {
         Args: never
         Returns: {
