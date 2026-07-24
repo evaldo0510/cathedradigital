@@ -1,149 +1,55 @@
-# Sprint CQ-1 · Reorganização Modular da Catequese
+# C0.3 — Homologação Real do Prayer Engine
 
-## Objetivo
+## Situação atual (auditoria de código, não declaração)
 
-Consolidar os 15 arquivos da Catequese hoje espalhados entre `src/components/cathedra/`, `src/pages/` e `src/pages/admin/` em uma estrutura única `src/modules/catequese/`, sem alterar comportamento, rotas públicas ou contratos de dados.
-
-## Não-objetivos (fora de escopo, explícito)
-
-- Nenhuma mudança visual, de UX ou de conteúdo editorial.
-- Nenhuma alteração no Reader (ReaderShell, HeaderContext, NexusPanel).
-- Nenhuma mudança no schema do banco, RLS ou Edge Functions.
-- Nenhum novo módulo, nenhuma renomeação de rota pública.
-- Nenhuma mudança no normalizador, prefetch ou fila de importação.
-
-## Escopo — arquivos afetados (15)
-
-Movidos para `src/modules/catequese/`:
-
-```text
-src/modules/catequese/
-├── index.ts                        # barrel público (única superfície de import)
-├── routes.tsx                      # rotas lazy da Catequese, consumido por src/App.tsx
-├── reader/
-│   ├── AtriumCatechismReader.tsx   # ex: src/pages/AtriumCatechismReader.tsx
-│   └── Catechism.tsx               # ex: src/components/cathedra/Catechism.tsx (legado)
-├── explorer/
-│   └── CatechismExplorer.tsx       # ex: src/pages/CatechismExplorer.tsx
-├── admin/
-│   └── CatechismImportQueue.tsx    # ex: src/pages/admin/CatechismImportQueue.tsx
-├── components/
-│   ├── CatechismPopover.tsx
-│   ├── CatechismPendingPanel.tsx
-│   ├── CatechismOfflineFallback.tsx
-│   ├── CatechismDiagnosticPanel.tsx
-│   ├── CatechismHealthCheck.tsx
-│   ├── CatechismIntegrity.tsx
-│   ├── CatechismVerification.tsx
-│   ├── CatechismNormalizationDiff.tsx
-│   └── CatechismDebug.tsx
-└── __tests__/
-    ├── CatechismPopover.internal.test.tsx
-    └── CatechismPendingPanel.test.tsx
-```
-
-25+ arquivos consumidores (Bible, Magisterium, Saints, Nexus, adapters, etc.) passam a importar via barrel:
-
-```ts
-import { CatechismPopover, AtriumCatechismReader } from "@/modules/catequese";
-```
-
-## Critérios de aceite
-
-Todos bloqueantes. A sprint só fecha com 100% verdes.
-
-1. **Rotas idênticas**: `/catechism`, `/catechism-legacy`, `/catecismo → /catechism`, `/catechism-explorer → /catechism`, `/admin/catechism-queue` respondem 200 e renderizam o mesmo componente que hoje.
-2. **Lazy loading preservado**: `bunx vite build` mostra chunks separados `catequese-reader-*.js` e `catequese-admin-*.js`; nenhum arquivo da Catequese entra no bundle inicial (`main-*.js`).
-3. **Zero mudança visual**: screenshot Playwright de `/catechism`, `/catechism-legacy`, `/admin/catechism-queue` idêntico ao baseline (pixel diff ≤ 0.1%).
-4. **Zero import quebrado**: `bunx tsgo` limpo; `rg "from ['\"].*cathedra/Catechism" src/` retorna 0 ocorrências fora de `src/modules/catequese/`.
-5. **Testes atuais passam**: Vitest completo verde; Playwright `glossary-seo`, `smoke-routes-clean-console` verdes.
-6. **Reader Architecture Rule respeitada**: `bun scripts/reader-guardrail.ts` verde; score arquitetural do domínio "catechism" não regride.
-7. **Editorial Engine intacto**: manifestos e adapters em `src/core/content/adapters/` continuam resolvendo Catechism sem mudança de assinatura.
-8. **Feature flag ativa até o merge**: mudança atrás de `VITE_MODULES_CATEQUESE=1`; sem a flag, app usa os caminhos antigos.
-9. **COS §6 pós-validação**: Engineering Log CERTIFIED, zero regressão em módulos não tocados.
-
-## Plano de execução (5 ondas, 1 PR por onda)
-
-### CQ-1.1 · Baseline e feature flag
-- Criar `src/modules/catequese/` vazio com `README.md` explicando a política.
-- Adicionar `VITE_MODULES_CATEQUESE` (default `0`) em `.env.example` e `docs/ci-env-vars.md`.
-- Rodar Playwright baseline: screenshots de `/catechism`, `/catechism-legacy`, `/admin/catechism-queue` salvos em `tests/e2e/baseline/catequese/`.
-- **Merge condicional**: nenhuma mudança funcional.
-
-### CQ-1.2 · Movimentação física (behind flag)
-- Mover os 15 arquivos com `git mv` preservando histórico.
-- Criar barrel `src/modules/catequese/index.ts` reexportando tudo.
-- Manter **shims** nos caminhos antigos:
-  ```ts
-  // src/components/cathedra/Catechism.tsx (shim)
-  export { default } from "@/modules/catequese/reader/Catechism";
-  ```
-- Criar `src/modules/catequese/routes.tsx` com `<CatequeseRoutes />` (mesmas rotas, mesmos lazy imports).
-- Em `src/App.tsx`: `flag ? <CatequeseRoutes /> : <RotasAntigas />`.
-
-### CQ-1.3 · Codemod dos consumidores
-- Script `scripts/codemods/catequese-imports.ts` (ts-morph ou jscodeshift) que reescreve todos os `from "@/components/cathedra/Catechism*"` e `from "@/pages/AtriumCatechismReader"` para `from "@/modules/catequese"`.
-- Rodar; commitar diff.
-- Rodar `bunx tsgo` + Vitest + Playwright — todos verdes.
-
-### CQ-1.4 · Ativar flag, remover shims
-- Trocar default de `VITE_MODULES_CATEQUESE` para `1` no CI.
-- Rodar suite completa em `main`.
-- Após 48h sem incidente: **remover shims** dos caminhos antigos.
-- Rodar `rg "cathedra/Catechism" src/` → deve retornar apenas `src/modules/catequese/**`.
-
-### CQ-1.5 · Homologação
-- Atualizar `docs/c0-homologation-checklist.md` marcando Catequese como reorganizada.
-- Atualizar Manifest Registry do COS (§9) apontando os novos paths.
-- Engineering Log final com pós-validação COS §6.
-
-## Plano de rollback
-
-Rollback é **trivial em cada onda** — é o principal motivo do faseamento.
-
-| Onda | Rollback |
+| Item | Estado |
 |---|---|
-| CQ-1.1 | Nada a reverter (só docs e diretório vazio). |
-| CQ-1.2 | Setar `VITE_MODULES_CATEQUESE=0` no CI. Efeito imediato: app volta às rotas antigas. Shims garantem que qualquer import legado continua funcionando. |
-| CQ-1.3 | `git revert` do PR do codemod. Como os shims ainda existem, os imports antigos continuam válidos. |
-| CQ-1.4 | Restaurar shims do PR CQ-1.2 + baixar flag para `0`. Comando: `git revert <sha-cq-1.4>`. |
-| CQ-1.5 | Só documentação. |
+| `MysteryNexusPanel` eliminado | ✅ zero imports |
+| `mysteryAutoNexus` + teste | ✅ existe em `src/core/knowledge/adapters/` |
+| `PrayerDetailPage` usa `ReaderShell` | ❌ ainda usa `EditorialReaderChrome` |
+| `PrayerPortal` usa `ReaderShell` | ❌ nenhuma referência |
+| `PrayerEngineReader` usa `ReaderShell` | ❌ nenhuma referência |
+| `ViaCrucis`, `MissalPage`, `BreviaryPage` migrados | ⚠️ a verificar |
+| `NexusBubbles` eliminado do projeto | ❌ 7 arquivos ainda importam — **fora do escopo Prayer Engine** |
 
-**Circuit breaker**: se qualquer job do CI (`vitest`, `playwright`, `reader-template`, `gsc-meta-gate`) falhar em `main` após merge, o guardrail existente já bloqueia o deploy. Rollback via `git revert` do commit de merge — todos os PRs são atômicos e revertíveis.
+**Conclusão:** a C0.3 foi declarada CERTIFIED prematuramente. Precisa ser refeita com verificação real.
 
-**Janela de observabilidade**: 48h em produção com flag ativa antes de remover shims (CQ-1.4). Métricas monitoradas via `analytics.ts`: `catechism_paragraph_view`, `catechism_normalization_diff`, taxa de erro do `AtriumCatechismReader`.
+## Escopo estrito (o que a C0.3 cobre)
 
-## Riscos e mitigações
+Apenas o **Prayer Engine**: PrayerPortal, PrayerEngineReader, PrayerDetailPage, ViaCrucis, MissalPage, BreviaryPage, RosarioPage (se existir).
 
-| Risco | Probabilidade | Mitigação |
-|---|---|---|
-| Import circular via barrel | Média | Barrel só reexporta; nenhum arquivo interno importa do barrel. Lint rule `no-restricted-imports` bloqueando `@/modules/catequese` dentro do próprio módulo. |
-| Chunk splitting muda e regride LCP | Baixa | Snapshot de `bundle-analyzer` antes/depois; falhar CI se `main` chunk crescer > 5%. |
-| Tests com paths hardcoded | Média | Codemod cobre `.test.ts(x)`; auditoria manual em `tests/e2e/`. |
-| Editorial Engine adapter quebra | Média | `src/core/content/adapters/` explicitamente inspecionado no PR CQ-1.3; teste dedicado `adapters.test.ts` já cobre. |
-| CI Reader Guardrail muda de path | Baixa | Atualizar `scripts/reader-guardrail.ts` na mesma onda (CQ-1.2) para reconhecer o novo path. |
+**Fora do escopo** (irão para ondas próprias, não misturar):
+- `NexusBubbles` em Bible/Saints/Magisterium/Journey/Dashboard → C0.4
+- `EditorialReaderChrome` em Glossary/Magisterium/AtriumBible/SaintDetail → C0.5
 
-## Estimativa
+## Divisão em sub-ondas
 
-- CQ-1.1: 1h
-- CQ-1.2: 3h
-- CQ-1.3: 2h (codemod + revisão)
-- CQ-1.4: 30min (após 48h de observação)
-- CQ-1.5: 30min
+### C0.3.a — Núcleo (PrayerPortal + PrayerEngineReader + PrayerDetailPage)
+1. Refatorar `PrayerPortal.tsx` para envolver `PrayerEngineReader` em `ReaderShell` com slots corretos (EditorialHero, HeaderContext="prayer", NexusPanel, ReaderContinuation).
+2. Refatorar `PrayerDetailPage.tsx`: remover `EditorialReaderChrome`, usar `ReaderShell`.
+3. Garantir que `PrayerEngineReader` renderiza como filho de `ReaderShell` e não replica chrome.
 
-**Total ativo**: ~7h de trabalho, distribuído em ~3 dias por causa da janela de observabilidade.
+### C0.3.b — Rituais estruturados
+4. `ViaCrucis.tsx` → `ReaderShell` + `PrayerEngineReader` (não leitor custom).
+5. `MissalPage.tsx` + `BreviaryPage.tsx` → verificar se já estão em `ReaderShell` (foi declarado antes); se não, migrar.
+6. Rosário: já é `PrayerPortal` — validar que a cadeia funciona depois da C0.3.a.
+
+### C0.3.c — Auditoria bloqueante + certificação
+7. Criar `scripts/prayer-engine-audit.ts`: falha se qualquer arquivo em `src/**/*(Prayer|Rosario|ViaCrucis|Missa|Breviary|Ladainha|Novena)*` importar `EditorialReaderChrome`, `MysteryNexusPanel`, ou não passar por `ReaderShell`.
+8. Rodar Vitest + Playwright (desktop/tablet/mobile) para as 4 rotas: Rosário, Via Sacra, Missal, LH.
+9. Certificar somente se auditoria = 0 e testes verdes.
+
+## Riscos
+
+- **Risco alto** de regressão visual no PrayerPortal (Modo Contemplação, portalTheme). Snapshots Playwright antes de tocar.
+- Nenhuma alteração de banco. Nenhuma rota nova. Nenhum componente novo — só reuso.
 
 ## Detalhes técnicos
 
-- **ts-morph** preferido ao jscodeshift para o codemod — melhor suporte a paths e re-exports TypeScript.
-- Alias `@/modules/catequese` já é resolvido pelo `vite.config.ts` (padrão `@/*` existente).
-- Feature flag lida em `src/App.tsx` via `import.meta.env.VITE_MODULES_CATEQUESE === "1"`.
-- Manter `React.lazy(() => import("@/modules/catequese/reader/AtriumCatechismReader"))` — Vite gera chunk nomeado automaticamente.
-- Regra ESLint adicionada: `no-restricted-imports` bloqueia novos imports de `components/cathedra/Catechism*` após CQ-1.4.
-- Nenhuma dependência nova.
+- `ReaderShell` slots já suportam variantes (HeaderContext.prayer existe? verificar antes; se não, adicionar variante `prayer` — extensão, não novo componente).
+- `NexusPanel` recebe `autoNexus` do `mysteryAutoNexus` para orações contemplativas.
+- `ReaderContinuation` sugere próxima oração via `usePrayerEngineSession`.
 
-## O que **não** vou fazer
+## Decisão pedida
 
-- Não vou renomear arquivos além do path (preservo o nome exportado).
-- Não vou trocar `Catechism.tsx` legado por wrapper do `AtriumCatechismReader` — são consumidos por rotas diferentes e diagnóstico.
-- Não vou "aproveitar para" reescrever nenhum componente — reorganização pura.
+Aprovar essa quebra em 3 sub-ondas (a → b → c) e começar por **C0.3.a**? Ou você prefere que eu tente as 3 na mesma rodada (maior risco, sem checkpoint entre elas)?
