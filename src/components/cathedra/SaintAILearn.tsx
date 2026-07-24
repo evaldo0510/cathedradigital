@@ -105,6 +105,11 @@ const SaintAILearn: React.FC<Props> = ({ saint }) => {
                   <li key={i} className="rounded-premium border border-border/60 bg-background/40 p-spacing-md">
                     <p className="text-premium-sm font-bold text-foreground">{t.title}</p>
                     <p className="text-premium-xs text-muted-foreground leading-relaxed mt-spacing-2xs">{t.body}</p>
+                    {t.source && (
+                      <p className="mt-spacing-xs text-premium-xs text-primary/80 italic border-l-2 border-primary/30 pl-spacing-sm">
+                        Base: <span className="not-italic">“{t.source}”</span>
+                      </p>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -117,6 +122,20 @@ const SaintAILearn: React.FC<Props> = ({ saint }) => {
               <p className="text-premium-sm leading-relaxed text-foreground whitespace-pre-line font-serif">
                 {reflection.meditation}
               </p>
+              {reflection.meditation_sources && reflection.meditation_sources.length > 0 && (
+                <div className="mt-spacing-sm rounded-premium bg-background/40 border border-border/40 p-spacing-sm">
+                  <p className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground mb-spacing-2xs">
+                    Trechos-base da meditação
+                  </p>
+                  <ul className="space-y-spacing-2xs">
+                    {reflection.meditation_sources.map((s, i) => (
+                      <li key={i} className="text-premium-xs text-foreground/80 italic leading-relaxed">
+                        “{s}”
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
 
@@ -127,6 +146,29 @@ const SaintAILearn: React.FC<Props> = ({ saint }) => {
                 {reflection.prayer}
               </p>
             </div>
+          )}
+
+          {reflection.citations && reflection.citations.length > 0 && (
+            <details className="rounded-premium border border-border/60 bg-background/30 p-spacing-md">
+              <summary className="cursor-pointer text-premium-xs font-black uppercase tracking-widest text-primary">
+                Referências textuais usadas ({reflection.citations.length})
+              </summary>
+              <ul className="mt-spacing-sm space-y-spacing-xs">
+                {reflection.citations.map((c, i) => (
+                  <li key={i} className="text-premium-xs text-foreground/80 leading-relaxed">
+                    <span className="inline-block mr-spacing-2xs px-spacing-2xs py-[2px] rounded-premium-full bg-primary/10 text-primary uppercase tracking-widest text-[10px] font-black">
+                      {c.type}
+                    </span>
+                    <span className="italic">“{c.text}”</span>
+                    {c.used_in && (
+                      <span className="ml-spacing-2xs text-muted-foreground">
+                        → {c.used_in === 'summary' ? 'resumo' : c.used_in === 'teaching' ? 'ensinamento' : c.used_in === 'meditation' ? 'meditação' : 'oração'}
+                      </span>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </details>
           )}
 
           <div className="flex items-center justify-between pt-spacing-sm border-t border-border/40">
