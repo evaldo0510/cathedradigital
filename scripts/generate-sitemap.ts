@@ -202,6 +202,122 @@ async function generateSitemap() {
     xml += '  </url>\n';
   });
 
+  // ─── P0.3.1 · Ondas dinâmicas de conteúdo editorial ──────────
+  // Todas as entidades fetchadas em paralelo. URLs emitidas via helper com cap.
+  const MAX_URLS = 45000; // Google aceita 50k por sitemap; folga p/ segurança.
+  let urlCount =
+    indexableRoutes.length + extraCount + glossary.length; // já emitidos até aqui
+
+  const emitUrl = (loc: string, ts?: string | null, changefreq = 'weekly', priority = '0.6') => {
+    if (urlCount >= MAX_URLS) return false;
+    const lm = (ts ?? '').split('T')[0] || lastmod;
+    xml += '  <url>\n';
+    xml += `    <loc>${BASE_URL}${loc}</loc>\n`;
+    xml += `    <lastmod>${lm}</lastmod>\n`;
+    xml += `    <changefreq>${changefreq}</changefreq>\n`;
+    xml += `    <priority>${priority}</priority>\n`;
+    xml += '  </url>\n';
+    urlCount++;
+    return true;
+  };
+
+  const [
+    saints,
+    catechism,
+    bibleBooks,
+    bibleChapters,
+    themes,
+    prayers,
+    collections,
+    journeys,
+    saintWorks,
+    saintWorkChapters,
+    magisterium,
+  ] = await Promise.all([
+    fetchSaints(),
+    fetchCatechism(),
+    fetchBibleBooks(),
+    fetchBibleChapters(),
+    fetchThemes(),
+    fetchPrayers(),
+    fetchCollections(),
+    fetchJourneys(),
+    fetchSaintWorks(),
+    fetchSaintWorkChapters(),
+    fetchMagisteriumIds(),
+  ]);
+
+  // Bíblia — livro-index (73) + capítulos realmente importados.
+  const bookAbbrById = new Map(bibleBooks.map((b) => [b.id, b.abbrev]));
+  bibleBooks.forEach((b) => {
+    emitUrl(`/bible?book=${encodeURIComponent(b.abbrev)}&amp;ch=1`, null, 'monthly', '0.6');
+  });
+  bibleChapters.forEach((c) => {
+    const abbr = bookAbbrById.get(c.book_id);
+    if (!abbr || c.number === 1) return; // ch=1 já emitido acima
+    emitUrl(`/bible?book=${encodeURIComponent(abbr)}&amp;ch=${c.number}`, null, 'monthly', '0.5');
+  });
+
+  // Catecismo — parágrafos com conteúdo (rota real usa ?p=).
+  catechism.forEach((p) => emitUrl(`/catechism?p=${p.paragraph}`, p.created_at, 'monthly', '0.6'));
+
+  // Santos — apenas os enriquecidos (content_status='complete'). Stubs ficam de fora.
+  saints.forEach((s) => emitUrl(`/santos/${encodeURIComponent(s.id)}`, s.updated_at, 'monthly', '0.7'));
+
+  // Magistério — documentos estáticos do módulo.
+  magisterium.forEach((d) => emitUrl(`/magisterium/${encodeURIComponent(d.id)}`, null, 'monthly', '0.7'));
+
+  // Temas, Orações, Coleções, Jornadas.
+  themes.forEach((t) => emitUrl(`/temas/${t.slug}`, t.updated_at, 'weekly', '0.6'));
+  prayers.forEach((p) => emitUrl(`/oracao/${p.slug}`, p.updated_at, 'weekly', '0.7'));
+  collections.forEach((c) => emitUrl(`/colecoes/${c.slug}`, c.updated_at, 'weekly', '0.7'));
+  journeys.forEach((j) => emitUrl(`/jornadas/${encodeURIComponent(j.id)}`, j.updated_at, 'weekly', '0.7'));
+
+  // Patrística — obras publicadas + capítulos (join id→slug).
+  saintWorks.forEach((w) => {
+    emitUrl(
+      `/biblioteca/escritos/${encodeURIComponent(w.saint_id)}/${w.slug}`,
+      w.updated_at,
+      'monthly',
+      '0.7',
+    );
+  });
+  if (saintWorkChapters.length > 0) {
+    const worksWithId = await fetchRest<{ id: string; slug: string; saint_id: string }>(
+      'saint_works?select=id,slug,saint_id&status=eq.published',
+      'patrística (map id→slug)',
+    );
+    const workById = new Map(worksWithId.map((w) => [w.id, { slug: w.slug, saint_id: w.saint_id }]));
+    saintWorkChapters.forEach((ch) => {
+      const w = workById.get(ch.work_id);
+      if (!w) return;
+      emitUrl(
+        `/biblioteca/escritos/${encodeURIComponent(w.saint_id)}/${w.slug}/capitulo/${ch.order}`,
+        ch.updated_at,
+        'monthly',
+        '0.6',
+      );
+    });
+  }
+
+  const dynamicEmitted = {
+    santos: saints.length,
+    catecismo: catechism.length,
+    biblia_capitulos: bibleChapters.length,
+    biblia_livros: bibleBooks.length,
+    magisterio: magisterium.length,
+    temas: themes.length,
+    oracoes: prayers.length,
+    colecoes: collections.length,
+    jornadas: journeys.length,
+    patristica_obras: saintWorks.length,
+    patristica_capitulos: saintWorkChapters.length,
+  };
+  console.log('ℹ️  P0.3.1 — entidades dinâmicas emitidas:', dynamicEmitted);
+  if (urlCount >= MAX_URLS) {
+    console.warn(`⚠️  Cap MAX_URLS=${MAX_URLS} atingido. Considere migrar para sitemap index.`);
+  }
+
   // Liturgia das Horas — 7 horas canônicas (canônicas sem data) + snapshot do dia
   const HOUR_SLUGS = ['oficio', 'laudes', 'tercia', 'sexta', 'noa', 'vesperas', 'completas'];
   HOUR_SLUGS.forEach((h) => {
