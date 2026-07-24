@@ -74,6 +74,14 @@ const BibleSearch: React.FC<BibleSearchProps> = ({ onSelectResult, onClose, init
       const { data, error } = await supabase.functions.invoke('bible-search', {
         body: { query }
       });
+      // P0.2.0 — Contenção: bible-search retorna 503 (unavailable) enquanto
+      // a Bíblia está em reconstrução. Comunicar honestamente ao leitor.
+      const unavailable = (data && data.status === 'unavailable') || (error as any)?.context?.status === 503;
+      if (unavailable) {
+        toast.info(data?.message || 'Busca bíblica em atualização. Reative em breve.');
+        setResults([]);
+        return;
+      }
       if (error) throw error;
       
       // Fetch advanced results from Magisterium/Catechism for unified search
