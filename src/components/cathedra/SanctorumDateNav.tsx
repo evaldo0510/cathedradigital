@@ -98,7 +98,7 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
       <div className="flex w-full max-w-full items-center justify-center gap-spacing-xs sm:gap-spacing-md md:gap-spacing-xl">
         <Button
           onClick={() => change(subDays(value, 1), 'prev-day')}
-          className="shrink-0 p-spacing-xs sm:p-spacing-sm bg-card border border-border rounded-premium-full hover:bg-primary/5 hover:border-primary/30 transition-all text-muted-foreground hover:text-primary"
+          className="shrink-0 min-h-11 min-w-11 p-spacing-xs sm:p-spacing-sm bg-card border border-border rounded-premium-full hover:bg-primary/5 hover:border-primary/30 focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all text-muted-foreground hover:text-primary"
           aria-label="Dia anterior"
         >
           <Icons.ChevronLeft className="w-spacing-md h-spacing-md" />
@@ -109,17 +109,17 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
           aria-live="polite"
           aria-atomic="true"
         >
-          <h2 className="text-premium-xl sm:text-premium-2xl font-serif font-bold text-foreground break-words">
+          <h2 className="text-premium-lg sm:text-premium-xl md:text-premium-2xl font-serif font-bold text-foreground leading-tight break-words line-clamp-2">
             {format(value, "dd 'de' MMMM", { locale: ptBR })}
           </h2>
-          <p className="text-premium-xs font-black uppercase tracking-widest text-primary mt-spacing-2xs">
+          <p className="text-premium-xs font-black uppercase tracking-widest text-primary mt-spacing-2xs truncate">
             {format(value, 'EEEE', { locale: ptBR })}
           </p>
         </div>
 
         <Button
           onClick={() => change(addDays(value, 1), 'next-day')}
-          className="shrink-0 p-spacing-xs sm:p-spacing-sm bg-card border border-border rounded-premium-full hover:bg-primary/5 hover:border-primary/30 transition-all text-muted-foreground hover:text-primary"
+          className="shrink-0 min-h-11 min-w-11 p-spacing-xs sm:p-spacing-sm bg-card border border-border rounded-premium-full hover:bg-primary/5 hover:border-primary/30 focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all text-muted-foreground hover:text-primary"
           aria-label="Próximo dia"
         >
           <Icons.ChevronRight className="w-spacing-md h-spacing-md" />
