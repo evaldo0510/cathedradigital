@@ -24,6 +24,7 @@ import SourceAttribution from './SourceAttribution';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import { resolveSaintAutoNexus } from '@/core/knowledge/adapters/saintAutoNexus';
 import { NexusPanel } from '@/components/reader';
+import SaintCuratedConnections from '@/components/cathedra/SaintCuratedConnections';
 import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
 import { ReaderToolbar } from '@/components/reader';
 import SanctumEditorial, { SanctumCurationBadge } from './SanctumEditorial';
