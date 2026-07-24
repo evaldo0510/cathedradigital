@@ -223,84 +223,91 @@ const PrayerDetailPage: React.FC = () => {
   return (
     <>
       <MobileTopBar kicker={kicker} title={prayer.title} showBack />
-      <EditorialReaderChrome
-        kicker={kicker}
-        title={prayer.title}
-        subtitle={prayer.subtitle ?? undefined}
-        backHref="/oracao"
-      />
-
-      <main className="mx-auto w-full max-w-[720px] px-4 pb-24 pt-8 md:px-8 md:pt-12">
-        <EditorialHero align="center" as="header">
-          <EditorialHero.Eyebrow>{kicker}</EditorialHero.Eyebrow>
-          <EditorialHero.Title>{prayer.title}</EditorialHero.Title>
-          {prayer.subtitle && (
-            <EditorialHero.Subtitle>{prayer.subtitle}</EditorialHero.Subtitle>
-          )}
-          <EditorialHero.Meta>
-            <span className="inline-flex items-center gap-1.5">
-              <Clock className="h-3.5 w-3.5" aria-hidden />
-              {Math.max(1, Math.round(prayer.estimated_seconds / 60))} min
-            </span>
-          </EditorialHero.Meta>
-          <EditorialHero.Actions>
-            <Button
-              type="button"
-              variant={isFavorite ? 'pill-toned' : 'pill'}
-              size="pill"
-              onClick={toggleFavorite}
-              aria-pressed={isFavorite}
-            >
-              <Star className={cn('h-3.5 w-3.5', isFavorite && 'fill-current')} aria-hidden />
-              {isFavorite ? 'Favorita' : 'Favoritar'}
-            </Button>
-            {fromLiturgia && (
-              <Button asChild variant="pill" size="pill">
-                <Link to="/liturgia">
-                  <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
-                  Voltar para Liturgia
-                </Link>
-              </Button>
+      <ReaderShell
+        contentMaxWidth="max-w-[720px]"
+        ariaLabel={prayer.title}
+        hero={
+          <EditorialHero align="center" as="header">
+            <EditorialHero.Eyebrow>{kicker}</EditorialHero.Eyebrow>
+            <EditorialHero.Title>{prayer.title}</EditorialHero.Title>
+            {prayer.subtitle && (
+              <EditorialHero.Subtitle>{prayer.subtitle}</EditorialHero.Subtitle>
             )}
-            <div
-              role="group"
-              aria-label="Tamanho da fonte"
-              className="inline-flex items-center gap-1 rounded-full border border-stitch-outline-variant/40 p-1"
-            >
-              <Button
-                type="button"
-                variant="pill"
-                size="pill-sm"
-                onClick={() => changeFont(-1)}
-                disabled={fontIndex === 0}
-                aria-label="Diminuir fonte"
-                className="border-transparent text-stitch-on-surface-variant hover:bg-stitch-secondary/10 hover:text-stitch-on-surface"
-              >
-                <Minus className="h-3.5 w-3.5" aria-hidden />
-              </Button>
-              <span
-                className="min-w-[28px] text-center font-stitch-body text-xs uppercase tracking-widest text-stitch-on-surface-variant"
-                aria-live="polite"
-              >
-                {fontKey.toUpperCase()}
+            <EditorialHero.Meta>
+              <span className="inline-flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5" aria-hidden />
+                {Math.max(1, Math.round(prayer.estimated_seconds / 60))} min
               </span>
+            </EditorialHero.Meta>
+            <EditorialHero.Actions>
               <Button
                 type="button"
-                variant="pill"
-                size="pill-sm"
-                onClick={() => changeFont(1)}
-                disabled={fontIndex === FONT_STEPS.length - 1}
-                aria-label="Aumentar fonte"
-                className="border-transparent text-stitch-on-surface-variant hover:bg-stitch-secondary/10 hover:text-stitch-on-surface"
+                variant={isFavorite ? 'pill-toned' : 'pill'}
+                size="pill"
+                onClick={toggleFavorite}
+                aria-pressed={isFavorite}
               >
-                <Plus className="h-3.5 w-3.5" aria-hidden />
+                <Star className={cn('h-3.5 w-3.5', isFavorite && 'fill-current')} aria-hidden />
+                {isFavorite ? 'Favorita' : 'Favoritar'}
               </Button>
-            </div>
-          </EditorialHero.Actions>
-        </EditorialHero>
-
-
-
+              {fromLiturgia && (
+                <Button asChild variant="pill" size="pill">
+                  <Link to="/liturgia">
+                    <ArrowLeft className="h-3.5 w-3.5" aria-hidden />
+                    Voltar para Liturgia
+                  </Link>
+                </Button>
+              )}
+              <div
+                role="group"
+                aria-label="Tamanho da fonte"
+                className="inline-flex items-center gap-1 rounded-full border border-stitch-outline-variant/40 p-1"
+              >
+                <Button
+                  type="button"
+                  variant="pill"
+                  size="pill-sm"
+                  onClick={() => changeFont(-1)}
+                  disabled={fontIndex === 0}
+                  aria-label="Diminuir fonte"
+                  className="border-transparent text-stitch-on-surface-variant hover:bg-stitch-secondary/10 hover:text-stitch-on-surface"
+                >
+                  <Minus className="h-3.5 w-3.5" aria-hidden />
+                </Button>
+                <span
+                  className="min-w-[28px] text-center font-stitch-body text-xs uppercase tracking-widest text-stitch-on-surface-variant"
+                  aria-live="polite"
+                >
+                  {fontKey.toUpperCase()}
+                </span>
+                <Button
+                  type="button"
+                  variant="pill"
+                  size="pill-sm"
+                  onClick={() => changeFont(1)}
+                  disabled={fontIndex === FONT_STEPS.length - 1}
+                  aria-label="Aumentar fonte"
+                  className="border-transparent text-stitch-on-surface-variant hover:bg-stitch-secondary/10 hover:text-stitch-on-surface"
+                >
+                  <Plus className="h-3.5 w-3.5" aria-hidden />
+                </Button>
+              </div>
+            </EditorialHero.Actions>
+          </EditorialHero>
+        }
+        continuation={
+          <ReaderContinuation
+            context={{
+              kind: 'prayer',
+              id: prayer.slug,
+              meta: {
+                nextPrayerSlug: nextInCategory?.slug,
+                prayerCategory: prayer.category,
+              },
+            }}
+          />
+        }
+      >
         {/* Texto principal */}
         <section aria-labelledby="prayer-text">
           <h2 id="prayer-text" className="sr-only">
@@ -325,7 +332,7 @@ const PrayerDetailPage: React.FC = () => {
 
         {/* Latim */}
         {prayer.content_latin && (
-          <section aria-labelledby="prayer-latin" className="mt-10 border-t border-stitch-outline-variant/30 pt-8">
+          <section aria-labelledby="prayer-latin" className="border-t border-stitch-outline-variant/30 pt-8">
             <h2
               id="prayer-latin"
               className="mb-3 font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary"
@@ -340,7 +347,7 @@ const PrayerDetailPage: React.FC = () => {
 
         {/* Explicação */}
         {prayer.explanation && (
-          <section aria-labelledby="prayer-expl" className="mt-10 border-t border-stitch-outline-variant/30 pt-8">
+          <section aria-labelledby="prayer-expl" className="border-t border-stitch-outline-variant/30 pt-8">
             <h2
               id="prayer-expl"
               className="mb-3 font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary"
@@ -355,7 +362,7 @@ const PrayerDetailPage: React.FC = () => {
 
         {/* Meditação */}
         {prayer.meditation && (
-          <section aria-labelledby="prayer-med" className="mt-10 border-t border-stitch-outline-variant/30 pt-8">
+          <section aria-labelledby="prayer-med" className="border-t border-stitch-outline-variant/30 pt-8">
             <h2
               id="prayer-med"
               className="mb-3 font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary"
@@ -372,7 +379,7 @@ const PrayerDetailPage: React.FC = () => {
         {(prayer.related_bible.length > 0 ||
           prayer.related_catechism.length > 0 ||
           prayer.source_ref) && (
-          <section aria-labelledby="prayer-refs" className="mt-10 border-t border-stitch-outline-variant/30 pt-8">
+          <section aria-labelledby="prayer-refs" className="border-t border-stitch-outline-variant/30 pt-8">
             <h2
               id="prayer-refs"
               className="mb-4 font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary"
@@ -402,21 +409,7 @@ const PrayerDetailPage: React.FC = () => {
             </ul>
           </section>
         )}
-
-        {/* Continuidade */}
-        <div className="mt-16">
-          <ReaderContinuation
-            context={{
-              kind: 'prayer',
-              id: prayer.slug,
-              meta: {
-                nextPrayerSlug: nextInCategory?.slug,
-                prayerCategory: prayer.category,
-              },
-            }}
-          />
-        </div>
-      </main>
+      </ReaderShell>
 
       <MobileBottomNav />
     </>
