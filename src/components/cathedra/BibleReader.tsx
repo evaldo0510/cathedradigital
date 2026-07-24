@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
 import { cn } from '@/lib/utils';
 import { BibleBook } from '@/data/bible-books';
 import { Button } from '@/components/ui/button';
-import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
-import { NexusPanel } from '@/components/reader';
-import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
+import {
+  ReaderShell,
+  NexusPanel,
+  ReaderContinuation,
+  EditorialHero,
+} from '@/components/reader';
 import { resolveBibleAutoNexus } from '@/core/knowledge/adapters/bibleAutoNexus';
 
 interface Verse {
@@ -28,6 +31,11 @@ interface BibleReaderProps {
   onConnectionClick: (connection: any) => void;
 }
 
+/**
+ * BibleReader — C0.5.b (Parallel Readers Migration).
+ * Envolvido em `ReaderShell` conforme Regra §10 do COS (Reader Architecture Rule).
+ * hero → EditorialHero; nexus → NexusPanel; continuation → ReaderContinuation.
+ */
 export const BibleReader: React.FC<BibleReaderProps> = ({
   book,
   chapter,
@@ -39,52 +47,81 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
   onVerseAction,
   highlights,
   connections,
-  onConnectionClick
+  onConnectionClick,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  
-  // Lógica de virtualização simplificada para este componente
+
   const [visibleRange, setVisibleRange] = useState({ start: 0, end: 50 });
-  
+
   useEffect(() => {
     const handleScroll = () => {
       if (!containerRef.current) return;
       const scrollPos = window.scrollY;
-      const windowHeight = window.innerHeight;
-      // Heurística para capítulos grandes como o Salmo 119
       if (verses.length > 100) {
         const index = Math.floor(scrollPos / 100);
         setVisibleRange({
           start: Math.max(0, index - 20),
-          end: Math.min(verses.length, index + 40)
+          end: Math.min(verses.length, index + 40),
         });
       }
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [verses.length]);
 
-  const displayedVerses = verses.length > 100 
-    ? verses.slice(visibleRange.start, visibleRange.end) 
+  const displayedVerses = verses.length > 100
+    ? verses.slice(visibleRange.start, visibleRange.end)
     : verses;
 
   const paddingTop = verses.length > 100 ? visibleRange.start * 40 : 0;
   const paddingBottom = verses.length > 100 ? (verses.length - visibleRange.end) * 40 : 0;
 
-  return (
-    <div className="relative pb-32">
-      {/* Cabeçalho editorial — padrão R2 (Reader Universal) */}
-      <EditorialReaderHeader
-        kicker={`Sagrada Escritura${book.category ? ` · ${book.category}` : ''}`}
-        title={<>{book.name} <span className="text-primary/40">·</span> Capítulo {chapter}</>}
-        subtitle={book.chapterTitles?.[chapter] || book.description}
-        meta={book.author ? `${book.author}${book.date ? ` · ${book.date}` : ''}` : undefined}
-      />
+  const heroKicker = `Sagrada Escritura${book.category ? ` · ${book.category}` : ''}`;
+  const heroSubtitle = book.chapterTitles?.[chapter] || book.description;
+  const heroMeta = book.author ? `${book.author}${book.date ? ` · ${book.date}` : ''}` : undefined;
 
-      {/* Introdução ao livro — só no capítulo 1 */}
+  const nexus = useMemo(
+    () => resolveBibleAutoNexus({ bookAbbr: book.abbr, bookName: book.name, chapter }),
+    [book.abbr, book.name, chapter],
+  );
+
+  return (
+    <ReaderShell
+      className="pb-32"
+      contentMaxWidth="max-w-2xl"
+      ariaLabel={`Leitura bíblica — ${book.name} ${chapter}`}
+      hero={
+        <EditorialHero
+          kicker={heroKicker}
+          title={`${book.name} · Capítulo ${chapter}`}
+          subtitle={typeof heroSubtitle === 'string' ? heroSubtitle : undefined}
+          meta={heroMeta}
+        />
+      }
+      nexus={
+        <NexusPanel
+          output={nexus}
+          kicker={`Conexões de ${book.name} ${chapter}`}
+        />
+      }
+      continuation={
+        <ReaderContinuation
+          context={{
+            kind: 'bible',
+            id: `${book.abbr}-${chapter}`,
+            graphNodeId: nexus.selfId ?? undefined,
+            meta: {
+              bookAbbr: book.abbr,
+              chapter,
+              totalChapters: book.chapters,
+            },
+          }}
+          suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
+        />
+      }
+    >
       {chapter === 1 && (book.context || book.themes) && (
-        <div className="max-w-2xl mx-auto px-6 -mt-spacing-md mb-spacing-2xl">
+        <div className="mb-spacing-2xl">
           <div className="p-6 rounded-2xl bg-primary/[0.02] border border-primary/5 text-left space-y-4">
             <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
               Introdução ao livro
@@ -110,13 +147,12 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
         </div>
       )}
 
-      {/* Verses Container */}
-      <div 
+      <div
         ref={containerRef}
         className={cn(
-          "px-8 space-y-6 max-w-2xl mx-auto",
+          'space-y-6',
           settings.fontSize === 'small' ? 'text-lg' : settings.fontSize === 'large' ? 'text-2xl' : 'text-xl',
-          settings.fontFamily === 'serif' ? 'font-serif' : 'font-sans'
+          settings.fontFamily === 'serif' ? 'font-serif' : 'font-sans',
         )}
         style={{ paddingTop, paddingBottom }}
       >
@@ -134,18 +170,16 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
             const verseKey = `${book.abbr}-${chapter}-${v.number}`;
             const highlightColor = highlights[verseKey];
             const verseConnections = connections[verseKey] || [];
-            
-            // Injetando espaços reservados para conexões vazias no modo Demo
             const finalConnections = verseConnections.length > 0 ? verseConnections : (connections['all'] || []);
 
             return (
-              <motion.div 
+              <motion.div
                 key={v.number}
                 id={`verse-${v.number}`}
                 onClick={() => onVerseAction(v)}
                 className={cn(
-                  "relative group cursor-pointer transition-all duration-300 rounded-lg p-3 -mx-2",
-                  highlightColor ? `bg-${highlightColor}/10` : "hover:bg-primary/[0.02]"
+                  'relative group cursor-pointer transition-all duration-300 rounded-lg p-3 -mx-2',
+                  highlightColor ? `bg-${highlightColor}/10` : 'hover:bg-primary/[0.02]',
                 )}
               >
                 <div className="flex items-start gap-4">
@@ -153,19 +187,17 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
                     {v.number}
                   </sup>
                   <p className={cn(
-                    "leading-relaxed transition-colors font-serif",
-                    settings.theme === 'night' ? "text-stone-300" : "text-primary/90"
+                    'leading-relaxed transition-colors font-serif',
+                    settings.theme === 'night' ? 'text-stone-300' : 'text-primary/90',
                   )}>
                     {v.text}
                   </p>
                 </div>
 
-                {/* Indicador de conexões - Knowledge Graph Cathedra V1 */}
                 {finalConnections.length > 0 && (
                   <div className="flex flex-wrap items-center gap-2 mt-3 ml-6">
                     {finalConnections.map((conn, idx) => {
                       const isEssential = conn.relevance_level === 'essential' || conn.relevance === 'essential';
-                      
                       return (
                         <button
                           key={idx}
@@ -174,17 +206,17 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
                             onConnectionClick(conn);
                           }}
                           className={cn(
-                            "flex items-center gap-1.5 px-2.5 py-1 rounded-full border transition-all hover:scale-105 active:scale-95",
-                            conn.id === 'coming-soon' 
-                              ? "bg-primary/[0.03] border-primary/5 text-primary/30" 
+                            'flex items-center gap-1.5 px-2.5 py-1 rounded-full border transition-all hover:scale-105 active:scale-95',
+                            conn.id === 'coming-soon'
+                              ? 'bg-primary/[0.03] border-primary/5 text-primary/30'
                               : isEssential
-                                ? "bg-secondary/20 border-secondary/40 text-secondary shadow-sm shadow-secondary/10"
-                                : "bg-primary/[0.04] border-primary/10 text-primary/60"
+                                ? 'bg-secondary/20 border-secondary/40 text-secondary shadow-sm shadow-secondary/10'
+                                : 'bg-primary/[0.04] border-primary/10 text-primary/60',
                           )}
                         >
                           <div className={cn(
-                            "w-1.5 h-1.5 rounded-full animate-pulse", 
-                            conn.color || (isEssential ? "bg-secondary" : "bg-primary/40")
+                            'w-1.5 h-1.5 rounded-full animate-pulse',
+                            conn.color || (isEssential ? 'bg-secondary' : 'bg-primary/40'),
                           )} />
                           <div className="flex flex-col items-start leading-none">
                             <span className="text-[8px] font-black uppercase tracking-widest">{conn.label}</span>
@@ -203,16 +235,12 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
         )}
       </div>
 
-      {/* Bloco de continuidade — fim do capítulo */}
-      <BibleReaderContinuation book={book} chapter={chapter} />
-
-
-      {/* Navigation Footer */}
-      <div className="fixed bottom-24 left-0 right-0 px-6 pointer-events-none">
+      {/* Navigation flutuante — preserva contexto de leitura */}
+      <div className="fixed bottom-24 left-0 right-0 px-6 pointer-events-none z-20">
         <div className="max-w-lg mx-auto flex justify-between items-center pointer-events-auto">
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={onPrevChapter}
             disabled={chapter === 1}
             className="w-12 h-12 rounded-full bg-background/80 backdrop-blur border border-primary/5 shadow-premium"
@@ -220,10 +248,9 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
           >
             <Icons.ChevronLeft className="w-6 h-6" />
           </Button>
-
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             onClick={onNextChapter}
             disabled={chapter >= book.chapters}
             className="w-12 h-12 rounded-full bg-background/80 backdrop-blur border border-primary/5 shadow-premium"
@@ -233,38 +260,6 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
           </Button>
         </div>
       </div>
-    </div>
+    </ReaderShell>
   );
 };
-
-const BibleReaderContinuation: React.FC<{ book: BibleBook; chapter: number }> = ({ book, chapter }) => {
-  const nexus = useMemo(
-    () => resolveBibleAutoNexus({ bookAbbr: book.abbr, bookName: book.name, chapter }),
-    [book.abbr, book.name, chapter],
-  );
-  return (
-    <div className="px-spacing-lg pb-spacing-2xl">
-      <EditorialDivider variant="gold-fade" className="max-w-[240px] mx-auto mb-spacing-2xl" />
-      <div className="mb-spacing-lg">
-        <NexusPanel
-          output={nexus}
-          kicker={`Conexões de ${book.name} ${chapter}`}
-        />
-      </div>
-      <ReaderContinuation
-        context={{
-          kind: 'bible',
-          id: `${book.abbr}-${chapter}`,
-          graphNodeId: nexus.selfId ?? undefined,
-          meta: {
-            bookAbbr: book.abbr,
-            chapter,
-            totalChapters: book.chapters,
-          },
-        }}
-        suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
-      />
-    </div>
-  );
-};
-

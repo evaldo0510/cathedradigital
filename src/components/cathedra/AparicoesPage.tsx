@@ -8,6 +8,7 @@ import DeepContentSection from './DeepContentSection';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
+import { ReaderShell, EditorialHero } from '@/components/reader';
 
 const AparicoesPage: React.FC = () => {
   const [selectedApparition, setSelectedApparition] = useState<Apparition | null>(null);
@@ -26,7 +27,18 @@ const AparicoesPage: React.FC = () => {
   if (selectedApparition) {
     const isFav = isFavorite('aparicao', selectedApparition.title);
     return (
-      <div className="w-full space-y-spacing-lg">
+      <ReaderShell
+        contentMaxWidth="max-w-none"
+        ariaLabel={`Aparição — ${selectedApparition.title}`}
+        hero={
+          <EditorialHero
+            kicker={`${selectedApparition.country} · ${selectedApparition.year}`}
+            title={selectedApparition.title}
+            subtitle={selectedApparition.location}
+          />
+        }
+      >
+        <div className="w-full space-y-spacing-lg">
         {/* Back + Header */}
         <div className="flex items-center gap-spacing-md">
           <Button onClick={() => setSelectedApparition(null)} className="p-spacing-xs rounded-premium-full bg-card border border-border hover:bg-primary/10 transition-all">
@@ -155,13 +167,25 @@ const AparicoesPage: React.FC = () => {
             )}
           </motion.div>
         </AnimatePresence>
-      </div>
+        </div>
+      </ReaderShell>
     );
   }
 
   // Overview
   return (
-    <div className="w-full space-y-spacing-xl">
+    <ReaderShell
+      contentMaxWidth="max-w-none"
+      ariaLabel="Aparições de Nossa Senhora"
+      hero={
+        <EditorialHero
+          kicker="Aparições Marianas"
+          title="Aparições de Nossa Senhora"
+          subtitle="As principais manifestações da Mãe de Deus ao longo da história, aprovadas pela Igreja Católica."
+        />
+      }
+    >
+      <div className="w-full space-y-spacing-xl">
       {/* Header */}
       <div className="text-center space-y-spacing-sm">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
@@ -246,6 +270,7 @@ const AparicoesPage: React.FC = () => {
         </p>
       </div>
     </div>
+    </ReaderShell>
   );
 };
 

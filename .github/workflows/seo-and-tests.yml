@@ -40,6 +40,9 @@ jobs:
       - name: Reader Chrome Final — Auditoria C0.5
         run: bunx tsx scripts/reader-chrome-audit.ts
 
+      - name: Parallel Readers Migration — Auditoria C0.5.b
+        run: bunx tsx scripts/parallel-readers-audit.ts
+
 
 
       - name: Benchmark do normalizador do Catecismo (budget-gated)

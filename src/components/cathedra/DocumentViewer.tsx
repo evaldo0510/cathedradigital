@@ -3,7 +3,18 @@ import { Button } from '@/components/ui/button';
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-
+/**
+ * DocumentViewer — utilitário de lightbox para documentos externos (iframe).
+ *
+ * C0.5.b (Parallel Readers Migration): NÃO é um Reader do Template Master.
+ * Sua responsabilidade é apresentar conteúdo EXTERNO (PDF/HTML de terceiros)
+ * dentro de um modal fullscreen — não conteúdo editorial próprio da Cathedra.
+ * Por isso está isento da Regra COS §10 (Reader Architecture Rule) e não
+ * consome `ReaderShell`. Consumidores atuais: `SaintDetail` (fontes primárias).
+ *
+ * Se um dia precisarmos internalizar o conteúdo, migrar a chamada para o
+ * ReaderShell canônico correspondente (Magistério / Santos / etc.).
+ */
 interface DocumentViewerProps {
   url: string;
   title: string;
