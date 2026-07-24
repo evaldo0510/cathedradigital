@@ -86,6 +86,10 @@ export const EditorialClosure: React.FC<EditorialClosureProps> = ({
     .map((item) => ({ item, href: resolveNexusHref(item.kind, item.ref) }))
     .filter((x): x is { item: EditorialClosureNexusItem; href: string } => !!x.href);
 
+  const hasAnything =
+    !!reflection || !!application || !!prayer || !!next || nexusLinks.length > 0;
+  if (!hasAnything) return null;
+
   return (
     <div
       className={cn(
@@ -98,28 +102,34 @@ export const EditorialClosure: React.FC<EditorialClosureProps> = ({
       data-constitution-version="1.0.0"
       data-closure-source={source ?? 'cathedra-editorial'}
     >
-      <ClosureBlock
-        kicker="Reflexão"
-        icon={<Icons.Compass className="w-4 h-4" aria-hidden />}
-      >
-        <p className="text-base leading-relaxed italic">{reflection}</p>
-      </ClosureBlock>
+      {reflection && (
+        <ClosureBlock
+          kicker="Reflexão"
+          icon={<Icons.Compass className="w-4 h-4" aria-hidden />}
+        >
+          <p className="text-base leading-relaxed italic">{reflection}</p>
+        </ClosureBlock>
+      )}
 
-      <ClosureBlock
-        kicker="Aplicação"
-        icon={<Icons.Map className="w-4 h-4" aria-hidden />}
-      >
-        <p className="text-base leading-relaxed">{application}</p>
-      </ClosureBlock>
+      {application && (
+        <ClosureBlock
+          kicker="Aplicação"
+          icon={<Icons.Map className="w-4 h-4" aria-hidden />}
+        >
+          <p className="text-base leading-relaxed">{application}</p>
+        </ClosureBlock>
+      )}
 
-      <ClosureBlock
-        kicker="Oração"
-        icon={<Icons.Flame className="w-4 h-4" aria-hidden />}
-      >
-        <p className="text-base leading-relaxed whitespace-pre-line text-center">
-          {prayer}
-        </p>
-      </ClosureBlock>
+      {prayer && (
+        <ClosureBlock
+          kicker="Oração"
+          icon={<Icons.Flame className="w-4 h-4" aria-hidden />}
+        >
+          <p className="text-base leading-relaxed whitespace-pre-line text-center">
+            {prayer}
+          </p>
+        </ClosureBlock>
+      )}
 
       {nexusLinks.length > 0 && (
         <ClosureBlock
