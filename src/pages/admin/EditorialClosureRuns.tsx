@@ -490,9 +490,9 @@ const EditorialClosureRuns: React.FC = () => {
                 {newRunIds.size} nova(s) run(s)
               </Button>
             )}
-            <Button variant="outline" onClick={() => void load()} disabled={loading || refreshing}>
+            <Button variant="outline" onClick={() => void manualRefresh()} disabled={loading || refreshing} title="Força um refresh imediato e limpa o badge de novas runs">
               <RefreshCcw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-              Atualizar
+              Atualizar agora
             </Button>
           </div>
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
