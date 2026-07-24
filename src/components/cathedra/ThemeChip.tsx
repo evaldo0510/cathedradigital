@@ -1,17 +1,12 @@
 /**
- * @deprecated Reader Architecture Rule (COS §10 / v1.1):
- *   `NexusBubbles` está proibido. Substituir por:
- *     - `NexusPanel`         (painel passivo de conexões)
- *     - `ReferencePopover`   (popover inline de referência)
- *   Ver docs/reader-architecture-master.md e src/components/reader/.
- *   Este componente será removido na Fase G da Sprint Nexus 2.0.
+ * ThemeChip (ex-TagBubble) — chip canônico de tema com popover de exploração.
+ *
+ * Criado na Onda C0.4.b (Extinção do NexusBubbles). É a única forma
+ * autorizada de renderizar bubbles de tema com sheet de conexões.
+ * Consumido por `TemasPage` e `TemaDetailPage`. Qualquer outra
+ * necessidade de exibir referência inline deve usar `ReferencePopover`
+ * de @/components/reader.
  */
-if (import.meta.env.DEV) {
-  // eslint-disable-next-line no-console
-  console.warn(
-    '[Cathedra] NexusBubbles é deprecated. Use NexusPanel + ReferencePopover de @/components/reader. Ver docs/reader-architecture-master.md',
-  );
-}
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { getSpiritualInsight } from '@/services/aiService';
 import { useNavigate } from 'react-router-dom';
