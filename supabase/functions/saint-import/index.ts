@@ -437,12 +437,15 @@ serve(async (req) => {
     const outcomes = await importFromProviders(saint.name as string);
     if (outcomes.length === 0) {
       await admin.from("saint_import_logs").insert({
-        saint_id: saintId,
+        saint_id: canonicalId,
+        canonical_id: canonicalId,
+        redirected_from: redirectedFrom,
         provider: "none",
         status: "skipped",
         message: "no provider returned data",
       });
-      return json({ ok: false, status: "skipped", message: "no data from providers" });
+      return json({ ok: false, status: "skipped", message: "no data from providers", canonical_id: canonicalId, redirected_from: redirectedFrom });
+
     }
 
     // Merge por provedor (Wikipedia primeiro; Vatican poderia sobrescrever com maior confidence)
