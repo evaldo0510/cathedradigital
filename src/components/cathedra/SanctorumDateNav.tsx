@@ -95,17 +95,21 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
       role="group"
       aria-label={ariaLabel}
     >
-      <div className="flex items-center gap-spacing-md md:gap-spacing-xl">
+      <div className="flex w-full max-w-full items-center justify-center gap-spacing-xs sm:gap-spacing-md md:gap-spacing-xl">
         <Button
           onClick={() => change(subDays(value, 1), 'prev-day')}
-          className="p-spacing-sm bg-card border border-border rounded-premium-full hover:bg-primary/5 hover:border-primary/30 transition-all text-muted-foreground hover:text-primary"
+          className="shrink-0 p-spacing-xs sm:p-spacing-sm bg-card border border-border rounded-premium-full hover:bg-primary/5 hover:border-primary/30 transition-all text-muted-foreground hover:text-primary"
           aria-label="Dia anterior"
         >
           <Icons.ChevronLeft className="w-spacing-md h-spacing-md" />
         </Button>
 
-        <div className="text-center min-w-[200px]" aria-live="polite" aria-atomic="true">
-          <h2 className="text-premium-2xl font-serif font-bold text-foreground">
+        <div
+          className="text-center min-w-0 flex-1 sm:flex-none sm:min-w-[200px] px-spacing-2xs"
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <h2 className="text-premium-xl sm:text-premium-2xl font-serif font-bold text-foreground break-words">
             {format(value, "dd 'de' MMMM", { locale: ptBR })}
           </h2>
           <p className="text-premium-xs font-black uppercase tracking-widest text-primary mt-spacing-2xs">
@@ -115,12 +119,13 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
 
         <Button
           onClick={() => change(addDays(value, 1), 'next-day')}
-          className="p-spacing-sm bg-card border border-border rounded-premium-full hover:bg-primary/5 hover:border-primary/30 transition-all text-muted-foreground hover:text-primary"
+          className="shrink-0 p-spacing-xs sm:p-spacing-sm bg-card border border-border rounded-premium-full hover:bg-primary/5 hover:border-primary/30 transition-all text-muted-foreground hover:text-primary"
           aria-label="Próximo dia"
         >
           <Icons.ChevronRight className="w-spacing-md h-spacing-md" />
         </Button>
       </div>
+
 
       <div className="flex flex-wrap items-center justify-center gap-spacing-xs">
         <Button
