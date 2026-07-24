@@ -46,6 +46,8 @@ const ARTS: ArtItem[] = [
   { file: 'templates/T1-contemplativo-base.png', title: 'Template · Contemplativo', category: 'template', format: '1:1' },
   { file: 'templates/T2-carrossel-capa-base.png', title: 'Template · Carrossel', category: 'template', format: '1:1' },
   { file: 'templates/T3-reel-capa-base.png', title: 'Template · Reel', category: 'template', format: '1:1' },
+  { file: 'templates/T4-story-carrossel-base.png', title: 'Template · Story Carrossel', category: 'template', format: '9:16' },
+  { file: 'templates/T5-story-reel-base.png', title: 'Template · Story Reel', category: 'template', format: '9:16' },
 ];
 
 const CATEGORIES: Array<{ id: ArtItem['category'] | 'all'; label: string }> = [
