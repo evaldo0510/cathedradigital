@@ -24,7 +24,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';
-import { AlertTriangle, RefreshCcw, RotateCcw, FileText, ArrowUp, ArrowDown, ChevronsUpDown } from 'lucide-react';
+import { AlertTriangle, RefreshCcw, RotateCcw, FileText, ArrowUp, ArrowDown, ChevronsUpDown, Download, Search, X } from 'lucide-react';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
