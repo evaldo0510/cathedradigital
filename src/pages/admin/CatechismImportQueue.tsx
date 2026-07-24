@@ -7,8 +7,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { RefreshCw, RotateCcw, Play } from "lucide-react";
+import { RefreshCw, RotateCcw, Play, AlertTriangle } from "lucide-react";
 import { toast } from "sonner";
+import { CATECHISM_RANGES, rangeForParagraph, normalizeErrorKey } from "@/lib/catechismRanges";
 
 type QueueStatus = "pending" | "processing" | "completed" | "error";
 
@@ -115,10 +116,41 @@ export default function CatechismImportQueuePage() {
     return n > 0 ? Math.round(sum / n) : null;
   }, [rows]);
 
+  const errorGroups = useMemo(() => {
+    const groups = new Map<string, { key: string; count: number; paragraphs: number[]; sample: string }>();
+    for (const r of rows) {
+      if (r.status !== "error") continue;
+      const key = normalizeErrorKey(r.last_error);
+      const g = groups.get(key) ?? { key, count: 0, paragraphs: [], sample: r.last_error ?? key };
+      g.count += 1;
+      g.paragraphs.push(r.paragraph);
+      groups.set(key, g);
+    }
+    return [...groups.values()].sort((a, b) => b.count - a.count);
+  }, [rows]);
+
+  const rangeCounts = useMemo(() => {
+    const map = new Map<string, { label: string; part: string; total: number; error: number; completed: number; pending: number }>();
+    for (const r of rows) {
+      const range = rangeForParagraph(r.paragraph);
+      if (!range) continue;
+      const cur = map.get(range.label) ?? { label: range.label, part: range.part, total: 0, error: 0, completed: 0, pending: 0 };
+      cur.total += 1;
+      if (r.status === "error") cur.error += 1;
+      else if (r.status === "completed") cur.completed += 1;
+      else cur.pending += 1;
+      map.set(range.label, cur);
+    }
+    return CATECHISM_RANGES
+      .map((r) => map.get(r.label))
+      .filter((x): x is NonNullable<typeof x> => Boolean(x));
+  }, [rows]);
+
   const filtered = useMemo(
     () => (statusFilter === "all" ? rows : rows.filter((r) => r.status === statusFilter)),
     [rows, statusFilter],
   );
+
 
   const toggleSelect = (id: string) =>
     setSelected((prev) => {
@@ -227,7 +259,95 @@ export default function CatechismImportQueuePage() {
         </Card>
       </div>
 
+      {errorGroups.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-destructive" />
+              Erros agrupados ({errorGroups.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {errorGroups.map((g) => (
+              <div
+                key={g.key}
+                className="flex items-start justify-between gap-3 rounded-md border p-3"
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="text-sm font-medium truncate" title={g.sample}>
+                    {g.sample}
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {g.count} ocorrência(s) · §{g.paragraphs.slice(0, 8).join(", §")}
+                    {g.paragraphs.length > 8 ? ` +${g.paragraphs.length - 8}` : ""}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      requeueIds(
+                        rows
+                          .filter((r) => r.status === "error" && normalizeErrorKey(r.last_error) === g.key)
+                          .map((r) => r.id),
+                      )
+                    }
+                  >
+                    <RotateCcw className="mr-2 h-3 w-3" />
+                    Re-enfileirar
+                  </Button>
+                  <Button
+                    size="sm"
+                    onClick={() => runWorker(g.paragraphs.slice(0, 20))}
+                    disabled={running}
+                  >
+                    <Play className="mr-2 h-3 w-3" />
+                    Reprocessar
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Contagem por faixa (parte / capítulo)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {rangeCounts.length === 0 ? (
+            <p className="text-sm text-muted-foreground">Nenhuma solicitação registrada ainda.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {rangeCounts.map((r) => (
+                <div key={r.label} className="flex items-center justify-between rounded border px-3 py-2 text-sm">
+                  <div className="min-w-0">
+                    <div className="truncate font-medium">{r.label}</div>
+                    <div className="text-[10px] uppercase text-muted-foreground">{r.part}</div>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs shrink-0">
+                    <span title="Total">{r.total}</span>
+                    {r.completed > 0 && (
+                      <Badge variant="default" className="h-5">{r.completed} ok</Badge>
+                    )}
+                    {r.pending > 0 && (
+                      <Badge variant="secondary" className="h-5">{r.pending} pend</Badge>
+                    )}
+                    {r.error > 0 && (
+                      <Badge variant="destructive" className="h-5">{r.error} err</Badge>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+
         <CardHeader className="flex flex-row items-center justify-between gap-3 flex-wrap">
           <CardTitle className="text-base">Solicitações</CardTitle>
           <div className="flex items-center gap-2">
