@@ -198,3 +198,69 @@ function emptyChanges(): NormalizationChanges {
 export function totalChanges(c: NormalizationChanges): number {
   return Object.values(c).reduce((a, b) => a + b, 0);
 }
+
+// ============================================================================
+// Cache LRU por parágrafo — evita recomputar quando o mesmo `content` volta.
+// ============================================================================
+
+interface CacheEntry {
+  key: string;
+  report: NormalizationReport;
+}
+
+const CACHE_MAX = 512;
+const cache = new Map<string, CacheEntry>();
+let cacheHits = 0;
+let cacheMisses = 0;
+
+function fnv1a(s: string): string {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = (h + ((h << 1) + (h << 4) + (h << 7) + (h << 8) + (h << 24))) >>> 0;
+  }
+  return h.toString(16);
+}
+
+function cacheKey(paragraph: number | string, input: string, options: NormalizeOptions): string {
+  const optKey = `${options.extractInlineLists ?? 1}${options.fixFootnotes ?? 1}${options.normalizeQuotes ?? 1}`;
+  return `${paragraph}:${optKey}:${input.length}:${fnv1a(input)}`;
+}
+
+/**
+ * Versão com cache LRU indexada por `paragraph` + hash de conteúdo.
+ * Retorna o mesmo objeto Report entre chamadas idênticas — não mutar!
+ */
+export function normalizeCatechismTextCached(
+  paragraph: number | string,
+  input: string | null | undefined,
+  options: NormalizeOptions = {}
+): NormalizationReport {
+  if (!input) return normalizeCatechismTextWithReport(input, options);
+  const key = cacheKey(paragraph, input, options);
+  const hit = cache.get(key);
+  if (hit) {
+    cache.delete(key);
+    cache.set(key, hit);
+    cacheHits++;
+    return hit.report;
+  }
+  cacheMisses++;
+  const report = normalizeCatechismTextWithReport(input, options);
+  cache.set(key, { key, report });
+  if (cache.size > CACHE_MAX) {
+    const oldest = cache.keys().next().value;
+    if (oldest !== undefined) cache.delete(oldest);
+  }
+  return report;
+}
+
+export function getNormalizerCacheStats() {
+  return { size: cache.size, max: CACHE_MAX, hits: cacheHits, misses: cacheMisses };
+}
+
+export function clearNormalizerCache() {
+  cache.clear();
+  cacheHits = 0;
+  cacheMisses = 0;
+}
