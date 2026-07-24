@@ -131,7 +131,7 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
         <Button
           onClick={() => change(subDays(value, 7), 'prev-week')}
           aria-label="Semana anterior"
-          className="h-spacing-xl px-spacing-md bg-card border border-border rounded-premium-full text-premium-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/30 transition-all"
+          className="min-h-11 px-spacing-md bg-card border border-border rounded-premium-full text-premium-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/30 focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all"
         >
           <Icons.ChevronLeft className="w-spacing-sm h-spacing-sm mr-spacing-2xs" />
           Semana
@@ -142,7 +142,7 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
           aria-label="Ir para hoje"
           aria-current={isToday(value) ? 'date' : undefined}
           className={cn(
-            'h-spacing-xl px-spacing-lg rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all',
+            'min-h-11 px-spacing-lg rounded-premium-full text-premium-xs font-black uppercase tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
             isToday(value)
               ? 'bg-primary text-primary-foreground shadow-premium shadow-primary/20 cursor-default'
               : 'bg-card border border-border text-foreground hover:border-primary/30 hover:text-primary',
@@ -154,7 +154,7 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
         <Button
           onClick={() => change(addDays(value, 7), 'next-week')}
           aria-label="Próxima semana"
-          className="h-spacing-xl px-spacing-md bg-card border border-border rounded-premium-full text-premium-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/30 transition-all"
+          className="min-h-11 px-spacing-md bg-card border border-border rounded-premium-full text-premium-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/30 focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all"
         >
           Semana
           <Icons.ChevronRight className="w-spacing-sm h-spacing-sm ml-spacing-2xs" />
@@ -165,7 +165,7 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
               aria-label="Escolher data no calendário"
               aria-haspopup="dialog"
               aria-expanded={calendarOpen}
-              className="h-spacing-xl px-spacing-md bg-card border border-border rounded-premium-full text-premium-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/30 transition-all"
+              className="min-h-11 px-spacing-md bg-card border border-border rounded-premium-full text-premium-xs font-black uppercase tracking-widest text-muted-foreground hover:text-primary hover:border-primary/30 focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all"
             >
               <Icons.Calendar className="w-spacing-sm h-spacing-sm mr-spacing-2xs" aria-hidden="true" />
               Calendário
