@@ -5,8 +5,8 @@
  * Usa o ReaderShell (Reader Architecture Rule) com EditorialHero e navegação.
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {
   getWorkBySlug,
