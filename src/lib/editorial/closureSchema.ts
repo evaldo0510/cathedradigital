@@ -10,7 +10,6 @@
  * Nenhum caminho lança exceção — parsing defeituoso vira warning.
  */
 import { z } from 'zod';
-import type { NexusKind } from '@/types/nexus';
 
 export const ClosureNexusItemSchema = z.object({
   kind: z.enum([
