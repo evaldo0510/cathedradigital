@@ -129,39 +129,29 @@ async function checkDatabaseInvariants(): Promise<void> {
   }
   const sb = createClient(url, key, { auth: { persistSession: false } });
 
-  // A1: exatamente ≤1 primária
-  const { data: primaries, error: pErr } = await sb
-    .from('bible_translation_sources')
-    .select('id, code, status, pcl_status, is_primary')
-    .eq('is_primary', true);
-  if (pErr) {
-    failures.push({ code: 'DB_ERROR', detail: `Falha ao ler traduções: ${pErr.message}` });
-    return;
-  }
-  if ((primaries?.length ?? 0) > 1) {
-    failures.push({
-      code: 'MULTIPLE_PRIMARIES',
-      detail: `Encontradas ${primaries!.length} traduções primárias — deve haver no máximo 1.`,
-    });
-  }
-
-  // A2: primária deve ser active/active
-  for (const p of primaries ?? []) {
-    if (p.status !== 'active' || p.pcl_status !== 'active') {
-      failures.push({
-        code: 'INVALID_PRIMARY',
-        detail: `Tradução ${p.code} é primária mas status=${p.status}, pcl_status=${p.pcl_status}.`,
-      });
-    }
-  }
-
-  // A3: RPC oficial disponível
-  const { error: rpcErr } = await sb.rpc('get_active_primary_translation');
-  if (rpcErr) {
+  // As invariantes A1 (≤1 primária) e A2 (primária = active/active) já são
+  // enforçadas no DB pelo índice único parcial + trigger
+  // `enforce_primary_translation_integrity`. Aqui basta validar que a
+  // fonte única da verdade — a RPC — responde e retorna 0 ou 1 linha.
+  const { data, error } = await sb.rpc('get_active_primary_translation');
+  if (error) {
     failures.push({
       code: 'RPC_UNAVAILABLE',
-      detail: `RPC get_active_primary_translation indisponível: ${rpcErr.message}`,
+      detail: `RPC get_active_primary_translation indisponível: ${error.message}`,
     });
+    return;
+  }
+  const rows = Array.isArray(data) ? data : [];
+  if (rows.length > 1) {
+    failures.push({
+      code: 'RPC_MULTIPLE_ROWS',
+      detail: `RPC retornou ${rows.length} linhas — deve retornar no máximo 1.`,
+    });
+  }
+  if (rows.length === 0) {
+    console.log(
+      `${YELLOW}⚠${RESET}  Nenhuma tradução ativa como primária (estado explícito válido durante P0.2.2).`,
+    );
   }
 }
 
