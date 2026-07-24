@@ -9,8 +9,10 @@ export const saintsAdapter: LibraryAdapter = {
     let query = supabase
       .from('saints')
       .select('id, name, title, bio, category, updated_at')
+      .neq('status', 'merged')
       .order('name', { ascending: true })
       .range(offset, offset + limit - 1);
+
 
     if (filters?.category) query = query.eq('category', filters.category);
 

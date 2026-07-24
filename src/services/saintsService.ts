@@ -12,7 +12,8 @@ export const getSaintsByDate = async (month: number, day: number): Promise<Saint
     .from('saints')
     .select(LIST_COLUMNS)
     .eq('feast_month', month)
-    .eq('feast_day_num', day);
+    .eq('feast_day_num', day)
+    .neq('status', 'merged');
 
   if (error) {
     console.error('Error fetching saints by date:', error);
@@ -34,7 +35,8 @@ export const getSaintsByDateOrThrow = async (
     .from('saints')
     .select(LIST_COLUMNS)
     .eq('feast_month', month)
-    .eq('feast_day_num', day);
+    .eq('feast_day_num', day)
+    .neq('status', 'merged');
 
   if (error) {
     console.error('Error fetching saints by date:', error);
@@ -43,6 +45,7 @@ export const getSaintsByDateOrThrow = async (
 
   return (data || []).map(formatSaint);
 };
+
 
 
 
@@ -71,7 +74,9 @@ export const searchSaints = async (query: string): Promise<SaintWithScore[]> => 
       .from('saints')
       .select('*')
       .or(`name.ilike.%${trimmed}%,title.ilike.%${trimmed}%`)
+      .neq('status', 'merged')
       .limit(50);
+
 
     if (fallbackError) {
       console.error('Error searching saints:', fallbackError);
@@ -88,6 +93,7 @@ export const getSaintsByCategory = async (category: string): Promise<Saint[]> =>
     .from('saints')
     .select(LIST_COLUMNS)
     .eq('category', category)
+    .neq('status', 'merged')
     .order('name');
 
   if (error) {
@@ -103,6 +109,7 @@ export const getSaintsByVirtue = async (virtue: string): Promise<Saint[]> => {
     .from('saints')
     .select(LIST_COLUMNS)
     .contains('virtues', [virtue])
+    .neq('status', 'merged')
     .limit(10);
 
   if (error) {
@@ -112,6 +119,7 @@ export const getSaintsByVirtue = async (virtue: string): Promise<Saint[]> => {
 
   return (data || []).map(formatSaint);
 };
+
 
 export const findSaintByVirtues = async (virtues: string[]): Promise<Saint | null> => {
   for (const virtue of virtues) {
@@ -125,6 +133,7 @@ export const getAllSaints = async (limit: number = 100): Promise<Saint[]> => {
   const { data, error } = await supabase
     .from('saints')
     .select(LIST_COLUMNS)
+    .neq('status', 'merged')
     .order('name')
     .limit(limit);
 
@@ -142,11 +151,13 @@ export const getSaintBySubtitle = async (subtitle: string): Promise<Saint | null
     .from('saints')
     .select('*')
     .ilike('name', `%${subtitle}%`)
+    .neq('status', 'merged')
     .limit(1);
 
   if (error || !data?.length) return null;
   return formatSaint(data[0]);
 };
+
 
 export const getSaintById = async (id: string): Promise<Saint | null> => {
   const { data, error } = await supabase
@@ -233,7 +244,10 @@ export const searchSaintsAdvanced = async (
 ): Promise<SaintsAdvancedResult> => {
   let q = supabase
     .from('saints')
-    .select(LIST_COLUMNS + ', century, country, vocation', { count: 'exact' });
+    .select(LIST_COLUMNS + ', century, country, vocation', { count: 'exact' })
+    .neq('status', 'merged');
+
+
 
   if (filters.category) q = q.eq('category', filters.category);
   if (filters.century) q = q.eq('century', filters.century);
@@ -288,7 +302,9 @@ export const getSaintsFilterFacets = async (): Promise<{
   const { data } = await supabase
     .from('saints')
     .select('country, vocation, virtues, century')
+    .neq('status', 'merged')
     .limit(2000);
+
 
   const countries = new Set<string>();
   const vocations = new Set<string>();

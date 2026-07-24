@@ -88,7 +88,9 @@ async function searchSaints(q: string, limit: number): Promise<RawHit[]> {
     .from('saints')
     .select('id, name, title, bio, category, content_status')
     .or(`name.ilike.${l},title.ilike.${l},bio.ilike.${l}`)
+    .neq('status', 'merged')
     .limit(limit);
+
   return (data ?? []).map((r) => ({
     type: 'saints',
     id: String(r.id),
