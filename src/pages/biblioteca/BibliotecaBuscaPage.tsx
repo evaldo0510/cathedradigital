@@ -143,10 +143,21 @@ const BibliotecaBuscaPage: React.FC = () => {
 
         {!loading && result && result.hits.length > 0 && (
           <>
-            <p className="text-premium-xs text-muted-foreground">
-              {result.total} {result.total === 1 ? 'trecho encontrado' : 'trechos encontrados'} · página {page}
-              {totalPages > 1 ? ` de ${totalPages}` : ''}
-            </p>
+            <div className="flex flex-wrap items-baseline justify-between gap-spacing-xs text-premium-xs text-muted-foreground">
+              <p>
+                <strong className="text-foreground tabular-nums">{result.total}</strong>{' '}
+                {result.total === 1 ? 'trecho encontrado' : 'trechos encontrados'}
+                {totalPages > 1 && (
+                  <>
+                    {' '}· exibindo{' '}
+                    <span className="tabular-nums">
+                      {(page - 1) * PAGE_SIZE + 1}–{Math.min(page * PAGE_SIZE, result.total)}
+                    </span>
+                  </>
+                )}
+              </p>
+              <p className="italic">Ordenado por relevância</p>
+            </div>
 
             <ol className="space-y-spacing-md">
               {result.hits.map((h, i) => (
@@ -180,26 +191,77 @@ const BibliotecaBuscaPage: React.FC = () => {
             </ol>
 
             {totalPages > 1 && (
-              <nav className="flex items-center justify-between pt-spacing-md" aria-label="Paginação">
-                <Button
-                  variant="outline"
-                  onClick={() => goPage(page - 1)}
-                  disabled={page <= 1}
-                  className="gap-1"
-                >
-                  <Icons.ArrowLeft className="w-4 h-4" aria-hidden /> Anterior
-                </Button>
-                <span className="text-premium-xs text-muted-foreground tabular-nums">
-                  {page} / {totalPages}
-                </span>
-                <Button
-                  variant="outline"
-                  onClick={() => goPage(page + 1)}
-                  disabled={page >= totalPages}
-                  className="gap-1"
-                >
-                  Próxima <Icons.ArrowRight className="w-4 h-4" aria-hidden />
-                </Button>
+              <nav
+                className="flex flex-wrap items-center justify-between gap-spacing-xs pt-spacing-md"
+                aria-label="Paginação de resultados"
+              >
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => goPage(1)}
+                    disabled={page <= 1}
+                    aria-label="Primeira página"
+                  >
+                    «
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => goPage(page - 1)}
+                    disabled={page <= 1}
+                    className="gap-1"
+                  >
+                    <Icons.ArrowLeft className="w-4 h-4" aria-hidden /> Anterior
+                  </Button>
+                </div>
+
+                <div className="flex items-center gap-1 flex-wrap justify-center">
+                  {buildPageWindow(page, totalPages).map((p, idx) =>
+                    p === '…' ? (
+                      <span
+                        key={`gap-${idx}`}
+                        className="px-1 text-muted-foreground text-premium-xs"
+                        aria-hidden
+                      >
+                        …
+                      </span>
+                    ) : (
+                      <Button
+                        key={p}
+                        variant={p === page ? 'default' : 'ghost'}
+                        size="sm"
+                        onClick={() => goPage(p)}
+                        aria-current={p === page ? 'page' : undefined}
+                        aria-label={`Ir para página ${p}`}
+                        className="min-w-[2.25rem] tabular-nums"
+                      >
+                        {p}
+                      </Button>
+                    ),
+                  )}
+                </div>
+
+                <div className="flex items-center gap-1">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => goPage(page + 1)}
+                    disabled={page >= totalPages}
+                    className="gap-1"
+                  >
+                    Próxima <Icons.ArrowRight className="w-4 h-4" aria-hidden />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => goPage(totalPages)}
+                    disabled={page >= totalPages}
+                    aria-label="Última página"
+                  >
+                    »
+                  </Button>
+                </div>
               </nav>
             )}
           </>
