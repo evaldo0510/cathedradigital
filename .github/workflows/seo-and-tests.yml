@@ -31,6 +31,13 @@ jobs:
       - name: Run Vitest
         run: bunx vitest run --reporter=default
 
+      - name: Benchmark do normalizador do Catecismo (budget-gated)
+        env:
+          NORM_BUDGET_PER_MS: '2'
+          NORM_BUDGET_BATCH_MS: '100'
+          NORM_ITERATIONS: '200'
+        run: bunx tsx scripts/catechism-normalizer-benchmark.ts
+
   seo-assets:
     name: Sitemap · robots · SEO checklist · indexing
     runs-on: ubuntu-latest
