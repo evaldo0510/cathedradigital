@@ -440,7 +440,7 @@ const EditorialClosureRuns: React.FC = () => {
                 <span>Linhas por página</span>
                 <Select
                   value={String(pageSize)}
-                  onValueChange={(v) => setPageSize(Number(v))}
+                  onValueChange={(v) => updateParams({ size: Number(v), page: 1 })}
                 >
                   <SelectTrigger className="h-8 w-20">
                     <SelectValue />
