@@ -98,7 +98,43 @@ function prettyJSON(v: unknown): string {
 
 type SortKey = 'started_at' | 'total_rows' | 'warnings' | 'dry_run';
 type SortDir = 'asc' | 'desc';
+type ModeFilter = 'all' | 'dry_run' | 'applied';
+type WarnFilter = 'all' | 'none' | 'any' | 'high';
 const PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
+const SORT_KEYS: SortKey[] = ['started_at', 'total_rows', 'warnings', 'dry_run'];
+
+function downloadFile(name: string, mime: string, content: string) {
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+function csvEscape(v: unknown): string {
+  const s = v == null ? '' : String(v);
+  return /[",\n;]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+function runsToCSV(list: RunSummary[]): string {
+  const header = ['run_id', 'started_at', 'ended_at', 'mode', 'actor', 'total_rows', 'entities', 'strategies', 'warnings'];
+  const lines = list.map((r) => [
+    r.run_id,
+    r.started_at,
+    r.ended_at,
+    r.dry_run ? 'dry_run' : 'applied',
+    r.actor ?? '',
+    r.total_rows,
+    Object.entries(r.entities).map(([k, v]) => `${k}:${v}`).join('|'),
+    Object.entries(r.strategies).map(([k, v]) => `${k}:${v}`).join('|'),
+    r.warnings,
+  ].map(csvEscape).join(','));
+  return [header.join(','), ...lines].join('\n');
+}
 
 const EditorialClosureRuns: React.FC = () => {
   const [loading, setLoading] = React.useState(true);
@@ -108,14 +144,38 @@ const EditorialClosureRuns: React.FC = () => {
   const [rollbackConfirm, setRollbackConfirm] = React.useState('');
   const [rollingBack, setRollingBack] = React.useState(false);
 
-  const [sortKey, setSortKey] = React.useState<SortKey>('started_at');
-  const [sortDir, setSortDir] = React.useState<SortDir>('desc');
-  const [page, setPage] = React.useState(1);
-  const [pageSize, setPageSize] = React.useState<number>(25);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const sortKey: SortKey = (SORT_KEYS as string[]).includes(searchParams.get('sort') ?? '')
+    ? (searchParams.get('sort') as SortKey)
+    : 'started_at';
+  const sortDir: SortDir = searchParams.get('order') === 'asc' ? 'asc' : 'desc';
+  const page = Math.max(1, Number(searchParams.get('page') ?? 1) || 1);
+  const pageSize = (PAGE_SIZE_OPTIONS as readonly number[]).includes(
+    Number(searchParams.get('size')),
+  ) ? Number(searchParams.get('size')) : 25;
+  const modeFilter: ModeFilter = (['all', 'dry_run', 'applied'] as const).includes(
+    (searchParams.get('mode') as ModeFilter) ?? 'all',
+  ) ? (searchParams.get('mode') as ModeFilter) : 'all';
+  const strategyFilter = searchParams.get('strategy') ?? 'all';
+  const warnFilter: WarnFilter = (['all', 'none', 'any', 'high'] as const).includes(
+    (searchParams.get('warn') as WarnFilter) ?? 'all',
+  ) ? (searchParams.get('warn') as WarnFilter) : 'all';
+  const query = searchParams.get('q') ?? '';
+
+  const updateParams = React.useCallback((patch: Record<string, string | number | null>) => {
+    setSearchParams((prev) => {
+      const next = new URLSearchParams(prev);
+      for (const [k, v] of Object.entries(patch)) {
+        if (v === null || v === '' || v === 'all') next.delete(k);
+        else next.set(k, String(v));
+      }
+      return next;
+    }, { replace: true });
+  }, [setSearchParams]);
 
   const load = React.useCallback(async () => {
     setLoading(true);
-    // Últimas 2000 linhas — suficiente para o painel; agrupamento é feito no cliente.
     const { data, error } = await supabase
       .from('editorial_closure_migration_log')
       .select('*')
@@ -134,8 +194,28 @@ const EditorialClosureRuns: React.FC = () => {
 
   const runs = React.useMemo(() => groupRuns(rows), [rows]);
 
+  const allStrategies = React.useMemo(() => {
+    const set = new Set<string>();
+    for (const r of runs) for (const k of Object.keys(r.strategies)) set.add(k);
+    return Array.from(set).sort();
+  }, [runs]);
+
+  const filteredRuns = React.useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return runs.filter((r) => {
+      if (modeFilter === 'dry_run' && !r.dry_run) return false;
+      if (modeFilter === 'applied' && r.dry_run) return false;
+      if (strategyFilter !== 'all' && !r.strategies[strategyFilter]) return false;
+      if (warnFilter === 'none' && r.warnings !== 0) return false;
+      if (warnFilter === 'any' && r.warnings === 0) return false;
+      if (warnFilter === 'high' && r.warnings < 5) return false;
+      if (q && !r.run_id.toLowerCase().includes(q)) return false;
+      return true;
+    });
+  }, [runs, modeFilter, strategyFilter, warnFilter, query]);
+
   const sortedRuns = React.useMemo(() => {
-    const arr = [...runs];
+    const arr = [...filteredRuns];
     arr.sort((a, b) => {
       let cmp = 0;
       switch (sortKey) {
@@ -147,11 +227,10 @@ const EditorialClosureRuns: React.FC = () => {
       return sortDir === 'asc' ? cmp : -cmp;
     });
     return arr;
-  }, [runs, sortKey, sortDir]);
+  }, [filteredRuns, sortKey, sortDir]);
 
   const totalPages = Math.max(1, Math.ceil(sortedRuns.length / pageSize));
   const currentPage = Math.min(page, totalPages);
-  React.useEffect(() => { setPage(1); }, [sortKey, sortDir, pageSize, runs.length]);
 
   const pagedRuns = React.useMemo(() => {
     const start = (currentPage - 1) * pageSize;
@@ -160,10 +239,9 @@ const EditorialClosureRuns: React.FC = () => {
 
   function toggleSort(key: SortKey) {
     if (sortKey === key) {
-      setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
+      updateParams({ order: sortDir === 'asc' ? 'desc' : 'asc', page: 1 });
     } else {
-      setSortKey(key);
-      setSortDir(key === 'started_at' ? 'desc' : 'desc');
+      updateParams({ sort: key, order: 'desc', page: 1 });
     }
   }
 
@@ -174,10 +252,31 @@ const EditorialClosureRuns: React.FC = () => {
       : <ArrowDown className="inline h-3 w-3" />;
   }
 
+  function exportRuns(format: 'csv' | 'json') {
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const base = `editorial-closure-runs-p${currentPage}-${stamp}`;
+    if (format === 'csv') {
+      downloadFile(`${base}.csv`, 'text/csv;charset=utf-8', runsToCSV(pagedRuns));
+    } else {
+      downloadFile(`${base}.json`, 'application/json', JSON.stringify(pagedRuns, null, 2));
+    }
+  }
+
+  const activeFilterCount =
+    (modeFilter !== 'all' ? 1 : 0) +
+    (strategyFilter !== 'all' ? 1 : 0) +
+    (warnFilter !== 'all' ? 1 : 0) +
+    (query ? 1 : 0);
+
+  function clearFilters() {
+    updateParams({ mode: null, strategy: null, warn: null, q: null, page: 1 });
+  }
+
   const openRun = React.useMemo(
     () => (openRunId ? rows.filter((r) => r.run_id === openRunId) : []),
     [rows, openRunId],
   );
+
 
   async function doRollback() {
     if (!rollbackTarget) return;
