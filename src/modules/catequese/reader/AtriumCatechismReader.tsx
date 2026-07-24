@@ -16,7 +16,7 @@ import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import { EditorialHero, EditorialCard } from '@/components/editorial/harmony';
 
-const Catechism = lazy(() => import('@/components/cathedra/Catechism'));
+const Catechism = lazy(() => import('./Catechism'));
 
 const PART_KICKERS: Record<string, string> = {
   'Introdução': 'Prólogo',
