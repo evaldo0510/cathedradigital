@@ -5639,6 +5639,13 @@ export type Database = {
             foreignKeyName: "saint_work_chapters_work_id_fkey"
             columns: ["work_id"]
             isOneToOne: false
+            referencedRelation: "library_items_v1"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "saint_work_chapters_work_id_fkey"
+            columns: ["work_id"]
+            isOneToOne: false
             referencedRelation: "saint_works"
             referencedColumns: ["id"]
           },
@@ -5845,6 +5852,13 @@ export type Database = {
             columns: ["chapter_id"]
             isOneToOne: false
             referencedRelation: "saint_work_chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "saint_works_audit_work_id_fkey"
+            columns: ["work_id"]
+            isOneToOne: false
+            referencedRelation: "library_items_v1"
             referencedColumns: ["id"]
           },
           {
@@ -7540,6 +7554,45 @@ export type Database = {
       }
     }
     Views: {
+      library_items_v1: {
+        Row: {
+          access_type: string | null
+          author_href: string | null
+          author_id: string | null
+          author_label: string | null
+          category: string | null
+          chapter_count: number | null
+          cover_image_url: string | null
+          editorial_score: number | null
+          ficha_completeness: string | null
+          href: string | null
+          id: string | null
+          is_public_domain: boolean | null
+          language: string | null
+          library_kind: Database["public"]["Enums"]["library_kind"] | null
+          original_title: string | null
+          published_at: string | null
+          reading_minutes: number | null
+          search_tsv: unknown
+          slug: string | null
+          source_module: string | null
+          status: string | null
+          synopsis: string | null
+          themes: string[] | null
+          title: string | null
+          updated_at: string | null
+          year: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saint_works_saint_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "saints"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       nexus_chapter_coverage: {
         Row: {
           book_abbr: string | null
@@ -8930,6 +8983,38 @@ export type Database = {
           isOneToOne: false
           isSetofReturn: true
         }
+      }
+      search_library_items: {
+        Args: {
+          p_access?: string
+          p_completeness?: string[]
+          p_kinds?: Database["public"]["Enums"]["library_kind"][]
+          p_limit?: number
+          p_offset?: number
+          p_query?: string
+        }
+        Returns: {
+          access_type: string
+          author_href: string
+          author_label: string
+          category: string
+          chapter_count: number
+          cover_image_url: string
+          ficha_completeness: string
+          href: string
+          id: string
+          is_public_domain: boolean
+          language: string
+          library_kind: Database["public"]["Enums"]["library_kind"]
+          rank: number
+          reading_minutes: number
+          slug: string
+          synopsis: string
+          themes: string[]
+          title: string
+          total_count: number
+          year: number
+        }[]
       }
       search_patristic_library: {
         Args: { page_number?: number; page_size?: number; search_query: string }
