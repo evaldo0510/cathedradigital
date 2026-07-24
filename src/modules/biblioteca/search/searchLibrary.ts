@@ -157,5 +157,3 @@ export async function searchLibrary(
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const _NEXUS_TO_MODULE_ref = NEXUS_TO_MODULE;
