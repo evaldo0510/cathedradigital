@@ -157,8 +157,8 @@ const EditorialClosureValidator: React.FC = () => {
                   reflection={report.data.reflection || undefined}
                   application={report.data.application || undefined}
                   prayer={report.data.prayer || undefined}
-                  next={report.data.next}
-                  nexus={report.data.nexus}
+                  next={report.data.next as React.ComponentProps<typeof EditorialClosure>['next']}
+                  nexus={report.data.nexus as React.ComponentProps<typeof EditorialClosure>['nexus']}
                   source={report.data.source}
                 />
               ) : (

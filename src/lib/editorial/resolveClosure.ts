@@ -35,8 +35,8 @@ export function resolveEditorialClosure(
     reflection: d.reflection || undefined,
     application: d.application || undefined,
     prayer: d.prayer || undefined,
-    next: d.next,
-    nexus: d.nexus,
+    next: d.next as EditorialClosureProps['next'],
+    nexus: d.nexus as EditorialClosureProps['nexus'],
     source: d.source,
   };
 }
