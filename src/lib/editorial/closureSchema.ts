@@ -12,22 +12,20 @@
 import { z } from 'zod';
 import type { NexusKind } from '@/types/nexus';
 
-const NEXUS_KINDS: readonly NexusKind[] = [
-  'bible_verse',
-  'catechism_paragraph',
-  'magisterium_doc',
-  'patristic',
-  'saint',
-  'saint_work',
-  'glossary',
-  'prayer',
-  'journey',
-  'liturgy',
-  'other',
-] as const;
-
 export const ClosureNexusItemSchema = z.object({
-  kind: z.enum(NEXUS_KINDS as unknown as [NexusKind, ...NexusKind[]]),
+  kind: z.enum([
+    'bible_verse',
+    'catechism_paragraph',
+    'magisterium_doc',
+    'patristic',
+    'saint',
+    'saint_work',
+    'glossary',
+    'prayer',
+    'journey',
+    'liturgy',
+    'other',
+  ] as const),
   ref: z.string().min(1),
   label: z.string().min(1),
   note: z.string().optional(),
