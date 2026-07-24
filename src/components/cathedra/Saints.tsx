@@ -422,47 +422,39 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                     />
 
                     {displaySaints.length > 1 && (
-                      <section aria-labelledby="tambem-celebrados" className="space-y-spacing-lg pt-spacing-lg">
-                        <div className="flex items-baseline justify-between border-b border-border/60 pb-spacing-xs">
+                      <section aria-labelledby="tambem-celebrados" className="space-y-spacing-lg pt-spacing-2xl">
+                        <div className="flex items-baseline gap-spacing-md">
                           <h3
                             id="tambem-celebrados"
-                            className="font-serif text-premium-xl text-foreground"
+                            className="font-serif text-premium-xl text-foreground whitespace-nowrap"
                           >
                             Também celebrados hoje
                           </h3>
-                          <span className="text-premium-xs font-black uppercase tracking-[0.2em] text-muted-foreground">
+                          <span aria-hidden="true" className="h-px flex-1 bg-secondary/40" />
+                          <span className="text-premium-xs font-black uppercase tracking-[0.24em] text-secondary">
                             {displaySaints.length - 1} {displaySaints.length - 1 === 1 ? 'memória' : 'memórias'}
                           </span>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-md">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-spacing-lg gap-y-spacing-md">
                           {displaySaints.slice(1).map((saint) => (
                             <button
                               key={saint.id}
                               type="button"
                               onClick={() => handleOpenSaint(saint, false)}
-                              className="group text-left premium-card overflow-hidden flex focus-visible:ring-2 focus-visible:ring-primary outline-none"
+                              className="group text-left border-l-2 border-secondary/40 hover:border-secondary pl-spacing-md py-spacing-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60"
                               aria-label={`Abrir ficha de ${saint.name}`}
                             >
-                              <div className="w-spacing-4xl h-auto shrink-0 relative overflow-hidden">
-                                <SacredImage
-                                  src={saint.image}
-                                  alt={saint.name}
-                                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                                />
-                              </div>
-                              <div className="flex-1 p-spacing-md space-y-spacing-2xs">
-                                <p className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">
-                                  {CATEGORY_LABELS[saint.category] || 'Testemunha da Fé'}
+                              <p className="text-premium-xs font-black uppercase tracking-[0.22em] text-secondary mb-spacing-3xs">
+                                {CATEGORY_LABELS[saint.category] || 'Testemunha da Fé'}
+                              </p>
+                              <h4 className="font-serif text-premium-lg text-foreground leading-tight group-hover:text-primary transition-colors">
+                                {saint.name}
+                              </h4>
+                              {saint.title && (
+                                <p className="text-premium-sm text-muted-foreground font-serif italic mt-spacing-3xs line-clamp-2">
+                                  {saint.title}
                                 </p>
-                                <h4 className="font-serif text-premium-lg text-foreground leading-tight group-hover:text-primary transition-colors line-clamp-spacing-2xs">
-                                  {saint.name}
-                                </h4>
-                                {saint.title && (
-                                  <p className="text-premium-xs text-muted-foreground font-serif italic line-clamp-spacing-2xs">
-                                    {saint.title}
-                                  </p>
-                                )}
-                              </div>
+                              )}
                             </button>
                           ))}
                         </div>
