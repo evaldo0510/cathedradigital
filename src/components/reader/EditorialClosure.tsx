@@ -19,6 +19,20 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Icons } from '@/constants';
+import { resolveNexusHref } from '@/lib/nexusHref';
+import type { NexusKind } from '@/types/nexus';
+
+/**
+ * Item de Nexus curado dentro do encerramento editorial.
+ * Distinto de `nexus_relations` (grafo global): estas são as 1–3
+ * conexões que o editor escolheu como fio de continuidade imediata.
+ */
+export interface EditorialClosureNexusItem {
+  kind: NexusKind;
+  ref: string;
+  label: string;
+  note?: string;
+}
 
 export interface EditorialClosureProps {
   /** Pergunta interior, sóbria, não retórica. 1 frase. */
@@ -33,6 +47,10 @@ export interface EditorialClosureProps {
     href: string;
     kicker?: string;
   };
+  /** Nexus editorial curado — 1 a 3 conexões diretas ao fio da leitura. */
+  nexus?: EditorialClosureNexusItem[];
+  /** Origem do closure. `cathedra-editorial` = curado; `ai-*` = gerado. */
+  source?: 'cathedra-editorial' | 'ai-assisted' | 'ai-generated' | string;
   className?: string;
 }
 
@@ -60,8 +78,14 @@ export const EditorialClosure: React.FC<EditorialClosureProps> = ({
   application,
   prayer,
   next,
+  nexus,
+  source,
   className,
 }) => {
+  const nexusLinks = (nexus ?? [])
+    .map((item) => ({ item, href: resolveNexusHref(item.kind, item.ref) }))
+    .filter((x): x is { item: EditorialClosureNexusItem; href: string } => !!x.href);
+
   return (
     <div
       className={cn(
@@ -72,6 +96,7 @@ export const EditorialClosure: React.FC<EditorialClosureProps> = ({
       )}
       data-editorial-closure
       data-constitution-version="1.0.0"
+      data-closure-source={source ?? 'cathedra-editorial'}
     >
       <ClosureBlock
         kicker="Reflexão"
@@ -95,6 +120,31 @@ export const EditorialClosure: React.FC<EditorialClosureProps> = ({
           {prayer}
         </p>
       </ClosureBlock>
+
+      {nexusLinks.length > 0 && (
+        <ClosureBlock
+          kicker="Conexões"
+          icon={<Icons.Link className="w-4 h-4" aria-hidden />}
+        >
+          <ul className="flex flex-col gap-spacing-xs">
+            {nexusLinks.map(({ item, href }) => (
+              <li key={`${item.kind}:${item.ref}`}>
+                <Link
+                  to={href}
+                  className="text-base leading-relaxed underline underline-offset-4 decoration-secondary/60 hover:decoration-secondary transition-colors"
+                >
+                  {item.label}
+                </Link>
+                {item.note && (
+                  <span className="ml-2 text-sm text-muted-foreground">
+                    — {item.note}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </ClosureBlock>
+      )}
 
       {next && (
         <ClosureBlock

@@ -10,11 +10,55 @@
  * Assim os leitores renderizam `<EditorialClosure>` apenas quando existe
  * conteúdo curado (nunca placeholders vazios ou genéricos de IA).
  */
-import type { EditorialClosureProps } from '@/components/reader/EditorialClosure';
+import type {
+  EditorialClosureProps,
+  EditorialClosureNexusItem,
+} from '@/components/reader/EditorialClosure';
+import type { NexusKind } from '@/types/nexus';
 
 type ClosureLike = {
   editorial_closure?: unknown;
 } & Record<string, unknown>;
+
+const VALID_KINDS: NexusKind[] = [
+  'bible_verse',
+  'catechism_paragraph',
+  'magisterium_doc',
+  'patristic',
+  'saint',
+  'saint_work',
+  'glossary',
+  'prayer',
+  'journey',
+  'liturgy',
+  'other',
+];
+
+function parseNexus(raw: unknown): EditorialClosureNexusItem[] | undefined {
+  if (!Array.isArray(raw)) return undefined;
+  const items: EditorialClosureNexusItem[] = [];
+  for (const entry of raw) {
+    if (!entry || typeof entry !== 'object') continue;
+    const e = entry as Record<string, unknown>;
+    const kind = e.kind ?? e.type;
+    const ref = e.ref ?? e.id ?? e.slug;
+    const label = e.label ?? e.title;
+    if (
+      typeof kind !== 'string' ||
+      !VALID_KINDS.includes(kind as NexusKind) ||
+      typeof ref !== 'string' ||
+      !ref ||
+      typeof label !== 'string' ||
+      !label
+    ) {
+      continue;
+    }
+    const item: EditorialClosureNexusItem = { kind: kind as NexusKind, ref, label };
+    if (typeof e.note === 'string') item.note = e.note;
+    items.push(item);
+  }
+  return items.length > 0 ? items : undefined;
+}
 
 export function resolveEditorialClosure(
   source: ClosureLike | null | undefined,
@@ -39,5 +83,8 @@ export function resolveEditorialClosure(
         }
       : undefined;
 
-  return { reflection, application, prayer, next };
+  const nexus = parseNexus(c.nexus);
+  const closureSource = typeof c.source === 'string' ? c.source : undefined;
+
+  return { reflection, application, prayer, next, nexus, source: closureSource };
 }
