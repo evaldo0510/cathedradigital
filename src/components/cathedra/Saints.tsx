@@ -301,7 +301,7 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                     `tab-${mode}`,
                     `panel-${mode}`,
                     isActive,
-                    `relative bg-transparent px-0 py-spacing-3xs text-premium-xs font-black uppercase tracking-[0.22em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                    `relative inline-flex items-center justify-center min-h-11 bg-transparent px-spacing-2xs py-spacing-xs text-premium-xs font-black uppercase tracking-[0.22em] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                       isActive
                         ? 'text-primary'
                         : 'text-muted-foreground hover:text-foreground'
