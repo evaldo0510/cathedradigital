@@ -5,8 +5,8 @@
  * Usa o ReaderShell (Reader Architecture Rule) com EditorialHero e navegação.
  */
 
-import React, { useEffect, useMemo, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {
   getWorkBySlug,
@@ -23,9 +23,78 @@ import { Icons } from '@/constants';
 
 type ChapterSummary = Pick<SaintWorkChapter, 'id' | 'order' | 'title' | 'subtitle' | 'reading_minutes'>;
 
+/** Escapa regex e divide o termo em tokens (>=2 chars, sem stopwords triviais). */
+function buildHighlightRegex(raw: string): RegExp | null {
+  const tokens = raw
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '') // remove acentos p/ comparar
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((t) => t.length >= 2)
+    .map((t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+  if (tokens.length === 0) return null;
+  return new RegExp(`(${tokens.join('|')})`, 'gi');
+}
+
+/** Percorre nós de texto sob `root` e envolve matches em <mark data-search-hit>. */
+function applyHighlight(root: HTMLElement, term: string): number {
+  const re = buildHighlightRegex(term);
+  if (!re) return 0;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode: (node) => {
+      const parent = (node as Text).parentElement;
+      if (!parent) return NodeFilter.FILTER_REJECT;
+      const tag = parent.tagName;
+      if (tag === 'SCRIPT' || tag === 'STYLE' || tag === 'MARK') return NodeFilter.FILTER_REJECT;
+      return node.nodeValue && node.nodeValue.trim().length > 0
+        ? NodeFilter.FILTER_ACCEPT
+        : NodeFilter.FILTER_REJECT;
+    },
+  });
+  const targets: Text[] = [];
+  let n: Node | null = walker.nextNode();
+  while (n) {
+    targets.push(n as Text);
+    n = walker.nextNode();
+  }
+  let hits = 0;
+  for (const textNode of targets) {
+    const text = textNode.nodeValue ?? '';
+    // Trabalha em variante sem acento para casar acentuadas também.
+    const noAcc = text.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    if (!re.test(noAcc)) {
+      re.lastIndex = 0;
+      continue;
+    }
+    re.lastIndex = 0;
+    const frag = document.createDocumentFragment();
+    let last = 0;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(noAcc)) !== null) {
+      const start = m.index;
+      const end = start + m[0].length;
+      if (start > last) frag.appendChild(document.createTextNode(text.slice(last, start)));
+      const mark = document.createElement('mark');
+      mark.setAttribute('data-search-hit', '');
+      mark.className = 'bg-primary/25 text-foreground rounded-sm px-0.5';
+      mark.textContent = text.slice(start, end);
+      frag.appendChild(mark);
+      last = end;
+      hits++;
+      if (m.index === re.lastIndex) re.lastIndex++;
+    }
+    if (last < text.length) frag.appendChild(document.createTextNode(text.slice(last)));
+    textNode.parentNode?.replaceChild(frag, textNode);
+  }
+  return hits;
+}
+
 const SaintWorkReaderPage: React.FC = () => {
   const { autor, obra, ordem } = useParams<{ autor: string; obra: string; ordem: string }>();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const highlight = searchParams.get('highlight')?.trim() ?? '';
+  const articleRef = useRef<HTMLElement | null>(null);
   const currentOrder = Math.max(1, parseInt(ordem ?? '1', 10) || 1);
 
   const [work, setWork] = useState<SaintWork | null>(null);
@@ -79,6 +148,21 @@ const SaintWorkReaderPage: React.FC = () => {
       next: idx >= 0 && idx < chapters.length - 1 ? chapters[idx + 1] : null,
     };
   }, [chapters, currentOrder]);
+
+  // Realce dos termos vindos de ?highlight= + scroll até a 1ª ocorrência.
+  useEffect(() => {
+    if (!chapter || !highlight) return;
+    const root = articleRef.current;
+    if (!root) return;
+    const raf = requestAnimationFrame(() => {
+      const hits = applyHighlight(root, highlight);
+      if (hits > 0) {
+        const first = root.querySelector<HTMLElement>('mark[data-search-hit]');
+        first?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [chapter, highlight]);
 
   if (loading) {
     return (
@@ -187,6 +271,7 @@ const SaintWorkReaderPage: React.FC = () => {
         }
       >
         <article
+          ref={articleRef}
           className="prose prose-lg dark:prose-invert max-w-none font-serif leading-relaxed"
           dangerouslySetInnerHTML={{ __html: chapter.body_html }}
         />

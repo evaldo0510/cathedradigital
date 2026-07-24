@@ -6,7 +6,8 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { listWorkAudit, type SaintWorksAuditEntry } from '@/services/saintWorksService';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, History } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Loader2, History, Download } from 'lucide-react';
 
 const ACTION_LABEL: Record<SaintWorksAuditEntry['action'], string> = {
   created: 'Obra criada',
@@ -42,6 +43,48 @@ export interface WorkAuditHistoryProps {
   workId: string;
 }
 
+/** Escape CSV cell: wrap in quotes, double-up embedded quotes. */
+function csvCell(v: unknown): string {
+  const s = v == null ? '' : String(v);
+  return `"${s.replace(/"/g, '""')}"`;
+}
+
+function exportCsv(entries: SaintWorksAuditEntry[], workId: string) {
+  const header = [
+    'data_iso',
+    'acao',
+    'de_status',
+    'para_status',
+    'campos_alterados',
+    'capitulo_id',
+    'ator_email',
+    'ator_id',
+    'notas',
+  ];
+  const rows = entries.map((e) => [
+    e.created_at,
+    ACTION_LABEL[e.action] ?? e.action,
+    e.from_status ?? '',
+    e.to_status ?? '',
+    (e.changed_fields ?? []).join('|'),
+    e.chapter_id ?? '',
+    e.actor_email ?? '',
+    e.actor_id ?? '',
+    (e.notes ?? '').replace(/\s+/g, ' ').trim(),
+  ]);
+  const csv = [header, ...rows].map((r) => r.map(csvCell).join(',')).join('\r\n');
+  // BOM para Excel reconhecer UTF-8.
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `auditoria_obra_${workId}_${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 export const WorkAuditHistory: React.FC<WorkAuditHistoryProps> = ({ workId }) => {
   const { data: entries = [], isLoading } = useQuery({
     queryKey: ['saint_works_audit', workId],
@@ -65,7 +108,23 @@ export const WorkAuditHistory: React.FC<WorkAuditHistoryProps> = ({ workId }) =>
   }
 
   return (
-    <ol className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
+    <div className="space-y-2">
+      <div className="flex items-center justify-between">
+        <p className="text-xs text-muted-foreground">
+          {entries.length} {entries.length === 1 ? 'evento registrado' : 'eventos registrados'}
+        </p>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          onClick={() => exportCsv(entries, workId)}
+          className="h-7 gap-1.5 text-xs"
+        >
+          <Download className="w-3.5 h-3.5" aria-hidden /> Exportar CSV
+        </Button>
+      </div>
+      <ol className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
+
       {entries.map((e) => (
         <li
           key={e.id}
@@ -101,7 +160,8 @@ export const WorkAuditHistory: React.FC<WorkAuditHistoryProps> = ({ workId }) =>
           </p>
         </li>
       ))}
-    </ol>
+      </ol>
+    </div>
   );
 };
 

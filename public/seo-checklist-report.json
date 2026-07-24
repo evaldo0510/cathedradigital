@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-07-23T15:11:42.896Z",
+  "generated_at": "2026-07-24T16:19:48.998Z",
   "project_domain": "https://www.cathedradigital.com.br",
   "summary": {
-    "pass": 11,
-    "warn": 3,
+    "pass": 12,
+    "warn": 2,
     "fail": 0
   },
   "checks": [
@@ -76,8 +76,8 @@
     {
       "id": "gsc_meta",
       "label": "Google Search Console: meta verification",
-      "status": "warn",
-      "detail": "Sem meta google-site-verification (configurar via /admin/seo-status após conectar GSC)."
+      "status": "pass",
+      "detail": "Meta google-site-verification presente."
     },
     {
       "id": "glossary_in_sitemap",
