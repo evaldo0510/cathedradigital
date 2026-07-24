@@ -5,8 +5,8 @@
  * importar `NexusBubbles`. Complementa `scripts/nexus-unification-audit.ts`
  * dentro do Vitest, para pegar regressões no PR antes do CI.
  */
-import { readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
+import { resolve, join } from 'node:path';
 import { describe, it, expect } from 'vitest';
 
 const TARGETS = [
@@ -19,7 +19,17 @@ const TARGETS = [
 
 const FORBIDDEN = /from\s+['"][^'"]*cathedra\/NexusBubbles['"]/;
 
-describe('C0.4 — Nexus Unification', () => {
+function walk(dir: string, acc: string[] = []): string[] {
+  for (const entry of readdirSync(dir)) {
+    const full = join(dir, entry);
+    const st = statSync(full);
+    if (st.isDirectory()) walk(full, acc);
+    else if (/\.(ts|tsx)$/.test(entry)) acc.push(full);
+  }
+  return acc;
+}
+
+describe('C0.4 / C0.4.b — Nexus Unification', () => {
   for (const rel of TARGETS) {
     it(`${rel} não importa NexusBubbles`, () => {
       const src = readFileSync(resolve(process.cwd(), rel), 'utf8');
@@ -32,5 +42,18 @@ describe('C0.4 — Nexus Unification', () => {
       const src = readFileSync(resolve(process.cwd(), rel), 'utf8');
       expect(/\bNexusPanel\b/.test(src)).toBe(true);
     }
+  });
+
+  it('C0.4.b: arquivo legado NexusBubbles.tsx não existe mais', () => {
+    expect(
+      existsSync(resolve(process.cwd(), 'src/components/cathedra/NexusBubbles.tsx')),
+    ).toBe(false);
+  });
+
+  it('C0.4.b: nenhum arquivo em src/ importa NexusBubbles', () => {
+    const offenders = walk(resolve(process.cwd(), 'src')).filter((full) =>
+      FORBIDDEN.test(readFileSync(full, 'utf8')),
+    );
+    expect(offenders).toEqual([]);
   });
 });

@@ -1,17 +1,12 @@
 /**
- * @deprecated Reader Architecture Rule (COS §10 / v1.1):
- *   `NexusBubbles` está proibido. Substituir por:
- *     - `NexusPanel`         (painel passivo de conexões)
- *     - `ReferencePopover`   (popover inline de referência)
- *   Ver docs/reader-architecture-master.md e src/components/reader/.
- *   Este componente será removido na Fase G da Sprint Nexus 2.0.
+ * ThemeChip (ex-TagBubble) — chip canônico de tema com popover de exploração.
+ *
+ * Criado na Onda C0.4.b (Extinção do NexusBubbles). É a única forma
+ * autorizada de renderizar bubbles de tema com sheet de conexões.
+ * Consumido por `TemasPage` e `TemaDetailPage`. Qualquer outra
+ * necessidade de exibir referência inline deve usar `ReferencePopover`
+ * de @/components/reader.
  */
-if (import.meta.env.DEV) {
-  // eslint-disable-next-line no-console
-  console.warn(
-    '[Cathedra] NexusBubbles é deprecated. Use NexusPanel + ReferencePopover de @/components/reader. Ver docs/reader-architecture-master.md',
-  );
-}
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { getSpiritualInsight } from '@/services/aiService';
 import { useNavigate } from 'react-router-dom';
@@ -76,9 +71,8 @@ interface Tag {
 
 // Reusing TagContent from @/lib/nexusContent
 
-interface NexusBubblesProps {
-  profileId?: ProfileId | null;
-}
+// Interface local do chip (Tag ainda referenciada em `interface TagBubbleProps`).
+
 
 interface TagBubbleProps {
   tag: Tag;
@@ -1044,129 +1038,3 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
   );
 };
 
-
-const NexusBubbles: React.FC<NexusBubblesProps> = ({ profileId: propProfileId }) => {
-  const { profileId: hookProfileId } = useSpiritualProfile();
-  const profileId = propProfileId || hookProfileId;
-  const navigate = useNavigate();
-  const filteredRef = React.useRef<HTMLDivElement>(null);
-  const suggestedRef = React.useRef<HTMLDivElement>(null);
-  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
-  const [tags, setTags] = useState<Tag[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  useEffect(() => {
-    const fetchTags = async () => {
-      const { data, error } = await supabase
-        .from('themes')
-        .select('*')
-        .order('name');
-      
-      if (!error && data) {
-        // Icons.Map themes to the Icons.Tag interface expected by the component
-        const mappedTags = data.map((t: any) => ({
-          id: t.id,
-          slug: t.slug,
-          label: t.name,
-          emoji: t.emoji || '⛪',
-          category: t.category || 'Geral'
-        })) as Tag[];
-        setTags(mappedTags);
-      }
-      setLoading(false);
-    };
-
-    fetchTags();
-  }, []);
-
-  const categories = useMemo(() => {
-    const cats = [...new Set(tags.map(t => t.category))];
-    return cats.sort();
-  }, [tags]);
-
-  const filteredTags = useMemo(() => {
-    if (!searchQuery.trim()) return tags;
-    const query = normalizeText(searchQuery);
-    return tags.filter(t => normalizeText(t.label).includes(query));
-  }, [tags, searchQuery]);
-
-  // Priority grouping for better visualization
-  const priorityGroups = useMemo(() => {
-    const suggested = tags.filter(t => t.priorityGroup === 'suggested');
-    const essential = tags.filter(t => t.priorityGroup === 'essential');
-    return { suggested, essential };
-  }, [tags]);
-
-  const { handleKeyDown } = useRovingTabindex(filteredTags.length);
-
-  return (
-    <div className="space-y-spacing-2xl">
-      <div className="relative group max-w-spacing-md mx-auto">
-        <div className="absolute inset-0 bg-primary/5 rounded-premium-full blur-xl opacity-0 group-focus-within:opacity-100 transition-opacity" />
-        <Icons.Search className="absolute left-spacing-md top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-muted-foreground group-focus-within:text-primary transition-colors" />
-        <input 
-          type="text" 
-          placeholder="Buscar temas e conexões..." 
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full h-spacing-2xl pl-spacing-2xl pr-spacing-md rounded-premium-full bg-card border border-border/40 focus:border-primary/30 focus:ring-4 focus:ring-primary/5 transition-all text-premium-sm outline-none"
-        />
-      </div>
-
-      <div className="space-y-spacing-3xl">
-        {searchQuery.trim() ? (
-          <div className="space-y-spacing-lg">
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 text-center">Resultados da Busca</h3>
-            <div 
-              ref={filteredRef}
-              className="flex flex-wrap justify-center gap-spacing-sm"
-            >
-              {filteredTags.map((tag, i) => (
-                <TagBubble 
-                  key={tag.id} 
-                  tag={tag} 
-                  index={i} 
-                  profileId={profileId}
-                />
-              ))}
-            </div>
-          </div>
-        ) : (
-          <>
-            {categories.map((cat, idx) => {
-              const catTags = tags.filter(t => t.category === cat);
-              return (
-                <section key={cat} className="space-y-spacing-lg">
-                  <div className="flex items-center gap-spacing-lg">
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/60 whitespace-nowrap">{cat}</h3>
-                    <div className="h-px flex-1 bg-border/20" />
-                  </div>
-                  <div className="flex flex-wrap gap-spacing-sm">
-                    {catTags.map((tag, i) => (
-                      <TagBubble 
-                        key={tag.id} 
-                        tag={tag} 
-                        index={i} 
-                        profileId={profileId}
-                      />
-                    ))}
-                  </div>
-                </section>
-              );
-            })}
-          </>
-        )}
-      </div>
-
-      {!loading && filteredTags.length === 0 && (
-        <div className="text-center py-spacing-3xl space-y-spacing-md">
-          <Icons.Search className="w-spacing-2xl h-spacing-2xl text-muted-foreground/60 mx-auto" />
-          <p className="text-muted-foreground font-serif italic">Nenhum tema encontrado para "{searchQuery}"</p>
-        </div>
-      )}
-    </div>
-  );
-};
-
-export default NexusBubbles;
