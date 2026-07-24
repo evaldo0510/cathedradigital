@@ -109,8 +109,8 @@ const BibliotecaEscritosPage = lazy(() => import('./pages/biblioteca/BibliotecaE
 const BibliotecaBuscaPage = lazy(() => import('./pages/biblioteca/BibliotecaBuscaPage'));
 const SaintWorkOverviewPage = lazy(() => import('./pages/biblioteca/SaintWorkOverviewPage'));
 const SaintWorkReaderPage = lazy(() => import('./pages/biblioteca/SaintWorkReaderPage'));
-const BibliotecaCatolicaPage = lazy(() => import('./pages/biblioteca/BibliotecaCatolicaPage'));
 const BibliotecaCatolicaAcervoPage = lazy(() => import('./pages/biblioteca/BibliotecaCatolicaAcervoPage'));
+const AcervoHomePage = lazy(() => import('./pages/acervo/AcervoHomePage'));
 
 const HojePage = lazy(() => import('./components/cathedra/HojePage'));
 const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
@@ -687,9 +687,15 @@ const AppLayout: React.FC = () => {
               <Route path="/biblioteca/escritos/:autor/:obra" element={<Suspense fallback={<LoadingFallback />}><SaintWorkOverviewPage /></Suspense>} />
               <Route path="/biblioteca/escritos/:autor/:obra/capitulo/:ordem" element={<Suspense fallback={<LoadingFallback />}><SaintWorkReaderPage /></Suspense>} />
 
-              {/* Biblioteca Católica — frente unificada (Escritos + Padres + Doutores + Clássicos + Magistério) */}
-              <Route path="/biblioteca/catolica" element={<Suspense fallback={<LoadingFallback />}><BibliotecaCatolicaPage /></Suspense>} />
-              <Route path="/biblioteca/catolica/acervo" element={<Suspense fallback={<LoadingFallback />}><BibliotecaCatolicaAcervoPage /></Suspense>} />
+              {/* Biblioteca Católica — frente unificada (legado; redirect para /acervo) */}
+              <Route path="/biblioteca/catolica" element={<Navigate to="/acervo" replace />} />
+              <Route path="/biblioteca/catolica/acervo" element={<Navigate to="/acervo/lista" replace />} />
+
+              {/* Acervo Cathedra — hub unificado do conhecimento católico */}
+              <Route path="/acervo" element={<Suspense fallback={<LoadingFallback />}><AcervoHomePage /></Suspense>} />
+              <Route path="/acervo/lista" element={<Suspense fallback={<LoadingFallback />}><BibliotecaCatolicaAcervoPage /></Suspense>} />
+
+
 
 
               {/* Jornadas */}
