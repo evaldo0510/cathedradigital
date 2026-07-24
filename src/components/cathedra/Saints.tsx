@@ -444,6 +444,16 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                 )}
               </div>
             </motion.div>
+          ) : viewMode === 'filtros' ? (
+            <motion.div
+              key="filtros"
+              {...getTabPanelProps('panel-filtros', 'tab-filtros', viewMode === 'filtros', "space-y-spacing-xl outline-none")}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+            >
+              <SaintsFilters onOpenSaint={(s) => handleOpenSaint(s, false)} />
+            </motion.div>
           ) : viewMode === 'search' ? (
             <motion.div
               key="search"
