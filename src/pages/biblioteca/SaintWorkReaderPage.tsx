@@ -149,6 +149,21 @@ const SaintWorkReaderPage: React.FC = () => {
     };
   }, [chapters, currentOrder]);
 
+  // Realce dos termos vindos de ?highlight= + scroll até a 1ª ocorrência.
+  useEffect(() => {
+    if (!chapter || !highlight) return;
+    const root = articleRef.current;
+    if (!root) return;
+    const raf = requestAnimationFrame(() => {
+      const hits = applyHighlight(root, highlight);
+      if (hits > 0) {
+        const first = root.querySelector<HTMLElement>('mark[data-search-hit]');
+        first?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [chapter, highlight]);
+
   if (loading) {
     return (
       <main className="min-h-screen flex items-center justify-center">
