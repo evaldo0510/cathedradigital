@@ -47,47 +47,35 @@ async function searchGlossary(q: string, limit: number): Promise<RawHit[]> {
 }
 
 async function searchBible(q: string, limit: number): Promise<RawHit[]> {
+  // Onda B.1.2 — busca apenas em livros (bible_verses exigiria join com
+  // bible_chapters → bible_books). Verse-level search entra na B.1.4 (semântica).
   const l = like(q);
-  const [books, verses] = await Promise.all([
-    supabase.from('bible_books').select('id, abbrev, name, testament')
-      .or(`name.ilike.${l},abbrev.ilike.${l}`).limit(Math.min(limit, 8)),
-    supabase.from('bible_verses').select('book_abbrev, chapter, verse, text')
-      .ilike('text', l).limit(Math.min(limit, 6)),
-  ]);
-  const hits: RawHit[] = [];
-  for (const r of books.data ?? []) {
-    hits.push({
-      type: 'bible',
-      id: `book:${r.abbrev}`,
-      title: r.name ?? r.abbrev ?? '',
-      subtitle: r.testament ?? undefined,
-      href: `/biblia/${r.abbrev}/1`,
-    });
-  }
-  for (const v of verses.data ?? []) {
-    hits.push({
-      type: 'bible',
-      id: `${v.book_abbrev}-${v.chapter}-${v.verse}`,
-      title: `${v.book_abbrev} ${v.chapter}:${v.verse}`,
-      excerpt: v.text ?? undefined,
-      href: `/biblia/${v.book_abbrev}/${v.chapter}#v${v.verse}`,
-    });
-  }
-  return hits;
+  const { data } = await supabase
+    .from('bible_books')
+    .select('id, abbrev, name, testament')
+    .or(`name.ilike.${l},abbrev.ilike.${l}`)
+    .limit(limit);
+  return (data ?? []).map((r) => ({
+    type: 'bible',
+    id: `book:${r.abbrev}`,
+    title: r.name ?? r.abbrev ?? '',
+    subtitle: r.testament ?? undefined,
+    href: `/biblia/${r.abbrev}/1`,
+  }));
 }
 
 async function searchCatechism(q: string, limit: number): Promise<RawHit[]> {
   const l = like(q);
   const { data } = await supabase
     .from('catechism_official')
-    .select('paragraph, slug, texto_base, titulo')
+    .select('paragraph, slug, texto_base')
     .eq('status', 'published')
-    .or(`texto_base.ilike.${l},titulo.ilike.${l}`)
+    .ilike('texto_base', l)
     .limit(limit);
   return (data ?? []).map((r) => ({
     type: 'catechism',
     id: String(r.paragraph),
-    title: r.titulo ? `§ ${r.paragraph} · ${r.titulo}` : `§ ${r.paragraph}`,
+    title: `§ ${r.paragraph}`,
     excerpt: r.texto_base ? r.texto_base.slice(0, 260) : undefined,
     href: `/catechism/${r.paragraph}`,
     nexusRef: { kind: 'catechism', ref: String(r.paragraph) },
