@@ -106,10 +106,10 @@ async function fetchWikipediaPT(name: string): Promise<ImportOutcome | null> {
     { alias: s.title, language: "pt", type: "alt", source: "wikipedia" },
   ];
 
-  // Enriquecimento via infobox + langlinks numa única chamada
+  // Enriquecimento via infobox + langlinks + imageinfo numa única chamada agregada
   try {
     const infoRes = await fetch(
-      `https://pt.wikipedia.org/w/api.php?action=query&prop=revisions|langlinks&rvprop=content&rvsection=0&lllimit=50&lllang=&titles=${title}&format=json&formatversion=2&origin=*`,
+      `https://pt.wikipedia.org/w/api.php?action=query&prop=revisions|langlinks|pageimages&rvprop=content&rvsection=0&lllimit=50&piprop=name&titles=${title}&format=json&formatversion=2&origin=*`,
       { headers: { "User-Agent": WIKI_UA } },
     );
     if (infoRes.ok) {
@@ -129,6 +129,18 @@ async function fetchWikipediaPT(name: string): Promise<ImportOutcome | null> {
           source: "wikipedia",
         });
       }
+
+      // Licença real via Commons imageinfo
+      const pageimage: string | undefined = page?.pageimage;
+      if (pageimage) {
+        const commons = await fetchCommonsImageInfo(pageimage);
+        if (commons) {
+          if (commons.url) data.image = commons.url;
+          data.image_source_url = commons.descriptionurl ?? data.image_source_url;
+          if (commons.license) data.image_license = commons.license;
+          if (commons.attribution) data.image_attribution = commons.attribution;
+        }
+      }
     }
   } catch (_) {
     /* opcional */
@@ -136,6 +148,38 @@ async function fetchWikipediaPT(name: string): Promise<ImportOutcome | null> {
 
   return { provider: "wikipedia-pt", confidence: 80, data, sourceUrl, aliases };
 }
+
+interface CommonsImage {
+  url?: string;
+  descriptionurl?: string;
+  license?: string;
+  attribution?: string;
+}
+
+async function fetchCommonsImageInfo(fileName: string): Promise<CommonsImage | null> {
+  const file = `File:${fileName}`.replace(/\s+/g, "_");
+  const url = `https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url|extmetadata&iiextmetadatafilter=LicenseShortName|Artist|AttributionRequired&titles=${encodeURIComponent(file)}&format=json&formatversion=2&origin=*`;
+  try {
+    const res = await fetch(url, { headers: { "User-Agent": WIKI_UA } });
+    if (!res.ok) return null;
+    const j = await res.json();
+    const ii = j?.query?.pages?.[0]?.imageinfo?.[0];
+    if (!ii) return null;
+    const meta = ii.extmetadata ?? {};
+    const license = meta.LicenseShortName?.value as string | undefined;
+    const artistHtml = meta.Artist?.value as string | undefined;
+    const artist = artistHtml?.replace(/<[^>]+>/g, "").trim();
+    return {
+      url: ii.url,
+      descriptionurl: ii.descriptionurl,
+      license,
+      attribution: artist ? `${artist} (via Wikimedia Commons)` : undefined,
+    };
+  } catch (_) {
+    return null;
+  }
+}
+
 
 function extractFromWikitext(wt: string): Partial<NormalizedSaint> {
   if (!wt) return {};
