@@ -3,7 +3,7 @@
  * dinamicamente, um índice de seções e um alvo favoritável na TopBar mobile.
  */
 
-import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import type { FavoriteInput } from "@/hooks/useDevotionalFavorites";
 
 export interface DevotionalIndexItem {
@@ -27,20 +27,22 @@ const DevotionalReaderCtx = createContext<Ctx | null>(null);
 export function DevotionalReaderProvider({ children }: { children: ReactNode }) {
   const [indexTitle, setIndexTitle] = useState<string | null>(null);
   const [indexItems, setIndexItems] = useState<DevotionalIndexItem[]>([]);
-  const [favorite, setFavorite] = useState<FavoriteInput | null>(null);
+  const [favorite, setFavoriteState] = useState<FavoriteInput | null>(null);
+
+  // Setters estáveis: identidade fixa entre renders para não invalidar
+  // useEffect de consumidores (causava loop infinito na Via Sacra ao
+  // re-disparar effects cujas deps incluíam setIndex/setFavorite).
+  const setIndex = useCallback((title: string, items: DevotionalIndexItem[]) => {
+    setIndexTitle(title);
+    setIndexItems(items);
+  }, []);
+  const setFavorite = useCallback((input: FavoriteInput | null) => {
+    setFavoriteState(input);
+  }, []);
 
   const value = useMemo<Ctx>(
-    () => ({
-      indexTitle,
-      indexItems,
-      favorite,
-      setIndex: (title, items) => {
-        setIndexTitle(title);
-        setIndexItems(items);
-      },
-      setFavorite,
-    }),
-    [indexTitle, indexItems, favorite],
+    () => ({ indexTitle, indexItems, favorite, setIndex, setFavorite }),
+    [indexTitle, indexItems, favorite, setIndex, setFavorite],
   );
 
   return <DevotionalReaderCtx.Provider value={value}>{children}</DevotionalReaderCtx.Provider>;
