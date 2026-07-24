@@ -18,7 +18,7 @@ import { SAINT_WORK_CATEGORY_LABELS } from '@/types/saintWorks';
 import { ReaderShell } from '@/components/reader';
 import { EditorialHero } from '@/components/editorial';
 import { Button } from '@/components/ui/button';
-import { Icons } from '../../../constants';
+import { Icons } from '@/constants';
 
 type ChapterSummary = Pick<SaintWorkChapter, 'id' | 'order' | 'title' | 'subtitle' | 'reading_minutes'>;
 
