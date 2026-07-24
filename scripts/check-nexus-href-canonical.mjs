@@ -51,34 +51,51 @@ function walk(dir) {
   }
 }
 
+function isNexusPolymorphicContext(src) {
+  // Só consideramos duplicação quando o arquivo trata múltiplos kinds do
+  // Nexus dinamicamente (switch/Record/target_kind/source_kind). Páginas
+  // que apenas navegam entre itens do próprio módulo não são "Nexus routing".
+  return (
+    /\btarget_kind\b/.test(src) ||
+    /\bsource_kind\b/.test(src) ||
+    /Record<\s*NexusKind\s*,/.test(src) ||
+    /switch\s*\(\s*[^)]*\bkind\b[^)]*\)[\s\S]{0,400}case\s+['"](saint|glossary|prayer|journey|catechism_paragraph|bible_verse|magisterium_doc|patristic|liturgy)['"]/.test(src)
+  );
+}
+
 function scan(file) {
   const rel = relative(ROOT, file).replaceAll('\\', '/');
   if (ALLOWLIST.has(rel)) return;
   const src = readFileSync(file, 'utf8');
 
-  for (const { re, hint } of FORBIDDEN) {
-    re.lastIndex = 0;
-    let m;
-    while ((m = re.exec(src)) !== null) {
-      const line = src.slice(0, m.index).split('\n').length;
-      violations.push({ file: rel, line, hint, snippet: m[0] });
+  const polymorphic = isNexusPolymorphicContext(src);
+
+  if (polymorphic) {
+    for (const { re, hint } of FORBIDDEN) {
+      re.lastIndex = 0;
+      let m;
+      while ((m = re.exec(src)) !== null) {
+        const line = src.slice(0, m.index).split('\n').length;
+        violations.push({ file: rel, line, hint, snippet: m[0] });
+      }
     }
   }
 
   LOCAL_HREFFOR.lastIndex = 0;
   let m;
   while ((m = LOCAL_HREFFOR.exec(src)) !== null) {
-    // Ignora se o próprio arquivo já usa resolveNexusHref.
     if (src.includes('resolveNexusHref')) continue;
+    if (!polymorphic) continue;
     const line = src.slice(0, m.index).split('\n').length;
     violations.push({
       file: rel,
       line,
-      hint: 'função local hrefFor* — reutilize resolveNexusHref',
+      hint: 'função local hrefFor* polimórfica — reutilize resolveNexusHref',
       snippet: m[0],
     });
   }
 }
+
 
 walk(SRC);
 
