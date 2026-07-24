@@ -485,6 +485,14 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               <div className="mb-spacing-lg">
                 <NexusPanel output={nexus} kicker={`Conexões · ${saint.name ?? saint.title ?? ''}`} />
               </div>
+              {(() => {
+                const closure = resolveEditorialClosure(saint as unknown as { editorial_closure?: unknown });
+                return closure ? (
+                  <div className="mb-spacing-2xl">
+                    <EditorialClosure {...closure} />
+                  </div>
+                ) : null;
+              })()}
               <ReaderContinuation
                 context={{
                   kind: 'saint',

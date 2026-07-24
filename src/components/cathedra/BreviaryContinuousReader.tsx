@@ -348,14 +348,22 @@ export const BreviaryContinuousReader: React.FC<Props> = ({
       contentMaxWidth="max-w-3xl"
       ariaLabel="Liturgia das Horas"
       nexus={<NexusPanel output={nexus} />}
-      continuation={
-        nexus.suggestions.length > 0 ? (
-          <ReaderContinuation
-            context={{ kind: 'prayer', id: prayer.slug }}
-            suggestions={nexus.suggestions}
-          />
-        ) : undefined
-      }
+      continuation={(() => {
+        const closure = resolveEditorialClosure(prayer as unknown as { editorial_closure?: unknown });
+        const hasSuggestions = nexus.suggestions.length > 0;
+        if (!closure && !hasSuggestions) return undefined;
+        return (
+          <div className="flex flex-col gap-spacing-2xl">
+            {closure ? <EditorialClosure {...closure} /> : null}
+            {hasSuggestions ? (
+              <ReaderContinuation
+                context={{ kind: 'prayer', id: prayer.slug }}
+                suggestions={nexus.suggestions}
+              />
+            ) : null}
+          </div>
+        );
+      })()}
     >
       {body}
     </ReaderShell>

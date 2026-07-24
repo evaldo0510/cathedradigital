@@ -222,51 +222,58 @@ const SaintWorkReaderPage: React.FC = () => {
           />
         }
         continuation={
-          <div className="max-w-[68ch] mx-auto flex items-center justify-between gap-spacing-md">
-            {prev ? (
-              <Button
-                variant="ghost"
-                onClick={() =>
-                  navigate(`/biblioteca/escritos/${autor}/${obra}/capitulo/${prev.order}`)
-                }
-                className="gap-spacing-xs flex-1 justify-start min-w-0"
-              >
-                <Icons.ArrowLeft className="w-4 h-4 flex-shrink-0" aria-hidden />
-                <span className="flex flex-col items-start min-w-0">
-                  <span className="text-premium-xs uppercase text-muted-foreground">
-                    Anterior
+          <div className="flex flex-col gap-spacing-2xl">
+            {(() => {
+              const closure = resolveEditorialClosure(chapter as unknown as { editorial_closure?: unknown })
+                ?? resolveEditorialClosure(work as unknown as { editorial_closure?: unknown });
+              return closure ? <EditorialClosure {...closure} /> : null;
+            })()}
+            <div className="max-w-[68ch] mx-auto flex items-center justify-between gap-spacing-md">
+              {prev ? (
+                <Button
+                  variant="ghost"
+                  onClick={() =>
+                    navigate(`/biblioteca/escritos/${autor}/${obra}/capitulo/${prev.order}`)
+                  }
+                  className="gap-spacing-xs flex-1 justify-start min-w-0"
+                >
+                  <Icons.ArrowLeft className="w-4 h-4 flex-shrink-0" aria-hidden />
+                  <span className="flex flex-col items-start min-w-0">
+                    <span className="text-premium-xs uppercase text-muted-foreground">
+                      Anterior
+                    </span>
+                    <span className="text-premium-sm truncate max-w-[16ch] md:max-w-none">
+                      {prev.title}
+                    </span>
                   </span>
-                  <span className="text-premium-sm truncate max-w-[16ch] md:max-w-none">
-                    {prev.title}
+                </Button>
+              ) : (
+                <span aria-hidden />
+              )}
+              {next ? (
+                <Button
+                  onClick={() =>
+                    navigate(`/biblioteca/escritos/${autor}/${obra}/capitulo/${next.order}`)
+                  }
+                  className="gap-spacing-xs flex-1 justify-end min-w-0"
+                >
+                  <span className="flex flex-col items-end min-w-0">
+                    <span className="text-premium-xs uppercase opacity-80">Próximo</span>
+                    <span className="text-premium-sm truncate max-w-[16ch] md:max-w-none">
+                      {next.title}
+                    </span>
                   </span>
-                </span>
-              </Button>
-            ) : (
-              <span aria-hidden />
-            )}
-            {next ? (
-              <Button
-                onClick={() =>
-                  navigate(`/biblioteca/escritos/${autor}/${obra}/capitulo/${next.order}`)
-                }
-                className="gap-spacing-xs flex-1 justify-end min-w-0"
-              >
-                <span className="flex flex-col items-end min-w-0">
-                  <span className="text-premium-xs uppercase opacity-80">Próximo</span>
-                  <span className="text-premium-sm truncate max-w-[16ch] md:max-w-none">
-                    {next.title}
-                  </span>
-                </span>
-                <Icons.ArrowRight className="w-4 h-4 flex-shrink-0" aria-hidden />
-              </Button>
-            ) : (
-              <Link
-                to={`/biblioteca/escritos/${autor}/${obra}`}
-                className="ml-auto text-premium-xs text-primary hover:underline"
-              >
-                Fim da obra · Voltar ao sumário
-              </Link>
-            )}
+                  <Icons.ArrowRight className="w-4 h-4 flex-shrink-0" aria-hidden />
+                </Button>
+              ) : (
+                <Link
+                  to={`/biblioteca/escritos/${autor}/${obra}`}
+                  className="ml-auto text-premium-xs text-primary hover:underline"
+                >
+                  Fim da obra · Voltar ao sumário
+                </Link>
+              )}
+            </div>
           </div>
         }
       >
