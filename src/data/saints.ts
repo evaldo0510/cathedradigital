@@ -31,11 +31,19 @@ export interface SaintTimelineEvent {
 export interface SaintBiographyBlocks {
   origem?: string;
   chamado?: string;
+  conversao?: string;
   missao?: string;
   fidelidade?: string;
   testemunho?: string;
   heranca?: string;
   aprendizado?: string;
+}
+
+export interface SaintKeyEvent {
+  year?: string | number;
+  title: string;
+  description?: string;
+  place?: string;
 }
 
 export interface SaintQuoteRich {
