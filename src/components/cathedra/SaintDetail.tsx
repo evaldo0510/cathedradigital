@@ -28,17 +28,11 @@ import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial'
 import { ReaderToolbar } from '@/components/reader';
 import SanctumEditorial, { SanctumCurationBadge } from './SanctumEditorial';
 import { SEO_CONFIG } from '@/config/seo';
+import SaintAILearn from './SaintAILearn';
+import { CATEGORY_LABELS } from './SaintDetail.categories';
 
-export const CATEGORY_LABELS: Record<string, string> = {
-  apostle: 'Apóstolo',
-  martyr: 'Mártir',
-  doctor: 'Doutor(a) da Igreja',
-  virgin: 'Virgem',
-  confessor: 'Confessor',
-  pope: 'Papa',
-  founder: 'Fundador(a)',
-  mystic: 'Místico(a)',
-};
+// Reexporta para consumidores existentes (Saints.tsx etc.)
+export { CATEGORY_LABELS };
 
 const VIRTUE_TO_JOURNEY: Record<string, { id: string, name: string }> = {
   'paciência': { id: '0b8ddab7-b106-4873-bc4d-3987421d265d', name: 'Rotina de Transformação' },
