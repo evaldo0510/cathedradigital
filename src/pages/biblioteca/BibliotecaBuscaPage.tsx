@@ -21,6 +21,19 @@ import {
 
 const PAGE_SIZE = 10;
 
+/** Constrói janela de páginas com elipses: 1 … 4 5 [6] 7 8 … 20. */
+function buildPageWindow(current: number, total: number): Array<number | '…'> {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+  const out: Array<number | '…'> = [1];
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+  if (start > 2) out.push('…');
+  for (let p = start; p <= end; p++) out.push(p);
+  if (end < total - 1) out.push('…');
+  out.push(total);
+  return out;
+}
+
 /** Sanitiza o snippet server-side (que só contém <mark>). */
 const SNIPPET_CONFIG = { ALLOWED_TAGS: ['mark'], ALLOWED_ATTR: [] };
 function sanitizeSnippet(html: string): string {
