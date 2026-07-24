@@ -229,6 +229,7 @@ const CatechismImportQueuePage = lazy(() =>
 const CollectionsAdmin = lazy(() => import('./pages/admin/CollectionsAdmin'));
 const CollectionEditor = lazy(() => import('./pages/admin/CollectionEditor'));
 const BibliotecaPatristicaAdmin = lazy(() => import('./pages/admin/BibliotecaPatristicaAdmin'));
+const BiblePhasesAdmin = lazy(() => import('./pages/admin/BiblePhasesAdmin'));
 const InstagramGalleryPage = lazy(() => import('./pages/admin/InstagramGallery'));
 const PrayerAdmin = lazy(() => import('./pages/admin/PrayerAdmin'));
 const LiturgyMeditationFallbackPanel = lazy(() => import('./pages/admin/LiturgyMeditationFallbackPanel'));
