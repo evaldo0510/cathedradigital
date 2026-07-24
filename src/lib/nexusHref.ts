@@ -75,6 +75,8 @@ export function resolveNexusHref(
     case 'liturgy':
       return `/missal/${id}`;
     case 'saint_work':
+      // Espera-se `autor/obra` (ex.: "agostinho/confissoes").
+      return id.includes('/') ? `/biblioteca/escritos/${id}` : null;
     case 'other':
     default:
       return null;
@@ -90,9 +92,11 @@ const COLLECTION_TO_NEXUS: Record<string, NexusKind> = {
   glossary: 'glossary',
   prayer: 'prayer',
   saint: 'saint',
+  saint_work: 'saint_work',
   bible: 'bible_verse',
   liturgy: 'liturgy',
   catechism: 'catechism_paragraph',
+  magisterium: 'magisterium_doc',
   journey: 'journey',
 };
 

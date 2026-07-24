@@ -23,9 +23,11 @@ const TYPE_LABELS: Record<CollectionItemType, string> = {
   glossary: 'Glossário',
   prayer: 'Oração',
   saint: 'Santo',
+  saint_work: 'Escrito',
   bible: 'Bíblia',
   liturgy: 'Liturgia',
   catechism: 'Catecismo',
+  magisterium: 'Magistério',
   journey: 'Jornada',
 };
 

@@ -1,115 +1,64 @@
-# Acervo Cathedra — Hub Unificado de Conhecimento
+## Sprint Coleções Temáticas
 
-Ponto de inflexão aprovado: a "Biblioteca Católica" deixa de ser um menu de livros e passa a ser o **centro do conhecimento** do Cathedra. Toda navegação por Tradição (Bíblia, Catecismo, Santos, Magistério, Patrística, Liturgia, Clássicos) converge para o mesmo shell, mesma busca, mesmo Nexus, mesmo EditorialClosure.
+Objetivo: transformar `collections` em **jornadas de formação guiadas**, misturando módulos (Bíblia, Catecismo, Santos, Escritos, Magistério, Orações), com progresso agregado e integração ao "Continue lendo".
 
-Nomenclatura adotada: **Acervo Cathedra** (rota `/acervo`). "Biblioteca Católica" fica como subtítulo humano. Legado `/biblioteca/*` preservado via redirect.
+### Aproveitamento da infra existente
 
----
+Auditei o schema — **nada a migrar em SQL**:
+- `collections`: já tem `cover`, `subtitle`, `description`, `category`, `metadata` (jsonb), `featured`, `editorial_status`, `ice_score`.
+- `collection_items`: já tem `order_index`, `item_type` (glossary/prayer/saint/bible/liturgy/catechism/journey), `title_override`, `metadata`.
+- `collection_progress`: já tem status por item (`not_started` → `reading` → `completed`).
+- Hook `useCollectionProgress` já entrega mapa de status + mutations otimistas.
 
-## Preflight
-
-- COS v1.3 ativo. Skills: `cathedra-guardian`, `cathedra-design-system-guardian`, `cathedra-knowledge-graph-expert`, `cathedra-prayer-engine-expert`, `cathedra-saints-expert`.
-- Reuso agressivo: `ReaderShell`, `EditorialHero`, `EditorialCard`, `EditorialClosure`, `NexusPanel`, `library_items_v1`, `search_library_items`, `libraryService`.
-- **Zero componente paralelo.** Toda nova superfície é composição dos primitivos existentes.
-
----
-
-## Arquitetura conceitual
-
-```text
-Acervo Cathedra (/acervo)
-│
-├── Navegar por Tradição
-│   ├── Escritos dos Santos      (saint_works: kind=writing)
-│   ├── Padres da Igreja         (saints.category=father + works)
-│   ├── Doutores da Igreja       (saints.category=doctor + works)
-│   ├── Patrística               (saint_works.category=patristic)
-│   ├── Magistério               (concílios, encíclicas, exortações...)
-│   ├── Espiritualidade
-│   ├── História da Igreja
-│   ├── Liturgia                 (Missal + LH)
-│   ├── Homilias
-│   ├── Clássicos Católicos      (saint_works: kind=classic)
-│   └── Favoritos                (user-scoped)
-│
-├── Busca Unificada              (RPC search_library_items ampliada)
-│
-├── Estudar (novo)               (/acervo/estudar/:tema)
-│   └── Trilha temática: Bíblia → Catecismo → Santos → Magistério
-│                        → Patrística → Reflexão → Oração → Continuar
-│
-└── Indicador de Profundidade    (chip em cada card/hero)
-    Rápida (5m) · Média (25m) · Profunda · Referência
+Extensões vão em `metadata` (sem nova coluna):
 ```
+metadata: {
+  eyebrow, space,
+  estimated_minutes: 150,
+  level: 'iniciante' | 'intermediario' | 'avancado',
+  editorial_goal: 'Descrição da trilha…'
+}
+```
+Adiciono `item_type` `'magisterium'` e `'saint_work'` ao union TS (o DB é text livre).
 
----
+### Ondas
 
-## Ondas de execução (sequenciais, com homologação entre cada)
+**Onda 1 — Estrutura editorial + progresso agregado (esta entrega)**
+- Estender `Collection.metadata` (TS) com `estimated_minutes`, `level`, `editorial_goal`.
+- Refatorar `CollectionPage.tsx`: hero editorial com capa, badges (nível, tempo, nº conteúdos), botão "Começar coleção" / "Continuar coleção", barra de progresso agregada (`X/N concluídos — NN%`).
+- Refatorar `CollectionItemsList.tsx`: ordem numerada, ícone por tipo (Bíblia / Catecismo / Santo / Escrito / Magistério / Oração), estado (não iniciado / lendo / concluído), CTA "Marcar como lido".
+- Estender `item_type` para `'magisterium' | 'saint_work'`; ajustar `resolveNexusHref` para cada tipo.
+- Novo componente `CollectionProgressBar.tsx` reutilizável.
+- Integração com Acervo: `AcervoContinueReadingPanel` passa a exibir coleção em andamento quando houver.
 
-### Onda 3 — Hub Acervo Cathedra (renomeação + IA visual)
-- Renomear `/biblioteca/catolica` → `/acervo` (redirect legado preservado).
-- `AcervoHomePage.tsx`: EditorialHero + grid de 11 categorias em `EditorialCard`.
-- Menu principal e Sidebar atualizados.
-- **Não** mexe em banco. Só composição visual.
+**Onda 2 — Seed das 6 primeiras coleções oficiais** (próximo turno)
+Priorizadas pelo impacto de lançamento:
+1. Primeiros Passos na Fé Católica (Iniciante · 3h)
+2. Introdução ao Catecismo (Iniciante · 4h)
+3. Eucaristia (Intermediário · 5h) — piloto multi-corpus (Bíblia → Catecismo → Crisóstomo → Aquino → Magistério → Oração → Reflexão)
+4. Doutores da Igreja (Intermediário · 8h)
+5. Caminho da Quaresma (Iniciante · 6h)
+6. Vida Interior (Avançado · 10h)
 
-### Onda 4 — Progresso agregado + Favoritos unificados
-- `useLibraryProgress` (hook): consolida progresso de saint_works, catecismo, bíblia por usuário.
-- Aba **Favoritos** puxa `bible_favorites` + reading_marks + collection_progress unificados.
-- Chip de progresso no `SaintWorkCard`.
+Cada uma nasce como `published` já com ficha editorial + itens ordenados + `nexus_refs`.
 
-### Onda 5 — Indicador de Profundidade
-- Migração: coluna `depth_level` (`quick` | `medium` | `deep` | `reference`) e `estimated_minutes` em `saint_works`. Trigger de auto-cálculo por word_count quando nulo.
-- Componente `DepthIndicator.tsx` (barra ■■■□□□) reutilizado em cards, hero e listagens.
-- Retro-preencher as 14 obras-âncora + Suma/Imitação/Solilóquios/História de uma Alma.
+**Onda 3 — Descoberta via Nexus ao concluir** (depois)
+- `CollectionCompletionCTA`: ao marcar último item como `completed`, sugere 2-3 coleções relacionadas via `nexus_relations` + link para tema no Acervo.
+- Hub `/colecoes` (grid filtrado por categoria/nível).
 
-### Onda 6 — Magistério no Acervo
-- Estender `library_items_v1` para incluir `magisterium_documents` (concílios, encíclicas, exortações, constituições, cartas).
-- Categorias novas no filtro do Acervo.
-- Reutiliza ReaderShell existente do Magistério.
+**Onda 4 — Coleções restantes** (backlog)
+Como estudar a Bíblia, Pais da Igreja, Místicos Carmelitas, Santos da Misericórdia, Santos Missionários, Tempo Pascal, Advento e Natal, A Santa Missa passo a passo, Oração, Virtudes Cristãs, Confissão.
 
-### Onda 7 — Modo "Estudar" (temático)
-- Tabela `study_themes` (slug, title, description, seed_terms, curated_items JSONB).
-- Página `/acervo/estudar/:slug` com trilha vertical: Escritura → Catecismo → Santos → Magistério → Patrística → Reflexão → Oração → Continuar.
-- Semear 5 temas-piloto: **Humildade, Caridade, Oração, Conversão, Eucaristia**.
-- Curadoria manual + Nexus automático como sugestão.
+### Fora de escopo desta sprint
 
-### Onda 8 — Busca única cross-corpus
-- Ampliar `search_library_items` para incluir Bíblia (verses) e Catecismo (paragraphs) com weight editorial.
-- Página `/acervo/busca?q=humildade` retorna resultado agrupado por corpus, com CTA "Estudar este tema".
+- Novo admin visual (o `/admin/collections` atual já cobre CRUD; seeds via SQL insert).
+- Editor drag-and-drop de itens (já existe em `CollectionEditor.tsx`).
+- Dashboard admin consolidado (adiado conforme sua orientação).
 
-### Onda 9 — Admin consolidado + Sitemap
-- `/admin/acervo`: dashboard de cobertura editorial cross-corpus (completude, ICE, stubs, pipeline).
-- Sitemap unificado inclui `/acervo/*` e `/acervo/estudar/*`.
-- Nexus enriquecido: relações temáticas alimentam trilhas.
+### Detalhes técnicos
 
----
+- Nenhuma migração SQL nesta sprint — só `INSERT` na Onda 2.
+- Componentes seguem `ReaderShell`/`EditorialHero`? **Não** — `CollectionPage` é hub de trilha, não leitor; usa `EditorialCard` e tokens semânticos.
+- Progresso agregado calculado no cliente a partir de `useCollectionProgress` (já otimizado).
 
-## Detalhes técnicos (skippable para leitura de produto)
-
-**Banco**
-- Onda 5: `ALTER TABLE saint_works ADD depth_level, estimated_minutes` + trigger.
-- Onda 6: `CREATE OR REPLACE VIEW library_items_v1` incorporando `magisterium_documents`.
-- Onda 7: `study_themes` com RLS pública leitura / admin escrita + GRANT explícito.
-- Onda 8: `search_library_items` reescrita com UNION tsvector Bíblia + Catecismo + Saint Works.
-
-**Reuso obrigatório**
-- Cards: `EditorialCard` (nova densidade `library` se necessário — não novo componente).
-- Hero: `EditorialHero` (variante `hub`).
-- Leitura: `ReaderShell` + `EditorialClosure` (já injetado via `resolveClosure`).
-- Nexus: `NexusPanel` alimentado por `search_library_items` filtrada por tema.
-
-**Rotas legadas** (preservadas com redirect):
-`/biblioteca/catolica`, `/biblioteca/catolica/acervo`, `/biblioteca/patristica`, `/biblioteca/escritos` → `/acervo/*`.
-
-**Não faremos nesta fase**
-- App mobile nativo.
-- Áudio narrado (fica para wave futura).
-- Editor colaborativo de trilhas (só curadoria admin).
-
----
-
-## O que peço agora
-
-Confirmação para começar pela **Onda 3 (renomeação + hub visual)**, sem tocar banco. Homologa visualmente, e só então avanço para Onda 4.
-
-Se preferir inverter (ex: Profundidade antes do Hub, ou Estudar como primeiro diferencial), me diga qual onda vira prioridade 1.
+Aprovo executar a **Onda 1** agora?
