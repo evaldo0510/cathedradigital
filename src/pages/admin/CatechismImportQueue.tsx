@@ -116,10 +116,41 @@ export default function CatechismImportQueuePage() {
     return n > 0 ? Math.round(sum / n) : null;
   }, [rows]);
 
+  const errorGroups = useMemo(() => {
+    const groups = new Map<string, { key: string; count: number; paragraphs: number[]; sample: string }>();
+    for (const r of rows) {
+      if (r.status !== "error") continue;
+      const key = normalizeErrorKey(r.last_error);
+      const g = groups.get(key) ?? { key, count: 0, paragraphs: [], sample: r.last_error ?? key };
+      g.count += 1;
+      g.paragraphs.push(r.paragraph);
+      groups.set(key, g);
+    }
+    return [...groups.values()].sort((a, b) => b.count - a.count);
+  }, [rows]);
+
+  const rangeCounts = useMemo(() => {
+    const map = new Map<string, { label: string; part: string; total: number; error: number; completed: number; pending: number }>();
+    for (const r of rows) {
+      const range = rangeForParagraph(r.paragraph);
+      if (!range) continue;
+      const cur = map.get(range.label) ?? { label: range.label, part: range.part, total: 0, error: 0, completed: 0, pending: 0 };
+      cur.total += 1;
+      if (r.status === "error") cur.error += 1;
+      else if (r.status === "completed") cur.completed += 1;
+      else cur.pending += 1;
+      map.set(range.label, cur);
+    }
+    return CATECHISM_RANGES
+      .map((r) => map.get(r.label))
+      .filter((x): x is NonNullable<typeof x> => Boolean(x));
+  }, [rows]);
+
   const filtered = useMemo(
     () => (statusFilter === "all" ? rows : rows.filter((r) => r.status === statusFilter)),
     [rows, statusFilter],
   );
+
 
   const toggleSelect = (id: string) =>
     setSelected((prev) => {
