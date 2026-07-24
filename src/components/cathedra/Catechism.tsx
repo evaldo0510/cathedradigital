@@ -136,11 +136,28 @@ const CatechismContent: React.FC<{
     }
   }, [refetch, paragraph]);
 
-  const segments = useMemo(() => {
-    if (!data?.content || data.status === 'not_cached') return [];
-    const normalized = normalizeCatechismText(data.content);
-    return parseTheologicalReferences(normalized);
+  const normalization = useMemo(() => {
+    if (!data?.content || data.status === 'not_cached') return null;
+    return normalizeCatechismTextWithReport(data.content);
   }, [data?.content, data?.status]);
+
+  const segments = useMemo(() => {
+    if (!normalization) return [];
+    return parseTheologicalReferences(normalization.text);
+  }, [normalization]);
+
+  // Telemetria: registra quando a normalização alterou o conteúdo do §.
+  useEffect(() => {
+    if (!normalization?.changed) return;
+    trackEvent('catechism_normalization_diff', {
+      paragraph,
+      total_changes: totalChanges(normalization.changes),
+      original_length: normalization.originalLength,
+      normalized_length: normalization.normalizedLength,
+      duration_ms: Number(normalization.durationMs.toFixed(3)),
+      ...normalization.changes,
+    });
+  }, [normalization, paragraph]);
 
   if (!isVisible) {
     return (
