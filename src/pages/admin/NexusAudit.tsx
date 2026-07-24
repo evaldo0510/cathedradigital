@@ -180,7 +180,7 @@ export default function NexusAuditPage() {
                 <CardHeader className="flex flex-row items-start justify-between gap-4 pb-3">
                   <div>
                     <CardTitle className="text-lg">
-                      <Link to={`/glossario/${r.slug}`} className="hover:underline">
+                      <Link to={resolveNexusHref('glossary', r.slug) ?? '#'} className="hover:underline">
                         {r.term}
                       </Link>
                     </CardTitle>
