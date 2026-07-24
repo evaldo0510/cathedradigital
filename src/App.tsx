@@ -224,8 +224,10 @@ const CatechismImportQueuePage = lazy(() =>
 );
 const CollectionsAdmin = lazy(() => import('./pages/admin/CollectionsAdmin'));
 const CollectionEditor = lazy(() => import('./pages/admin/CollectionEditor'));
+const InstagramGalleryPage = lazy(() => import('./pages/admin/InstagramGallery'));
 const PrayerAdmin = lazy(() => import('./pages/admin/PrayerAdmin'));
 const LiturgyMeditationFallbackPanel = lazy(() => import('./pages/admin/LiturgyMeditationFallbackPanel'));
+
 const BibleAbbrValidatePage = lazy(() => import('./pages/BibleAbbrValidatePage'));
 const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
 const A11yAuditPage = lazy(() => import('./components/cathedra/A11yAuditPage'));
@@ -822,6 +824,9 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/liturgia-meditation-fallback" element={<LiturgyMeditationFallbackPanel />} />
                       <Route path="/admin/collections" element={<CollectionsAdmin />} />
                       <Route path="/admin/collections/:id" element={<CollectionEditor />} />
+                      <Route path="/admin/instagram-gallery" element={<Suspense fallback={<LoadingFallback />}><InstagramGalleryPage /></Suspense>} />
+
+
 
 
 
