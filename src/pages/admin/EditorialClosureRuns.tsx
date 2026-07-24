@@ -324,10 +324,97 @@ const EditorialClosureRuns: React.FC = () => {
       </header>
 
       <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">
-            {loading ? 'Carregando…' : `${runs.length} run(s)`}
-          </CardTitle>
+        <CardHeader className="space-y-4">
+          <div className="flex items-start justify-between gap-4">
+            <CardTitle className="text-lg">
+              {loading
+                ? 'Carregando…'
+                : `${filteredRuns.length} de ${runs.length} run(s)${activeFilterCount ? ' · filtros ativos' : ''}`}
+            </CardTitle>
+            <div className="flex items-center gap-2">
+              <Button
+                size="sm" variant="outline"
+                onClick={() => exportRuns('csv')}
+                disabled={loading || pagedRuns.length === 0}
+                title="Exportar página atual em CSV"
+              >
+                <Download className="mr-1 h-3 w-3" /> CSV
+              </Button>
+              <Button
+                size="sm" variant="outline"
+                onClick={() => exportRuns('json')}
+                disabled={loading || pagedRuns.length === 0}
+                title="Exportar página atual em JSON"
+              >
+                <Download className="mr-1 h-3 w-3" /> JSON
+              </Button>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+            <div className="relative md:col-span-2">
+              <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                value={query}
+                onChange={(e) => updateParams({ q: e.target.value, page: 1 })}
+                placeholder="Buscar por run_id…"
+                className="pl-8 pr-8"
+              />
+              {query && (
+                <button
+                  type="button"
+                  aria-label="Limpar busca"
+                  onClick={() => updateParams({ q: null, page: 1 })}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+            <Select
+              value={modeFilter}
+              onValueChange={(v) => updateParams({ mode: v, page: 1 })}
+            >
+              <SelectTrigger><SelectValue placeholder="Modo" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Modo · todos</SelectItem>
+                <SelectItem value="dry_run">dry-run</SelectItem>
+                <SelectItem value="applied">aplicada</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select
+              value={warnFilter}
+              onValueChange={(v) => updateParams({ warn: v, page: 1 })}
+            >
+              <SelectTrigger><SelectValue placeholder="Warnings" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Warnings · todos</SelectItem>
+                <SelectItem value="none">Sem warnings</SelectItem>
+                <SelectItem value="any">Com warnings (≥1)</SelectItem>
+                <SelectItem value="high">Alto (≥5)</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select
+              value={strategyFilter}
+              onValueChange={(v) => updateParams({ strategy: v, page: 1 })}
+            >
+              <SelectTrigger><SelectValue placeholder="Strategy" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Strategy · todas</SelectItem>
+                {allStrategies.map((s) => (
+                  <SelectItem key={s} value={s}>{s}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            {activeFilterCount > 0 && (
+              <Button
+                size="sm" variant="ghost"
+                onClick={clearFilters}
+                className="md:col-span-4 justify-self-start text-muted-foreground"
+              >
+                <X className="mr-1 h-3 w-3" /> Limpar filtros ({activeFilterCount})
+              </Button>
+            )}
+          </div>
         </CardHeader>
         <CardContent>
           {!loading && runs.length === 0 ? (
