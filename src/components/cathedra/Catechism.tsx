@@ -23,6 +23,7 @@ import { useFavorites } from '@/hooks/useFavorites';
 import { useAuth } from '@/hooks/useAuth';
 import { useCatechismParagraph, usePrefetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
+import { normalizeCatechismText } from '@/lib/catechismTextNormalizer';
 import CatechismPopover from './CatechismPopover';
 import AudioButton from './AudioButton';
 import { CatechismParagraphSkeleton } from './SacredSkeleton';
@@ -135,7 +136,8 @@ const CatechismContent: React.FC<{
 
   const segments = useMemo(() => {
     if (!data?.content || data.status === 'not_cached') return [];
-    return parseTheologicalReferences(data.content);
+    const normalized = normalizeCatechismText(data.content);
+    return parseTheologicalReferences(normalized);
   }, [data?.content, data?.status]);
 
   if (!isVisible) {
