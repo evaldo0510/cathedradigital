@@ -414,6 +414,7 @@ const SaintsAdmin: React.FC = () => {
         </CardContent>
       </Card>
 
+      <DoctorReviewQueue />
       <SaintsEnrichmentPanel />
       <SaintsReimportRunsPanel onApplied={load} />
       <SaintsAuditPanel />
