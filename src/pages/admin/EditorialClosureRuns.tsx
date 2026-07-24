@@ -519,6 +519,13 @@ const EditorialClosureRuns: React.FC = () => {
                 <SelectItem value="300">5min</SelectItem>
               </SelectContent>
             </Select>
+            <span
+              className={`inline-flex items-center gap-1 ${realtimeConnected ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground'}`}
+              title={realtimeConnected ? 'Recebendo novas runs em tempo real' : 'Realtime offline — usando polling como fallback'}
+            >
+              <Radio className={`h-3 w-3 ${realtimeConnected ? '' : 'opacity-50'}`} />
+              {realtimeConnected ? 'ao vivo' : 'polling'}
+            </span>
             <span aria-live="polite" data-tick={nowTick}>
               {lastUpdatedAt
                 ? `Atualizado ${formatRelative(lastUpdatedAt)}`
