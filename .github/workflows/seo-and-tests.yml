@@ -115,10 +115,14 @@ jobs:
         with:
           name: gsc-meta-reports
           path: |
+            reports/seo/gsc-meta-check.json
+            reports/seo/gsc-meta-check.md
             reports/seo/sitemap-robots-check.json
             reports/seo/sitemap-robots-check.md
+            dist/index.html
           if-no-files-found: warn
           retention-days: 14
+
 
 
 
