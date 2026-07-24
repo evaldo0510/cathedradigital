@@ -212,9 +212,13 @@ export const formatSaint = (dbSaint: any): Saint => {
     vocation: dbSaint.vocation ?? undefined,
     aiReflection: parseJson(dbSaint.ai_reflection, undefined),
     // Onda 2 — complementos editoriais (TEXT)
+    // Onda 2 — complementos editoriais (TEXT)
     conversionStory: dbSaint.conversion_story ?? undefined,
     mission: dbSaint.mission ?? undefined,
     legacy: dbSaint.legacy ?? undefined,
+    // Sprint 3.2.1 — narrativa espiritual
+    spiritualitySummary: dbSaint.spirituality_summary ?? undefined,
+    keyEvents: parseJson(dbSaint.key_events, []),
   };
 
 };
