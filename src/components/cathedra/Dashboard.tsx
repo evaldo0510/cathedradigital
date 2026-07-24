@@ -6,7 +6,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { Icons } from '@/constants';
 import { useLang } from '@/hooks/useLang';
 import RitualDoDia from './RitualDoDia';
-import NexusBubbles from './NexusBubbles';
+
 import SpiritualQuiz, { PROFILES, type ProfileId } from './SpiritualQuiz';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { DashboardSkeleton } from './DashboardSkeleton';
@@ -99,12 +99,8 @@ const Dashboard: React.FC<DashboardProps> = ({ user }) => {
           </div>
         </FadeUp>
 
-        {/* Secondary Content - Subdued */}
-        <FadeUp delay={0.4}>
-          <div className="opacity-40 hover:opacity-100 transition-opacity duration-1000">
-            <NexusBubbles profileId={spiritualProfile as ProfileId} />
-          </div>
-        </FadeUp>
+        {/* C0.4: NexusBubbles removido (dead-end de descoberta profile-based).
+            Descoberta primária vive na grade CathedraCard acima e no SpiritualQuiz abaixo. */}
 
         {!spiritualProfile && (
           <FadeUp delay={0.5}>
