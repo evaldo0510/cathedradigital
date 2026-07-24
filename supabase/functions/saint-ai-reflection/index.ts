@@ -16,7 +16,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 import { generateText, NoObjectGeneratedError, Output } from "npm:ai";
 import { z } from "npm:zod";
 
-const EDITORIAL_VERSION = 1;
+const EDITORIAL_VERSION = 2;
 const AI_PROVIDER = "lovable-ai-gateway";
 const AI_MODEL = "google/gemini-2.5-flash";
 
@@ -25,9 +25,16 @@ const reflectionSchema = z.object({
   teachings: z.array(z.object({
     title: z.string(),
     body: z.string(),
+    source: z.string().optional(),
   })),
   meditation: z.string(),
+  meditation_sources: z.array(z.string()).optional(),
   prayer: z.string(),
+  citations: z.array(z.object({
+    type: z.enum(["quote", "work", "biography", "virtue"]),
+    text: z.string(),
+    used_in: z.enum(["summary", "teaching", "meditation", "prayer"]).optional(),
+  })).optional(),
 });
 
 type Reflection = z.infer<typeof reflectionSchema>;
