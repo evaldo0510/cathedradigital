@@ -70,7 +70,15 @@ const queryClient = new QueryClient({
 
 // Lazy loaded routes
 const Bible = lazy(() => import('./components/cathedra/Bible'));
-const Catechism = lazy(() => import('./components/cathedra/Catechism'));
+// Sprint CQ-1.2 · Feature flag: quando VITE_MODULES_CATEQUESE=1, o import
+// resolve o barrel do módulo Catequese; caso contrário mantém o shim legado.
+// Ambos apontam para o mesmo componente após CQ-1.2 (shims reexportam o módulo).
+const CATEQUESE_MODULES_ENABLED = import.meta.env.VITE_MODULES_CATEQUESE === '1';
+const Catechism = lazy(() =>
+  CATEQUESE_MODULES_ENABLED
+    ? import('./modules/catequese').then((m) => ({ default: m.Catechism }))
+    : import('./components/cathedra/Catechism'),
+);
 const Magisterium = lazy(() => import('./components/cathedra/Magisterium'));
 const MagisteriumViewer = lazy(() => import('./components/cathedra/MagisteriumViewer'));
 const Auth = lazy(() => import('./components/cathedra/Auth'));
@@ -111,7 +119,11 @@ const BibliotecaPage = lazy(() => import('./components/cathedra/BibliotecaPage')
 const AtriumBibliotecaPage = lazy(() => import('./pages/AtriumBibliotecaPage'));
 const PadresRedirect = lazy(() => import('./pages/PadresRedirect'));
 const AtriumBibleReader = lazy(() => import('./pages/AtriumBibleReader'));
-const AtriumCatechismReader = lazy(() => import('./pages/AtriumCatechismReader'));
+const AtriumCatechismReader = lazy(() =>
+  CATEQUESE_MODULES_ENABLED
+    ? import('./modules/catequese').then((m) => ({ default: m.AtriumCatechismReader }))
+    : import('./pages/AtriumCatechismReader'),
+);
 const AtriumNexusPage = lazy(() => import('./pages/AtriumNexusPage'));
 const AtriumMagisteriumViewer = lazy(() => import('./pages/AtriumMagisteriumViewer'));
 
