@@ -28,11 +28,11 @@ if (!SUPABASE_URL || !ANON || !JWT) {
 }
 
 const PILOT_SAINTS = [
-  "sao-francisco-de-assis",
-  "santo-agostinho",
-  "sao-bento",
-  "santa-teresa-de-avila",
-  "santa-teresinha-do-menino-jesus",
+  "francisco-assis",
+  "agostinho",
+  "bento",
+  "teresa-avila",
+  "teresinha",
 ];
 
 const endpoint = `${SUPABASE_URL}/functions/v1/saint-import`;
