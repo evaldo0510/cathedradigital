@@ -75,6 +75,12 @@ export interface SaintWork {
   chapter_count: number;
   total_reading_minutes: number;
   metadata: Record<string, unknown>;
+  /** Modelo de acesso ao texto. Default `internal`. */
+  access_type: SaintWorkAccessType;
+  /** URL canônica externa (obrigatória quando access_type != 'internal'). */
+  external_url: string | null;
+  /** Rótulo humano da fonte externa (ex.: "Vatican.va", "CCEL"). */
+  external_source_label: string | null;
   created_at: string;
   updated_at: string;
   published_at: string | null;
