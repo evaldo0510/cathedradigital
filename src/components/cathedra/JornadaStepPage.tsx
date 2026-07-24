@@ -41,7 +41,9 @@ import AudioContentPlayer from './AudioContentPlayer';
 import { getSaintBySubtitle } from '@/services/saintsService';
 import SacredImage from './SacredImage';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
-import NexusBubbles from '@/components/cathedra/NexusBubbles';
+import { NexusPanel } from '@/components/reader';
+import { resolveJourneyAutoNexus } from '@/core/knowledge/adapters/journeyAutoNexus';
+import { BUCKET_LABEL, type ReaderAutoNexusOutput } from '@/core/knowledge/adapters/ReaderAutoNexus';
 
 /**
  * Cache em memória para prefetch de etapas vizinhas (prev/next).
@@ -791,7 +793,20 @@ const JornadaStepPage: React.FC = () => {
           {/* Nexus + continuação após conclusão */}
           {completed && (
             <div className="mt-12 space-y-8 border-t border-stitch-secondary/10 pt-8">
-              <NexusBubbles />
+              {(() => {
+                const j = resolveJourneyAutoNexus({
+                  id: journeyId ?? stepId ?? 'journey',
+                  title: step?.title ?? journeyTitle ?? '',
+                  subtitle: step?.subtitle ?? null,
+                });
+                const output: ReaderAutoNexusOutput = {
+                  selfId: null,
+                  suggestions: [],
+                  byBucket: j.byKind as ReaderAutoNexusOutput['byBucket'],
+                  labels: { ...BUCKET_LABEL, ...j.labels },
+                };
+                return <NexusPanel output={output} kicker={`Conexões · ${step?.title ?? journeyTitle ?? 'Jornada'}`} />;
+              })()}
               <ReaderContinuation
                 context={{
                   kind: 'journey-step',
