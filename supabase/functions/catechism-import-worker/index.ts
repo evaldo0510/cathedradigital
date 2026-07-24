@@ -1,47 +1,13 @@
 // deno-lint-ignore-file no-explicit-any
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
+import { extractParagraph, fileFor, slugFor } from './parser.ts';
 
 const BASE = 'https://www.vatican.va/archive/cathechism_po/index_new';
-
-// Ranges verified against vatican.va PT archive.
-const FILES: Array<{ from: number; to: number; file: string }> = [
-  { from: 1,    to: 25,   file: 'prologo%201-25_po.html' },
-  { from: 26,   to: 49,   file: 'p1s1c1_26-49_po.html' },
-  { from: 50,   to: 141,  file: 'p1s1c2_50-141_po.html' },
-  { from: 142,  to: 184,  file: 'p1s1c3_142-184_po.html' },
-  { from: 185,  to: 197,  file: 'p1s2_185-197_po.html' },
-  { from: 198,  to: 421,  file: 'p1s2c1_198-421_po.html' },
-  { from: 422,  to: 682,  file: 'p1s2cap2_422-682_po.html' },
-  { from: 683,  to: 1065, file: 'p1s2cap3_683-1065_po.html' },
-  { from: 1066, to: 1134, file: 'p2s1cap1_1076-1134_po.html' },
-  { from: 1135, to: 1209, file: 'p2s1cap2_1135-1209_po.html' },
-  { from: 1210, to: 1419, file: 'p2s2cap1_1210-1419_po.html' },
-  { from: 1420, to: 1532, file: 'p2s2cap1_1420-1532_po.html' },
-  { from: 1533, to: 1666, file: 'p2s2cap3_1533-1666_po.html' },
-  { from: 1667, to: 1690, file: 'p2s2cap4_1667-1690_po.html' },
-  { from: 1691, to: 1698, file: 'p3-intr_1691-1698_po.html' },
-  { from: 1699, to: 1876, file: 'p3s1cap1_1699-1876_po.html' },
-  { from: 1877, to: 1948, file: 'p3s1cap2_1877-1948_po.html' },
-  { from: 1949, to: 2051, file: 'p3s1cap3_1949-2051_po.html' },
-  { from: 2052, to: 2082, file: 'p3s2-intr_2052-2082_po.html' },
-  { from: 2083, to: 2195, file: 'p3s2cap1_2083-2195_po.html' },
-  { from: 2196, to: 2557, file: 'p3s2cap2_2196-2557_po.html' },
-  { from: 2558, to: 2565, file: 'p4-intr_2558-2565_po.html' },
-  { from: 2566, to: 2649, file: 'p4s1cap1_2566-2649_po.html' },
-  { from: 2650, to: 2696, file: 'p4s1cap2_2650-2696_po.html' },
-  { from: 2697, to: 2758, file: 'p4s1cap3_2697-2758_po.html' },
-  { from: 2759, to: 2865, file: 'p4s2_2759-2865_po.html' },
-];
 
 const MAX_ATTEMPTS = 6;
 // Backoff em segundos: 30s, 2min, 8min, 30min, 60min, 60min (cap)
 const BACKOFF_SECONDS = [30, 120, 480, 1800, 3600, 3600];
-
-function fileFor(paragraph: number): string | null {
-  const hit = FILES.find((r) => paragraph >= r.from && paragraph <= r.to);
-  return hit ? hit.file : null;
-}
 
 const htmlCache = new Map<string, string>();
 
@@ -60,42 +26,6 @@ async function fetchHtml(file: string): Promise<string> {
   return text;
 }
 
-function stripTags(s: string): string {
-  return s
-    .replace(/<br\s*\/?>/gi, '\n')
-    .replace(/<[^>]+>/g, '')
-    .replace(/&nbsp;/gi, ' ')
-    .replace(/&amp;/gi, '&')
-    .replace(/&quot;/gi, '"')
-    .replace(/&#(\d+);/g, (_, d) => String.fromCharCode(parseInt(d, 10)))
-    .replace(/&[a-z]+;/gi, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function extractParagraph(html: string, n: number): string | null {
-  const blocks = [...html.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)].map((m) => m[1]);
-  const startRe = new RegExp(`^\\s*(?:<[^>]+>\\s*)*<b>\\s*${n}\\s*\\.?\\s*<\\/b>`, 'i');
-  const anyStartRe = /^\s*(?:<[^>]+>\s*)*<b>\s*\d+\s*\.?\s*<\/b>/i;
-
-  let startIdx = -1;
-  for (let i = 0; i < blocks.length; i++) {
-    if (startRe.test(blocks[i])) { startIdx = i; break; }
-  }
-  if (startIdx < 0) return null;
-
-  const parts: string[] = [];
-  for (let i = startIdx; i < blocks.length; i++) {
-    if (i > startIdx && anyStartRe.test(blocks[i])) break;
-    const clean = stripTags(blocks[i]);
-    if (i === startIdx) parts.push(clean.replace(new RegExp(`^${n}\\s*\\.?\\s*`), ''));
-    else if (clean) parts.push(clean);
-  }
-  const out = parts.join('\n\n').trim();
-  return out.length > 10 ? out : null;
-}
-
-const slugFor = (n: number) => `ccc-${n}`;
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
