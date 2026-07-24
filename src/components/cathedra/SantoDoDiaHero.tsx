@@ -360,7 +360,7 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
           id="santo-do-dia-meditacao"
           ref={(el) => { sectionRefs.current.meditacao = el; }}
           aria-labelledby="bloco-meditacao"
-          className="rounded-[2rem] border border-primary/15 bg-primary/5 p-spacing-xl space-y-spacing-sm scroll-mt-32"
+          className="rounded-[1.5rem] md:rounded-[2rem] border border-primary/15 bg-primary/5 p-spacing-lg md:p-spacing-xl space-y-spacing-sm scroll-mt-32"
         >
           <h3
             id="bloco-meditacao"
