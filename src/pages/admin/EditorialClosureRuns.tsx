@@ -145,6 +145,14 @@ const EditorialClosureRuns: React.FC = () => {
   const [rollbackTarget, setRollbackTarget] = React.useState<RunSummary | null>(null);
   const [rollbackConfirm, setRollbackConfirm] = React.useState('');
   const [rollingBack, setRollingBack] = React.useState(false);
+  const [autoRefresh, setAutoRefresh] = React.useState(true);
+  const [intervalSec, setIntervalSec] = React.useState(30);
+  const [lastUpdatedAt, setLastUpdatedAt] = React.useState<Date | null>(null);
+  const [refreshing, setRefreshing] = React.useState(false);
+  const [newRunIds, setNewRunIds] = React.useState<Set<string>>(new Set());
+  const knownRunIdsRef = React.useRef<Set<string>>(new Set());
+  const [nowTick, setNowTick] = React.useState(0);
+
 
   const [searchParams, setSearchParams] = useSearchParams();
 
