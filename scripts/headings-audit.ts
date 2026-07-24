@@ -50,7 +50,8 @@ function auditFile(abs: string) {
   const src = readFileSync(abs, 'utf8');
 
   // Coletar tags de heading + primitivos H1-emitters, na ordem de aparição.
-  const tagRe = /<(h[1-6]|EditorialHero)\b([^>]*)>/g;
+  // Note: negative lookahead exclui subcomponentes tipo <EditorialHero.Title>.
+  const tagRe = /<(h[1-6]|EditorialHero)(?![.\w])([^>]*)>/g;
   const headings: { level: number; index: number; empty: boolean; source: string }[] = [];
   let m: RegExpExecArray | null;
   while ((m = tagRe.exec(src))) {
