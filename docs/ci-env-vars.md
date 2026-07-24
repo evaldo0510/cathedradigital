@@ -12,7 +12,9 @@ Referência única das variáveis usadas pelos workflows em `.github/workflows/`
 | `NORM_BUDGET_PER_MS` | Job `vitest` (benchmark do normalizador) | Inline no workflow | `2` | Não |
 | `NORM_BUDGET_BATCH_MS` | Job `vitest` | Inline no workflow | `100` | Não |
 | `NORM_ITERATIONS` | Job `vitest` | Inline no workflow | `200` | Não |
+| `VITE_MODULES_CATEQUESE` | Frontend (`src/App.tsx`), Sprint CQ-1 | `.env.local` / build env | `0` | Não (feature flag) |
 | `CI` | Playwright (`headless`, retries) | GitHub Actions define automaticamente | — | — |
+
 
 > **Token do Google Search Console** não é uma variável de ambiente — é um valor **estático colado em `index.html`** (`<meta name="google-site-verification" content="...">`). O CI apenas valida a presença via `scripts/validate-gsc-meta.ts`. Ver seção abaixo.
 
