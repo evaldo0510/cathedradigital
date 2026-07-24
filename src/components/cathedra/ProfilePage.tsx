@@ -19,7 +19,7 @@ import { ESTADOS_BRASIL, ESTADO_NOME, DIOCESES_POR_ESTADO, MOVIMENTOS_PASTORAIS 
 import ContemplativeLayout from './ContemplativeLayout';
 import PremiumAuditTrail from './PremiumAuditTrail';
 import { exportProfilePdf, type DonationRow, type AuditRow } from '@/lib/profile-pdf-export';
-import { getAvatarSources } from '@/lib/avatar-sources';
+import { useAvatarUrl } from '@/lib/avatar';
 
 const STREAK_MILESTONES = [
   { days: 7, label: 'Chama Constante', badge: '🔥' },
@@ -264,14 +264,13 @@ const ProfilePage: React.FC = () => {
     if (!file || !user) return;
     if (file.size > 2 * 1024 * 1024) { toast.error('A imagem deve ter no máximo 2MB'); return; }
     setUploading(true);
-    const ext = file.name.split('.').pop();
-    const path = `${user.id}/avatar.${ext}`;
+    const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+    // Bucket privado: guardamos apenas o path; leitura é via Signed URL.
+    const path = `${user.id}/avatar-${Date.now()}.${ext}`;
     const { error: uploadError } = await supabase.storage.from('avatars').upload(path, file, { upsert: true });
     if (uploadError) { toast.error('Erro ao enviar avatar'); setUploading(false); return; }
-    const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(path);
-    const freshUrl = `${publicUrl}?t=${Date.now()}`;
-    await supabase.from('profiles').update({ avatar_url: freshUrl } as any).eq('id', user.id);
-    setAvatarUrl(freshUrl);
+    await supabase.from('profiles').update({ avatar_url: path } as any).eq('id', user.id);
+    setAvatarUrl(path);
     setUploading(false);
     toast.success('Avatar atualizado!');
   };
