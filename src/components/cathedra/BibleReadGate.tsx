@@ -53,7 +53,8 @@ export const BibleReadGate: React.FC<{ children: React.ReactNode }> = ({ childre
     );
   }
 
-  // Cobertura parcial: banner + navegação segura para livros existentes.
+  // P0.2.0 — Contenção: banner de reconstrução sempre presente para
+  // não-admins até que a importação do cânon completo seja certificada.
   return (
     <>
       <BiblePartialCoverageBanner />
