@@ -11,6 +11,7 @@ import { getLevelInfo } from '@/lib/levels';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { Database } from '@/integrations/supabase/types';
+import { useAvatarUrl } from '@/lib/avatar';
 
 type UserHistory = Database['public']['Tables']['user_history']['Row'];
 type JourneyProgressRow = Database['public']['Tables']['journey_progress']['Row'] & { journeys: { title: string } | null };
@@ -25,6 +26,7 @@ interface JourneyProgress {
 const SpiritualProfile: React.FC = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
+  const avatarSrc = useAvatarUrl(profile?.avatar_url, 128);
   const [recentReadings, setRecentReadings] = useState<UserHistory[]>([]);
   const [activeJourneys, setActiveJourneys] = useState<JourneyProgress[]>([]);
   const [contemplatedThemes, setContemplatedThemes] = useState<string[]>(profile?.spiritual_themes || []);
@@ -130,8 +132,8 @@ const SpiritualProfile: React.FC = () => {
             <div className="absolute inset-0 rounded-premium-full border border-primary/10 animate-pulse" />
             <div className="absolute -inset-spacing-md rounded-premium-full border border-primary/5 animate-slow-spin" />
             <div className="w-full h-full rounded-premium-full bg-primary/5 flex items-center justify-center overflow-hidden border border-primary/10">
-              {profile.avatar_url ? (
-                <img src={profile.avatar_url} alt={profile.name} className="w-full h-full object-cover opacity-80" />
+              {avatarSrc ? (
+                <img src={avatarSrc} alt={profile.name} className="w-full h-full object-cover opacity-80" loading="lazy" decoding="async" />
               ) : (
                 <Icons.User className="w-spacing-2xl h-spacing-2xl text-primary/60" strokeWidth={0.5} />
               )}

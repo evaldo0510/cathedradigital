@@ -19,7 +19,7 @@ import { ESTADOS_BRASIL, ESTADO_NOME, DIOCESES_POR_ESTADO, MOVIMENTOS_PASTORAIS 
 import ContemplativeLayout from './ContemplativeLayout';
 import PremiumAuditTrail from './PremiumAuditTrail';
 import { exportProfilePdf, type DonationRow, type AuditRow } from '@/lib/profile-pdf-export';
-import { getAvatarSources } from '@/lib/avatar-sources';
+import { useAvatarUrl } from '@/lib/avatar';
 
 const STREAK_MILESTONES = [
   { days: 7, label: 'Chama Constante', badge: '🔥' },
@@ -146,6 +146,7 @@ const ProfilePage: React.FC = () => {
   const [activityFilter, setActivityFilter] = useState<'all' | ActivityKind>('all');
   const [activityPage, setActivityPage] = useState(1);
   const [exportingPdf, setExportingPdf] = useState(false);
+  const avatarDisplay = useAvatarUrl(avatarUrl, 192);
 
   useEffect(() => {
     if (!loading && !user) navigate(AppRoute.LOGIN);
@@ -264,14 +265,13 @@ const ProfilePage: React.FC = () => {
     if (!file || !user) return;
     if (file.size > 2 * 1024 * 1024) { toast.error('A imagem deve ter no máximo 2MB'); return; }
     setUploading(true);
-    const ext = file.name.split('.').pop();
-    const path = `${user.id}/avatar.${ext}`;
+    const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+    // Bucket privado: guardamos apenas o path; leitura é via Signed URL.
+    const path = `${user.id}/avatar-${Date.now()}.${ext}`;
     const { error: uploadError } = await supabase.storage.from('avatars').upload(path, file, { upsert: true });
     if (uploadError) { toast.error('Erro ao enviar avatar'); setUploading(false); return; }
-    const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(path);
-    const freshUrl = `${publicUrl}?t=${Date.now()}`;
-    await supabase.from('profiles').update({ avatar_url: freshUrl } as any).eq('id', user.id);
-    setAvatarUrl(freshUrl);
+    await supabase.from('profiles').update({ avatar_url: path } as any).eq('id', user.id);
+    setAvatarUrl(path);
     setUploading(false);
     toast.success('Avatar atualizado!');
   };
@@ -384,23 +384,17 @@ const ProfilePage: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-spacing-lg">
             <div className="relative w-spacing-4xl h-spacing-4xl group shrink-0">
               <Avatar className="w-spacing-3xl h-spacing-3xl sm:w-spacing-4xl sm:h-spacing-4xl border-4 border-primary/20 shrink-0">
-                {(() => {
-                  const sources = getAvatarSources(avatarUrl);
-                  if (!sources) return null;
-                  return (
-                    <AvatarImage
-                      src={sources.src}
-                      srcSet={sources.srcSet}
-                      sizes={sources.sizes}
-                      alt={profile.name}
-                      loading="lazy"
-                      decoding="async"
-                      className="aspect-square h-full w-full object-cover object-center"
-                      // @ts-expect-error — atributo válido em HTML mas ainda não tipado por completo
-                      fetchpriority="low"
-                    />
-                  );
-                })()}
+                {avatarDisplay ? (
+                  <AvatarImage
+                    src={avatarDisplay}
+                    alt={profile.name}
+                    loading="lazy"
+                    decoding="async"
+                    className="aspect-square h-full w-full object-cover object-center"
+                    // @ts-expect-error — atributo válido em HTML mas ainda não tipado por completo
+                    fetchpriority="low"
+                  />
+                ) : null}
                 <AvatarFallback className="text-premium-2xl font-black bg-foreground text-background">{initials}</AvatarFallback>
               </Avatar>
               <button
