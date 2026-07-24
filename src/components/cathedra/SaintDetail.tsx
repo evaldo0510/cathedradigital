@@ -472,6 +472,10 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           });
           return (
             <>
+              <SaintCuratedConnections
+                saintId={String(saintSlug ?? '')}
+                saintName={saint.name ?? saint.title ?? ''}
+              />
               <div className="mb-spacing-lg">
                 <NexusPanel output={nexus} kicker={`Conexões · ${saint.name ?? saint.title ?? ''}`} />
               </div>
