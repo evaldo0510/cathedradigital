@@ -111,6 +111,7 @@ const SaintWorkOverviewPage = lazy(() => import('./pages/biblioteca/SaintWorkOve
 const SaintWorkReaderPage = lazy(() => import('./pages/biblioteca/SaintWorkReaderPage'));
 const BibliotecaCatolicaPage = lazy(() => import('./pages/biblioteca/BibliotecaCatolicaPage'));
 const BibliotecaCatolicaAcervoPage = lazy(() => import('./pages/biblioteca/BibliotecaCatolicaAcervoPage'));
+const AcervoHomePage = lazy(() => import('./pages/acervo/AcervoHomePage'));
 
 const HojePage = lazy(() => import('./components/cathedra/HojePage'));
 const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
