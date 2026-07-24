@@ -88,7 +88,9 @@ function validate() {
     const problems: string[] = [];
     if (!legacy) problems.push("legacy_missing");
     if (!canonical) problems.push("canonical_missing");
-    if (legacy?.merged_into && legacy.merged_into !== "") problems.push(`legacy_already_merged_into:${legacy.merged_into}`);
+    if (legacy?.merged_into && legacy.merged_into !== "" && legacy.merged_into !== pair.canonicalSlug) problems.push(`legacy_already_merged_into:${legacy.merged_into}`);
+    const alreadyMerged = legacy?.merged_into === pair.canonicalSlug;
+
     if (canonical?.merged_into && canonical.merged_into !== "") problems.push("canonical_is_itself_merged");
     if (problems.length) issues.push(`${pair.legacySlug} → ${pair.canonicalSlug}: ${problems.join(", ")}`);
     return {
