@@ -252,7 +252,11 @@ const PartnerAdminRow: React.FC<{
     <CardContent className="grid grid-cols-1 md:grid-cols-[120px_1fr] gap-spacing-md">
       <div className="h-[120px] rounded-premium bg-muted/40 flex items-center justify-center overflow-hidden">
         {partner.logo_url ? (
-          <img src={resolveLogoPreview(partner.logo_url)} alt={partner.name} className="max-h-full max-w-full object-contain" />
+          <img
+            src={(partner as PartnerRow & { _preview?: string | null })._preview ?? (partner.logo_url.startsWith('http') ? partner.logo_url : '')}
+            alt={partner.name}
+            className="max-h-full max-w-full object-contain"
+          />
         ) : (
           <Icons.Image className="w-spacing-lg h-spacing-lg text-muted-foreground/60" />
         )}
@@ -274,7 +278,6 @@ const PartnerAdminRow: React.FC<{
 
 function resolveLogoPreview(logo: string): string {
   if (logo.startsWith('http')) return logo;
-  // logo é um path do bucket privado — usa signed URL curta para preview no admin
   const { data } = supabase.storage.from('partner-logos').getPublicUrl(logo);
   return data.publicUrl;
 }
