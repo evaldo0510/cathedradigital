@@ -159,6 +159,7 @@ export const WorkAuditHistory: React.FC<WorkAuditHistoryProps> = ({ workId }) =>
             por <span className="font-mono">{e.actor_email ?? e.actor_id ?? 'sistema'}</span>
           </p>
         </li>
+      ))}
       </ol>
     </div>
   );
