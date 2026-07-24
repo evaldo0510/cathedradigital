@@ -47,11 +47,11 @@ if (existsSync(resolve(ROOT, legacyFile))) {
   });
 }
 
-// 2. Nenhum arquivo em src/** pode importar NexusBubbles
+// 2. Nenhum arquivo em src/** pode importar NexusBubbles (grep restrito a `from '...NexusBubbles'`)
 let importHits = '';
 try {
   importHits = execSync(
-    `grep -rl --include='*.ts' --include='*.tsx' "cathedra/NexusBubbles" src/ scripts/ || true`,
+    `grep -rlE --include='*.ts' --include='*.tsx' "from ['\\\"][^'\\\"]*cathedra/NexusBubbles['\\\"]" src/ || true`,
     { cwd: ROOT, encoding: 'utf8' },
   ).trim();
 } catch {
