@@ -4956,6 +4956,45 @@ export type Database = {
         }
         Relationships: []
       }
+      saint_prayers_links: {
+        Row: {
+          created_at: string
+          id: string
+          prayer_id: string
+          relation: string
+          saint_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          prayer_id: string
+          relation?: string
+          saint_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          prayer_id?: string
+          relation?: string
+          saint_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saint_prayers_links_prayer_id_fkey"
+            columns: ["prayer_id"]
+            isOneToOne: false
+            referencedRelation: "prayers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "saint_prayers_links_saint_id_fkey"
+            columns: ["saint_id"]
+            isOneToOne: false
+            referencedRelation: "saints"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       saints: {
         Row: {
           ai_reflection: Json | null
@@ -4970,6 +5009,7 @@ export type Database = {
           church_doc_refs: Json | null
           content_hash: string | null
           content_status: Database["public"]["Enums"]["saint_content_status"]
+          conversion_story: string | null
           country: string | null
           created_at: string | null
           curiosities: string[]
@@ -4983,7 +5023,9 @@ export type Database = {
           id: string
           image: string | null
           last_scraped_at: string | null
+          legacy: string | null
           miracles: Json
+          mission: string | null
           name: string
           patron_of: string[] | null
           patronages: string[]
@@ -5015,6 +5057,7 @@ export type Database = {
           church_doc_refs?: Json | null
           content_hash?: string | null
           content_status?: Database["public"]["Enums"]["saint_content_status"]
+          conversion_story?: string | null
           country?: string | null
           created_at?: string | null
           curiosities?: string[]
@@ -5028,7 +5071,9 @@ export type Database = {
           id: string
           image?: string | null
           last_scraped_at?: string | null
+          legacy?: string | null
           miracles?: Json
+          mission?: string | null
           name: string
           patron_of?: string[] | null
           patronages?: string[]
@@ -5060,6 +5105,7 @@ export type Database = {
           church_doc_refs?: Json | null
           content_hash?: string | null
           content_status?: Database["public"]["Enums"]["saint_content_status"]
+          conversion_story?: string | null
           country?: string | null
           created_at?: string | null
           curiosities?: string[]
@@ -5073,7 +5119,9 @@ export type Database = {
           id?: string
           image?: string | null
           last_scraped_at?: string | null
+          legacy?: string | null
           miracles?: Json
+          mission?: string | null
           name?: string
           patron_of?: string[] | null
           patronages?: string[]
@@ -7831,6 +7879,7 @@ export type Database = {
           church_doc_refs: Json | null
           content_hash: string | null
           content_status: Database["public"]["Enums"]["saint_content_status"]
+          conversion_story: string | null
           country: string | null
           created_at: string | null
           curiosities: string[]
@@ -7844,7 +7893,9 @@ export type Database = {
           id: string
           image: string | null
           last_scraped_at: string | null
+          legacy: string | null
           miracles: Json
+          mission: string | null
           name: string
           patron_of: string[] | null
           patronages: string[]
