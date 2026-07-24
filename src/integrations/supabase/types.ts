@@ -2714,6 +2714,45 @@ export type Database = {
         }
         Relationships: []
       }
+      editorial_closure_migration_log: {
+        Row: {
+          actor: string | null
+          after_value: Json | null
+          before_value: Json | null
+          created_at: string
+          dry_run: boolean
+          entity_id: string
+          entity_table: string
+          id: string
+          strategy: string
+          warnings: Json
+        }
+        Insert: {
+          actor?: string | null
+          after_value?: Json | null
+          before_value?: Json | null
+          created_at?: string
+          dry_run?: boolean
+          entity_id: string
+          entity_table: string
+          id?: string
+          strategy: string
+          warnings?: Json
+        }
+        Update: {
+          actor?: string | null
+          after_value?: Json | null
+          before_value?: Json | null
+          created_at?: string
+          dry_run?: boolean
+          entity_id?: string
+          entity_table?: string
+          id?: string
+          strategy?: string
+          warnings?: Json
+        }
+        Relationships: []
+      }
       editorial_jobs: {
         Row: {
           bucket: string
@@ -8531,6 +8570,24 @@ export type Database = {
         Returns: string
       }
       mask_ip: { Args: { ip: string }; Returns: string }
+      migrate_editorial_closure_legacy: {
+        Args: { _dry_run?: boolean }
+        Returns: {
+          discarded: number
+          entity_table: string
+          normalized: number
+          scanned: number
+          unchanged: number
+        }[]
+      }
+      normalize_editorial_closure: {
+        Args: { _raw: Json }
+        Returns: {
+          canonical: Json
+          strategy: string
+          warnings: Json
+        }[]
+      }
       pg_stat_notif_backoff: { Args: { p_attempts: number }; Returns: string }
       pg_stat_notif_channel_gate_blocked: {
         Args: { p_channel: string }
