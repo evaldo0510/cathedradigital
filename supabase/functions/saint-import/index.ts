@@ -601,7 +601,10 @@ serve(async (req) => {
       aliases_inserted,
       editorial_score,
       confidence: bestConfidence,
+      canonical_id: canonicalId,
+      redirected_from: redirectedFrom,
     });
+
   } catch (e) {
     console.error("saint-import fatal:", e);
     return json({ error: "internal", details: String(e) }, 500);
