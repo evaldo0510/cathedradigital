@@ -37,8 +37,12 @@ import type {
   SaintWork,
   SaintWorkStatus,
   SaintWorkCategory,
+  SaintWorkFichaCompleteness,
 } from '@/types/saintWorks';
-import { SAINT_WORK_CATEGORY_LABELS } from '@/types/saintWorks';
+import {
+  SAINT_WORK_CATEGORY_LABELS,
+  SAINT_WORK_FICHA_COMPLETENESS_LABELS,
+} from '@/types/saintWorks';
 
 const STATUS_LABEL: Record<SaintWorkStatus, string> = {
   draft: 'Rascunho',
