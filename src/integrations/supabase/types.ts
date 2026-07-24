@@ -1533,6 +1533,56 @@ export type Database = {
           },
         ]
       }
+      bible_translation_certifications: {
+        Row: {
+          approved: boolean
+          checksum: string | null
+          created_at: string
+          ice: number | null
+          id: string
+          notes: string | null
+          phase: Database["public"]["Enums"]["bible_import_phase"]
+          reviewed_at: string
+          reviewer: string | null
+          translation_id: string
+          version: number
+        }
+        Insert: {
+          approved?: boolean
+          checksum?: string | null
+          created_at?: string
+          ice?: number | null
+          id?: string
+          notes?: string | null
+          phase: Database["public"]["Enums"]["bible_import_phase"]
+          reviewed_at?: string
+          reviewer?: string | null
+          translation_id: string
+          version?: number
+        }
+        Update: {
+          approved?: boolean
+          checksum?: string | null
+          created_at?: string
+          ice?: number | null
+          id?: string
+          notes?: string | null
+          phase?: Database["public"]["Enums"]["bible_import_phase"]
+          reviewed_at?: string
+          reviewer?: string | null
+          translation_id?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bible_translation_certifications_translation_id_fkey"
+            columns: ["translation_id"]
+            isOneToOne: false
+            referencedRelation: "bible_translation_sources"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bible_translation_phase_status: {
         Row: {
           certified_at: string | null
@@ -1543,6 +1593,7 @@ export type Database = {
           check_popovers: boolean
           check_reader: boolean
           check_references: boolean
+          check_search: boolean
           check_verses: boolean
           created_at: string
           ice_score: number | null
@@ -1564,6 +1615,7 @@ export type Database = {
           check_popovers?: boolean
           check_reader?: boolean
           check_references?: boolean
+          check_search?: boolean
           check_verses?: boolean
           created_at?: string
           ice_score?: number | null
@@ -1585,6 +1637,7 @@ export type Database = {
           check_popovers?: boolean
           check_reader?: boolean
           check_references?: boolean
+          check_search?: boolean
           check_verses?: boolean
           created_at?: string
           ice_score?: number | null
@@ -1634,6 +1687,7 @@ export type Database = {
           pcl_activated_at: string | null
           pcl_activated_by: string | null
           pcl_status: string
+          pipeline_stage: Database["public"]["Enums"]["bible_translation_pipeline_stage"]
           provider: string | null
           source_origin: string | null
           source_url: string | null
@@ -1669,6 +1723,7 @@ export type Database = {
           pcl_activated_at?: string | null
           pcl_activated_by?: string | null
           pcl_status?: string
+          pipeline_stage?: Database["public"]["Enums"]["bible_translation_pipeline_stage"]
           provider?: string | null
           source_origin?: string | null
           source_url?: string | null
@@ -1704,6 +1759,7 @@ export type Database = {
           pcl_activated_at?: string | null
           pcl_activated_by?: string | null
           pcl_status?: string
+          pipeline_stage?: Database["public"]["Enums"]["bible_translation_pipeline_stage"]
           provider?: string | null
           source_origin?: string | null
           source_url?: string | null
@@ -7899,11 +7955,20 @@ export type Database = {
           actual_chapters: number
           actual_verses: number
           certified_at: string
+          check_continuity: boolean
+          check_navigation: boolean
+          check_nexus: boolean
+          check_popovers: boolean
+          check_reader: boolean
+          check_references: boolean
+          check_search: boolean
+          check_verses: boolean
           expected_books: number
           expected_chapters: number
           ice_score: number
           is_primary: boolean
           phase: Database["public"]["Enums"]["bible_import_phase"]
+          pipeline_stage: Database["public"]["Enums"]["bible_translation_pipeline_stage"]
           status: Database["public"]["Enums"]["bible_phase_status"]
           translation_code: string
           translation_id: string
@@ -8485,6 +8550,15 @@ export type Database = {
         | "imported"
         | "certified"
         | "rejected"
+      bible_translation_pipeline_stage:
+        | "draft"
+        | "importing"
+        | "integrity_check"
+        | "editorial_review"
+        | "ice"
+        | "certified"
+        | "primary"
+        | "archived"
       content_curation_status: "stub" | "partial" | "complete"
       prayer_category:
         | "fundamentais"
@@ -8651,6 +8725,16 @@ export const Constants = {
         "imported",
         "certified",
         "rejected",
+      ],
+      bible_translation_pipeline_stage: [
+        "draft",
+        "importing",
+        "integrity_check",
+        "editorial_review",
+        "ice",
+        "certified",
+        "primary",
+        "archived",
       ],
       content_curation_status: ["stub", "partial", "complete"],
       prayer_category: [
