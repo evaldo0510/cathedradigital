@@ -15,10 +15,12 @@ import {
   Circle,
   Loader2,
 } from 'lucide-react';
+import { EditorialSurface } from '@/components/editorial';
 import {
+  ReaderShell,
   EditorialHero,
-  EditorialSurface,
-} from '@/components/editorial';
+  StudyContext,
+} from '@/components/reader';
 import { useCollection } from '@/features/collections/useCollection';
 import { useCollectionProgress } from '@/features/collections/useCollectionProgress';
 import { collectionAutoNexus } from '@/features/collections/collectionAutoNexus';
@@ -125,6 +127,12 @@ function ItemCard({
   );
 }
 
+/**
+ * CollectionPage — C0.5.b (Parallel Readers Migration).
+ * Envolvida em `ReaderShell` conforme Regra §10 do COS.
+ * hero → EditorialHero; headerContext → StudyContext.
+ * Sem `nexus`/`continuation`: página é índice curatorial de itens.
+ */
 export default function CollectionPage() {
   const { slug } = useParams<{ slug: string }>();
   const { data, isLoading, error } = useCollection(slug);
@@ -170,51 +178,52 @@ export default function CollectionPage() {
         <meta property="og:type" content="article" />
       </Helmet>
 
-      <div className="min-h-screen">
-        <EditorialHero
-          kicker={eyebrow}
-          title={collection.title}
-          subtitle={collection.subtitle ?? undefined}
-          parchment
-        />
+      <ReaderShell
+        className="min-h-screen"
+        contentMaxWidth="max-w-5xl"
+        ariaLabel={`Coleção — ${collection.title}`}
+        hero={
+          <EditorialHero
+            kicker={eyebrow}
+            title={collection.title}
+            subtitle={collection.subtitle ?? undefined}
+            parchment
+          />
+        }
+        headerContext={
+          collectionId && items.length > 0 ? (
+            <StudyContext
+              collectionTitle={collection.title}
+              position={`${totalCompleted} de ${items.length} concluídos`}
+            />
+          ) : undefined
+        }
+      >
+        {collection.description && (
+          <p className="font-stitch-body text-stitch-body-lg text-stitch-on-surface-variant leading-relaxed max-w-2xl mb-10">
+            {collection.description}
+          </p>
+        )}
 
-        <div className="mx-auto w-full max-w-5xl px-6 pb-24">
-          {collection.description && (
-            <p className="font-stitch-body text-stitch-body-lg text-stitch-on-surface-variant leading-relaxed max-w-2xl mb-10">
-              {collection.description}
-            </p>
-          )}
-
-          {collectionId && items.length > 0 && (
-            <div className="mb-8 flex items-center gap-3 text-sm text-stitch-on-surface-variant">
-              <span className="inline-flex items-center gap-1">
-                <CheckCircle2 className="h-4 w-4 text-stitch-secondary" />
-                {totalCompleted} de {items.length} concluídos
-              </span>
-            </div>
-          )}
-
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-            {items.map((item, idx) => {
-              const href = nexus[idx]?.href ?? '#';
-              return (
-                <ItemCard
-                  key={item.id}
-                  item={item}
-                  href={href}
-                  status={getStatus(item.id)}
-                  onOpen={() => {
-                    // marca como "reading" sem bloquear a navegação
-                    if (getStatus(item.id) === 'not_started') {
-                      void startItem(item.id).catch(() => undefined);
-                    }
-                  }}
-                />
-              );
-            })}
-          </div>
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          {items.map((item, idx) => {
+            const href = nexus[idx]?.href ?? '#';
+            return (
+              <ItemCard
+                key={item.id}
+                item={item}
+                href={href}
+                status={getStatus(item.id)}
+                onOpen={() => {
+                  if (getStatus(item.id) === 'not_started') {
+                    void startItem(item.id).catch(() => undefined);
+                  }
+                }}
+              />
+            );
+          })}
         </div>
-      </div>
+      </ReaderShell>
     </>
   );
 }
