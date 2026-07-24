@@ -54,6 +54,7 @@ import {
   EditorialHero,
   NexusPanel,
   ReaderContinuation,
+  CatechesisContext,
 } from '@/components/reader';
 import { resolveCatechismAutoNexus } from '@/core/knowledge/adapters/catechismAutoNexus';
 import { EditorialDivider } from '@/components/editorial';
@@ -486,6 +487,13 @@ const Catechism: React.FC = memo(() => {
                 subtitle={`${selectedPart.title} · §${startPara} — §${endPara}`}
                 size="md"
                 parchment
+              />
+            }
+            headerContext={
+              <CatechesisContext
+                moduleTitle="Catecismo da Igreja Católica"
+                section={selectedSection.title}
+                level={selectedPart.part}
               />
             }
             nexus={

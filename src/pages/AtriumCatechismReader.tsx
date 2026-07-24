@@ -5,14 +5,13 @@
  * Com ?p=N → delega ao Catechism existente (não duplica lógica).
  */
 
-import React, { lazy, Suspense, useMemo } from 'react';
+import React, { lazy, Suspense } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useSearchParams } from 'react-router-dom';
 import { BookMarked, ArrowRight, Search as SearchIcon } from 'lucide-react';
 import { CIC_SECTIONS } from '@/data/catechism';
 import { AppRoute } from '@/types';
 import { CatechismSkeleton } from '@/components/cathedra/RouteSkeletons';
-import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import { EditorialHero, EditorialCard } from '@/components/editorial/harmony';
@@ -27,42 +26,21 @@ const PART_KICKERS: Record<string, string> = {
   'Parte IV': 'Oração',
 };
 
-function findPartByParagraph(p: number): { part: string; section?: string } | null {
-  for (const part of CIC_SECTIONS) {
-    for (const sec of part.sections) {
-      const [start, end] = sec.paragraphs;
-      if (p >= start && p <= end) return { part: part.part, section: sec.title };
-    }
-  }
-  return null;
-}
-
 const AtriumCatechismReader: React.FC = () => {
   const [sp] = useSearchParams();
   const pParam = sp.get('p');
-  const chrome = useMemo(() => {
-    if (!pParam) return null;
-    const n = parseInt(pParam, 10);
-    const loc = Number.isFinite(n) ? findPartByParagraph(n) : null;
-    const kicker = loc ? `${PART_KICKERS[loc.part] ?? loc.part}` : 'Depositum Fidei';
-    const title = `§${pParam}`;
-    const subtitle = loc?.section;
-    return { kicker, title, subtitle };
-  }, [pParam]);
 
-  if (pParam && chrome) {
+  // Reader Template Master (COS §10 / Regra 11):
+  // Quando há `?p=`, o próprio Catechism renderiza a cadeia canônica
+  // ReaderShell → EditorialHero → HeaderContext → NexusPanel → ReaderContinuation.
+  // Não envolver com chrome paralelo (EditorialReaderChrome removido).
+  if (pParam) {
     return (
       <Suspense fallback={<CatechismSkeleton />}>
         <MobileTopBar
-          kicker={`Cathedra · ${chrome.kicker}`}
-          title={chrome.title}
+          kicker="Cathedra · Depositum Fidei"
+          title={`§${pParam}`}
           showBack
-        />
-        <EditorialReaderChrome
-          kicker={`Cathedra · ${chrome.kicker}`}
-          title={chrome.title}
-          subtitle={chrome.subtitle}
-          backHref={AppRoute.CATECHISM}
         />
         <Catechism />
         <MobileBottomNav />
