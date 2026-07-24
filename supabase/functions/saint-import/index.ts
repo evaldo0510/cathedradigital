@@ -219,7 +219,8 @@ function extractFromWikitext(wt: string): Partial<NormalizedSaint> {
   };
 
   const grab = (key: string): string | undefined => {
-    const re = new RegExp(`\\|\\s*${key}\\s*=\\s*((?:[^\\n|]|\\{\\{[^}]*\\}\\})+)`, "i");
+    // Consome wikilinks e templates como uma unidade para não quebrar em `|`
+    const re = new RegExp(`\\|\\s*${key}\\s*=\\s*((?:\\[\\[[^\\]]*\\]\\]|\\{\\{[^}]*\\}\\}|[^\\n|])+)`, "i");
     const m = wt.match(re);
     if (!m) return undefined;
     let v = cleanTemplates(m[1]);
@@ -227,6 +228,7 @@ function extractFromWikitext(wt: string): Partial<NormalizedSaint> {
     v = v.replace(/\s{2,}/g, " ");
     return v || undefined;
   };
+
 
   const grabAny = (...keys: string[]) => {
     for (const k of keys) {
