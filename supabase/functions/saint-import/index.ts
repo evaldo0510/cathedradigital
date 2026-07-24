@@ -106,10 +106,10 @@ async function fetchWikipediaPT(name: string): Promise<ImportOutcome | null> {
     { alias: s.title, language: "pt", type: "alt", source: "wikipedia" },
   ];
 
-  // Enriquecimento via infobox + langlinks numa única chamada
+  // Enriquecimento via infobox + langlinks + imageinfo numa única chamada agregada
   try {
     const infoRes = await fetch(
-      `https://pt.wikipedia.org/w/api.php?action=query&prop=revisions|langlinks&rvprop=content&rvsection=0&lllimit=50&lllang=&titles=${title}&format=json&formatversion=2&origin=*`,
+      `https://pt.wikipedia.org/w/api.php?action=query&prop=revisions|langlinks|pageimages&rvprop=content&rvsection=0&lllimit=50&piprop=name&titles=${title}&format=json&formatversion=2&origin=*`,
       { headers: { "User-Agent": WIKI_UA } },
     );
     if (infoRes.ok) {
@@ -129,6 +129,18 @@ async function fetchWikipediaPT(name: string): Promise<ImportOutcome | null> {
           source: "wikipedia",
         });
       }
+
+      // Licença real via Commons imageinfo
+      const pageimage: string | undefined = page?.pageimage;
+      if (pageimage) {
+        const commons = await fetchCommonsImageInfo(pageimage);
+        if (commons) {
+          if (commons.url) data.image = commons.url;
+          data.image_source_url = commons.descriptionurl ?? data.image_source_url;
+          if (commons.license) data.image_license = commons.license;
+          if (commons.attribution) data.image_attribution = commons.attribution;
+        }
+      }
     }
   } catch (_) {
     /* opcional */
@@ -137,19 +149,96 @@ async function fetchWikipediaPT(name: string): Promise<ImportOutcome | null> {
   return { provider: "wikipedia-pt", confidence: 80, data, sourceUrl, aliases };
 }
 
+interface CommonsImage {
+  url?: string;
+  descriptionurl?: string;
+  license?: string;
+  attribution?: string;
+}
+
+async function fetchCommonsImageInfo(fileName: string): Promise<CommonsImage | null> {
+  const file = `File:${fileName}`.replace(/\s+/g, "_");
+  const url = `https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url|extmetadata&iiextmetadatafilter=LicenseShortName|Artist|AttributionRequired&titles=${encodeURIComponent(file)}&format=json&formatversion=2&origin=*`;
+  try {
+    const res = await fetch(url, { headers: { "User-Agent": WIKI_UA } });
+    if (!res.ok) return null;
+    const j = await res.json();
+    const ii = j?.query?.pages?.[0]?.imageinfo?.[0];
+    if (!ii) return null;
+    const meta = ii.extmetadata ?? {};
+    const license = meta.LicenseShortName?.value as string | undefined;
+    const artistHtml = meta.Artist?.value as string | undefined;
+    const artist = artistHtml?.replace(/<[^>]+>/g, "").trim();
+    return {
+      url: ii.url,
+      descriptionurl: ii.descriptionurl,
+      license,
+      attribution: artist ? `${artist} (via Wikimedia Commons)` : undefined,
+    };
+  } catch (_) {
+    return null;
+  }
+}
+
+
 function extractFromWikitext(wt: string): Partial<NormalizedSaint> {
   if (!wt) return {};
-  const grab = (key: string): string | undefined => {
-    const re = new RegExp(`\\|\\s*${key}\\s*=\\s*([^\\n|]+)`, "i");
-    const m = wt.match(re);
-    return m?.[1]?.trim().replace(/\[\[([^\]|]+\|)?([^\]]+)\]\]/g, "$2").replace(/<[^>]+>/g, "").trim() || undefined;
+
+  // Limpa templates comuns de data preservando o texto interno relevante.
+  //  {{dtln|1181|9|26}} -> "1181-09-26"
+  //  {{Data de nascimento|1181|9|26|...}} -> "1181-09-26"
+  //  {{Nowrap|...}} / {{lang|xx|...}} -> conteúdo interno
+  const cleanTemplates = (raw: string): string => {
+    let s = raw;
+    s = s.replace(/\{\{\s*(?:dtln|dnbr|dmbr|Data de (?:nascimento|morte|falecimento)|nascimento(?:\s+e\s+idade)?|morte(?:\s+e\s+idade)?)\s*\|([^}]+)\}\}/gi, (_m, args) => {
+      const parts = String(args).split("|").map((p: string) => p.trim()).filter(Boolean);
+      const nums = parts.filter((p: string) => /^\d+$/.test(p));
+      if (nums.length >= 3) {
+        const [y, mo, d] = nums;
+        return `${y.padStart(4, "0")}-${mo.padStart(2, "0")}-${d.padStart(2, "0")}`;
+      }
+      if (nums.length === 1) return nums[0];
+      return parts.join(" ");
+    });
+    s = s.replace(/\{\{\s*(?:nowrap|lang|langx|small|nobr)\s*\|([^}]+)\}\}/gi, (_m, args) => {
+      const parts = String(args).split("|");
+      return parts[parts.length - 1].trim();
+    });
+    // Remove templates residuais simples
+    s = s.replace(/\{\{[^{}]*\}\}/g, " ");
+    return s;
   };
+
+  const grab = (key: string): string | undefined => {
+    const re = new RegExp(`\\|\\s*${key}\\s*=\\s*((?:[^\\n|]|\\{\\{[^}]*\\}\\})+)`, "i");
+    const m = wt.match(re);
+    if (!m) return undefined;
+    let v = cleanTemplates(m[1]);
+    v = v.replace(/\[\[([^\]|]+\|)?([^\]]+)\]\]/g, "$2").replace(/<[^>]+>/g, "").replace(/'{2,}/g, "").trim();
+    v = v.replace(/\s{2,}/g, " ");
+    return v || undefined;
+  };
+
+  const grabAny = (...keys: string[]) => {
+    for (const k of keys) {
+      const v = grab(k);
+      if (v) return v;
+    }
+    return undefined;
+  };
+
   const out: Partial<NormalizedSaint> = {};
-  const born = grab("nascimento_data") ?? grab("data_nascimento");
-  const died = grab("morte_data") ?? grab("data_morte") ?? grab("data_falecimento");
-  const birthplace = grab("nascimento_local") ?? grab("local_nascimento");
-  const country = grab("nacionalidade") ?? grab("país");
-  const order = grab("ordem") ?? grab("congregação") ?? grab("congregacao");
+  const born = grabAny("nascimento_data", "data_nascimento", "nascimento", "data de nascimento");
+  const died = grabAny("morte_data", "data_morte", "data_falecimento", "morte", "data de morte", "falecimento");
+  const birthplace = grabAny(
+    "nascimento_local",
+    "local_nascimento",
+    "local de nascimento",
+    "nascimento local",
+    "naturalidade",
+  );
+  const country = grabAny("nacionalidade", "país", "pais");
+  const order = grabAny("ordem", "ordem_religiosa", "ordem religiosa", "congregação", "congregacao");
   if (born) out.born = born;
   if (died) out.died = died;
   if (birthplace) out.birthplace = birthplace;
@@ -157,6 +246,7 @@ function extractFromWikitext(wt: string): Partial<NormalizedSaint> {
   if (order) out.religious_order = order;
   return out;
 }
+
 
 // v2: Vatican.va scrape opcional — placeholder por ora
 async function fetchVatican(_name: string): Promise<ImportOutcome | null> {
@@ -328,6 +418,22 @@ serve(async (req) => {
       fields: perProviderFields,
     };
 
+    // Preview auditável de aliases (mesma deduplicação do fluxo de persistência)
+    const aliasCandidates = outcomes.flatMap((o) =>
+      o.aliases.map((a) => ({ ...a, _providerSource: `${o.provider}_langlinks` })),
+    );
+    const seenPreview = new Set<string>();
+    const aliases_preview = aliasCandidates
+      .filter((a) => a.alias && a.alias.trim() && a.alias.trim().toLowerCase() !== String(saint.name).trim().toLowerCase())
+      .filter((a) => {
+        const k = `${a.language}::${a.alias.trim().toLowerCase()}`;
+        if (seenPreview.has(k)) return false;
+        seenPreview.add(k);
+        return true;
+      })
+      .map((a) => ({ alias: a.alias.trim(), language: a.language, type: a.type, source: a._providerSource }));
+
+
     const editorial_score = computeEditorialScore(baseRow);
 
     if (Object.keys(aggUpdates).length === 0) {
@@ -345,6 +451,7 @@ serve(async (req) => {
         status: "skipped",
         applied: [],
         skipped: Array.from(aggSkipped),
+        aliases_preview,
         editorial_score,
       });
     }
@@ -356,10 +463,12 @@ serve(async (req) => {
         applied: Array.from(aggApplied),
         skipped: Array.from(aggSkipped),
         updates: aggUpdates,
+        aliases_preview,
         source_metadata: sourceMetadata,
         editorial_score,
       });
     }
+
 
     const { error: upErr } = await admin
       .from("saints")
@@ -383,7 +492,6 @@ serve(async (req) => {
     }
 
     // Upsert aliases (idempotente via UNIQUE saint_id+alias_norm+language)
-    const aliasCandidates = outcomes.flatMap((o) => o.aliases);
     const seen = new Set<string>();
     const aliasRows = aliasCandidates
       .filter((a) => a.alias && a.alias.trim() && a.alias.trim().toLowerCase() !== String(saint.name).trim().toLowerCase())
@@ -394,6 +502,7 @@ serve(async (req) => {
         return true;
       })
       .map((a) => ({ saint_id: saintId, alias: a.alias.trim(), language: a.language, type: a.type, source: a.source }));
+
 
     let aliases_inserted = 0;
     if (aliasRows.length > 0) {
