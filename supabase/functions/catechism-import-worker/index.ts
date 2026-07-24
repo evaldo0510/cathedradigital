@@ -5,7 +5,6 @@ import { corsHeaders } from 'npm:@supabase/supabase-js@2/cors';
 const BASE = 'https://www.vatican.va/archive/cathechism_po/index_new';
 
 // Ranges verified against vatican.va PT archive.
-// Order matters: first entry whose [from,to] contains N wins.
 const FILES: Array<{ from: number; to: number; file: string }> = [
   { from: 1,    to: 25,   file: 'prologo%201-25_po.html' },
   { from: 26,   to: 49,   file: 'p1s1c1_26-49_po.html' },
@@ -35,12 +34,15 @@ const FILES: Array<{ from: number; to: number; file: string }> = [
   { from: 2759, to: 2865, file: 'p4s2_2759-2865_po.html' },
 ];
 
+const MAX_ATTEMPTS = 6;
+// Backoff em segundos: 30s, 2min, 8min, 30min, 60min, 60min (cap)
+const BACKOFF_SECONDS = [30, 120, 480, 1800, 3600, 3600];
+
 function fileFor(paragraph: number): string | null {
   const hit = FILES.find((r) => paragraph >= r.from && paragraph <= r.to);
   return hit ? hit.file : null;
 }
 
-// Simple in-request HTML cache to avoid re-fetching the same file per batch.
 const htmlCache = new Map<string, string>();
 
 async function fetchHtml(file: string): Promise<string> {
@@ -50,14 +52,10 @@ async function fetchHtml(file: string): Promise<string> {
     headers: { 'User-Agent': 'CathedraDigital/1.0 (catechism importer)' },
   });
   if (!res.ok) throw new Error(`fetch ${file} -> HTTP ${res.status}`);
-  // vatican.va often serves ISO-8859-1
   const buf = await res.arrayBuffer();
   let text: string;
-  try {
-    text = new TextDecoder('iso-8859-1').decode(buf);
-  } catch {
-    text = new TextDecoder('utf-8').decode(buf);
-  }
+  try { text = new TextDecoder('iso-8859-1').decode(buf); }
+  catch { text = new TextDecoder('utf-8').decode(buf); }
   htmlCache.set(file, text);
   return text;
 }
@@ -75,15 +73,7 @@ function stripTags(s: string): string {
     .trim();
 }
 
-/**
- * Extract paragraph N text.
- * Pattern in PT files: <p>...<b>N.</b> ... </p>
- * We grab the <p>...</p> block that starts with the bold number and
- * concatenate following <p> blocks that do NOT begin with a new <b>digit.</b>
- * (to capture multi-paragraph articles).
- */
 function extractParagraph(html: string, n: number): string | null {
-  // Find every <p ...>...</p> block; approach: build list of blocks then scan.
   const blocks = [...html.matchAll(/<p\b[^>]*>([\s\S]*?)<\/p>/gi)].map((m) => m[1]);
   const startRe = new RegExp(`^\\s*(?:<[^>]+>\\s*)*<b>\\s*${n}\\s*\\.?\\s*<\\/b>`, 'i');
   const anyStartRe = /^\s*(?:<[^>]+>\s*)*<b>\s*\d+\s*\.?\s*<\/b>/i;
@@ -98,20 +88,14 @@ function extractParagraph(html: string, n: number): string | null {
   for (let i = startIdx; i < blocks.length; i++) {
     if (i > startIdx && anyStartRe.test(blocks[i])) break;
     const clean = stripTags(blocks[i]);
-    // Remove leading "N." or "N ." from the very first block
-    if (i === startIdx) {
-      parts.push(clean.replace(new RegExp(`^${n}\\s*\\.?\\s*`), ''));
-    } else if (clean) {
-      parts.push(clean);
-    }
+    if (i === startIdx) parts.push(clean.replace(new RegExp(`^${n}\\s*\\.?\\s*`), ''));
+    else if (clean) parts.push(clean);
   }
   const out = parts.join('\n\n').trim();
   return out.length > 10 ? out : null;
 }
 
-function slugFor(n: number): string {
-  return `ccc-${n}`;
-}
+const slugFor = (n: number) => `ccc-${n}`;
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
@@ -127,45 +111,52 @@ Deno.serve(async (req) => {
     const specific: number[] | undefined = Array.isArray(body?.paragraphs)
       ? body.paragraphs.map(Number).filter((x: number) => Number.isFinite(x) && x >= 1 && x <= 2865)
       : undefined;
+    const nowIso = new Date().toISOString();
 
-    // Pick queue items
-    let items: Array<{ id: string; paragraph: number; attempts: number }> = [];
+    // Selecionar itens elegíveis
+    let items: Array<{ id: string; paragraph: number; attempts: number; attempts_log: any[] }> = [];
     if (specific && specific.length) {
       const { data, error } = await supabase
         .from('catechism_import_queue')
-        .select('id, paragraph, attempts')
+        .select('id, paragraph, attempts, attempts_log')
         .in('paragraph', specific)
         .in('status', ['pending', 'error']);
       if (error) throw error;
-      items = data ?? [];
+      items = (data ?? []) as any;
     } else {
       const { data, error } = await supabase
         .from('catechism_import_queue')
-        .select('id, paragraph, attempts')
+        .select('id, paragraph, attempts, attempts_log')
         .in('status', ['pending', 'error'])
+        .or(`next_attempt_at.is.null,next_attempt_at.lte.${nowIso}`)
         .order('requested_at', { ascending: true })
         .limit(limit);
       if (error) throw error;
-      items = data ?? [];
+      items = (data ?? []) as any;
     }
 
     if (!items.length) {
       return new Response(
-        JSON.stringify({ ok: true, processed: 0, message: 'queue empty' }),
+        JSON.stringify({ ok: true, processed: 0, message: 'no eligible items' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       );
     }
 
-    // Mark processing
+    // Marcar processing
     await supabase
       .from('catechism_import_queue')
-      .update({ status: 'processing', updated_at: new Date().toISOString() })
+      .update({ status: 'processing', updated_at: nowIso })
       .in('id', items.map((i) => i.id));
 
-    const results: Array<{ paragraph: number; status: string; error?: string }> = [];
+    const results: Array<{ paragraph: number; status: string; error?: string; attempt: number; duration_ms: number }> = [];
 
     for (const item of items) {
       const n = item.paragraph;
+      const attempt = (item.attempts ?? 0) + 1;
+      const startedAt = Date.now();
+      const startedIso = new Date(startedAt).toISOString();
+      const log = Array.isArray(item.attempts_log) ? [...item.attempts_log] : [];
+
       try {
         const file = fileFor(n);
         if (!file) throw new Error(`no file mapping for paragraph ${n}`);
@@ -176,16 +167,14 @@ Deno.serve(async (req) => {
         const { error: upErr } = await supabase
           .from('catechism_official')
           .upsert(
-            {
-              paragraph: n,
-              slug: slugFor(n),
-              content: text,
-              texto_base: text,
-              status: 'imported',
-            },
+            { paragraph: n, slug: slugFor(n), content: text, texto_base: text, status: 'imported' },
             { onConflict: 'paragraph' },
           );
         if (upErr) throw upErr;
+
+        const duration = Date.now() - startedAt;
+        log.push({ attempt, started_at: startedIso, duration_ms: duration, status: 'completed', source: file });
+        console.log(JSON.stringify({ fn: 'catechism-import-worker', level: 'info', paragraph: n, attempt, duration_ms: duration, status: 'completed', file }));
 
         await supabase
           .from('catechism_import_queue')
@@ -194,23 +183,35 @@ Deno.serve(async (req) => {
             processed_at: new Date().toISOString(),
             updated_at: new Date().toISOString(),
             last_error: null,
-            attempts: (item.attempts ?? 0) + 1,
+            attempts: attempt,
+            next_attempt_at: null,
+            attempts_log: log,
           })
           .eq('id', item.id);
 
-        results.push({ paragraph: n, status: 'completed' });
+        results.push({ paragraph: n, status: 'completed', attempt, duration_ms: duration });
       } catch (err: any) {
         const msg = String(err?.message ?? err).slice(0, 500);
+        const duration = Date.now() - startedAt;
+        const giveUp = attempt >= MAX_ATTEMPTS;
+        const backoffSec = BACKOFF_SECONDS[Math.min(attempt - 1, BACKOFF_SECONDS.length - 1)];
+        const nextAttempt = giveUp ? null : new Date(Date.now() + backoffSec * 1000).toISOString();
+
+        log.push({ attempt, started_at: startedIso, duration_ms: duration, status: 'error', error: msg, next_attempt_at: nextAttempt, gave_up: giveUp });
+        console.error(JSON.stringify({ fn: 'catechism-import-worker', level: 'error', paragraph: n, attempt, duration_ms: duration, error: msg, next_attempt_at: nextAttempt, gave_up: giveUp }));
+
         await supabase
           .from('catechism_import_queue')
           .update({
             status: 'error',
             last_error: msg,
-            attempts: (item.attempts ?? 0) + 1,
+            attempts: attempt,
+            next_attempt_at: nextAttempt,
+            attempts_log: log,
             updated_at: new Date().toISOString(),
           })
           .eq('id', item.id);
-        results.push({ paragraph: n, status: 'error', error: msg });
+        results.push({ paragraph: n, status: 'error', error: msg, attempt, duration_ms: duration });
       }
     }
 
