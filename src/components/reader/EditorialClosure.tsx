@@ -19,6 +19,20 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Icons } from '@/constants';
+import { resolveNexusHref } from '@/lib/nexusHref';
+import type { NexusKind } from '@/types/nexus';
+
+/**
+ * Item de Nexus curado dentro do encerramento editorial.
+ * Distinto de `nexus_relations` (grafo global): estas são as 1–3
+ * conexões que o editor escolheu como fio de continuidade imediata.
+ */
+export interface EditorialClosureNexusItem {
+  kind: NexusKind;
+  ref: string;
+  label: string;
+  note?: string;
+}
 
 export interface EditorialClosureProps {
   /** Pergunta interior, sóbria, não retórica. 1 frase. */
@@ -33,6 +47,10 @@ export interface EditorialClosureProps {
     href: string;
     kicker?: string;
   };
+  /** Nexus editorial curado — 1 a 3 conexões diretas ao fio da leitura. */
+  nexus?: EditorialClosureNexusItem[];
+  /** Origem do closure. `cathedra-editorial` = curado; `ai-*` = gerado. */
+  source?: 'cathedra-editorial' | 'ai-assisted' | 'ai-generated' | string;
   className?: string;
 }
 
