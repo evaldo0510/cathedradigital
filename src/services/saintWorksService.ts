@@ -149,3 +149,99 @@ export async function searchInWork(
   }
   return (data ?? []) as Array<Pick<SaintWorkChapter, 'id' | 'order' | 'title'>>;
 }
+
+/* ---------------------------------------------------------------------- */
+/* Global full-text search (E1.4)                                          */
+/* ---------------------------------------------------------------------- */
+
+export interface PatristicSearchHit {
+  work_id: string;
+  work_slug: string;
+  work_title: string;
+  saint_id: string;
+  saint_name: string | null;
+  category: string;
+  year_written: number | null;
+  chapter_id: string | null;
+  chapter_order: number | null;
+  chapter_title: string | null;
+  /** Trecho já contendo <mark> em torno dos termos. Sanitizado no server. */
+  snippet: string;
+  rank: number;
+  total_count: number;
+}
+
+export interface PatristicSearchResult {
+  hits: PatristicSearchHit[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export async function searchPatristicLibrary(
+  query: string,
+  page = 1,
+  pageSize = 10,
+): Promise<PatristicSearchResult> {
+  const q = query.trim();
+  if (q.length < 2) {
+    return { hits: [], total: 0, page, pageSize };
+  }
+  const { data, error } = await (supabase.rpc as unknown as (
+    fn: string,
+    args: { search_query: string; page_number: number; page_size: number },
+  ) => Promise<{ data: PatristicSearchHit[] | null; error: Error | null }>)(
+    'search_patristic_library',
+    { search_query: q, page_number: page, page_size: pageSize },
+  );
+  if (error) {
+    console.error('[saintWorksService] searchPatristicLibrary', error);
+    return { hits: [], total: 0, page, pageSize };
+  }
+  const hits = data ?? [];
+  return {
+    hits,
+    total: hits[0]?.total_count ?? 0,
+    page,
+    pageSize,
+  };
+}
+
+/* ---------------------------------------------------------------------- */
+/* Audit log (E1.3.1)                                                      */
+/* ---------------------------------------------------------------------- */
+
+export interface SaintWorksAuditEntry {
+  id: string;
+  work_id: string;
+  chapter_id: string | null;
+  action:
+    | 'created'
+    | 'updated'
+    | 'status_changed'
+    | 'chapter_created'
+    | 'chapter_updated'
+    | 'chapter_deleted';
+  from_status: string | null;
+  to_status: string | null;
+  changed_fields: string[];
+  actor_id: string | null;
+  actor_email: string | null;
+  notes: string | null;
+  created_at: string;
+}
+
+export async function listWorkAudit(workId: string, limit = 100): Promise<SaintWorksAuditEntry[]> {
+  const { data, error } = await supabase
+    .from('saint_works_audit')
+    .select('*')
+    .eq('work_id', workId)
+    .order('created_at', { ascending: false })
+    .limit(limit);
+  if (error) {
+    console.error('[saintWorksService] listWorkAudit', error);
+    return [];
+  }
+  return (data ?? []) as SaintWorksAuditEntry[];
+}
+
