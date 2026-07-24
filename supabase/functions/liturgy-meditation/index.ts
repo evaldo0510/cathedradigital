@@ -9,6 +9,7 @@
  * armazena em `liturgy_meditations` e reusa para todos os leitores.
  */
 import { createLovableAiGatewayProvider } from "../_shared/ai-gateway.ts";
+import { composeEditorialSystemPrompt } from "../_shared/editorial-prompt.ts";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { generateText, NoObjectGeneratedError, Output } from "npm:ai";
@@ -258,7 +259,7 @@ Deno.serve(async (req) => {
   try {
     const result = await generateText({
       model,
-      system: SYSTEM_PROMPT,
+      system: composeEditorialSystemPrompt(SYSTEM_PROMPT),
       prompt: buildUserPrompt(body.iso_date, body.readings),
       output: Output.object({ schema: meditationSchema }),
     });

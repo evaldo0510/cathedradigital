@@ -10,6 +10,7 @@
  * Retro-compat: sem `field` → gera `explanation`.
  */
 import { createLovableAiGatewayProvider } from "../_shared/ai-gateway.ts";
+import { composeEditorialSystemPrompt } from "../_shared/editorial-prompt.ts";
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { generateText } from "npm:ai";
@@ -161,7 +162,7 @@ Deno.serve(async (req) => {
 
     const { text } = await generateText({
       model: gateway("google/gemini-2.5-flash"),
-      system,
+      system: composeEditorialSystemPrompt(system),
       prompt: user,
       maxRetries: 1,
     });
