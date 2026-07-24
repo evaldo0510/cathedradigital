@@ -204,6 +204,7 @@ const MissionControlPage = lazy(() => import('./pages/admin/MissionControl'));
 const EditorialBulkPage = lazy(() => import('./pages/admin/EditorialBulk'));
 const NexusAdmin = lazy(() => import('./pages/admin/NexusAdmin'));
 const GlossaryAdmin = lazy(() => import('./pages/admin/GlossaryAdmin'));
+const CatechismImportQueuePage = lazy(() => import('./pages/admin/CatechismImportQueue'));
 const CollectionsAdmin = lazy(() => import('./pages/admin/CollectionsAdmin'));
 const CollectionEditor = lazy(() => import('./pages/admin/CollectionEditor'));
 const PrayerAdmin = lazy(() => import('./pages/admin/PrayerAdmin'));
@@ -788,6 +789,7 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/nexus-audit" element={<NexusAuditPage />} />
                       <Route path="/admin/editorial-integrity" element={<EditorialIntegrityPage />} />
                       <Route path="/admin/editorial-audit" element={<EditorialAuditPage />} />
+                      <Route path="/admin/catechism-queue" element={<CatechismImportQueuePage />} />
                       <Route path="/admin/editorial-bulk" element={<EditorialBulkPage />} />
                       <Route path="/admin/mission-control" element={<MissionControlPage />} />
 
