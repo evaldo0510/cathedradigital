@@ -111,7 +111,12 @@ export interface Saint extends Partial<DeepContent> {
   country?: string;
   vocation?: string;
   aiReflection?: SaintAIReflection;
+  // Onda 2 — complementos editoriais (TEXT)
+  conversionStory?: string;
+  mission?: string;
+  legacy?: string;
 }
+
 
 export interface SaintAIReflectionTeaching {
   title: string;
