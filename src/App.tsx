@@ -109,6 +109,8 @@ const BibliotecaEscritosPage = lazy(() => import('./pages/biblioteca/BibliotecaE
 const BibliotecaBuscaPage = lazy(() => import('./pages/biblioteca/BibliotecaBuscaPage'));
 const SaintWorkOverviewPage = lazy(() => import('./pages/biblioteca/SaintWorkOverviewPage'));
 const SaintWorkReaderPage = lazy(() => import('./pages/biblioteca/SaintWorkReaderPage'));
+const BibliotecaCatolicaPage = lazy(() => import('./pages/biblioteca/BibliotecaCatolicaPage'));
+const BibliotecaCatolicaAcervoPage = lazy(() => import('./pages/biblioteca/BibliotecaCatolicaAcervoPage'));
 
 const HojePage = lazy(() => import('./components/cathedra/HojePage'));
 const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
@@ -684,6 +686,10 @@ const AppLayout: React.FC = () => {
               <Route path="/biblioteca/escritos/busca" element={<Suspense fallback={<LoadingFallback />}><BibliotecaBuscaPage /></Suspense>} />
               <Route path="/biblioteca/escritos/:autor/:obra" element={<Suspense fallback={<LoadingFallback />}><SaintWorkOverviewPage /></Suspense>} />
               <Route path="/biblioteca/escritos/:autor/:obra/capitulo/:ordem" element={<Suspense fallback={<LoadingFallback />}><SaintWorkReaderPage /></Suspense>} />
+
+              {/* Biblioteca Católica — frente unificada (Escritos + Padres + Doutores + Clássicos + Magistério) */}
+              <Route path="/biblioteca/catolica" element={<Suspense fallback={<LoadingFallback />}><BibliotecaCatolicaPage /></Suspense>} />
+              <Route path="/biblioteca/catolica/acervo" element={<Suspense fallback={<LoadingFallback />}><BibliotecaCatolicaAcervoPage /></Suspense>} />
 
 
               {/* Jornadas */}

@@ -454,6 +454,22 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
     },
   },
   {
+    test: /^\/biblioteca\/catolica$/,
+    meta: {
+      title: 'Biblioteca Católica — Cathedra',
+      description: 'Escritos dos Santos, Padres, Doutores, Clássicos e Magistério da Igreja em um só átrio, com ficha editorial e Nexus Theologicus.',
+      canonicalPath: '/biblioteca/catolica',
+    },
+  },
+  {
+    test: /^\/biblioteca\/catolica\/acervo$/,
+    meta: {
+      title: 'Acervo — Biblioteca Católica · Cathedra',
+      description: 'Explore o acervo unificado: busque por título, autor ou tema em toda a Tradição — Escritos, Padres, Doutores, Clássicos e Magistério.',
+      canonicalPath: '/biblioteca/catolica/acervo',
+    },
+  },
+  {
     test: /^\/biblioteca\/escritos$/,
     meta: {
       title: 'Biblioteca Patrística — Escritos dos Santos | Cathedra',
