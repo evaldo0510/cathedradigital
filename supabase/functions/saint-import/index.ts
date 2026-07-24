@@ -396,18 +396,42 @@ serve(async (req) => {
     const dryRun = !!body?.dryRun;
     if (!saintId) return json({ error: "bad_request", details: "saintId required" }, 400);
 
-    // Carrega santo
+    // Carrega santo + resolve merged_into (redirecionamento canônico)
+    const { data: requested, error: reqErr } = await admin
+      .from("saints")
+      .select("id, merged_into")
+      .eq("id", saintId)
+      .maybeSingle();
+    if (reqErr) return json({ error: "load_failed", details: reqErr.message }, 500);
+    if (!requested) return json({ error: "not_found", details: `saint ${saintId} not found` }, 404);
+
+    const canonicalId: string = (requested.merged_into as string | null)?.trim() || saintId;
+    const redirectedFrom: string | null = canonicalId !== saintId ? saintId : null;
+
+    if (redirectedFrom) {
+      console.log(`saint-import: redirect ${saintId} → ${canonicalId} (merged_into)`);
+    }
+
     const { data: saint, error: sErr } = await admin
       .from("saints")
       .select("*")
-      .eq("id", saintId)
+      .eq("id", canonicalId)
       .maybeSingle();
     if (sErr) return json({ error: "load_failed", details: sErr.message }, 500);
-    if (!saint) return json({ error: "not_found", details: `saint ${saintId} not found` }, 404);
+    if (!saint) return json({ error: "not_found", details: `canonical ${canonicalId} not found` }, 404);
+
+    // Se o canônico também está apontando para outro (cadeia), aborta — evita loops.
+    if (saint.merged_into) {
+      return json({
+        error: "merge_chain",
+        details: `canonical ${canonicalId} is itself merged into ${saint.merged_into}. Resolve manually.`,
+      }, 409);
+    }
 
     const protectedFields: string[] = Array.isArray(saint.protected_fields)
       ? saint.protected_fields as string[]
       : [];
+
 
     // Chama provedores
     const outcomes = await importFromProviders(saint.name as string);
