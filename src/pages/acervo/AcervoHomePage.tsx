@@ -21,6 +21,7 @@ import {
   fetchLibraryFeatured,
 } from '@/services/libraryService';
 import type { LibraryItem, LibraryKind } from '@/types/library';
+import AcervoContinueReadingPanel from './AcervoContinueReadingPanel';
 import { LIBRARY_KIND_LABELS } from '@/types/library';
 
 type CategoryStatus = 'live' | 'soon';
