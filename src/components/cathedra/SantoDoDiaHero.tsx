@@ -152,11 +152,11 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
     [expanded],
   );
 
-  const sectionNav: Array<{ key: SectionKey; label: string; enabled: boolean }> = [
-    { key: 'frase', label: 'Frase', enabled: Boolean(frase) },
-    { key: 'vida', label: 'Vida', enabled: true },
-    { key: 'legado', label: 'Legado', enabled: true },
-    { key: 'meditacao', label: 'Meditação', enabled: true },
+  const sectionNav: Array<{ key: SectionKey; label: string; enabled: boolean; controls: string }> = [
+    { key: 'frase', label: 'Frase', enabled: Boolean(frase), controls: 'santo-do-dia-frase' },
+    { key: 'vida', label: 'Vida', enabled: true, controls: 'santo-do-dia-vida' },
+    { key: 'legado', label: 'Legado', enabled: true, controls: 'santo-do-dia-legado' },
+    { key: 'meditacao', label: 'Meditação', enabled: true, controls: 'santo-do-dia-meditacao' },
   ];
 
   return (
