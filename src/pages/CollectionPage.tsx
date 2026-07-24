@@ -396,7 +396,16 @@ export default function CollectionPage() {
             );
           })}
         </ol>
+
+        {/* Reflexão final + recomendações Nexus (100% concluído) */}
+        {items.length > 0 && totalCompleted === items.length && (
+          <CollectionCompletionCTA
+            collection={collection}
+            reflection={meta.final_reflection}
+          />
+        )}
       </ReaderShell>
     </>
   );
 }
+
