@@ -24,10 +24,8 @@ import { useBibliotecaRecents } from '@/hooks/useBibliotecaState';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import { LibrarySearchPanel, LibraryThemesBlock } from '@/modules/biblioteca';
-import collectionSagradaEscritura from '@/assets/collections/sagrada-escritura.jpg';
-import collectionCatecismo from '@/assets/collections/catecismo.jpg';
-import collectionMagisterio from '@/assets/collections/magisterio.jpg';
-import collectionSantosPadres from '@/assets/collections/santos-padres.jpg';
+import { SafeImage } from '@/components/library/SafeImage';
+import { LIBRARY_ACERVOS } from '@/config/libraryAcervos';
 
 type Collection = {
   title: string;
@@ -35,43 +33,24 @@ type Collection = {
   description: string;
   to: string;
   Icon: React.ComponentType<{ className?: string }>;
-  image: string;
+  image?: string;
 };
 
-const COLLECTIONS: Collection[] = [
-  {
-    title: 'Sagrada Escritura',
-    meta: '73 Livros',
-    description: 'Antigo e Novo Testamento, com anotações e Nexus contextual.',
-    to: AppRoute.BIBLE,
-    Icon: BookOpen,
-    image: collectionSagradaEscritura,
-  },
-  {
-    title: 'Catecismo',
-    meta: '2865 Parágrafos',
-    description: 'A doutrina da Igreja organizada e interconectada.',
-    to: AppRoute.CATECHISM,
-    Icon: BookMarked,
-    image: collectionCatecismo,
-  },
-  {
-    title: 'Magistério',
-    meta: 'Encíclicas e Constituições',
-    description: 'Documentos pontifícios que definem o dogma através dos séculos.',
-    to: AppRoute.MAGISTERIUM,
-    Icon: Gavel,
-    image: collectionMagisterio,
-  },
-  {
-    title: 'Santos & Padres',
-    meta: 'Vida e Escritos',
-    description: 'Testemunhos e obras dos Padres e Doutores da Igreja.',
-    to: AppRoute.SAINTS,
-    Icon: Sparkles,
-    image: collectionSantosPadres,
-  },
-];
+const MODULE_ICON: Record<string, React.ComponentType<{ className?: string }>> = {
+  bible: BookOpen,
+  catechism: BookMarked,
+  magisterium: Gavel,
+  saints: Sparkles,
+};
+
+const COLLECTIONS: Collection[] = LIBRARY_ACERVOS.map((a) => ({
+  title: a.title,
+  meta: a.meta,
+  description: a.shortDescription,
+  to: `/biblioteca/acervo/${a.slug}`,
+  Icon: MODULE_ICON[a.module] ?? BookOpen,
+  image: a.image,
+}));
 
 const AtriumBibliotecaPage: React.FC = () => {
   const recents = useBibliotecaRecents().recents.slice(0, 2);
@@ -196,19 +175,24 @@ const AtriumBibliotecaPage: React.FC = () => {
               <Link
                 key={c.title}
                 to={c.to}
-                className="group flex cursor-pointer flex-col overflow-hidden rounded-lg border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest transition-all hover:border-stitch-secondary/40 hover:shadow-lg"
+                aria-label={`Abrir acervo ${c.title}`}
+                className="group flex cursor-pointer flex-col overflow-hidden rounded-lg border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest transition-all hover:border-stitch-secondary/40 hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary focus-visible:ring-offset-2"
               >
-                <div className="relative aspect-[4/3] overflow-hidden bg-stitch-primary">
-                  <img
+                <div className="relative">
+                  <SafeImage
                     src={c.image}
-                    alt={c.title}
+                    alt={`Ilustração editorial do acervo ${c.title}`}
+                    fallbackLabel={c.title}
+                    aspect="aspect-[4/3]"
                     width={800}
                     height={600}
-                    loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="transition-transform duration-700 group-hover:scale-105"
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-stitch-primary/70 via-stitch-primary/10 to-transparent" />
-                  <div className="absolute left-3 top-3 flex h-8 w-8 items-center justify-center rounded-md bg-stitch-primary/85 text-stitch-primary-foreground backdrop-blur-sm">
+                  <div
+                    aria-hidden
+                    className="absolute left-3 top-3 flex h-8 w-8 items-center justify-center rounded-md bg-stitch-primary/85 text-stitch-primary-foreground backdrop-blur-sm"
+                  >
                     <c.Icon className="h-4 w-4" />
                   </div>
                 </div>
