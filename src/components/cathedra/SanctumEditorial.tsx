@@ -4,33 +4,10 @@ import type { Saint } from '@/data/saints';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
-
-const NARRATIVE_BLOCKS: Array<{
-  key: keyof NonNullable<Saint['biographyFull']>;
-  label: string;
-  icon: keyof typeof Icons;
-}> = [
-  { key: 'origem',       label: 'A origem',           icon: 'MapPin' },
-  { key: 'chamado',      label: 'O chamado',          icon: 'Sparkles' },
-  { key: 'missao',       label: 'A missão',           icon: 'Route' },
-  { key: 'fidelidade',   label: 'A fidelidade',       icon: 'Shield' },
-  { key: 'testemunho',   label: 'O testemunho',       icon: 'Flame' },
-  { key: 'heranca',      label: 'A herança espiritual', icon: 'Crown' },
-  { key: 'aprendizado',  label: 'O que aprendemos hoje', icon: 'Lightbulb' },
-];
-
-const TIMELINE_ICON: Record<string, keyof typeof Icons> = {
-  birth: 'User',
-  conversion: 'Sparkles',
-  formation: 'BookOpen',
-  mission: 'Route',
-  work: 'Feather',
-  miracle: 'Star',
-  martyrdom: 'Flame',
-  death: 'XCircle',
-  canonization: 'Crown',
-  feast: 'Calendar',
-};
+import SaintLife from './sanctum/SaintLife';
+import SaintTimeline from './sanctum/SaintTimeline';
+import SaintVirtues from './sanctum/SaintVirtues';
+import SaintSources from './sanctum/SaintSources';
 
 const renderRich = (text: string) =>
   parseTheologicalReferences(text).map((seg, i) => {
@@ -63,11 +40,11 @@ export const SanctumCurationBadge: React.FC<{ status?: Saint['contentStatus'] }>
   );
 };
 
+/**
+ * SanctumEditorial — orquestrador editorial da ficha do santo.
+ * Composição de módulos: SaintLife · SaintTimeline · SaintVirtues · (media/quotes/spiritual) · SaintSources.
+ */
 const SanctumEditorial: React.FC<{ saint: Saint }> = ({ saint }) => {
-  const bio = saint.biographyFull || {};
-  const filledBlocks = NARRATIVE_BLOCKS.filter(b => (bio as any)[b.key]?.trim?.());
-  const hasHistorical = !!saint.historicalContext?.trim();
-  const hasTimeline = (saint.timeline?.length ?? 0) > 0;
   const hasIcono = !!(saint.iconography && (
     saint.iconography.symbols?.length ||
     saint.iconography.attributes?.length ||
@@ -77,85 +54,30 @@ const SanctumEditorial: React.FC<{ saint: Saint }> = ({ saint }) => {
   const hasCuriosities = (saint.curiosities?.length ?? 0) > 0;
   const hasMiracles = (saint.miracles?.length ?? 0) > 0;
   const hasQuotesRich = (saint.quotesRich?.length ?? 0) > 0;
-  const hasSources = (saint.sources?.length ?? 0) > 0;
   const sp = saint.spiritualPractice || {};
   const hasSpiritual = !!(sp.live_today || sp.prayer || sp.purpose || sp.practice || (sp.examination?.length));
 
+  const bio = saint.biographyFull || {};
+  const hasAnyLife =
+    !!saint.historicalContext?.trim() ||
+    !!saint.century ||
+    Object.values(bio).some(v => typeof v === 'string' && v.trim()) ||
+    !!saint.conversionStory?.trim() ||
+    !!saint.mission?.trim() ||
+    !!saint.legacy?.trim();
+
   const anything =
-    filledBlocks.length || hasHistorical || hasTimeline || hasIcono || hasPatronages ||
-    hasCuriosities || hasMiracles || hasQuotesRich || hasSources || hasSpiritual;
+    hasAnyLife || (saint.timeline?.length ?? 0) > 0 || (saint.virtues?.length ?? 0) > 0 ||
+    hasIcono || hasPatronages || hasCuriosities || hasMiracles || hasQuotesRich ||
+    hasSpiritual || (saint.sources?.length ?? 0) > 0;
 
   if (!anything) return null;
 
   return (
     <div className="space-y-spacing-2xl">
-      {/* Contexto histórico + século */}
-      {(hasHistorical || saint.century) && (
-        <section className="space-y-spacing-md">
-          <SectionTitle icon="Clock">Contexto histórico{saint.century ? ` · Século ${saint.century}` : ''}</SectionTitle>
-          {hasHistorical && (
-            <p className="font-serif text-premium-md leading-relaxed text-foreground/90 max-w-[68ch]">
-              {renderRich(saint.historicalContext!)}
-            </p>
-          )}
-        </section>
-      )}
-
-      {/* Biografia em blocos narrativos */}
-      {filledBlocks.length > 0 && (
-        <section className="space-y-spacing-xl" aria-label="Capítulos da vida">
-          {filledBlocks.map(block => {
-            const Icon = Icons[block.icon] as any;
-            return (
-              <article key={block.key} className="space-y-spacing-sm max-w-[68ch]">
-                <header className="flex items-center gap-spacing-sm text-primary">
-                  {Icon && <Icon className="w-spacing-md h-spacing-md" aria-hidden="true" />}
-                  <h4 className="text-premium-xs font-black uppercase tracking-[0.22em] text-primary/80">
-                    {block.label}
-                  </h4>
-                </header>
-                <p className="font-serif text-premium-md leading-[1.75] text-foreground/90">
-                  {renderRich((bio as any)[block.key])}
-                </p>
-              </article>
-            );
-          })}
-        </section>
-      )}
-
-      {/* Timeline */}
-      {hasTimeline && (
-        <section className="space-y-spacing-md">
-          <SectionTitle icon="Calendar">Linha do tempo</SectionTitle>
-          <ol className="relative border-l-2 border-primary/20 pl-spacing-lg space-y-spacing-lg">
-            {saint.timeline!.map((ev, i) => {
-              const iconName = TIMELINE_ICON[ev.type || 'work'] || 'Star';
-              const Icon = Icons[iconName] as any;
-              return (
-                <li key={i} className="relative">
-                  <span className="absolute -left-[calc(theme(spacing.spacing-lg)+9px)] top-0 w-spacing-lg h-spacing-lg rounded-premium-full bg-background border-2 border-primary/40 flex items-center justify-center text-primary">
-                    {Icon && <Icon className="w-3 h-3" aria-hidden="true" />}
-                  </span>
-                  <div className="flex flex-wrap items-baseline gap-spacing-xs">
-                    {ev.year !== undefined && (
-                      <span className="text-premium-xs font-black uppercase tracking-widest text-primary">
-                        {ev.year}
-                      </span>
-                    )}
-                    <p className="font-serif text-premium-md text-foreground">{ev.event}</p>
-                  </div>
-                  {ev.place && (
-                    <p className="text-premium-xs text-muted-foreground mt-spacing-2xs">
-                      <Icons.MapPin className="inline w-3 h-3 mr-1" aria-hidden="true" />
-                      {ev.place}
-                    </p>
-                  )}
-                </li>
-              );
-            })}
-          </ol>
-        </section>
-      )}
+      <SaintLife saint={saint} />
+      <SaintTimeline saint={saint} />
+      <SaintVirtues saint={saint} />
 
       {/* Iconografia + Patronatos lado a lado */}
       {(hasIcono || hasPatronages) && (
@@ -315,34 +237,7 @@ const SanctumEditorial: React.FC<{ saint: Saint }> = ({ saint }) => {
         </section>
       )}
 
-      {/* Fontes / Bibliografia */}
-      {hasSources && (
-        <section className="space-y-spacing-md pt-spacing-lg border-t border-border">
-          <SectionTitle icon="BookOpen">Fontes e bibliografia</SectionTitle>
-          <ul className="space-y-spacing-2xs text-premium-sm text-muted-foreground">
-            {saint.sources!.map((s, i) => (
-              <li key={i} className="font-serif">
-                {s.author && <span className="text-foreground/80">{s.author}. </span>}
-                <em className="text-foreground/90">{s.title}</em>
-                {s.year && <span>, {s.year}</span>}
-                {s.url && (
-                  <>
-                    {' · '}
-                    <a
-                      href={s.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary underline underline-offset-2 hover:text-primary/80"
-                    >
-                      fonte
-                    </a>
-                  </>
-                )}
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      <SaintSources saint={saint} />
     </div>
   );
 };
