@@ -6,7 +6,8 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { listWorkAudit, type SaintWorksAuditEntry } from '@/services/saintWorksService';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, History } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Loader2, History, Download } from 'lucide-react';
 
 const ACTION_LABEL: Record<SaintWorksAuditEntry['action'], string> = {
   created: 'Obra criada',
