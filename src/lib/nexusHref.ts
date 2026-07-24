@@ -75,6 +75,8 @@ export function resolveNexusHref(
     case 'liturgy':
       return `/missal/${id}`;
     case 'saint_work':
+      // Espera-se `autor/obra` (ex.: "agostinho/confissoes").
+      return id.includes('/') ? `/biblioteca/escritos/${id}` : null;
     case 'other':
     default:
       return null;
