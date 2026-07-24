@@ -47,8 +47,10 @@ export interface CollectionMetadata {
   estimated_minutes?: number;
   /** Nível pedagógico. */
   level?: CollectionLevel;
-  [k: string]: unknown;
-}
+  /** Slugs de coleções relacionadas para recomendação Nexus ao concluir. */
+  related_slugs?: string[];
+  /** Reflexão final exibida ao completar 100% da trilha. */
+  final_reflection?: string;
 
 export interface Collection {
   id: string;
