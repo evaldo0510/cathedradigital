@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 import { BibleBook } from '@/data/bible-books';
 import { Button } from '@/components/ui/button';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
-import NexusBubbles from '@/components/cathedra/NexusBubbles';
+import { NexusPanel } from '@/components/reader';
 import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
 import { resolveBibleAutoNexus } from '@/core/knowledge/adapters/bibleAutoNexus';
 
@@ -246,7 +246,10 @@ const BibleReaderContinuation: React.FC<{ book: BibleBook; chapter: number }> = 
     <div className="px-spacing-lg pb-spacing-2xl">
       <EditorialDivider variant="gold-fade" className="max-w-[240px] mx-auto mb-spacing-2xl" />
       <div className="mb-spacing-lg">
-        <NexusBubbles />
+        <NexusPanel
+          output={nexus}
+          kicker={`Conexões de ${book.name} ${chapter}`}
+        />
       </div>
       <ReaderContinuation
         context={{
