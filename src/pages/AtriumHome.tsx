@@ -118,7 +118,10 @@ const AtriumHome: React.FC = () => {
           name="description"
           content="Entrai no silêncio. A biblioteca viva da Tradição: leitura, oração, formação e pesquisa em um só lugar."
         />
+        <link rel="canonical" href="https://www.cathedradigital.com.br/" />
         <meta property="og:title" content="Cathedra — Átrio" />
+        <meta property="og:url" content="https://www.cathedradigital.com.br/" />
+        <meta property="og:type" content="website" />
         <meta
           property="og:description"
           content="Um espaço sagrado para contemplar a Verdade através dos séculos."

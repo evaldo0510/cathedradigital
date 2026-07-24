@@ -132,7 +132,10 @@ const BibleLanding: React.FC = () => {
           name="description"
           content="Bíblia católica com notas, cruzamentos e Lectio Divina. Antigo e Novo Testamento em leitura contemplativa."
         />
+        <link rel="canonical" href="https://www.cathedradigital.com.br/bible" />
         <meta property="og:title" content="Cathedra — Sagrada Escritura" />
+        <meta property="og:url" content="https://www.cathedradigital.com.br/bible" />
+        <meta property="og:type" content="website" />
       </Helmet>
 
       <MobileTopBar

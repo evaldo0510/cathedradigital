@@ -224,7 +224,9 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
               >
                 <span style={{ color: 'var(--gold-text)', fontSize: '10px' }} aria-hidden="true">●</span>
                 <div className="flex flex-col leading-none gap-1">
-                  <h1
+                  <span
+                    role="text"
+                    aria-label="Cathedra Digital"
                     style={{
                       fontFamily: "'Playfair Display', serif",
                       fontWeight: 500,
@@ -234,7 +236,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     }}
                   >
                     CATHEDRA
-                  </h1>
+                  </span>
                   <span style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '8px', letterSpacing: '0.4em', textTransform: 'uppercase' }}>
                     Sacrum Archivum
                   </span>
@@ -409,9 +411,10 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                       variant="ghost"
                       size="icon"
                       onClick={onSignOut}
+                      aria-label="Sair da conta"
                       className="h-spacing-xl w-spacing-xl rounded-premium-lg text-primary/70 hover:text-destructive hover:bg-destructive/10 transition-colors"
                     >
-                      <Icons.LogOut className="w-spacing-sm h-spacing-sm" />
+                      <Icons.LogOut className="w-spacing-sm h-spacing-sm" aria-hidden="true" />
                     </Button>
                   </div>
                 </div>
