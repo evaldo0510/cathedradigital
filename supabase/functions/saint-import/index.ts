@@ -194,17 +194,32 @@ function extractFromWikitext(wt: string): Partial<NormalizedSaint> {
   if (!wt) return {};
 
   // 1) Preserva templates de data convertendo-os para texto simples ANTES do strip global.
-  let pre = wt.replace(
-    /\{\{\s*(?:dtln|dnbr|dmbr|Data de (?:nascimento|morte|falecimento)|nascimento(?:\s+e\s+idade)?|morte(?:\s+e\s+idade)?)\s*\|([^}]+)\}\}/gi,
-    (_m, args) => {
-      const parts = String(args).split("|").map((p: string) => p.trim()).filter(Boolean);
-      const nums = parts.filter((p: string) => /^\d+$/.test(p));
-      if (nums.length >= 3) return `${nums[0].padStart(4, "0")}-${nums[1].padStart(2, "0")}-${nums[2].padStart(2, "0")}`;
-      if (nums.length === 1) return nums[0];
-      return parts.join(" ");
-    },
-  );
+  //    Inclui dni, dnil, morte, Data de nascimento/morte/falecimento e variantes "e idade".
+  const dateTemplateRe = /\{\{\s*(?:dtln|dni|dnil|dnbr|dmbr|morte|falecimento|Data de (?:nascimento|morte|falecimento)|(?:nascimento|morte|falecimento)(?:\s+e\s+idade)?)\s*\|([^{}]+)\}\}/gi;
+  const applyDateTemplate = (_m: string, args: string) => {
+    const parts = String(args).split("|").map((p) => p.trim()).filter(Boolean);
+    const nums = parts.filter((p) => /^\d+$/.test(p));
+    // Convenção comum: {{dni|d|m|a|...}}, {{morte|dm|mm|am|dn|mn|an|...}} → usa primeiros 3
+    if (nums.length >= 3) {
+      const [a, b, c] = nums;
+      // dni usa d|m|a; morte usa d|m|a de morte. Ambos: a data resulta de a-m-d.
+      if (c.length === 4) return `${c}-${b.padStart(2, "0")}-${a.padStart(2, "0")}`;
+      if (a.length === 4) return `${a}-${b.padStart(2, "0")}-${c.padStart(2, "0")}`;
+      return `${a}-${b}-${c}`;
+    }
+    if (nums.length === 1) return nums[0];
+    return parts.join(" ");
+  };
+  // Aplica iterativamente para lidar com templates aninhados (ex.: {{nowrap|{{morte|...}}}})
+  let pre = wt;
+  let prevDate: string;
+  do {
+    prevDate = pre;
+    pre = pre.replace(dateTemplateRe, applyDateTemplate);
+  } while (pre !== prevDate);
+
   pre = pre.replace(
+
     /\{\{\s*(?:nowrap|lang|langx|small|nobr)\s*\|([^}]+)\}\}/gi,
     (_m, args) => {
       const parts = String(args).split("|");
