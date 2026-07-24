@@ -1,0 +1,21 @@
+name: headings-audit
+on:
+  pull_request:
+    paths:
+      - 'src/pages/**'
+      - 'src/components/editorial/harmony/EditorialHero.tsx'
+      - 'src/components/reader/**'
+      - 'scripts/headings-audit.ts'
+      - '.github/workflows/headings-audit.yml'
+  push:
+    branches: [main]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v1
+      - run: bun install --frozen-lockfile
+      - name: Run headings audit (P0.3.2)
+        run: bun run scripts/headings-audit.ts
