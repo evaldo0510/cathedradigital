@@ -8,6 +8,7 @@ import DeepContentSection from './DeepContentSection';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
+import { ReaderShell, EditorialHero } from '@/components/reader';
 
 const AparicoesPage: React.FC = () => {
   const [selectedApparition, setSelectedApparition] = useState<Apparition | null>(null);
