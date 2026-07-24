@@ -202,6 +202,18 @@ export default function BibliotecaPatristicaAdmin() {
             </SelectContent>
           </Select>
         </div>
+        <div className="min-w-[180px]">
+          <Label>Ficha editorial</Label>
+          <Select value={fichaFilter} onValueChange={(v: SaintWorkFichaCompleteness | 'all') => setFichaFilter(v)}>
+            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Todas</SelectItem>
+              {(Object.keys(SAINT_WORK_FICHA_COMPLETENESS_LABELS) as SaintWorkFichaCompleteness[]).map(f => (
+                <SelectItem key={f} value={f}>{SAINT_WORK_FICHA_COMPLETENESS_LABELS[f]}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       <Card>
