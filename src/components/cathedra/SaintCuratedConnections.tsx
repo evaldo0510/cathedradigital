@@ -110,7 +110,7 @@ export function SaintCuratedConnections({ saintId, saintName }: SaintCuratedConn
   if (!groups || groups.all.length === 0) return null;
 
   return (
-    <EditorialCard density="balanced" className="mb-spacing-lg">
+    <div className="mb-spacing-lg rounded-lg border border-border/60 bg-card text-card-foreground shadow-sm">
       <div className="space-y-4 p-spacing-md">
         <header>
           <p className="text-[10px] font-black uppercase tracking-[0.24em] text-secondary">
@@ -126,7 +126,7 @@ export function SaintCuratedConnections({ saintId, saintName }: SaintCuratedConn
           <Section icon={Users} title="Relacionados" relations={groups.relatedSaints} />
         </div>
       </div>
-    </EditorialCard>
+    </div>
   );
 }
 
