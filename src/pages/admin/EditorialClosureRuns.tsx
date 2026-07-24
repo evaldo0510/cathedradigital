@@ -23,7 +23,10 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/hooks/use-toast';
-import { AlertTriangle, RefreshCcw, RotateCcw, FileText } from 'lucide-react';
+import { AlertTriangle, RefreshCcw, RotateCcw, FileText, ArrowUp, ArrowDown, ChevronsUpDown } from 'lucide-react';
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from '@/components/ui/select';
 
 type LogRow = {
   id: string;
@@ -92,6 +95,10 @@ function prettyJSON(v: unknown): string {
   try { return JSON.stringify(v, null, 2); } catch { return String(v); }
 }
 
+type SortKey = 'started_at' | 'total_rows' | 'warnings' | 'dry_run';
+type SortDir = 'asc' | 'desc';
+const PAGE_SIZE_OPTIONS = [10, 25, 50, 100] as const;
+
 const EditorialClosureRuns: React.FC = () => {
   const [loading, setLoading] = React.useState(true);
   const [rows, setRows] = React.useState<LogRow[]>([]);
@@ -99,6 +106,11 @@ const EditorialClosureRuns: React.FC = () => {
   const [rollbackTarget, setRollbackTarget] = React.useState<RunSummary | null>(null);
   const [rollbackConfirm, setRollbackConfirm] = React.useState('');
   const [rollingBack, setRollingBack] = React.useState(false);
+
+  const [sortKey, setSortKey] = React.useState<SortKey>('started_at');
+  const [sortDir, setSortDir] = React.useState<SortDir>('desc');
+  const [page, setPage] = React.useState(1);
+  const [pageSize, setPageSize] = React.useState<number>(25);
 
   const load = React.useCallback(async () => {
     setLoading(true);
@@ -120,6 +132,47 @@ const EditorialClosureRuns: React.FC = () => {
   React.useEffect(() => { void load(); }, [load]);
 
   const runs = React.useMemo(() => groupRuns(rows), [rows]);
+
+  const sortedRuns = React.useMemo(() => {
+    const arr = [...runs];
+    arr.sort((a, b) => {
+      let cmp = 0;
+      switch (sortKey) {
+        case 'started_at': cmp = a.started_at.localeCompare(b.started_at); break;
+        case 'total_rows': cmp = a.total_rows - b.total_rows; break;
+        case 'warnings': cmp = a.warnings - b.warnings; break;
+        case 'dry_run': cmp = Number(a.dry_run) - Number(b.dry_run); break;
+      }
+      return sortDir === 'asc' ? cmp : -cmp;
+    });
+    return arr;
+  }, [runs, sortKey, sortDir]);
+
+  const totalPages = Math.max(1, Math.ceil(sortedRuns.length / pageSize));
+  const currentPage = Math.min(page, totalPages);
+  React.useEffect(() => { setPage(1); }, [sortKey, sortDir, pageSize, runs.length]);
+
+  const pagedRuns = React.useMemo(() => {
+    const start = (currentPage - 1) * pageSize;
+    return sortedRuns.slice(start, start + pageSize);
+  }, [sortedRuns, currentPage, pageSize]);
+
+  function toggleSort(key: SortKey) {
+    if (sortKey === key) {
+      setSortDir((d) => (d === 'asc' ? 'desc' : 'asc'));
+    } else {
+      setSortKey(key);
+      setSortDir(key === 'started_at' ? 'desc' : 'desc');
+    }
+  }
+
+  function SortIcon({ k }: { k: SortKey }) {
+    if (sortKey !== k) return <ChevronsUpDown className="inline h-3 w-3 opacity-40" />;
+    return sortDir === 'asc'
+      ? <ArrowUp className="inline h-3 w-3" />
+      : <ArrowDown className="inline h-3 w-3" />;
+  }
+
   const openRun = React.useMemo(
     () => (openRunId ? rows.filter((r) => r.run_id === openRunId) : []),
     [rows, openRunId],
@@ -183,20 +236,53 @@ const EditorialClosureRuns: React.FC = () => {
               <code>bun scripts/migrate-editorial-closure.ts</code> para popular este painel.
             </p>
           ) : (
+            <>
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Run</TableHead>
-                  <TableHead>Início</TableHead>
-                  <TableHead>Modo</TableHead>
-                  <TableHead className="text-right">Linhas</TableHead>
+                  <TableHead>
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1 hover:text-foreground"
+                      onClick={() => toggleSort('started_at')}
+                    >
+                      Início <SortIcon k="started_at" />
+                    </button>
+                  </TableHead>
+                  <TableHead>
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1 hover:text-foreground"
+                      onClick={() => toggleSort('dry_run')}
+                    >
+                      Modo <SortIcon k="dry_run" />
+                    </button>
+                  </TableHead>
+                  <TableHead className="text-right">
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1 hover:text-foreground"
+                      onClick={() => toggleSort('total_rows')}
+                    >
+                      Linhas <SortIcon k="total_rows" />
+                    </button>
+                  </TableHead>
                   <TableHead>Entidades</TableHead>
-                  <TableHead className="text-right">Warnings</TableHead>
+                  <TableHead className="text-right">
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1 hover:text-foreground"
+                      onClick={() => toggleSort('warnings')}
+                    >
+                      Warnings <SortIcon k="warnings" />
+                    </button>
+                  </TableHead>
                   <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {runs.map((r) => (
+                {pagedRuns.map((r) => (
                   <TableRow key={r.run_id}>
                     <TableCell className="font-mono text-xs">
                       {r.run_id.slice(0, 8)}…
@@ -249,6 +335,55 @@ const EditorialClosureRuns: React.FC = () => {
                 ))}
               </TableBody>
             </Table>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-4 text-sm">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <span>Linhas por página</span>
+                <Select
+                  value={String(pageSize)}
+                  onValueChange={(v) => setPageSize(Number(v))}
+                >
+                  <SelectTrigger className="h-8 w-20">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PAGE_SIZE_OPTIONS.map((n) => (
+                      <SelectItem key={n} value={String(n)}>{n}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <span>
+                  {sortedRuns.length === 0
+                    ? '0 de 0'
+                    : `${(currentPage - 1) * pageSize + 1}–${Math.min(currentPage * pageSize, sortedRuns.length)} de ${sortedRuns.length}`}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  size="sm" variant="outline"
+                  onClick={() => setPage(1)}
+                  disabled={currentPage <= 1}
+                >« Primeira</Button>
+                <Button
+                  size="sm" variant="outline"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage <= 1}
+                >‹ Anterior</Button>
+                <span className="tabular-nums text-muted-foreground px-2">
+                  Página {currentPage} / {totalPages}
+                </span>
+                <Button
+                  size="sm" variant="outline"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage >= totalPages}
+                >Próxima ›</Button>
+                <Button
+                  size="sm" variant="outline"
+                  onClick={() => setPage(totalPages)}
+                  disabled={currentPage >= totalPages}
+                >Última »</Button>
+              </div>
+            </div>
+            </>
           )}
         </CardContent>
       </Card>
