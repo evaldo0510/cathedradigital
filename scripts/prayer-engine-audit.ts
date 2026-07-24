@@ -28,12 +28,14 @@ const ROOT = resolve(__dirname, '..');
 
 // Arquivos que RENDERIZAM leitura de oração e portanto devem
 // obedecer o Reader Template Master.
+// (Adaptadores puros que apenas delegam a outro Reader — como
+//  BreviaryHourInline → BreviaryContinuousReader — são fora de escopo:
+//  o Reader real é auditado no próprio arquivo delegado.)
 const READER_TARGETS = [
   'src/pages/PrayerDetailPage.tsx',
   'src/components/cathedra/PrayerEngineReader.tsx',
   'src/components/cathedra/BreviaryContinuousReader.tsx',
   'src/components/cathedra/MissaContinuousReader.tsx',
-  'src/components/cathedra/BreviaryHourInline.tsx',
 ];
 
 // Símbolos paralelos proibidos no Prayer Engine.
