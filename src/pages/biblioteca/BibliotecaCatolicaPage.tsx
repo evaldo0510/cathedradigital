@@ -32,10 +32,10 @@ const KIND_ORDER: LibraryKind[] = [
 
 const KIND_ICONS: Record<LibraryKind, React.ComponentType<{ className?: string }>> = {
   saint_work: Icons.BookOpen,
-  patristic: Icons.Scroll,
-  doctor: Icons.GraduationCap,
+  patristic: Icons.ScrollText,
+  doctor: Icons.BookMarked,
   classic: Icons.Feather,
-  magisterium: Icons.Landmark,
+  magisterium: Icons.Building2,
 };
 
 const BibliotecaCatolicaPage: React.FC = () => {
