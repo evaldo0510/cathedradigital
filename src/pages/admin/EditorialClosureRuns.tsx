@@ -26,7 +26,8 @@ import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { toast } from '@/hooks/use-toast';
-import { AlertTriangle, RefreshCcw, RotateCcw, FileText, ArrowUp, ArrowDown, ChevronsUpDown, Download, Search, X } from 'lucide-react';
+import { toast as sonnerToast } from 'sonner';
+import { AlertTriangle, RefreshCcw, RotateCcw, FileText, ArrowUp, ArrowDown, ChevronsUpDown, Download, Search, X, Star, Trash2, Radio } from 'lucide-react';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
@@ -146,6 +147,23 @@ function runsToCSV(list: RunSummary[]): string {
   return [header.join(','), ...lines].join('\n');
 }
 
+// ---------------- Filter presets (localStorage) ----------------
+type Preset = { id: string; name: string; params: Record<string, string> };
+const PRESETS_KEY = 'editorial-closure-runs:presets:v1';
+const PRESET_KEYS = ['sort', 'order', 'size', 'mode', 'strategy', 'warn', 'q'] as const;
+
+function loadPresets(): Preset[] {
+  try {
+    const raw = localStorage.getItem(PRESETS_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.filter((p) => p && typeof p.name === 'string') : [];
+  } catch { return []; }
+}
+function savePresets(list: Preset[]) {
+  try { localStorage.setItem(PRESETS_KEY, JSON.stringify(list)); } catch { /* ignore */ }
+}
+
 const EditorialClosureRuns: React.FC = () => {
   const [loading, setLoading] = React.useState(true);
   const [rows, setRows] = React.useState<LogRow[]>([]);
@@ -160,6 +178,11 @@ const EditorialClosureRuns: React.FC = () => {
   const [newRunIds, setNewRunIds] = React.useState<Set<string>>(new Set());
   const knownRunIdsRef = React.useRef<Set<string>>(new Set());
   const [nowTick, setNowTick] = React.useState(0);
+  const [realtimeConnected, setRealtimeConnected] = React.useState(false);
+  const [presets, setPresets] = React.useState<Preset[]>([]);
+  const [presetDialog, setPresetDialog] = React.useState(false);
+  const [presetName, setPresetName] = React.useState('');
+  const suppressToastRef = React.useRef(true); // suprime toast na primeira carga
 
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -207,29 +230,64 @@ const EditorialClosureRuns: React.FC = () => {
       const fresh = (data ?? []) as unknown as LogRow[];
       setRows(fresh);
       setLastUpdatedAt(new Date());
-      // Diff de run_ids para destacar novas runs no refresh silencioso
       const currentIds = new Set<string>();
       for (const r of fresh) if (r.run_id) currentIds.add(r.run_id);
-      if (opts.silent && knownRunIdsRef.current.size > 0) {
-        const added = new Set<string>();
-        for (const id of currentIds) if (!knownRunIdsRef.current.has(id)) added.add(id);
-        if (added.size > 0) {
-          setNewRunIds((prev) => {
-            const next = new Set(prev);
-            for (const id of added) next.add(id);
-            return next;
+      const added: string[] = [];
+      if (knownRunIdsRef.current.size > 0) {
+        for (const id of currentIds) if (!knownRunIdsRef.current.has(id)) added.push(id);
+      }
+      if (added.length > 0) {
+        setNewRunIds((prev) => {
+          const next = new Set(prev);
+          for (const id of added) next.add(id);
+          return next;
+        });
+        if (!suppressToastRef.current) {
+          const count = added.length;
+          sonnerToast(`${count} nova(s) run(s) detectada(s)`, {
+            description: `Última: ${added[0].slice(0, 8)}…`,
+            action: {
+              label: 'Ver agora',
+              onClick: () => {
+                // Preserva filtros; volta para página 1 e limpa badge
+                updateParams({ page: 1 });
+                setNewRunIds(new Set());
+                if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
+              },
+            },
           });
         }
       }
       knownRunIdsRef.current = currentIds;
+      suppressToastRef.current = false;
     }
     if (opts.silent) setRefreshing(false);
     else setLoading(false);
-  }, []);
+  }, [updateParams]);
 
   React.useEffect(() => { void load(); }, [load]);
 
-  // Polling: preserva filtros/ordenação/página (state em URL), pausa em aba oculta
+  // Presets
+  React.useEffect(() => { setPresets(loadPresets()); }, []);
+
+  // Realtime (SSE-equivalente via WebSocket) — dispara refresh silencioso ao
+  // inserir novas linhas no log; fallback: polling continua ativo.
+  React.useEffect(() => {
+    const channel = supabase
+      .channel('editorial-closure-runs')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'editorial_closure_migration_log' },
+        () => { void load({ silent: true }); },
+      )
+      .subscribe((status) => {
+        setRealtimeConnected(status === 'SUBSCRIBED');
+      });
+    return () => { void supabase.removeChannel(channel); };
+  }, [load]);
+
+  // Polling: fallback quando realtime está offline OU garantia adicional.
+  // Preserva filtros/ordenação/página (state em URL), pausa em aba oculta
   // e enquanto houver diálogo aberto para não interferir na interação.
   const pollPaused = openRunId !== null || rollbackTarget !== null || rollingBack;
   React.useEffect(() => {
@@ -339,6 +397,42 @@ const EditorialClosureRuns: React.FC = () => {
     updateParams({ mode: null, strategy: null, warn: null, q: null, page: 1 });
   }
 
+  async function manualRefresh() {
+    setNewRunIds(new Set());
+    await load({ silent: true });
+  }
+
+  function savePreset() {
+    const name = presetName.trim();
+    if (!name) return;
+    const params: Record<string, string> = {};
+    for (const k of PRESET_KEYS) {
+      const v = searchParams.get(k);
+      if (v && v !== 'all') params[k] = v;
+    }
+    const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    const next = [...presets.filter((p) => p.name !== name), { id, name, params }];
+    setPresets(next);
+    savePresets(next);
+    setPresetDialog(false);
+    setPresetName('');
+    sonnerToast.success(`Preset "${name}" salvo`);
+  }
+
+  function applyPreset(p: Preset) {
+    // Zera chaves gerenciáveis e aplica as do preset; sempre volta para página 1.
+    const patch: Record<string, string | number | null> = { page: 1 };
+    for (const k of PRESET_KEYS) patch[k] = p.params[k] ?? null;
+    updateParams(patch);
+    sonnerToast(`Preset "${p.name}" aplicado`);
+  }
+
+  function deletePreset(id: string) {
+    const next = presets.filter((p) => p.id !== id);
+    setPresets(next);
+    savePresets(next);
+  }
+
   const openRun = React.useMemo(
     () => (openRunId ? rows.filter((r) => r.run_id === openRunId) : []),
     [rows, openRunId],
@@ -396,9 +490,9 @@ const EditorialClosureRuns: React.FC = () => {
                 {newRunIds.size} nova(s) run(s)
               </Button>
             )}
-            <Button variant="outline" onClick={() => void load()} disabled={loading || refreshing}>
+            <Button variant="outline" onClick={() => void manualRefresh()} disabled={loading || refreshing} title="Força um refresh imediato e limpa o badge de novas runs">
               <RefreshCcw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
-              Atualizar
+              Atualizar agora
             </Button>
           </div>
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
@@ -425,6 +519,13 @@ const EditorialClosureRuns: React.FC = () => {
                 <SelectItem value="300">5min</SelectItem>
               </SelectContent>
             </Select>
+            <span
+              className={`inline-flex items-center gap-1 ${realtimeConnected ? 'text-emerald-600 dark:text-emerald-400' : 'text-muted-foreground'}`}
+              title={realtimeConnected ? 'Recebendo novas runs em tempo real' : 'Realtime offline — usando polling como fallback'}
+            >
+              <Radio className={`h-3 w-3 ${realtimeConnected ? '' : 'opacity-50'}`} />
+              {realtimeConnected ? 'ao vivo' : 'polling'}
+            </span>
             <span aria-live="polite" data-tick={nowTick}>
               {lastUpdatedAt
                 ? `Atualizado ${formatRelative(lastUpdatedAt)}`
@@ -526,6 +627,41 @@ const EditorialClosureRuns: React.FC = () => {
                 <X className="mr-1 h-3 w-3" /> Limpar filtros ({activeFilterCount})
               </Button>
             )}
+          </div>
+          <div className="flex flex-wrap items-center gap-2 border-t pt-3">
+            <div className="flex items-center gap-1 text-xs text-muted-foreground mr-1">
+              <Star className="h-3 w-3" /> Presets:
+            </div>
+            {presets.length === 0 && (
+              <span className="text-xs italic text-muted-foreground">nenhum salvo</span>
+            )}
+            {presets.map((p) => (
+              <div key={p.id} className="inline-flex items-center gap-0.5">
+                <Badge
+                  variant="secondary"
+                  className="cursor-pointer hover:bg-primary/20"
+                  onClick={() => applyPreset(p)}
+                  title="Aplicar preset"
+                >
+                  {p.name}
+                </Badge>
+                <Button
+                  size="icon" variant="ghost" className="h-5 w-5"
+                  onClick={() => deletePreset(p.id)}
+                  aria-label={`Remover preset ${p.name}`}
+                >
+                  <Trash2 className="h-3 w-3" />
+                </Button>
+              </div>
+            ))}
+            <Button
+              size="sm" variant="ghost" className="h-7 ml-auto"
+              onClick={() => setPresetDialog(true)}
+              disabled={activeFilterCount === 0 && sortKey === 'started_at' && sortDir === 'desc' && pageSize === 25}
+              title="Salvar filtros, ordenação e paginação atuais como preset"
+            >
+              <Star className="mr-1 h-3.5 w-3.5" /> Salvar preset atual
+            </Button>
           </div>
         </CardHeader>
         <CardContent>
@@ -774,6 +910,36 @@ const EditorialClosureRuns: React.FC = () => {
             <Button variant="destructive" onClick={doRollback} disabled={rollingBack}>
               {rollingBack ? 'Revertendo…' : 'Confirmar rollback'}
             </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Save preset */}
+      <Dialog open={presetDialog} onOpenChange={(o) => { if (!o) { setPresetDialog(false); setPresetName(''); } }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Salvar preset de filtros</DialogTitle>
+            <DialogDescription>
+              Armazena ordenação, tamanho de página e todos os filtros ativos (modo, strategy, warnings, busca).
+              Presets ficam no seu navegador.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="preset-name">Nome</Label>
+            <Input
+              id="preset-name"
+              value={presetName}
+              onChange={(e) => setPresetName(e.target.value)}
+              placeholder="Ex: Apenas dry-runs com ≥5 warnings"
+              autoFocus
+              onKeyDown={(e) => { if (e.key === 'Enter') savePreset(); }}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => { setPresetDialog(false); setPresetName(''); }}>
+              Cancelar
+            </Button>
+            <Button onClick={savePreset} disabled={!presetName.trim()}>Salvar</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
