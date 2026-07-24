@@ -32,6 +32,7 @@ const IGNORE_PATTERNS = [
   /pages\/prototype-2\.0\//,
   /pages\/__test\//,
   /pages\/landing\//,          // fragments compostos em Index.tsx
+  /pages\/dev\//,              // showcase interno, fora de produção
   /pages\/NotFound\.tsx$/,     // 404 pode ter apenas H2
 ];
 
