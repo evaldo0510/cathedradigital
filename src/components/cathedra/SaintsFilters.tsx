@@ -22,7 +22,7 @@ const QUICK_CHIPS: Array<{ label: string; category: string; icon: React.ReactNod
   { label: 'Doutores', category: 'doctor', icon: <Icons.BookOpen className="w-spacing-sm h-spacing-sm" /> },
   { label: 'Papas', category: 'pope', icon: <Icons.Crown className="w-spacing-sm h-spacing-sm" /> },
   { label: 'Mártires', category: 'martyr', icon: <Icons.Flame className="w-spacing-sm h-spacing-sm" /> },
-  { label: 'Fundadores', category: 'founder', icon: <Icons.Building className="w-spacing-sm h-spacing-sm" /> },
+  { label: 'Fundadores', category: 'founder', icon: <Icons.Building2 className="w-spacing-sm h-spacing-sm" /> },
 ];
 
 /**
