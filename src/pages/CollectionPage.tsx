@@ -1,19 +1,24 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link, useParams, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {
-  Droplet,
-  Flame,
-  Wheat,
-  HeartHandshake,
-  HandHeart,
-  Church,
-  Sparkles,
   BookOpen,
   ChevronRight,
   CheckCircle2,
   Circle,
   Loader2,
+  Clock,
+  GraduationCap,
+  Layers,
+  Play,
+  BookMarked,
+  Church,
+  Sparkles,
+  ScrollText,
+  Users,
+  Landmark,
+  HandHeart,
+  Map as MapIcon,
 } from 'lucide-react';
 import { EditorialSurface } from '@/components/editorial';
 import {
@@ -24,125 +29,199 @@ import {
 import { useCollection } from '@/features/collections/useCollection';
 import { useCollectionProgress } from '@/features/collections/useCollectionProgress';
 import { collectionAutoNexus } from '@/features/collections/collectionAutoNexus';
+import { CollectionProgressBar } from '@/features/collections/CollectionProgressBar';
 import type {
   CollectionItem,
+  CollectionItemType,
+  CollectionLevel,
   CollectionProgressStatus,
 } from '@/features/collections/types';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-const SYMBOL_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
-  droplet: Droplet,
-  flame: Flame,
-  wheat: Wheat,
-  'heart-handshake': HeartHandshake,
-  'hand-heart': HandHeart,
-  church: Church,
-  rings: Sparkles,
+const TYPE_ICON: Record<CollectionItemType, React.ComponentType<{ className?: string }>> = {
+  bible: BookMarked,
+  catechism: BookOpen,
+  saint: Users,
+  saint_work: ScrollText,
+  magisterium: Landmark,
+  prayer: HandHeart,
+  liturgy: Church,
+  glossary: Sparkles,
+  journey: MapIcon,
+};
+
+const TYPE_LABEL: Record<CollectionItemType, string> = {
+  bible: 'Escritura',
+  catechism: 'Catecismo',
+  saint: 'Santo',
+  saint_work: 'Escrito',
+  magisterium: 'Magistério',
+  prayer: 'Oração',
+  liturgy: 'Liturgia',
+  glossary: 'Glossário',
+  journey: 'Jornada',
 };
 
 const STATUS_LABEL: Record<CollectionProgressStatus, string> = {
-  not_started: 'Ainda não iniciado',
-  reading: 'Em estudo',
+  not_started: 'Não iniciado',
+  reading: 'Em leitura',
   meditating: 'Em meditação',
   completed: 'Concluído',
 };
 
-function ItemCard({
+const LEVEL_LABEL: Record<CollectionLevel, string> = {
+  iniciante: 'Iniciante',
+  intermediario: 'Intermediário',
+  avancado: 'Avançado',
+};
+
+function formatDuration(minutes?: number): string | null {
+  if (!minutes || minutes <= 0) return null;
+  if (minutes < 60) return `${minutes} min`;
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return m === 0 ? `${h}h` : `${h}h${String(m).padStart(2, '0')}`;
+}
+
+interface ItemRowProps {
+  item: CollectionItem;
+  index: number;
+  status: CollectionProgressStatus;
+  href: string | null;
+  onOpen: () => void;
+  onToggleComplete: () => void;
+}
+
+const ItemRow: React.FC<ItemRowProps> = ({
   item,
+  index,
   status,
   href,
   onOpen,
-}: {
-  item: CollectionItem;
-  status: CollectionProgressStatus;
-  href: string;
-  onOpen: () => void;
-}) {
-  const symbol = (item.metadata?.symbol as string) ?? 'church';
-  const short = (item.metadata?.short as string) ?? '';
-  const Icon = SYMBOL_ICONS[symbol] ?? Church;
+  onToggleComplete,
+}) => {
+  const Icon = TYPE_ICON[item.item_type] ?? BookOpen;
   const done = status === 'completed';
   const started = status === 'reading' || status === 'meditating';
+  const short = (item.metadata?.short as string) ?? item.description_override ?? '';
 
   return (
     <EditorialSurface
       tier="lowest"
-      interactive
       as="article"
-      className="flex flex-col gap-4 p-6"
+      className={cn(
+        'flex items-start gap-spacing-md p-spacing-md transition-colors',
+        done && 'bg-primary/5',
+      )}
     >
-      <div className="flex items-start justify-between gap-3">
+      {/* Número + ícone */}
+      <div className="flex flex-col items-center gap-spacing-2xs flex-shrink-0 pt-1">
+        <span className="text-[10px] font-mono tabular-nums text-muted-foreground">
+          {String(index + 1).padStart(2, '0')}
+        </span>
         <div
           className={cn(
-            'flex h-12 w-12 items-center justify-center rounded-full',
-            'bg-stitch-secondary/10 text-stitch-secondary',
+            'w-10 h-10 rounded-full flex items-center justify-center',
+            done ? 'bg-primary text-primary-foreground' : 'bg-primary/10 text-primary',
           )}
-          aria-hidden="true"
+          aria-hidden
         >
-          <Icon className="h-6 w-6" />
+          <Icon className="w-5 h-5" />
         </div>
-        <span
-          className={cn(
-            'inline-flex items-center gap-1 text-xs font-medium',
-            done && 'text-stitch-secondary',
-            started && 'text-stitch-on-surface-variant',
-            !done && !started && 'text-stitch-on-surface-variant/70',
-          )}
-        >
-          {done ? (
-            <CheckCircle2 className="h-4 w-4" />
-          ) : (
-            <Circle className="h-4 w-4" />
-          )}
-          {STATUS_LABEL[status]}
-        </span>
       </div>
 
-      <div className="flex flex-col gap-1">
-        <span className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.18em] text-stitch-on-surface-variant">
-          {String(item.order_index).padStart(2, '0')} · Sacramento
-        </span>
-        <h3 className="font-stitch-display text-stitch-headline-sm text-stitch-on-background leading-tight capitalize">
+      {/* Conteúdo */}
+      <div className="flex-1 min-w-0 space-y-spacing-2xs">
+        <div className="flex items-center gap-spacing-xs flex-wrap">
+          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70">
+            {TYPE_LABEL[item.item_type]}
+          </span>
+          <span
+            className={cn(
+              'inline-flex items-center gap-1 text-[10px] font-medium uppercase tracking-widest',
+              done && 'text-primary',
+              started && 'text-muted-foreground',
+              !done && !started && 'text-muted-foreground/60',
+            )}
+          >
+            {done ? <CheckCircle2 className="w-3 h-3" /> : <Circle className="w-3 h-3" />}
+            {STATUS_LABEL[status]}
+          </span>
+        </div>
+        <h3 className="font-serif text-premium-md md:text-premium-lg text-foreground leading-tight">
           {item.title_override ?? item.item_slug.replace(/-/g, ' ')}
         </h3>
         {short && (
-          <p className="text-stitch-body-md text-stitch-on-surface-variant leading-relaxed">
+          <p className="text-premium-sm text-muted-foreground leading-relaxed line-clamp-2">
             {short}
           </p>
         )}
-      </div>
 
-      <div className="mt-auto flex items-center justify-between pt-2">
-        <Link
-          to={href}
-          onClick={onOpen}
-          className="inline-flex items-center gap-1 text-sm font-medium text-stitch-secondary hover:underline"
-        >
-          Abrir estudo
-          <ChevronRight className="h-4 w-4" />
-        </Link>
-        <BookOpen className="h-4 w-4 text-stitch-on-surface-variant/60" aria-hidden="true" />
+        <div className="flex items-center gap-spacing-md pt-spacing-2xs">
+          {href ? (
+            <Link
+              to={href}
+              onClick={onOpen}
+              className="inline-flex items-center gap-1 text-premium-sm font-medium text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded"
+            >
+              {done ? 'Reler' : started ? 'Continuar' : 'Abrir'}
+              <ChevronRight className="w-4 h-4" />
+            </Link>
+          ) : (
+            <span className="text-premium-xs text-muted-foreground italic">
+              Conteúdo em preparação
+            </span>
+          )}
+          <button
+            type="button"
+            onClick={onToggleComplete}
+            className="text-premium-xs text-muted-foreground hover:text-primary underline underline-offset-4"
+            aria-pressed={done}
+          >
+            {done ? 'Desmarcar' : 'Marcar como concluído'}
+          </button>
+        </div>
       </div>
     </EditorialSurface>
   );
-}
+};
 
 /**
- * CollectionPage — C0.5.b (Parallel Readers Migration).
- * Envolvida em `ReaderShell` conforme Regra §10 do COS.
- * hero → EditorialHero; headerContext → StudyContext.
- * Sem `nexus`/`continuation`: página é índice curatorial de itens.
+ * CollectionPage — trilha de formação guiada (Sprint Coleções Temáticas · Onda 1).
+ *
+ * Hero editorial (capa opcional, kicker, título, subtítulo)
+ *   → Ficha da jornada (nível, duração, nº conteúdos, meta editorial)
+ *   → Barra de progresso agregada + CTA "Começar / Continuar"
+ *   → Lista numerada de itens (mistura de módulos) com marcar-como-lido
+ *
+ * Nenhuma migração; consome `collections`/`collection_items`/`collection_progress`.
  */
 export default function CollectionPage() {
   const { slug } = useParams<{ slug: string }>();
   const { data, isLoading, error } = useCollection(slug);
   const collectionId = data?.collection.id;
-  const { progress, startItem, getStatus } = useCollectionProgress(collectionId);
+  const {
+    progress,
+    startItem,
+    completeItem,
+    getStatus,
+  } = useCollectionProgress(collectionId);
+
+  const nexus = useMemo(
+    () => (data ? collectionAutoNexus(data.items) : []),
+    [data],
+  );
+  const hrefBySlug = useMemo(() => {
+    const m = new Map<string, string>();
+    for (const n of nexus) m.set(`${n.kind}:${n.id}`, n.href);
+    return m;
+  }, [nexus]);
 
   if (isLoading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin text-stitch-secondary" />
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
       </div>
     );
   }
@@ -152,11 +231,37 @@ export default function CollectionPage() {
   }
 
   const { collection, items } = data;
-  const nexus = collectionAutoNexus(items);
-  const eyebrow = (collection.metadata?.eyebrow as string) ?? 'COLEÇÃO';
+  const meta = collection.metadata ?? {};
+  const eyebrow = meta.eyebrow ?? 'COLEÇÃO';
+  const level = meta.level as CollectionLevel | undefined;
+  const duration = formatDuration(meta.estimated_minutes);
+  const editorialGoal = meta.editorial_goal;
+
   const totalCompleted = Object.values(progress).filter(
     (p) => p.status === 'completed',
   ).length;
+  const totalStarted = Object.values(progress).filter(
+    (p) => p.status !== 'not_started',
+  ).length;
+
+  // Próximo item pendente para o CTA principal
+  const nextItem =
+    items.find((i) => getStatus(i.id) !== 'completed') ?? items[0];
+  const nextHref = nextItem
+    ? hrefBySlug.get(`${nextItem.item_type}:${nextItem.item_slug}`) ?? null
+    : null;
+  const ctaLabel =
+    totalCompleted === items.length && items.length > 0
+      ? 'Reler coleção'
+      : totalStarted > 0
+        ? 'Continuar coleção'
+        : 'Começar coleção';
+
+  const handleStartCta = () => {
+    if (nextItem && getStatus(nextItem.id) === 'not_started') {
+      void startItem(nextItem.id).catch(() => undefined);
+    }
+  };
 
   return (
     <>
@@ -165,6 +270,7 @@ export default function CollectionPage() {
         <meta
           name="description"
           content={
+            editorialGoal ??
             collection.subtitle ??
             collection.description ??
             `Coleção ${collection.title} — Cathedra Digital.`
@@ -173,9 +279,10 @@ export default function CollectionPage() {
         <meta property="og:title" content={collection.title} />
         <meta
           property="og:description"
-          content={collection.subtitle ?? collection.description ?? ''}
+          content={editorialGoal ?? collection.subtitle ?? collection.description ?? ''}
         />
         <meta property="og:type" content="article" />
+        {collection.cover && <meta property="og:image" content={collection.cover} />}
       </Helmet>
 
       <ReaderShell
@@ -188,10 +295,11 @@ export default function CollectionPage() {
             title={collection.title}
             subtitle={collection.subtitle ?? undefined}
             parchment
+            {...(collection.cover ? { imageUrl: collection.cover } : {})}
           />
         }
         headerContext={
-          collectionId && items.length > 0 ? (
+          items.length > 0 ? (
             <StudyContext
               collectionTitle={collection.title}
               position={`${totalCompleted} de ${items.length} concluídos`}
@@ -199,30 +307,94 @@ export default function CollectionPage() {
           ) : undefined
         }
       >
-        {collection.description && (
-          <p className="font-stitch-body text-stitch-body-lg text-stitch-on-surface-variant leading-relaxed max-w-2xl mb-10">
-            {collection.description}
-          </p>
-        )}
+        {/* Ficha editorial + CTA */}
+        <section className="rounded-2xl border border-border/60 bg-card/40 p-spacing-lg space-y-spacing-md">
+          <div className="flex flex-wrap items-center gap-spacing-md">
+            {level && (
+              <span className="inline-flex items-center gap-spacing-2xs text-premium-xs text-foreground">
+                <GraduationCap className="w-4 h-4 text-primary/70" aria-hidden />
+                <span className="font-medium">{LEVEL_LABEL[level]}</span>
+              </span>
+            )}
+            {duration && (
+              <span className="inline-flex items-center gap-spacing-2xs text-premium-xs text-foreground">
+                <Clock className="w-4 h-4 text-primary/70" aria-hidden />
+                <span className="font-medium">{duration} de leitura</span>
+              </span>
+            )}
+            <span className="inline-flex items-center gap-spacing-2xs text-premium-xs text-foreground">
+              <Layers className="w-4 h-4 text-primary/70" aria-hidden />
+              <span className="font-medium">
+                {items.length} {items.length === 1 ? 'conteúdo' : 'conteúdos'}
+              </span>
+            </span>
+          </div>
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          {(editorialGoal || collection.description) && (
+            <p className="font-serif text-premium-md text-muted-foreground leading-relaxed max-w-2xl">
+              {editorialGoal ?? collection.description}
+            </p>
+          )}
+
+          {items.length > 0 && (
+            <>
+              <CollectionProgressBar completed={totalCompleted} total={items.length} />
+              <div className="flex flex-wrap items-center gap-spacing-md pt-spacing-2xs">
+                {nextHref ? (
+                  <Button asChild size="lg" onClick={handleStartCta}>
+                    <Link to={nextHref}>
+                      <Play className="w-4 h-4 mr-2" aria-hidden />
+                      {ctaLabel}
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button size="lg" disabled>
+                    <Play className="w-4 h-4 mr-2" aria-hidden />
+                    {ctaLabel}
+                  </Button>
+                )}
+                {totalStarted > 0 && nextItem && (
+                  <span className="text-premium-xs text-muted-foreground">
+                    Próximo: <span className="font-medium text-foreground">
+                      {nextItem.title_override ?? nextItem.item_slug.replace(/-/g, ' ')}
+                    </span>
+                  </span>
+                )}
+              </div>
+            </>
+          )}
+        </section>
+
+        {/* Lista numerada */}
+        <ol className="space-y-spacing-sm mt-spacing-lg">
           {items.map((item, idx) => {
-            const href = nexus[idx]?.href ?? '#';
+            const status = getStatus(item.id);
+            const href = hrefBySlug.get(`${item.item_type}:${item.item_slug}`) ?? null;
             return (
-              <ItemCard
-                key={item.id}
-                item={item}
-                href={href}
-                status={getStatus(item.id)}
-                onOpen={() => {
-                  if (getStatus(item.id) === 'not_started') {
-                    void startItem(item.id).catch(() => undefined);
-                  }
-                }}
-              />
+              <li key={item.id}>
+                <ItemRow
+                  item={item}
+                  index={idx}
+                  status={status}
+                  href={href}
+                  onOpen={() => {
+                    if (status === 'not_started') {
+                      void startItem(item.id).catch(() => undefined);
+                    }
+                  }}
+                  onToggleComplete={() => {
+                    // Simples toggle: se concluído → reabre em leitura; senão marca concluído.
+                    if (status === 'completed') {
+                      void startItem(item.id).catch(() => undefined);
+                    } else {
+                      void completeItem(item.id).catch(() => undefined);
+                    }
+                  }}
+                />
+              </li>
             );
           })}
-        </div>
+        </ol>
       </ReaderShell>
     </>
   );
