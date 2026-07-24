@@ -271,6 +271,7 @@ const SaintWorkReaderPage: React.FC = () => {
         }
       >
         <article
+          ref={articleRef}
           className="prose prose-lg dark:prose-invert max-w-none font-serif leading-relaxed"
           dangerouslySetInnerHTML={{ __html: chapter.body_html }}
         />
