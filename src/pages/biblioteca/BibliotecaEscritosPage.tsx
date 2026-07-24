@@ -31,12 +31,12 @@ const BibliotecaEscritosPage: React.FC = () => {
       if (ids.length) {
         const { data } = await supabase
           .from('saints')
-          .select('id, name, slug')
+          .select('id, name')
           .in('id', ids);
         if (!alive) return;
         const map: Record<string, { name: string; slug: string }> = {};
         (data ?? []).forEach((s: any) => {
-          map[s.id] = { name: s.name, slug: s.slug ?? s.id };
+          map[s.id] = { name: s.name, slug: s.id };
         });
         setSaintNames(map);
       }
