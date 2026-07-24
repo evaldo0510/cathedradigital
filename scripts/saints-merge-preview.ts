@@ -103,8 +103,10 @@ function validate() {
       canonical_score: canonical?.score ?? null,
       reason: pair.reason,
       note: pair.note ?? null,
+      already_merged: alreadyMerged,
       problems,
     };
+
   });
 
   return { preview, issues };
