@@ -216,7 +216,11 @@ const MissionControlPage = lazy(() => import('./pages/admin/MissionControl'));
 const EditorialBulkPage = lazy(() => import('./pages/admin/EditorialBulk'));
 const NexusAdmin = lazy(() => import('./pages/admin/NexusAdmin'));
 const GlossaryAdmin = lazy(() => import('./pages/admin/GlossaryAdmin'));
-const CatechismImportQueuePage = lazy(() => import('./pages/admin/CatechismImportQueue'));
+const CatechismImportQueuePage = lazy(() =>
+  CATEQUESE_MODULES_ENABLED
+    ? import('./modules/catequese').then((m) => ({ default: m.CatechismImportQueue }))
+    : import('./pages/admin/CatechismImportQueue'),
+);
 const CollectionsAdmin = lazy(() => import('./pages/admin/CollectionsAdmin'));
 const CollectionEditor = lazy(() => import('./pages/admin/CollectionEditor'));
 const PrayerAdmin = lazy(() => import('./pages/admin/PrayerAdmin'));
