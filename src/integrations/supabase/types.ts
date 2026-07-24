@@ -4958,6 +4958,7 @@ export type Database = {
       }
       saints: {
         Row: {
+          ai_reflection: Json | null
           bible_refs: Json | null
           bio: string | null
           bio_source_url: string | null
@@ -4969,6 +4970,7 @@ export type Database = {
           church_doc_refs: Json | null
           content_hash: string | null
           content_status: Database["public"]["Enums"]["saint_content_status"]
+          country: string | null
           created_at: string | null
           curiosities: string[]
           died: string | null
@@ -4997,9 +4999,11 @@ export type Database = {
           title: string | null
           updated_at: string | null
           virtues: string[] | null
+          vocation: string | null
           works: Json | null
         }
         Insert: {
+          ai_reflection?: Json | null
           bible_refs?: Json | null
           bio?: string | null
           bio_source_url?: string | null
@@ -5011,6 +5015,7 @@ export type Database = {
           church_doc_refs?: Json | null
           content_hash?: string | null
           content_status?: Database["public"]["Enums"]["saint_content_status"]
+          country?: string | null
           created_at?: string | null
           curiosities?: string[]
           died?: string | null
@@ -5039,9 +5044,11 @@ export type Database = {
           title?: string | null
           updated_at?: string | null
           virtues?: string[] | null
+          vocation?: string | null
           works?: Json | null
         }
         Update: {
+          ai_reflection?: Json | null
           bible_refs?: Json | null
           bio?: string | null
           bio_source_url?: string | null
@@ -5053,6 +5060,7 @@ export type Database = {
           church_doc_refs?: Json | null
           content_hash?: string | null
           content_status?: Database["public"]["Enums"]["saint_content_status"]
+          country?: string | null
           created_at?: string | null
           curiosities?: string[]
           died?: string | null
@@ -5081,6 +5089,7 @@ export type Database = {
           title?: string | null
           updated_at?: string | null
           virtues?: string[] | null
+          vocation?: string | null
           works?: Json | null
         }
         Relationships: []
@@ -7734,6 +7743,7 @@ export type Database = {
       search_saints_fuzzy: {
         Args: { result_limit?: number; search_query: string }
         Returns: {
+          ai_reflection: Json | null
           bible_refs: Json | null
           bio: string | null
           bio_source_url: string | null
@@ -7745,6 +7755,7 @@ export type Database = {
           church_doc_refs: Json | null
           content_hash: string | null
           content_status: Database["public"]["Enums"]["saint_content_status"]
+          country: string | null
           created_at: string | null
           curiosities: string[]
           died: string | null
@@ -7773,6 +7784,7 @@ export type Database = {
           title: string | null
           updated_at: string | null
           virtues: string[] | null
+          vocation: string | null
           works: Json | null
         }[]
         SetofOptions: {

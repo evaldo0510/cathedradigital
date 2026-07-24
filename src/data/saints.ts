@@ -107,4 +107,24 @@ export interface Saint extends Partial<DeepContent> {
   spiritualPractice?: SaintSpiritualPracticeData;
   quotesRich?: SaintQuoteRich[];
   contentStatus?: SaintContentStatus;
+  // v3 — Biblioteca Viva
+  country?: string;
+  vocation?: string;
+  aiReflection?: SaintAIReflection;
+}
+
+export interface SaintAIReflectionTeaching {
+  title: string;
+  body: string;
+}
+
+export interface SaintAIReflection {
+  version: number;
+  summary: string;
+  teachings: SaintAIReflectionTeaching[];
+  meditation: string;
+  prayer: string;
+  model?: string;
+  provider?: string;
+  generated_at?: string;
 }
