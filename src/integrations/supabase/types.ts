@@ -3772,6 +3772,7 @@ export type Database = {
           id: string
           logo_url: string | null
           name: string
+          partner_type: string
           status: string
           updated_at: string
           website_url: string | null
@@ -3783,6 +3784,7 @@ export type Database = {
           id?: string
           logo_url?: string | null
           name: string
+          partner_type?: string
           status?: string
           updated_at?: string
           website_url?: string | null
@@ -3794,6 +3796,7 @@ export type Database = {
           id?: string
           logo_url?: string | null
           name?: string
+          partner_type?: string
           status?: string
           updated_at?: string
           website_url?: string | null
@@ -6460,6 +6463,7 @@ export type Database = {
           id: string | null
           logo_url: string | null
           name: string | null
+          partner_type: string | null
           status: string | null
           updated_at: string | null
           website_url: string | null
@@ -6470,6 +6474,7 @@ export type Database = {
           id?: string | null
           logo_url?: string | null
           name?: string | null
+          partner_type?: string | null
           status?: string | null
           updated_at?: string | null
           website_url?: string | null
@@ -6480,6 +6485,7 @@ export type Database = {
           id?: string | null
           logo_url?: string | null
           name?: string | null
+          partner_type?: string | null
           status?: string | null
           updated_at?: string | null
           website_url?: string | null
