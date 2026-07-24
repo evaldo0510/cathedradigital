@@ -107,7 +107,7 @@ const SaintWorkOverviewPage: React.FC = () => {
   const canonicalUrl = `https://cathedradigital.com.br/biblioteca/escritos/${autor}/${obra}`;
   const accessLabel = work.external_source_label ?? SAINT_WORK_ACCESS_LABELS[work.access_type];
   const themes = (work.main_themes ?? []).filter((t) => t && t.trim().length > 0);
-  const closureProps = resolveEditorialClosure(work);
+  const closureProps = resolveEditorialClosure({ editorial_closure: work.editorial_closure });
   const metaDescription = (work.synopsis ?? work.abstract ?? '').slice(0, 155) ||
     `Leia ${work.title} — obra da tradição ${SAINT_WORK_CATEGORY_LABELS[work.category]} na Biblioteca Patrística Cathedra.`;
 
