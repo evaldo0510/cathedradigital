@@ -189,7 +189,7 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
       </div>
 
       <div
-        className="flex gap-spacing-xs overflow-x-auto pb-spacing-xs px-spacing-md max-w-full no-scrollbar snap-x snap-mandatory scroll-smooth"
+        className="flex gap-spacing-xs sm:gap-spacing-sm overflow-x-auto pt-spacing-2xs pb-spacing-sm px-spacing-2xs max-w-full no-scrollbar snap-x snap-mandatory scroll-smooth"
         role="group"
         aria-label="Tira de dias"
         data-testid="sanctorum-date-strip"
@@ -203,27 +203,47 @@ export const SanctorumDateNav: React.FC<SanctorumDateNavProps> = ({
           }
         }}
       >
-        {strip.map((date, i) => (
-          <Button
-            key={i}
-            onClick={() => change(date, 'strip')}
-            className={`flex flex-col items-center justify-center shrink-0 snap-start whitespace-nowrap min-w-[56px] max-w-[64px] h-spacing-3xl rounded-premium-full border transition-all ${
-              isSameDay(date, value)
-                ? 'bg-primary border-primary text-primary-foreground shadow-premium shadow-primary/20 scale-110'
-                : 'bg-card border-border text-foreground/75 hover:border-primary/30 hover:text-primary'
-            }`}
-            aria-label={format(date, "dd 'de' MMMM", { locale: ptBR })}
-            aria-pressed={isSameDay(date, value)}
-          >
-            <span
-              className="text-premium-xs font-black uppercase tracking-tighter mb-spacing-2xs truncate max-w-[3ch]"
-              title={format(date, 'EEEE', { locale: ptBR })}
+        {strip.map((date, i) => {
+          const active = isSameDay(date, value);
+          const today = isToday(date);
+          return (
+            <Button
+              key={i}
+              onClick={() => change(date, 'strip')}
+              className={cn(
+                'group relative flex flex-col items-center justify-center shrink-0 snap-start whitespace-nowrap',
+                'w-14 sm:w-16 h-16 sm:h-[4.5rem] p-0 rounded-premium-md border-2 transition-all',
+                'focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background',
+                active
+                  ? 'bg-primary border-primary text-primary-foreground shadow-premium shadow-primary/25'
+                  : today
+                    ? 'bg-card border-primary/40 text-foreground hover:border-primary hover:bg-primary/5'
+                    : 'bg-card border-border/70 text-foreground/80 hover:border-primary/40 hover:text-primary hover:bg-primary/5',
+              )}
+              aria-label={format(date, "dd 'de' MMMM", { locale: ptBR })}
+              aria-pressed={active}
+              aria-current={today && !active ? 'date' : undefined}
             >
-              {format(date, 'EEEEEE', { locale: ptBR }).replace('.', '')}
-            </span>
-            <span className="text-premium-lg font-serif font-bold">{format(date, 'dd')}</span>
-          </Button>
-        ))}
+              <span
+                className={cn(
+                  'text-[10px] leading-none font-black uppercase tracking-widest mb-spacing-2xs',
+                  active ? 'text-primary-foreground/85' : 'text-muted-foreground group-hover:text-primary/80',
+                )}
+              >
+                {format(date, 'EEEEEE', { locale: ptBR }).replace('.', '').slice(0, 3)}
+              </span>
+              <span className="text-[1.375rem] leading-none font-serif font-bold tabular-nums">
+                {format(date, 'dd')}
+              </span>
+              {today && !active && (
+                <span
+                  aria-hidden="true"
+                  className="absolute bottom-1.5 h-1 w-1 rounded-full bg-primary"
+                />
+              )}
+            </Button>
+          );
+        })}
 
       </div>
     </div>
