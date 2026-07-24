@@ -61,11 +61,19 @@ interface NormalizedSaint {
   image_attribution?: string;
 }
 
+interface AliasCandidate {
+  alias: string;
+  language: string;
+  type: "birth_name" | "translation" | "popular" | "latin" | "alt" | "honorific";
+  source: "manual" | "wikipedia" | "vatican" | "import";
+}
+
 interface ImportOutcome {
   provider: string;
   confidence: number;
   data: NormalizedSaint;
   sourceUrl: string;
+  aliases: AliasCandidate[];
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -94,27 +102,39 @@ async function fetchWikipediaPT(name: string): Promise<ImportOutcome | null> {
     image_attribution: image ? `Wikipedia PT — ${s.title}` : undefined,
   };
 
-  // Enriquecimento via infobox (MediaWiki API `parse`): datas, ordem, país
+  const aliases: AliasCandidate[] = [
+    { alias: s.title, language: "pt", type: "alt", source: "wikipedia" },
+  ];
+
+  // Enriquecimento via infobox + langlinks numa única chamada
   try {
     const infoRes = await fetch(
-      `https://pt.wikipedia.org/w/api.php?action=parse&page=${title}&prop=wikitext&section=0&format=json&origin=*`,
+      `https://pt.wikipedia.org/w/api.php?action=query&prop=revisions|langlinks&rvprop=content&rvsection=0&lllimit=50&lllang=&titles=${title}&format=json&formatversion=2&origin=*`,
       { headers: { "User-Agent": WIKI_UA } },
     );
     if (infoRes.ok) {
       const infoJson = await infoRes.json();
-      const wikitext: string = infoJson?.parse?.wikitext?.["*"] ?? "";
+      const page = infoJson?.query?.pages?.[0];
+      const wikitext: string = page?.revisions?.[0]?.content ?? "";
       Object.assign(data, extractFromWikitext(wikitext));
+
+      const langlinks: Array<{ lang: string; title: string }> = page?.langlinks ?? [];
+      const wanted = new Set(["es", "en", "la", "it", "fr", "de"]);
+      for (const ll of langlinks) {
+        if (!wanted.has(ll.lang) || !ll.title) continue;
+        aliases.push({
+          alias: ll.title,
+          language: ll.lang,
+          type: ll.lang === "la" ? "latin" : "translation",
+          source: "wikipedia",
+        });
+      }
     }
   } catch (_) {
     /* opcional */
   }
 
-  return {
-    provider: "wikipedia-pt",
-    confidence: 80,
-    data,
-    sourceUrl,
-  };
+  return { provider: "wikipedia-pt", confidence: 80, data, sourceUrl, aliases };
 }
 
 function extractFromWikitext(wt: string): Partial<NormalizedSaint> {
@@ -362,6 +382,28 @@ serve(async (req) => {
       return json({ error: "update_failed", details: upErr.message }, 500);
     }
 
+    // Upsert aliases (idempotente via UNIQUE saint_id+alias_norm+language)
+    const aliasCandidates = outcomes.flatMap((o) => o.aliases);
+    const seen = new Set<string>();
+    const aliasRows = aliasCandidates
+      .filter((a) => a.alias && a.alias.trim() && a.alias.trim().toLowerCase() !== String(saint.name).trim().toLowerCase())
+      .filter((a) => {
+        const k = `${a.language}::${a.alias.trim().toLowerCase()}`;
+        if (seen.has(k)) return false;
+        seen.add(k);
+        return true;
+      })
+      .map((a) => ({ saint_id: saintId, alias: a.alias.trim(), language: a.language, type: a.type, source: a.source }));
+
+    let aliases_inserted = 0;
+    if (aliasRows.length > 0) {
+      const { error: aErr, count } = await admin
+        .from("saint_aliases")
+        .upsert(aliasRows, { onConflict: "saint_id,alias_norm,language", ignoreDuplicates: true, count: "exact" });
+      if (aErr) console.warn(`saint-import: alias upsert failed for ${saintId}:`, aErr.message);
+      else aliases_inserted = count ?? aliasRows.length;
+    }
+
     await admin.from("saint_import_logs").insert({
       saint_id: saintId,
       provider: outcomes.map((o) => o.provider).join(","),
@@ -369,7 +411,7 @@ serve(async (req) => {
       fields_updated: Array.from(aggApplied),
       fields_skipped: Array.from(aggSkipped),
       confidence: bestConfidence,
-      payload: sourceMetadata,
+      payload: { ...sourceMetadata, aliases_inserted },
     });
 
     return json({
@@ -377,6 +419,7 @@ serve(async (req) => {
       status: "success",
       applied: Array.from(aggApplied),
       skipped: Array.from(aggSkipped),
+      aliases_inserted,
       editorial_score,
       confidence: bestConfidence,
     });

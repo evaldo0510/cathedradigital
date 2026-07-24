@@ -4956,6 +4956,47 @@ export type Database = {
         }
         Relationships: []
       }
+      saint_aliases: {
+        Row: {
+          alias: string
+          alias_norm: string | null
+          created_at: string
+          id: string
+          language: string
+          saint_id: string
+          source: string
+          type: string
+        }
+        Insert: {
+          alias: string
+          alias_norm?: string | null
+          created_at?: string
+          id?: string
+          language?: string
+          saint_id: string
+          source?: string
+          type?: string
+        }
+        Update: {
+          alias?: string
+          alias_norm?: string | null
+          created_at?: string
+          id?: string
+          language?: string
+          saint_id?: string
+          source?: string
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saint_aliases_saint_id_fkey"
+            columns: ["saint_id"]
+            isOneToOne: false
+            referencedRelation: "saints"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       saint_import_logs: {
         Row: {
           confidence: number | null
