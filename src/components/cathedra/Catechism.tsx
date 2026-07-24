@@ -23,7 +23,7 @@ import { useFavorites } from '@/hooks/useFavorites';
 import { useAuth } from '@/hooks/useAuth';
 import { useCatechismParagraph, usePrefetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
-import { normalizeCatechismTextWithReport, totalChanges } from '@/lib/catechismTextNormalizer';
+import { normalizeCatechismTextCached, totalChanges } from '@/lib/catechismTextNormalizer';
 import { CatechismNormalizationDiff } from './CatechismNormalizationDiff';
 import { trackEvent } from '@/lib/analytics';
 import CatechismPopover from './CatechismPopover';
