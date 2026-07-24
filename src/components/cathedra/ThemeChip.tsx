@@ -71,9 +71,8 @@ interface Tag {
 
 // Reusing TagContent from @/lib/nexusContent
 
-interface NexusBubblesProps {
-  profileId?: ProfileId | null;
-}
+// Interface local do chip (Tag ainda referenciada em `interface TagBubbleProps`).
+
 
 interface TagBubbleProps {
   tag: Tag;
