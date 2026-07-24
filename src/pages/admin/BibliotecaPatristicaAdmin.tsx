@@ -296,7 +296,7 @@ export default function BibliotecaPatristicaAdmin() {
 interface EditWorkDialogProps {
   work: SaintWork;
   onClose: () => void;
-  onSave: (patch: Partial<SaintWork>) => Promise<void>;
+  onSave: (patch: WorkPatch) => Promise<void>;
   saving: boolean;
 }
 
