@@ -61,11 +61,19 @@ interface NormalizedSaint {
   image_attribution?: string;
 }
 
+interface AliasCandidate {
+  alias: string;
+  language: string;
+  type: "birth_name" | "translation" | "popular" | "latin" | "alt" | "honorific";
+  source: "manual" | "wikipedia" | "vatican" | "import";
+}
+
 interface ImportOutcome {
   provider: string;
   confidence: number;
   data: NormalizedSaint;
   sourceUrl: string;
+  aliases: AliasCandidate[];
 }
 
 // ─────────────────────────────────────────────────────────────
