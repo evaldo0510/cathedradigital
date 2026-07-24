@@ -198,18 +198,22 @@ function extractFromWikitext(wt: string): Partial<NormalizedSaint> {
   const dateTemplateRe = /\{\{\s*(?:dtln|dni|dnil|dnbr|dmbr|morte|falecimento|Data de (?:nascimento|morte|falecimento)|(?:nascimento|morte|falecimento)(?:\s+e\s+idade)?)\s*\|([^{}]+)\}\}/gi;
   const applyDateTemplate = (_m: string, args: string) => {
     const parts = String(args).split("|").map((p) => p.trim()).filter(Boolean);
-    const nums = parts.filter((p) => /^\d+$/.test(p));
-    // Convenção comum: {{dni|d|m|a|...}}, {{morte|dm|mm|am|dn|mn|an|...}} → usa primeiros 3
+    const nums = parts.filter((p) => /^\d+$/.test(p)).map((n) => n);
     if (nums.length >= 3) {
-      const [a, b, c] = nums;
-      // dni usa d|m|a; morte usa d|m|a de morte. Ambos: a data resulta de a-m-d.
-      if (c.length === 4) return `${c}-${b.padStart(2, "0")}-${a.padStart(2, "0")}`;
-      if (a.length === 4) return `${a}-${b.padStart(2, "0")}-${c.padStart(2, "0")}`;
-      return `${a}-${b}-${c}`;
+      const [a, b, c] = nums.slice(0, 3);
+      const na = Number(a), nc = Number(c);
+      // Detecta o ano: normalmente é o maior número (>31). dni usa d|m|a → c é ano.
+      // Data de nascimento usa a|m|d → a é ano.
+      let year: string, month: string, day: string;
+      if (nc > 31 || c.length === 4) { year = c; month = b; day = a; }
+      else if (na > 31 || a.length === 4) { year = a; month = b; day = c; }
+      else { return `${a}-${b}-${c}`; }
+      return `${year.padStart(4, "0")}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
     }
     if (nums.length === 1) return nums[0];
     return parts.join(" ");
   };
+
   // Aplica iterativamente para lidar com templates aninhados (ex.: {{nowrap|{{morte|...}}}})
   let pre = wt;
   let prevDate: string;
