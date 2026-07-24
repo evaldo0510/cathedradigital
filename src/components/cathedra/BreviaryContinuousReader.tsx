@@ -33,6 +33,8 @@ import {
 import { resolvePrayerAutoNexus } from '@/core/knowledge/adapters/prayerAutoNexus';
 import { PrayerTTSButton } from './PrayerTTSButton';
 import { LiturgyBlockCard } from './primitives/liturgy/LiturgyBlockCard';
+import { EditorialClosure } from '@/components/reader/EditorialClosure';
+import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
 
 export interface BreviaryHourBundle {
   hourSlug: HourSlug;
