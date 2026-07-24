@@ -61,6 +61,8 @@ import {
 } from '@/components/reader';
 import { resolveCatechismAutoNexus } from '@/core/knowledge/adapters/catechismAutoNexus';
 import { EditorialDivider } from '@/components/editorial';
+import { EditorialClosure } from '@/components/reader/EditorialClosure';
+import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
 
 
 const CatechismContent: React.FC<{ 

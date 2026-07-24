@@ -32,6 +32,8 @@ import SanctumEditorial, { SanctumCurationBadge } from './SanctumEditorial';
 import { SEO_CONFIG } from '@/config/seo';
 import SaintAILearn from './SaintAILearn';
 import { CATEGORY_LABELS } from './SaintDetail.categories';
+import { EditorialClosure } from '@/components/reader/EditorialClosure';
+import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
 
 // Reexporta para consumidores existentes (Saints.tsx etc.)
 export { CATEGORY_LABELS };

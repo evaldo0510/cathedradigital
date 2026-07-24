@@ -20,6 +20,8 @@ import { EditorialHero } from '@/components/editorial';
 import { EditorialCredits } from '@/components/biblioteca/EditorialCredits';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
+import { EditorialClosure } from '@/components/reader/EditorialClosure';
+import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
 
 type ChapterSummary = Pick<SaintWorkChapter, 'id' | 'order' | 'title' | 'subtitle' | 'reading_minutes'>;
 
