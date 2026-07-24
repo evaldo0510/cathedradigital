@@ -236,20 +236,53 @@ const EditorialClosureRuns: React.FC = () => {
               <code>bun scripts/migrate-editorial-closure.ts</code> para popular este painel.
             </p>
           ) : (
+            <>
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Run</TableHead>
-                  <TableHead>Início</TableHead>
-                  <TableHead>Modo</TableHead>
-                  <TableHead className="text-right">Linhas</TableHead>
+                  <TableHead>
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1 hover:text-foreground"
+                      onClick={() => toggleSort('started_at')}
+                    >
+                      Início <SortIcon k="started_at" />
+                    </button>
+                  </TableHead>
+                  <TableHead>
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1 hover:text-foreground"
+                      onClick={() => toggleSort('dry_run')}
+                    >
+                      Modo <SortIcon k="dry_run" />
+                    </button>
+                  </TableHead>
+                  <TableHead className="text-right">
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1 hover:text-foreground"
+                      onClick={() => toggleSort('total_rows')}
+                    >
+                      Linhas <SortIcon k="total_rows" />
+                    </button>
+                  </TableHead>
                   <TableHead>Entidades</TableHead>
-                  <TableHead className="text-right">Warnings</TableHead>
+                  <TableHead className="text-right">
+                    <button
+                      type="button"
+                      className="inline-flex items-center gap-1 hover:text-foreground"
+                      onClick={() => toggleSort('warnings')}
+                    >
+                      Warnings <SortIcon k="warnings" />
+                    </button>
+                  </TableHead>
                   <TableHead className="text-right">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {runs.map((r) => (
+                {pagedRuns.map((r) => (
                   <TableRow key={r.run_id}>
                     <TableCell className="font-mono text-xs">
                       {r.run_id.slice(0, 8)}…
@@ -302,6 +335,55 @@ const EditorialClosureRuns: React.FC = () => {
                 ))}
               </TableBody>
             </Table>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mt-4 text-sm">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <span>Linhas por página</span>
+                <Select
+                  value={String(pageSize)}
+                  onValueChange={(v) => setPageSize(Number(v))}
+                >
+                  <SelectTrigger className="h-8 w-20">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PAGE_SIZE_OPTIONS.map((n) => (
+                      <SelectItem key={n} value={String(n)}>{n}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <span>
+                  {sortedRuns.length === 0
+                    ? '0 de 0'
+                    : `${(currentPage - 1) * pageSize + 1}–${Math.min(currentPage * pageSize, sortedRuns.length)} de ${sortedRuns.length}`}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button
+                  size="sm" variant="outline"
+                  onClick={() => setPage(1)}
+                  disabled={currentPage <= 1}
+                >« Primeira</Button>
+                <Button
+                  size="sm" variant="outline"
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={currentPage <= 1}
+                >‹ Anterior</Button>
+                <span className="tabular-nums text-muted-foreground px-2">
+                  Página {currentPage} / {totalPages}
+                </span>
+                <Button
+                  size="sm" variant="outline"
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={currentPage >= totalPages}
+                >Próxima ›</Button>
+                <Button
+                  size="sm" variant="outline"
+                  onClick={() => setPage(totalPages)}
+                  disabled={currentPage >= totalPages}
+                >Última »</Button>
+              </div>
+            </div>
+            </>
           )}
         </CardContent>
       </Card>
