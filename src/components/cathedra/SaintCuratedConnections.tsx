@@ -9,30 +9,15 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Sparkles, Users, type LucideIcon } from 'lucide-react';
 
-import type { NexusRelation, NexusKind } from '@/types/nexus';
+import type { NexusRelation } from '@/types/nexus';
 import { getSaintRelations, type SaintRelationGroups } from '@/services/saintNexusService';
-
-function hrefFor(kind: NexusKind, id: string): string | null {
-  switch (kind) {
-    case 'saint':
-      return `/santos/${id}`;
-    case 'glossary':
-      return `/glossario/${id}`;
-    case 'prayer':
-      return `/oracao/${id}`;
-    case 'journey':
-      return `/jornadas/${id}`;
-    case 'catechism_paragraph':
-      return `/catecismo/${id}`;
-    default:
-      return null;
-  }
-}
+import { resolveNexusHref, extractNexusRefId } from '@/lib/nexusHref';
 
 function RelationItem({ rel }: { rel: NexusRelation }) {
-  const id = String(rel.target_ref?.id ?? '');
+  const id = extractNexusRefId(rel.target_ref) ?? '';
   const title = String(rel.target_ref?.title ?? id);
-  const href = hrefFor(rel.target_kind, id);
+  const href = resolveNexusHref(rel.target_kind, rel.target_ref);
+
   const content = (
     <span className="inline-flex items-center gap-1.5">
       <span className="font-medium text-foreground">{title}</span>
