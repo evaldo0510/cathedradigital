@@ -462,15 +462,14 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                     )}
                   </>
                 ) : (
-                  <div className="text-center py-spacing-3xl bg-muted/20 rounded-[2.5rem] border border-dashed border-border space-y-spacing-md">
-                    <Icons.Star className="w-spacing-2xl h-spacing-2xl text-muted-foreground/60 mx-auto" />
-                    <div className="space-y-spacing-xs">
-                      <p className="text-premium-lg font-serif italic text-muted-foreground">O céu está repleto de heróis silenciosos.</p>
-                      <p className="text-premium-xs text-muted-foreground/60 max-w-spacing-xs mx-auto">
-                        Embora não tenhamos um santo específico catalogado para hoje em nossa base, milhares de almas celebram na glória de Deus.
-                      </p>
-                    </div>
-                  </div>
+                  <section className="text-center py-spacing-3xl space-y-spacing-md border-y border-secondary/40">
+                    <p className="text-premium-xs font-black uppercase tracking-[0.22em] text-secondary">Sanctorum</p>
+                    <Icons.Star className="w-spacing-2xl h-spacing-2xl text-secondary/60 mx-auto" />
+                    <h3 className="font-serif text-premium-2xl text-foreground italic">O céu está repleto de heróis silenciosos.</h3>
+                    <p className="text-premium-sm font-serif italic text-muted-foreground max-w-xl mx-auto px-spacing-md">
+                      Embora não tenhamos um santo específico catalogado para hoje em nossa base, milhares de almas celebram na glória de Deus.
+                    </p>
+                  </section>
                 )}
               </div>
             </motion.div>
@@ -575,10 +574,14 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
               className="space-y-spacing-xl outline-none"
               tabIndex={0}
             >
-              <div className="text-center space-y-spacing-xs">
-                <p className="text-premium-xs font-black uppercase tracking-[0.2em] text-primary">Nuvem de Testemunhas</p>
-                <p className="text-premium-sm text-muted-foreground italic font-serif">"Estamos cercados de tão grande nuvem de testemunhas..." — Heb 12,1</p>
-              </div>
+              <header className="max-w-spacing-2xl mx-auto px-spacing-md space-y-spacing-sm text-center">
+                <p className="text-premium-xs font-black uppercase tracking-[0.22em] text-secondary">Nuvem de Testemunhas</p>
+                <h2 className="font-serif text-premium-3xl text-foreground">Comunhão dos Santos</h2>
+                <div aria-hidden="true" className="mx-auto h-px w-16 bg-secondary/60" />
+                <p className="font-serif italic text-premium-sm text-muted-foreground">
+                  "Estamos cercados de tão grande nuvem de testemunhas…" — Hebreus 12,1
+                </p>
+              </header>
 
               <div className="flex flex-wrap justify-center gap-spacing-sm max-w-spacing-4xl mx-auto" role="list">
                 {displaySaints.map((saint, i) => (
@@ -606,14 +609,22 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
               className="space-y-spacing-xl outline-none"
               tabIndex={0}
             >
-              <div className="text-center space-y-spacing-md max-w-spacing-2xl mx-auto px-spacing-md">
-                <h2 className="text-premium-2xl font-serif font-bold">
+              <header className="max-w-spacing-2xl mx-auto px-spacing-md space-y-spacing-sm text-center">
+                <p className="text-premium-xs font-black uppercase tracking-[0.22em] text-secondary">
+                  {viewMode === 'writers' ? 'Doctores Ecclesiae' : viewMode === 'popes' ? 'Cathedra Petri' : 'Sanctorum'}
+                </p>
+                <h2 className="font-serif text-premium-3xl text-foreground">
                   {viewMode === 'writers' ? 'Doutores e Escritores' : viewMode === 'popes' ? 'Sucessores de Pedro' : 'Base Sanctorum'}
                 </h2>
-                <p className="text-premium-sm text-muted-foreground italic">
-                  {viewMode === 'writers' ? '"A pena é a língua da alma..."' : viewMode === 'popes' ? '"Tu és Pedro..."' : 'Exibindo registros catalogados.'}
+                <div aria-hidden="true" className="mx-auto h-px w-16 bg-secondary/60" />
+                <p className="font-serif italic text-premium-sm text-muted-foreground">
+                  {viewMode === 'writers'
+                    ? '"A pena é a língua da alma…"'
+                    : viewMode === 'popes'
+                    ? '"Tu és Pedro, e sobre esta pedra edificarei a minha Igreja." — Mateus 16,18'
+                    : 'Exibindo registros catalogados em nosso acervo.'}
                 </p>
-              </div>
+              </header>
               <div className="max-w-5xl mx-auto px-spacing-md">
                 {isLoadingMode ? (
                   <div className="flex justify-center py-spacing-3xl"><Icons.Cross className="w-spacing-xl h-spacing-xl animate-spin opacity-20" /></div>
