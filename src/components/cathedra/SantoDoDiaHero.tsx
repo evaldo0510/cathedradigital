@@ -235,6 +235,7 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
                     <button
                       type="button"
                       onClick={() => scrollToSection(s.key)}
+                      aria-controls={s.controls}
                       className="inline-flex items-center justify-center min-h-11 px-spacing-sm py-spacing-2xs rounded-premium-full border border-border/60 text-premium-xs font-black uppercase tracking-widest text-foreground/80 hover:text-primary hover:border-primary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background whitespace-nowrap"
                     >
                       {s.label}
