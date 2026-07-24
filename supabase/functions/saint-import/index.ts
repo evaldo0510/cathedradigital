@@ -491,7 +491,6 @@ serve(async (req) => {
     }
 
     // Upsert aliases (idempotente via UNIQUE saint_id+alias_norm+language)
-    const aliasCandidates = outcomes.flatMap((o) => o.aliases);
     const seen = new Set<string>();
     const aliasRows = aliasCandidates
       .filter((a) => a.alias && a.alias.trim() && a.alias.trim().toLowerCase() !== String(saint.name).trim().toLowerCase())
@@ -502,6 +501,7 @@ serve(async (req) => {
         return true;
       })
       .map((a) => ({ saint_id: saintId, alias: a.alias.trim(), language: a.language, type: a.type, source: a.source }));
+
 
     let aliases_inserted = 0;
     if (aliasRows.length > 0) {
