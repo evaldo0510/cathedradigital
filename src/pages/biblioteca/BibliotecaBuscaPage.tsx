@@ -193,7 +193,7 @@ const BibliotecaBuscaPage: React.FC = () => {
                           </span>
                         </>
                       )}
-                    </h3>
+                    </h2>
                     <p
                       className="mt-spacing-xs text-premium-sm text-foreground/80 leading-relaxed [&_mark]:bg-primary/20 [&_mark]:text-foreground [&_mark]:rounded-sm [&_mark]:px-0.5"
                       dangerouslySetInnerHTML={{ __html: sanitizeSnippet(h.snippet ?? '') }}
