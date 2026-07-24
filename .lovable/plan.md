@@ -1,128 +1,115 @@
+# Acervo Cathedra — Hub Unificado de Conhecimento
 
-# Biblioteca Católica — Frente Unificada
+Ponto de inflexão aprovado: a "Biblioteca Católica" deixa de ser um menu de livros e passa a ser o **centro do conhecimento** do Cathedra. Toda navegação por Tradição (Bíblia, Catecismo, Santos, Magistério, Patrística, Liturgia, Clássicos) converge para o mesmo shell, mesma busca, mesmo Nexus, mesmo EditorialClosure.
 
-Unifica **Escritos dos Santos**, **Patrística**, **Magistério** e **Clássicos** em uma única experiência com o mesmo `ReaderShell`, mesma ficha editorial, mesmo sistema de progresso e mesmo grafo (Nexus).
+Nomenclatura adotada: **Acervo Cathedra** (rota `/acervo`). "Biblioteca Católica" fica como subtítulo humano. Legado `/biblioteca/*` preservado via redirect.
 
-## Preflight (COS)
+---
 
-- Skills carregados: guardian, design-system, knowledge-graph, glossary-editorial, saints-expert
-- Classificação: Editorial + Banco + Nexus + UX
-- Risco: **alto** — cross-módulo + nova tabela pivô + refatoração de rotas
-- Requer confirmação explícita antes de executar
+## Preflight
 
-## Princípio arquitetural
+- COS v1.3 ativo. Skills: `cathedra-guardian`, `cathedra-design-system-guardian`, `cathedra-knowledge-graph-expert`, `cathedra-prayer-engine-expert`, `cathedra-saints-expert`.
+- Reuso agressivo: `ReaderShell`, `EditorialHero`, `EditorialCard`, `EditorialClosure`, `NexusPanel`, `library_items_v1`, `search_library_items`, `libraryService`.
+- **Zero componente paralelo.** Toda nova superfície é composição dos primitivos existentes.
 
-**Não** duplicar conteúdo. Criar uma **view de leitura unificada** (`library_items`) sobre as tabelas canônicas existentes:
+---
 
-```text
-saint_works ──┐
-              ├──► library_items (view materializada)  ──► LibraryReader
-magisterium ──┤                                           (ReaderShell único)
-              │
-patristica  ──┘ (já é saint_works com category ∈ padres/doutores)
-
-clássicos = saint_works com category='classic' (novo valor de enum)
-```
-
-Progresso continua nas tabelas nativas de cada módulo — a Biblioteca só **agrega** e **lê**.
-
-## Fase 1 — Schema (migration única, aditiva)
-
-1. Estender enum `saint_work_category` com `'classic'` (para autores fora dos Padres/Doutores: Newman, Chesterton, Guardini, Ratzinger acadêmico).
-2. Criar tabela `library_kinds` (`saint_work | magisterium | classic | patristic`) — enum + labels PT-BR.
-3. Criar **VIEW** `public.library_items_v1`:
-   - Campos: `library_kind`, `id`, `slug`, `title`, `author_label`, `author_href`, `category_label`, `year`, `synopsis`, `themes[]`, `access_type`, `cover_image_url`, `reading_minutes`, `ficha_completeness`, `status`, `href`, `search_tsv`.
-   - `UNION ALL` entre `saint_works` (published) e um SELECT análogo em `magisterium_documents` (ou tabela equivalente já existente — a auditar antes).
-   - `href` resolve via `resolveNexusHref`.
-4. `GRANT SELECT ON public.library_items_v1 TO anon, authenticated`.
-5. Estender `nexus_relations`: nenhum novo tipo — reuso de `see_also` + `explains`.
-
-## Fase 2 — Serviço + tipos
-
-- `src/types/library.ts`: `LibraryItem`, `LibraryKind`, `LibraryFilter`.
-- `src/services/libraryService.ts`:
-  - `listLibrary(filter)` — paginado, com FTS.
-  - `getLibraryItem(kind, id)` — hidrata do módulo canônico.
-- Adaptador `toLibraryItem(source)` para cada módulo.
-
-## Fase 3 — Rota unificada
-
-Novas rotas SPA:
-
-- `/biblioteca` — landing (hero + 4 filtros por `library_kind`).
-- `/biblioteca/acervo` — grade unificada com busca híbrida.
-- `/biblioteca/:kind/:slug` — ficha editorial (redireciona internamente para a rota canônica: `/biblioteca/escritos/...`, `/magisterio/...`).
-
-Rotas legadas **preservadas** (redirects, não breaking).
-Meta em `routeMeta.ts` (dinâmico via `DYNAMIC_PATTERNS`).
-
-## Fase 4 — LibraryReader (reuso, não novo)
-
-- `LibraryReaderShell.tsx` = wrapper fino sobre `ReaderShell` que resolve `library_kind` → componente de leitor canônico já existente:
-  - `saint_work` → `SaintWorkReaderPage`
-  - `magisterium` → `MagisteriumReaderPage`
-  - `classic` → `SaintWorkReaderPage` (mesma engine)
-- Zero fork de leitor. Apenas **roteamento inteligente**.
-
-## Fase 5 — Progresso unificado
-
-- View `public.library_progress_v1` agregando:
-  - `saint_work_chapters_read` (a criar se ainda não existir — auditar) ou `reading_marks`
-  - progresso do Magistério
-- `useLibraryProgress(userId)` — hook único para dashboard `/conta`.
-- **Não** criar nova tabela de progresso; agregar as existentes.
-
-## Fase 6 — UI
-
-- `BibliotecaLandingPage.tsx`: 4 cards (Escritos, Patrística, Magistério, Clássicos) usando `EditorialCard` + hero em pergaminho.
-- Reuso de `BibliotecaAcervoPage.tsx` (já existe) — expandir para incluir Magistério e Clássicos via `library_items_v1`.
-- Filtros: `library_kind`, `category`, `access_type`, `ficha_completeness`, `themes[]`.
-- Busca híbrida (FTS + trigram) via RPC.
-
-## Fase 7 — Nexus + SEO
-
-- `AutoNexusList` reconhece `library_item` como agregação e resolve para módulo canônico.
-- Sitemap: incluir `library_items_v1` (published apenas).
-- JSON-LD `Collection` na landing + `Book` na ficha.
-
-## Fase 8 — Admin
-
-- `/admin/biblioteca` — dashboard agregando contagens por `library_kind` × `ficha_completeness` × `status`.
-- **Não** duplicar `/admin/biblioteca-patristica` (que continua para gestão editorial fina de `saint_works`).
-
-## Fora de escopo (ondas futuras)
-
-- Importação em massa do Magistério (Sprint separada — depende de conteúdo).
-- Recomendações personalizadas (RAG) — Sprint AI.
-- Coleções curadas cross-módulo — Sprint Collections Studio v2.
-
-## Detalhes técnicos
-
-- **Sem tabela pivô física** — só views. Reversível, zero risco de deriva de dados.
-- Ordem canônica de migração respeitada (CREATE → GRANT → RLS/RULES → policies onde aplicável; views herdam do subjacente).
-- Zero componente novo além de: `BibliotecaLandingPage`, `LibraryReaderShell` (roteador), `useLibraryProgress`.
-- `ReaderShell`, `EditorialHero`, `EditorialCard`, `EditorialClosure` — **reuso 100%**.
-
-## Entregáveis por fase (em ordem)
+## Arquitetura conceitual
 
 ```text
-Onda 1 (Fundação)   → Fase 1 + 2 + Auditoria de magisterium_documents
-Onda 2 (Rotas)      → Fase 3 + 4
-Onda 3 (Progresso)  → Fase 5
-Onda 4 (UI+Nexus)   → Fase 6 + 7
-Onda 5 (Admin)      → Fase 8
+Acervo Cathedra (/acervo)
+│
+├── Navegar por Tradição
+│   ├── Escritos dos Santos      (saint_works: kind=writing)
+│   ├── Padres da Igreja         (saints.category=father + works)
+│   ├── Doutores da Igreja       (saints.category=doctor + works)
+│   ├── Patrística               (saint_works.category=patristic)
+│   ├── Magistério               (concílios, encíclicas, exortações...)
+│   ├── Espiritualidade
+│   ├── História da Igreja
+│   ├── Liturgia                 (Missal + LH)
+│   ├── Homilias
+│   ├── Clássicos Católicos      (saint_works: kind=classic)
+│   └── Favoritos                (user-scoped)
+│
+├── Busca Unificada              (RPC search_library_items ampliada)
+│
+├── Estudar (novo)               (/acervo/estudar/:tema)
+│   └── Trilha temática: Bíblia → Catecismo → Santos → Magistério
+│                        → Patrística → Reflexão → Oração → Continuar
+│
+└── Indicador de Profundidade    (chip em cada card/hero)
+    Rápida (5m) · Média (25m) · Profunda · Referência
 ```
 
-## Critério de aceitação
+---
 
-- Toda ficha renderiza com `EditorialHero` + `EditorialClosure`.
-- Zero regressão em `/biblioteca/escritos/*` e `/magisterio/*`.
-- Busca única retorna resultados dos 4 tipos.
-- Dashboard `/conta` mostra progresso agregado.
-- `tsgo` limpo, sitemap atualizado, `headings-audit` verde.
+## Ondas de execução (sequenciais, com homologação entre cada)
 
-## Pergunta antes de executar
+### Onda 3 — Hub Acervo Cathedra (renomeação + IA visual)
+- Renomear `/biblioteca/catolica` → `/acervo` (redirect legado preservado).
+- `AcervoHomePage.tsx`: EditorialHero + grid de 11 categorias em `EditorialCard`.
+- Menu principal e Sidebar atualizados.
+- **Não** mexe em banco. Só composição visual.
 
-1. **Fonte do Magistério**: qual tabela canônica hoje armazena documentos (Vatican.va importados)? Vi `catechism_official` e `vatican_cache`, mas não uma `magisterium_documents` como tal. **Confirmar antes da Fase 1** — impacta o SQL da view.
-2. **Enum `classic`**: aprovar adição ao `saint_work_category` ou preferimos criar tabela separada `classic_works`?
-3. **Ordem de execução**: começo pela Onda 1 (Fundação) e pauso para homologação, seguindo Regra 12 (Homologação Sequencial) do COS?
+### Onda 4 — Progresso agregado + Favoritos unificados
+- `useLibraryProgress` (hook): consolida progresso de saint_works, catecismo, bíblia por usuário.
+- Aba **Favoritos** puxa `bible_favorites` + reading_marks + collection_progress unificados.
+- Chip de progresso no `SaintWorkCard`.
+
+### Onda 5 — Indicador de Profundidade
+- Migração: coluna `depth_level` (`quick` | `medium` | `deep` | `reference`) e `estimated_minutes` em `saint_works`. Trigger de auto-cálculo por word_count quando nulo.
+- Componente `DepthIndicator.tsx` (barra ■■■□□□) reutilizado em cards, hero e listagens.
+- Retro-preencher as 14 obras-âncora + Suma/Imitação/Solilóquios/História de uma Alma.
+
+### Onda 6 — Magistério no Acervo
+- Estender `library_items_v1` para incluir `magisterium_documents` (concílios, encíclicas, exortações, constituições, cartas).
+- Categorias novas no filtro do Acervo.
+- Reutiliza ReaderShell existente do Magistério.
+
+### Onda 7 — Modo "Estudar" (temático)
+- Tabela `study_themes` (slug, title, description, seed_terms, curated_items JSONB).
+- Página `/acervo/estudar/:slug` com trilha vertical: Escritura → Catecismo → Santos → Magistério → Patrística → Reflexão → Oração → Continuar.
+- Semear 5 temas-piloto: **Humildade, Caridade, Oração, Conversão, Eucaristia**.
+- Curadoria manual + Nexus automático como sugestão.
+
+### Onda 8 — Busca única cross-corpus
+- Ampliar `search_library_items` para incluir Bíblia (verses) e Catecismo (paragraphs) com weight editorial.
+- Página `/acervo/busca?q=humildade` retorna resultado agrupado por corpus, com CTA "Estudar este tema".
+
+### Onda 9 — Admin consolidado + Sitemap
+- `/admin/acervo`: dashboard de cobertura editorial cross-corpus (completude, ICE, stubs, pipeline).
+- Sitemap unificado inclui `/acervo/*` e `/acervo/estudar/*`.
+- Nexus enriquecido: relações temáticas alimentam trilhas.
+
+---
+
+## Detalhes técnicos (skippable para leitura de produto)
+
+**Banco**
+- Onda 5: `ALTER TABLE saint_works ADD depth_level, estimated_minutes` + trigger.
+- Onda 6: `CREATE OR REPLACE VIEW library_items_v1` incorporando `magisterium_documents`.
+- Onda 7: `study_themes` com RLS pública leitura / admin escrita + GRANT explícito.
+- Onda 8: `search_library_items` reescrita com UNION tsvector Bíblia + Catecismo + Saint Works.
+
+**Reuso obrigatório**
+- Cards: `EditorialCard` (nova densidade `library` se necessário — não novo componente).
+- Hero: `EditorialHero` (variante `hub`).
+- Leitura: `ReaderShell` + `EditorialClosure` (já injetado via `resolveClosure`).
+- Nexus: `NexusPanel` alimentado por `search_library_items` filtrada por tema.
+
+**Rotas legadas** (preservadas com redirect):
+`/biblioteca/catolica`, `/biblioteca/catolica/acervo`, `/biblioteca/patristica`, `/biblioteca/escritos` → `/acervo/*`.
+
+**Não faremos nesta fase**
+- App mobile nativo.
+- Áudio narrado (fica para wave futura).
+- Editor colaborativo de trilhas (só curadoria admin).
+
+---
+
+## O que peço agora
+
+Confirmação para começar pela **Onda 3 (renomeação + hub visual)**, sem tocar banco. Homologa visualmente, e só então avanço para Onda 4.
+
+Se preferir inverter (ex: Profundidade antes do Hub, ou Estudar como primeiro diferencial), me diga qual onda vira prioridade 1.
