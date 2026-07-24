@@ -31,7 +31,7 @@ import MagisteriumDiagnosticPanel from './MagisteriumDiagnosticPanel';
 import { logMagisteriumDiag } from '@/lib/magisteriumDiagnostics';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import { resolveMagisteriumAutoNexus } from '@/core/knowledge/adapters/magisteriumAutoNexus';
-import NexusBubbles from '@/components/cathedra/NexusBubbles';
+import { NexusPanel } from '@/components/reader';
 import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
 
 
@@ -773,10 +773,6 @@ const MagisteriumViewer: React.FC = () => {
       {/* STAB-004.3: Navegação entre documentos (derivada de MAGISTERIUM_DOCUMENTS) */}
       {id && <MagisteriumDocumentNav currentId={id} />}
 
-      {/* Sprint 1 — Fechar dead-end: próximo passo contextual */}
-      <div className="mb-spacing-lg">
-        <NexusBubbles />
-      </div>
       {(() => {
         const nexus = resolveMagisteriumAutoNexus({
           docId: id ?? 'documento',
@@ -784,15 +780,20 @@ const MagisteriumViewer: React.FC = () => {
           themes: [content.title],
         });
         return (
-          <ReaderContinuation
-            context={{
-              kind: 'magisterium',
-              id: id ?? undefined,
-              graphNodeId: nexus.selfId ?? undefined,
-              meta: { theme: content.title },
-            }}
-            suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
-          />
+          <>
+            <div className="mb-spacing-lg">
+              <NexusPanel output={nexus} kicker={`Conexões · ${content.title}`} />
+            </div>
+            <ReaderContinuation
+              context={{
+                kind: 'magisterium',
+                id: id ?? undefined,
+                graphNodeId: nexus.selfId ?? undefined,
+                meta: { theme: content.title },
+              }}
+              suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
+            />
+          </>
         );
       })()}
 
