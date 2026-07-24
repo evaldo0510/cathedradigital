@@ -72,9 +72,22 @@ const CatechismContent: React.FC<{
   const { settings } = useReadingSettings();
   const { markPending, clearPending } = useCatechismPending();
 
+  // Pré-carrega uma janela de §§ vizinhos (±5) em background para reduzir latência
+  // ao navegar. `prefetch` é idempotente e reaproveita cache do React Query;
+  // quando o § não existe no banco, dispara o enfileiramento automático via edge.
   useEffect(() => {
-    if (isVisible && paragraph < 2865) prefetch(paragraph + 1);
+    if (!isVisible) return;
+    const offsets = [1, 2, 3, 4, 5, -1, -2];
+    const handles: number[] = [];
+    offsets.forEach((off, idx) => {
+      const target = paragraph + off;
+      if (target < 1 || target > 2865) return;
+      // Escalona para não competir com o fetch do § atual
+      handles.push(window.setTimeout(() => prefetch(target), 120 + idx * 180));
+    });
+    return () => handles.forEach(clearTimeout);
   }, [paragraph, prefetch, isVisible]);
+
 
   // Sincroniza este parágrafo com o painel de pendências da seção.
   useEffect(() => {
