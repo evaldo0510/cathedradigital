@@ -152,11 +152,11 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
     [expanded],
   );
 
-  const sectionNav: Array<{ key: SectionKey; label: string; enabled: boolean }> = [
-    { key: 'frase', label: 'Frase', enabled: Boolean(frase) },
-    { key: 'vida', label: 'Vida', enabled: true },
-    { key: 'legado', label: 'Legado', enabled: true },
-    { key: 'meditacao', label: 'Meditação', enabled: true },
+  const sectionNav: Array<{ key: SectionKey; label: string; enabled: boolean; controls: string }> = [
+    { key: 'frase', label: 'Frase', enabled: Boolean(frase), controls: 'santo-do-dia-frase' },
+    { key: 'vida', label: 'Vida', enabled: true, controls: 'santo-do-dia-vida' },
+    { key: 'legado', label: 'Legado', enabled: true, controls: 'santo-do-dia-legado' },
+    { key: 'meditacao', label: 'Meditação', enabled: true, controls: 'santo-do-dia-meditacao' },
   ];
 
   return (
@@ -235,6 +235,7 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
                     <button
                       type="button"
                       onClick={() => scrollToSection(s.key)}
+                      aria-controls={s.controls}
                       className="inline-flex items-center justify-center min-h-11 px-spacing-sm py-spacing-2xs rounded-premium-full border border-border/60 text-premium-xs font-black uppercase tracking-widest text-foreground/80 hover:text-primary hover:border-primary/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background whitespace-nowrap"
                     >
                       {s.label}
