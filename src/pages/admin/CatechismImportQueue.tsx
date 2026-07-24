@@ -66,7 +66,7 @@ export default function CatechismImportQueuePage() {
     if (error) {
       toast.error("Falha ao carregar fila", { description: error.message });
     } else if (data) {
-      setRows(data as QueueRow[]);
+      setRows(data as unknown as QueueRow[]);
       setSelected(new Set());
     }
     setLoading(false);
