@@ -15,6 +15,7 @@ import {
 import type { SaintWork, SaintWorkChapter } from '@/types/saintWorks';
 import { SAINT_WORK_CATEGORY_LABELS } from '@/types/saintWorks';
 import { EditorialHero } from '@/components/editorial';
+import { EditorialCredits } from '@/components/biblioteca/EditorialCredits';
 import { Button } from '@/components/ui/button';
 import { Icons } from '../../constants';
 
@@ -186,24 +187,12 @@ const SaintWorkOverviewPage: React.FC = () => {
           </section>
         )}
 
-        {(work.translation_credit || work.source_url) && (
-          <footer className="text-premium-xs text-muted-foreground space-y-1 pt-spacing-md border-t border-border/40">
-            {work.translation_credit && <p>Tradução: {work.translation_credit}</p>}
-            {work.source_url && (
-              <p>
-                Fonte:{' '}
-                <a
-                  href={work.source_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline hover:text-primary"
-                >
-                  {new URL(work.source_url).hostname}
-                </a>
-              </p>
-            )}
-          </footer>
-        )}
+        <EditorialCredits
+          isPublicDomain={work.is_public_domain}
+          license={work.license}
+          translationCredit={work.translation_credit}
+          sourceUrl={work.source_url}
+        />
       </div>
     </main>
   );

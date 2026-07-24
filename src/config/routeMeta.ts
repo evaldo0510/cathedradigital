@@ -462,6 +462,14 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
     },
   },
   {
+    test: /^\/biblioteca\/escritos\/busca$/,
+    meta: {
+      title: 'Buscar — Biblioteca Patrística Cathedra',
+      description: 'Busca full-text nos escritos dos Padres, Doutores e místicos: pesquise por autor, obra ou palavras exatas dentro dos capítulos.',
+      noindex: true,
+    },
+  },
+  {
     test: /^\/biblioteca\/escritos\/[^/]+\/[^/]+$/,
     meta: {
       title: 'Obra Patrística — Biblioteca Cathedra',
