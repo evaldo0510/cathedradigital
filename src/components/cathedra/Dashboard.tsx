@@ -7,7 +7,7 @@ import { Icons } from '@/constants';
 import { useLang } from '@/hooks/useLang';
 import RitualDoDia from './RitualDoDia';
 
-import SpiritualQuiz, { PROFILES, type ProfileId } from './SpiritualQuiz';
+import SpiritualQuiz from './SpiritualQuiz';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { DashboardSkeleton } from './DashboardSkeleton';
 import { CathedraCard } from './CathedraCard';
