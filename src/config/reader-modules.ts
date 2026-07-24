@@ -186,20 +186,12 @@ export const FORBIDDEN_IMPORTS = [
  * a entrada correspondente daqui.
  */
 export const GUARDRAIL_ALLOWLIST: readonly string[] = [
-  // Os próprios arquivos deprecados (serão removidos na Fase D)
-  'src/components/cathedra/NexusBubbles.tsx',
   // Primitivo shadcn (Popover base)
   'src/components/ui/popover.tsx',
   // ReferencePopover é o único wrapper autorizado
   'src/components/reader/ReferencePopover.tsx',
-  // ── Baseline Fase C: consumidores legados aguardando migração.
-  //    Remover ao concluir a sub-onda de cada módulo (ver docs/reader-template-master-fase-c.md).
+  // C0.4.b: NexusBubbles extinto. TagBubble migrado para ThemeChip.
   //    C0.4 concluída: Bible/Journey/Magisterium/Saint migrados de NexusBubbles → NexusPanel.
-  //    Temas ainda importa TagBubble (chip inline) — resolvido em C0.4.b (→ ReferencePopover).
-  'src/components/cathedra/TemasPage.tsx',              // C0.4.b (TagBubble → ReferencePopover)
-  'src/components/cathedra/TemaDetailPage.tsx',         // C0.4.b (TagBubble → ReferencePopover)
-  'src/components/cathedra/NexusBubbles.test.tsx',      // teste do próprio deprecado (removido em Fase D)
-  'src/components/cathedra/NexusBubbles.interaction.test.tsx',
   'src/components/cathedra/MissalPage.tsx',            // sub-onda C.4
   'src/components/cathedra/MissaContinuousReader.tsx', // sub-onda C.4
   'src/components/cathedra/BreviaryPage.tsx',          // sub-onda C.4
