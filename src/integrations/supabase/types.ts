@@ -9092,6 +9092,12 @@ export type Database = {
         | "ice_pending"
         | "published"
         | "archived"
+      library_kind:
+        | "saint_work"
+        | "patristic"
+        | "doctor"
+        | "classic"
+        | "magisterium"
       prayer_category:
         | "fundamentais"
         | "marianas"
@@ -9120,6 +9126,8 @@ export type Database = {
         | "espiritualidade"
         | "apologetica"
         | "liturgica"
+        | "classic"
+        | "magisterio"
       saint_work_ficha_completeness: "stub" | "minimal" | "complete"
       saint_work_reading_level: "beginner" | "intermediate" | "advanced"
       saint_work_status: "draft" | "in_review" | "published" | "archived"
@@ -9284,6 +9292,13 @@ export const Constants = {
         "published",
         "archived",
       ],
+      library_kind: [
+        "saint_work",
+        "patristic",
+        "doctor",
+        "classic",
+        "magisterium",
+      ],
       prayer_category: [
         "fundamentais",
         "marianas",
@@ -9314,6 +9329,8 @@ export const Constants = {
         "espiritualidade",
         "apologetica",
         "liturgica",
+        "classic",
+        "magisterio",
       ],
       saint_work_ficha_completeness: ["stub", "minimal", "complete"],
       saint_work_reading_level: ["beginner", "intermediate", "advanced"],
