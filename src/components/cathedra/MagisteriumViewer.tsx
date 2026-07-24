@@ -31,8 +31,8 @@ import MagisteriumDiagnosticPanel from './MagisteriumDiagnosticPanel';
 import { logMagisteriumDiag } from '@/lib/magisteriumDiagnostics';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import { resolveMagisteriumAutoNexus } from '@/core/knowledge/adapters/magisteriumAutoNexus';
-import { NexusPanel } from '@/components/reader';
-import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
+import { NexusPanel, ReaderShell, EditorialHero } from '@/components/reader';
+import { EditorialDivider } from '@/components/editorial';
 
 
 const MIN_DOC_LEN = 500;
@@ -525,9 +525,39 @@ const MagisteriumViewer: React.FC = () => {
   }
 
 
+  const magisteriumNexus = resolveMagisteriumAutoNexus({
+    docId: id ?? 'documento',
+    title: content.title,
+    themes: [content.title],
+  });
+
   return (
-    <div className="w-full pb-spacing-4xl relative overflow-x-hidden">
-      <SEOHead 
+    <ReaderShell
+      className="w-full pb-spacing-4xl relative overflow-x-hidden"
+      contentMaxWidth="max-w-none"
+      ariaLabel={`Documento do Magistério — ${content.title}`}
+      hero={
+        <EditorialHero
+          kicker={`Magistério${docMeta?.category ? ` · ${docMeta.category}` : ''}`}
+          title={docMeta?.title ?? content.title}
+          subtitle={docMeta ? [docMeta.type, docMeta.author].filter(Boolean).join(' · ') : undefined}
+          meta={docMeta?.year ? String(docMeta.year) : undefined}
+        />
+      }
+      nexus={<NexusPanel output={magisteriumNexus} kicker={`Conexões · ${content.title}`} />}
+      continuation={
+        <ReaderContinuation
+          context={{
+            kind: 'magisterium',
+            id: id ?? undefined,
+            graphNodeId: magisteriumNexus.selfId ?? undefined,
+            meta: { theme: content.title },
+          }}
+          suggestions={magisteriumNexus.suggestions.length > 0 ? magisteriumNexus.suggestions : undefined}
+        />
+      }
+    >
+      <SEOHead
         title={`${content.title} | Magistério`}
         description={`Leia o documento completo: ${content.title}`}
         path={`/magisterium/${id}`}
