@@ -55,9 +55,10 @@ Regras invioláveis:
 - Se um dado faltar, seja discreto — não preencha com genérico.
 - Tom contemplativo, sereno, sem clichês modernos, sem "IA falando".
 - Deixe implícito que é uma reflexão baseada nos textos e ensinamentos do santo.
-- Meditação: 3–4 parágrafos, ancorada nos escritos do santo.
+- Meditação: 3–4 parágrafos, ancorada nos escritos do santo. Preencha meditation_sources com os trechos/obras que fundamentaram a meditação (curto, verbatim ou paráfrase mínima).
 - Oração: composta na primeira pessoa, no espírito do santo, sem invenções.
-- Ensinamentos: 3 a 5 itens, cada um com título curto (2–5 palavras) e corpo enxuto.
+- Ensinamentos: 3 a 5 itens, cada um com título curto (2–5 palavras), corpo enxuto e, quando possível, "source" apontando a frase/obra que o embasa (trecho curto ou nome da obra).
+- Citações: preencha o array "citations" listando os trechos concretos (frases, obras, virtudes ou biografia) que você efetivamente usou como base, marcando em qual seção foram aplicados. Não invente citações.
 - Idioma: português (Brasil).`;
 
 function buildUserPrompt(saint: Record<string, unknown>): string {
