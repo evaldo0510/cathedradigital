@@ -165,9 +165,14 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="relative overflow-hidden rounded-[2.5rem] border border-border/60 bg-card shadow-premium-hover"
+      className="relative overflow-hidden border border-secondary/30 bg-card shadow-premium-hover"
       aria-labelledby="santo-do-dia-title"
     >
+      {/* Molduras editoriais douradas nos cantos (Pergaminho Sacro) */}
+      <span aria-hidden="true" className="pointer-events-none absolute top-spacing-sm left-spacing-sm w-spacing-xl h-spacing-xl border-t-2 border-l-2 border-secondary/50 z-20" />
+      <span aria-hidden="true" className="pointer-events-none absolute top-spacing-sm right-spacing-sm w-spacing-xl h-spacing-xl border-t-2 border-r-2 border-secondary/50 z-20" />
+      <span aria-hidden="true" className="pointer-events-none absolute bottom-spacing-sm left-spacing-sm w-spacing-xl h-spacing-xl border-b-2 border-l-2 border-secondary/50 z-20" />
+      <span aria-hidden="true" className="pointer-events-none absolute bottom-spacing-sm right-spacing-sm w-spacing-xl h-spacing-xl border-b-2 border-r-2 border-secondary/50 z-20" />
       {/* Hero — imagem + overlay editorial */}
       <div className="relative">
         <div className="relative h-[38vh] min-h-[320px] md:h-[52vh] md:min-h-[420px] w-full overflow-hidden">
