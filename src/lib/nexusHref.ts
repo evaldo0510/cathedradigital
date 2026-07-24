@@ -17,13 +17,19 @@ import type { NexusKind, NexusRef } from '@/types/nexus';
 import type { NexusChannel } from '@/components/cathedra/nexus/nexusPresets';
 import { catechismInternalPath } from '@/lib/nexusNavigation';
 
+export type NexusRefLike =
+  | NexusRef
+  | Partial<NexusRef>
+  | Record<string, unknown>
+  | string
+  | null
+  | undefined;
+
 /**
  * Extrai o identificador natural de um `NexusRef` (JSONB variável).
  * Aceita `slug`, `id` e `ref` — nessa ordem — e valores string diretos.
  */
-export function extractNexusRefId(
-  ref: NexusRef | string | null | undefined,
-): string | null {
+export function extractNexusRefId(ref: NexusRefLike): string | null {
   if (ref == null) return null;
   if (typeof ref === 'string') return ref.length > 0 ? ref : null;
   const obj = ref as Record<string, unknown>;
@@ -41,8 +47,9 @@ export function extractNexusRefId(
  */
 export function resolveNexusHref(
   kind: NexusKind,
-  ref: NexusRef | string | null | undefined,
+  ref: NexusRefLike,
 ): string | null {
+
   const id = extractNexusRefId(ref);
   if (!id) return null;
 
