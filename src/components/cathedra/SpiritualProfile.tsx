@@ -26,6 +26,7 @@ interface JourneyProgress {
 const SpiritualProfile: React.FC = () => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
+  const avatarSrc = useAvatarUrl(profile?.avatar_url, 128);
   const [recentReadings, setRecentReadings] = useState<UserHistory[]>([]);
   const [activeJourneys, setActiveJourneys] = useState<JourneyProgress[]>([]);
   const [contemplatedThemes, setContemplatedThemes] = useState<string[]>(profile?.spiritual_themes || []);
