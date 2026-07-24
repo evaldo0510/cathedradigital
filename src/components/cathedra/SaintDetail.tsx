@@ -25,6 +25,7 @@ import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import { resolveSaintAutoNexus } from '@/core/knowledge/adapters/saintAutoNexus';
 import { NexusPanel } from '@/components/reader';
 import SaintCuratedConnections from '@/components/cathedra/SaintCuratedConnections';
+import SaintWorksSection from '@/components/cathedra/SaintWorksSection';
 import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
 import { ReaderToolbar } from '@/components/reader';
 import SanctumEditorial, { SanctumCurationBadge } from './SanctumEditorial';
@@ -402,6 +403,11 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             </div>
           </section>
         )}
+
+        {/* Sprint E1 — Biblioteca Patrística (leitor completo via saint_works) */}
+        <SaintWorksSection saintId={saint.id} saintSlug={(saint as any).slug} />
+
+
 
         {/* Relatio: Intelligent Contextual Connections */}
         <EditorialDivider variant="gold-fade" />
