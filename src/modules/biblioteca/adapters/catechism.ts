@@ -2,8 +2,8 @@ import { supabase } from '@/integrations/supabase/client';
 import type { LibraryAdapter, LibraryItem } from '../types';
 
 /**
- * Catecismo — cada card representa um parágrafo. Para o hub inicial trazemos
- * os últimos publicados; a navegação profunda continua no Reader canônico.
+ * Catecismo — cada card representa um parágrafo publicado. A tabela usa
+ * `paragraph` (int) como identificador natural; não há coluna `id` separada.
  */
 export const catechismAdapter: LibraryAdapter = {
   module: 'catechism',
@@ -12,24 +12,22 @@ export const catechismAdapter: LibraryAdapter = {
   async list({ limit = 24, offset = 0 } = {}) {
     const { data, error } = await supabase
       .from('catechism_official')
-      .select('id, paragraph, slug, texto_base, status, updated_at')
+      .select('paragraph, slug, texto_base, status')
       .eq('status', 'published')
       .order('paragraph', { ascending: true })
       .range(offset, offset + limit - 1);
     if (error) throw error;
 
     return (data ?? []).map<LibraryItem>((row) => {
-      const paragraph = (row as { paragraph?: number }).paragraph;
-      const slug = (row as { slug?: string }).slug ?? String(paragraph ?? row.id);
-      const text = (row as { texto_base?: string }).texto_base ?? '';
+      const paragraph = row.paragraph;
+      const slug = row.slug ?? String(paragraph);
       return {
-        id: String(row.id),
+        id: String(paragraph),
         module: 'catechism',
-        title: `§ ${paragraph ?? slug}`,
+        title: `§ ${paragraph}`,
         slug,
-        summary: text ? text.slice(0, 240) : undefined,
-        href: `/catechism/${paragraph ?? slug}`,
-        updatedAt: (row as { updated_at?: string }).updated_at ?? undefined,
+        summary: row.texto_base ? row.texto_base.slice(0, 240) : undefined,
+        href: `/catechism/${paragraph}`,
       };
     });
   },

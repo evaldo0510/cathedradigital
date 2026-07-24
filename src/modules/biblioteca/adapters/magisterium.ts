@@ -2,34 +2,42 @@ import { supabase } from '@/integrations/supabase/client';
 import type { LibraryAdapter, LibraryItem } from '../types';
 
 /**
- * Magistério e Patrística — ambos residem em `spiritual_contents` diferenciados
- * por `category`. Exportamos dois adapters distintos consumindo a mesma tabela.
+ * Magistério e Patrística compartilham `spiritual_contents` — diferenciados
+ * pela coluna `type`. A tabela expõe: `id, title, content_text, tags, type,
+ * reference_id, metadata, created_at`. Não há `slug` nem `updated_at`.
  */
-async function listSpiritualContents(category: string, limit: number, offset: number) {
+type SpiritualRow = {
+  id: string;
+  title: string | null;
+  content_text: string | null;
+  type: string | null;
+  tags: string[] | null;
+  reference_id: string | null;
+  created_at: string | null;
+};
+
+async function listSpiritualContents(type: string, limit: number, offset: number) {
   const { data, error } = await supabase
     .from('spiritual_contents')
-    .select('id, title, slug, summary, description, category, updated_at')
-    .eq('category', category)
-    .order('updated_at', { ascending: false })
+    .select('id, title, content_text, type, tags, reference_id, created_at')
+    .eq('type', type)
+    .order('created_at', { ascending: false })
     .range(offset, offset + limit - 1);
   if (error) throw error;
-  return data ?? [];
+  return (data ?? []) as SpiritualRow[];
 }
 
-function toItem(module: 'magisterium' | 'patristics', row: Record<string, unknown>): LibraryItem {
-  const slug = (row.slug as string | undefined) ?? String(row.id);
+function toItem(module: 'magisterium' | 'patristics', row: SpiritualRow): LibraryItem {
+  const slug = row.reference_id ?? String(row.id);
   return {
     id: String(row.id),
     module,
-    title: (row.title as string | undefined) ?? '',
+    title: row.title ?? '',
     slug,
-    summary:
-      (row.summary as string | undefined) ??
-      (row.description as string | undefined)?.slice(0, 220) ??
-      undefined,
-    category: (row.category as string | undefined) ?? undefined,
+    summary: row.content_text ? row.content_text.slice(0, 220) : undefined,
+    themes: row.tags ?? undefined,
     href: module === 'magisterium' ? `/magisterio/${slug}` : `/biblioteca/padres/${slug}`,
-    updatedAt: (row.updated_at as string | undefined) ?? undefined,
+    updatedAt: row.created_at ?? undefined,
   };
 }
 
@@ -38,7 +46,7 @@ export const magisteriumAdapter: LibraryAdapter = {
   label: 'Magistério',
   async list({ limit = 24, offset = 0 } = {}) {
     const rows = await listSpiritualContents('magisterium', limit, offset);
-    return rows.map((r) => toItem('magisterium', r as Record<string, unknown>));
+    return rows.map((r) => toItem('magisterium', r));
   },
   resolveHref({ slug }) {
     return `/magisterio/${slug}`;
@@ -50,7 +58,7 @@ export const patristicsAdapter: LibraryAdapter = {
   label: 'Patrística',
   async list({ limit = 24, offset = 0 } = {}) {
     const rows = await listSpiritualContents('patristics', limit, offset);
-    return rows.map((r) => toItem('patristics', r as Record<string, unknown>));
+    return rows.map((r) => toItem('patristics', r));
   },
   resolveHref({ slug }) {
     return `/biblioteca/padres/${slug}`;

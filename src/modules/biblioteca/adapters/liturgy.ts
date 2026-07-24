@@ -2,8 +2,9 @@ import { supabase } from '@/integrations/supabase/client';
 import type { LibraryAdapter, LibraryItem } from '../types';
 
 /**
- * Liturgia — traz os últimos próprios do Missal publicados. O leitor real
- * continua sendo `MissaContinuousReader` / `BreviaryContinuousReader`.
+ * Liturgia — traz os últimos próprios do Missal (chave natural: `iso_date`).
+ * A tabela `missal_propers` não tem `slug/title/subtitle`; usamos
+ * `iso_date` para link e `celebration_title` para o título.
  */
 export const liturgyAdapter: LibraryAdapter = {
   module: 'liturgy',
@@ -12,22 +13,22 @@ export const liturgyAdapter: LibraryAdapter = {
   async list({ limit = 24, offset = 0 } = {}) {
     const { data, error } = await supabase
       .from('missal_propers')
-      .select('id, slug, title, subtitle, liturgical_color, date, updated_at')
-      .order('date', { ascending: false, nullsFirst: false })
+      .select('id, iso_date, celebration_title, liturgical_color, updated_at')
+      .order('iso_date', { ascending: false, nullsFirst: false })
       .range(offset, offset + limit - 1);
     if (error) throw error;
 
     return (data ?? []).map<LibraryItem>((row) => {
-      const slug = (row as { slug?: string }).slug ?? String(row.id);
+      const slug = row.iso_date ?? String(row.id);
       return {
         id: String(row.id),
         module: 'liturgy',
-        title: (row as { title?: string }).title ?? 'Missal',
+        title: row.celebration_title ?? row.iso_date ?? 'Missal',
         slug,
-        summary: (row as { subtitle?: string }).subtitle ?? undefined,
-        category: (row as { liturgical_color?: string }).liturgical_color ?? undefined,
+        summary: row.iso_date ?? undefined,
+        category: row.liturgical_color ?? undefined,
         href: `/missal/${slug}`,
-        updatedAt: (row as { updated_at?: string }).updated_at ?? undefined,
+        updatedAt: row.updated_at ?? undefined,
       };
     });
   },
