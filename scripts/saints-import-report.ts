@@ -18,9 +18,10 @@ import { writeFileSync, mkdirSync } from "node:fs";
 import { join } from "node:path";
 
 function psql(sql: string): unknown[] {
-  const raw = execSync(`psql -Aqt -F"\u0001" -c ${JSON.stringify(sql)}`, { encoding: "utf-8" });
-  return raw.trim().split("\n").filter(Boolean).map((line) => line.split("\u0001"));
+  const raw = execSync(`psql -Aqt -F$'\\x01'`, { input: sql, encoding: "utf-8" });
+  return raw.trim().split("\n").filter(Boolean).map((line) => line.split("\x01"));
 }
+
 
 const sinceArg = process.argv.find((a) => a.startsWith("--since="))?.split("=")[1] ?? "24h";
 const m = sinceArg.match(/^(\d+)([hd])$/);
