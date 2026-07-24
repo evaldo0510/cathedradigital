@@ -687,6 +687,10 @@ const AppLayout: React.FC = () => {
               <Route path="/biblioteca/escritos/:autor/:obra" element={<Suspense fallback={<LoadingFallback />}><SaintWorkOverviewPage /></Suspense>} />
               <Route path="/biblioteca/escritos/:autor/:obra/capitulo/:ordem" element={<Suspense fallback={<LoadingFallback />}><SaintWorkReaderPage /></Suspense>} />
 
+              {/* Biblioteca Católica — frente unificada (Escritos + Padres + Doutores + Clássicos + Magistério) */}
+              <Route path="/biblioteca/catolica" element={<Suspense fallback={<LoadingFallback />}><BibliotecaCatolicaPage /></Suspense>} />
+              <Route path="/biblioteca/catolica/acervo" element={<Suspense fallback={<LoadingFallback />}><BibliotecaCatolicaAcervoPage /></Suspense>} />
+
 
               {/* Jornadas */}
               <Route path="/jornadas" element={<Suspense fallback={<LoadingFallback />}><AtriumJornadasPage /></Suspense>} />
