@@ -1,54 +1,154 @@
-# Sprint Santos S2 — Doutores da Igreja (36)
+
+# Sprint SW-1.3 — Escritos dos Santos com Ficha Editorial Mínima
+
+## Preflight
+- Skills ativos: `cathedra-guardian`, `cathedra-saints-expert`, `cathedra-knowledge-graph-expert`, `cathedra-design-system-guardian`.
+- Base já pronta: `saint_works` com `access_type`, `external_url`, `external_source_label`; `SaintWorksSection.tsx` com badges e roteamento; `EditorialClosure` operante via `resolveClosure.ts`.
+- Classificação: Editorial + Conteúdo + UX (leitor patrístico).
+- Risco: **médio** — mudanças de schema aditivas + inserção de ~14 obras curadas.
+
+## Matriz de Impacto
+- Banco: sim (aditivo, reversível).
+- Rotas: reuso de `/biblioteca/patristica/*`.
+- UI: enriquecimento da ficha (novos campos exibidos).
+- Regressões esperadas: nenhuma; obras existentes continuam válidas (campos opcionais).
+
+---
 
 ## Objetivo
-Levar os 36 Doutores da Igreja a `editorial_status='published'` com conteúdo editorial mínimo, curadoria manual e nexus completo. Reutilizar `/admin/saints` e edge functions já existentes (`saint-import`, `admin-incremental-reimport-saints`).
 
-## Escopo
-Lista canônica dos 36 Doutores. Já no banco: 19 (3 completos, 16 stubs — score 0). Faltam ~17 novos IDs (Alberto Magno, Beda, Bonaventura, Efrém, João Crisóstomo, Cirilo Alexandrino, Cirilo Jerusalém, Damasceno, Hilário, Ambrósio, Gregório Magno, Pedro Damião, Pedro Crisólogo, Francisco de Sales, Ildefonso, Ireneu, Gregório de Narek, João de Ávila, Hildegarda). Consolidar duplicatas (Teresinha ×2, Teresa de Lisieux).
+Cada obra dos Doutores nasce com **ficha editorial mínima** que entrega valor imediato ao usuário — mesmo quando o texto integral está em fonte externa. Semeadura priorizada pelas obras fundamentais.
 
-## Fluxo editorial (aprovado)
-`draft` → `editorial_review` → `doctrinal_review` → `published`. Revisor humano no `/admin/saints`. Nada publica sozinho.
+---
 
-## Etapas
+## Fase 1 — Schema Editorial da Ficha (migração aditiva)
 
-### S2.1 — Higiene e seed dos IDs faltantes
-- Migration: mesclar `teresinha` + `terezinha` + `teresa-lisieux` num único ID canônico via `merged_into`.
-- Insert dos ~17 doutores faltantes como stub mínimo (`id, name, category='doctor', editorial_status='draft', feast_day, century, source_url`).
-- Trigger `trg_saints_editorial_transition` valida transições e exige campos mínimos para sair de `draft`.
+Estender `saint_works` com campos editoriais estruturados:
 
-### S2.2 — Ingestão em lote
-- Novo botão no `SaintsEnrichmentPanel`: "Ingerir todos os Doutores pendentes".
-- Chama `saint-import` (já existe) em fila com throttle 1/2s; grava resultado em `saints_enrichment_runs` (já existe).
-- Sempre grava em `draft` — nunca publica direto.
+- `synopsis` (TEXT, 150–300 palavras) — descrição introdutória
+- `historical_context` (TEXT) — quando/por que foi escrita
+- `why_it_matters` (TEXT) — importância teológica/espiritual
+- `main_themes` (TEXT[]) — temas centrais (tags curtas)
+- `recommended_audience` (TEXT) — para quem é indicada
+- `reading_level` (ENUM: `beginner` | `intermediate` | `advanced`)
+- `editorial_closure` (JSONB) — reuso do schema Zod já existente
+- `ficha_completeness` (ENUM: `stub` | `minimal` | `complete`) — trigger auto-calcula
 
-### S2.3 — Painel de revisão
-- Nova aba em `/admin/saints`: **Fila de Revisão**.
-- Lista santos com `editorial_status ∈ {draft, editorial_review, doctrinal_review}` e `category='doctor'`.
-- Card por santo com: score, campos faltantes, diff bruto→editado, botões **Aprovar (avança 1 estágio)** / **Reprovar (volta pra draft com nota)** / **Editar inline**.
-- Ação `Publicar` só aparece quando `doctrinal_review` + score ≥ 85 + checklist mínimo verde.
+**Trigger de qualidade**: recalcula `ficha_completeness` no INSERT/UPDATE.
+- `stub` = só título
+- `minimal` = tem synopsis + historical_context + why_it_matters + main_themes + reading_level
+- `complete` = minimal + editorial_closure preenchido
 
-### S2.4 — Guardrail editorial
-- `scripts/saints-editorial-integrity.ts`: valida bio curta ≥ 150 chars, bio longa ≥ 800, ≥ 1 escrito, ≥ 1 iconografia, ≥ 3 nexus_relations, oração associada.
-- Workflow `.github/workflows/saints-editorial.yml` roda em PRs que tocam `supabase/seeds/saints*` ou `src/data/saints*`.
-- Falha bloqueia merge.
+Gate de publicação: `status='published'` exige `ficha_completeness >= minimal`.
 
-### S2.5 — Nexus e closure
-- Para cada doutor aprovado: gera ≥ 3 arestas em `nexus_relations` (1 Bíblia, 1 CIC, 1 obra própria).
-- Preenche `editorial_closure` conforme schema Zod já vigente.
+---
 
-## Detalhes técnicos
+## Fase 2 — Semeadura Priorizada (obras fundamentais)
 
-- Reuso: `SaintsAdmin`, `SaintsEnrichmentPanel`, `SaintsReimportRunsPanel`, `saint-import` edge function, `saints_enrichment_runs`, `saints_reimport_runs`, `saint_import_logs`.
-- Novo: 1 migration (higiene + inserts + trigger), 1 componente `DoctorReviewQueue.tsx`, 1 RPC `saints_advance_editorial_stage(id, next_status, note)`, 1 script guardrail, 1 workflow.
-- Sem novas deps.
-- Todas as mutações passam por `AdminGuard` + `has_role('editor'|'admin')`.
+Não popular todas. Começar por essas 14 obras-âncora:
 
-## Entregáveis
-1. 36 Doutores no banco com IDs canônicos.
-2. Fila de revisão funcional em `/admin/saints`.
-3. Ingestão em lote disparável do painel.
-4. Guardrail editorial no CI.
-5. Relatório final: antes×depois (score médio, cobertura editorial, nexus/santo).
+| Santo | Obra | Fonte prioritária |
+|---|---|---|
+| Agostinho | Confissões | Vatican.va / DCO |
+| Agostinho | Cidade de Deus | DCO |
+| Agostinho | De Trinitate | DCO |
+| Bento | Regra de São Bento | Vatican.va |
+| Teresa de Ávila | Castelo Interior | CCEL |
+| Teresa de Ávila | Caminho de Perfeição | CCEL |
+| Teresa de Ávila | Livro da Vida | CCEL |
+| Teresinha | História de uma Alma | Interno (já existe cap. 1) |
+| João Crisóstomo | Homilias sobre Mateus | DCO |
+| João Crisóstomo | Homilias sobre João | DCO |
+| Tomás de Aquino | Suma Teológica | Interno (já existe Q.1) |
+| Tomás de Kempis | Imitação de Cristo | Interno (já existe Livro I) |
+| Agostinho | Solilóquios | Interno (já existe Livro I) |
+| Ambrósio | De Officiis Ministrorum | DCO |
+
+**Ordem de fonte oficial** para `external_url`:
+1. Vatican.va
+2. Documenta Catholica Omnia
+3. CCEL
+4. Outras bibliotecas reconhecidas
+
+Cada obra entra com ficha `minimal` mínima (redigida editorialmente, sem lorem ipsum).
+
+---
+
+## Fase 3 — UI da Ficha Editorial
+
+Refatorar `SaintWorksSection.tsx` + criar `SaintWorkCard.tsx` para mostrar:
+
+- Header: título + autor + badge de acesso (interno/oficial/domínio público)
+- Badge de nível de leitura (com ícone)
+- Chips dos temas principais
+- Synopsis (colapsável em mobile)
+- Bloco "Contexto histórico" (accordion)
+- Bloco "Por que importa" (destaque visual)
+- Bloco "Público recomendado"
+- CTA: "Ler no Cathedra" | "Ler na fonte oficial" (nova aba com aria-label)
+- Rodapé com `EditorialClosure` reduzido (síntese + aplicação + oração + Nexus)
+
+Reuso: `EditorialCard`, tokens semânticos, `data-space="biblioteca"`.
+
+---
+
+## Fase 4 — EditorialClosure em Obras Externas
+
+Injetar `EditorialClosure` na página-índice da obra externa (`/biblioteca/patristica/:saint/:work`), mesmo quando `access_type != 'internal'`:
+
+- Síntese espiritual (curada)
+- Aplicação prática
+- Oração associada
+- Nexus (Bíblia, Catecismo, santos irmãos, verbetes do Glossário)
+
+Assim o usuário recebe formação dentro do Cathedra antes de sair para a fonte externa.
+
+---
+
+## Fase 5 — Painel Admin
+
+Estender `/admin/biblioteca-patristica`:
+- Coluna `ficha_completeness` com badge colorido
+- Filtro por completeness (`stub` / `minimal` / `complete`)
+- Editor rico para os novos campos
+- Preview lado-a-lado da ficha renderizada
+
+---
+
+## Fase 6 — Preparar "Biblioteca Católica" (próxima frente, não nesta sprint)
+
+Registrar como próximo grande objetivo (sem executar agora):
+
+Guarda-chuva único **Biblioteca Católica** reunindo:
+- Escritos dos Santos
+- Padres da Igreja
+- Doutores da Igreja
+- Documentos do Magistério
+- Clássicos da espiritualidade
+
+Toda ela reusa: `ReaderShell`, progresso, favoritos, anotações, `EditorialClosure`, Nexus. Zero infraestrutura nova.
+
+---
+
+## Entregáveis desta sprint
+
+1. Migração aditiva em `saint_works` + trigger de completeness + gate de publicação.
+2. Semeadura das 14 obras-âncora com ficha `minimal` curada.
+3. `SaintWorkCard.tsx` renderizando a ficha completa.
+4. `EditorialClosure` presente também em obras externas.
+5. Painel admin com edição da ficha e filtros por completeness.
+6. Nota no roadmap sobre **Biblioteca Católica** como próxima frente.
+
+## Fora de escopo
+
+- Internalizar textos integrais (fica para ondas seguintes por obra).
+- Refatoração de outros módulos.
+- Criação da Biblioteca Católica em si (só planejamento).
 
 ## Ordem de execução
-S2.1 → S2.2 → S2.3 → S2.4 → S2.5. Cada etapa entrega um marco navegável. Homologação sequencial (Regra 12 do COS).
+
+1. Migração schema + trigger (aguarda aprovação).
+2. UI da ficha em paralelo (não bloqueia).
+3. Semeadura das 14 obras via `supabase--insert` após migração aprovada.
+4. Painel admin.
+5. Engineering Log final.
