@@ -183,17 +183,62 @@ async function fetchCommonsImageInfo(fileName: string): Promise<CommonsImage | n
 
 function extractFromWikitext(wt: string): Partial<NormalizedSaint> {
   if (!wt) return {};
-  const grab = (key: string): string | undefined => {
-    const re = new RegExp(`\\|\\s*${key}\\s*=\\s*([^\\n|]+)`, "i");
-    const m = wt.match(re);
-    return m?.[1]?.trim().replace(/\[\[([^\]|]+\|)?([^\]]+)\]\]/g, "$2").replace(/<[^>]+>/g, "").trim() || undefined;
+
+  // Limpa templates comuns de data preservando o texto interno relevante.
+  //  {{dtln|1181|9|26}} -> "1181-09-26"
+  //  {{Data de nascimento|1181|9|26|...}} -> "1181-09-26"
+  //  {{Nowrap|...}} / {{lang|xx|...}} -> conteúdo interno
+  const cleanTemplates = (raw: string): string => {
+    let s = raw;
+    s = s.replace(/\{\{\s*(?:dtln|dnbr|dmbr|Data de (?:nascimento|morte|falecimento)|nascimento(?:\s+e\s+idade)?|morte(?:\s+e\s+idade)?)\s*\|([^}]+)\}\}/gi, (_m, args) => {
+      const parts = String(args).split("|").map((p: string) => p.trim()).filter(Boolean);
+      const nums = parts.filter((p: string) => /^\d+$/.test(p));
+      if (nums.length >= 3) {
+        const [y, mo, d] = nums;
+        return `${y.padStart(4, "0")}-${mo.padStart(2, "0")}-${d.padStart(2, "0")}`;
+      }
+      if (nums.length === 1) return nums[0];
+      return parts.join(" ");
+    });
+    s = s.replace(/\{\{\s*(?:nowrap|lang|langx|small|nobr)\s*\|([^}]+)\}\}/gi, (_m, args) => {
+      const parts = String(args).split("|");
+      return parts[parts.length - 1].trim();
+    });
+    // Remove templates residuais simples
+    s = s.replace(/\{\{[^{}]*\}\}/g, " ");
+    return s;
   };
+
+  const grab = (key: string): string | undefined => {
+    const re = new RegExp(`\\|\\s*${key}\\s*=\\s*((?:[^\\n|]|\\{\\{[^}]*\\}\\})+)`, "i");
+    const m = wt.match(re);
+    if (!m) return undefined;
+    let v = cleanTemplates(m[1]);
+    v = v.replace(/\[\[([^\]|]+\|)?([^\]]+)\]\]/g, "$2").replace(/<[^>]+>/g, "").replace(/'{2,}/g, "").trim();
+    v = v.replace(/\s{2,}/g, " ");
+    return v || undefined;
+  };
+
+  const grabAny = (...keys: string[]) => {
+    for (const k of keys) {
+      const v = grab(k);
+      if (v) return v;
+    }
+    return undefined;
+  };
+
   const out: Partial<NormalizedSaint> = {};
-  const born = grab("nascimento_data") ?? grab("data_nascimento");
-  const died = grab("morte_data") ?? grab("data_morte") ?? grab("data_falecimento");
-  const birthplace = grab("nascimento_local") ?? grab("local_nascimento");
-  const country = grab("nacionalidade") ?? grab("país");
-  const order = grab("ordem") ?? grab("congregação") ?? grab("congregacao");
+  const born = grabAny("nascimento_data", "data_nascimento", "nascimento", "data de nascimento");
+  const died = grabAny("morte_data", "data_morte", "data_falecimento", "morte", "data de morte", "falecimento");
+  const birthplace = grabAny(
+    "nascimento_local",
+    "local_nascimento",
+    "local de nascimento",
+    "nascimento local",
+    "naturalidade",
+  );
+  const country = grabAny("nacionalidade", "país", "pais");
+  const order = grabAny("ordem", "ordem_religiosa", "ordem religiosa", "congregação", "congregacao");
   if (born) out.born = born;
   if (died) out.died = died;
   if (birthplace) out.birthplace = birthplace;
@@ -201,6 +246,7 @@ function extractFromWikitext(wt: string): Partial<NormalizedSaint> {
   if (order) out.religious_order = order;
   return out;
 }
+
 
 // v2: Vatican.va scrape opcional — placeholder por ora
 async function fetchVatican(_name: string): Promise<ImportOutcome | null> {
