@@ -171,15 +171,40 @@ async function stabilizePage(page: Page, readySelector?: string) {
   await page.waitForTimeout(150);
 }
 
-for (const route of ROUTES) {
-  for (const vp of VIEWPORTS) {
-    test(`catequese · ${route.path} · ${vp.label}`, async ({ page }) => {
-      await page.setViewportSize({ width: vp.width, height: vp.height });
-      await page.emulateMedia({ reducedMotion: "reduce" });
+/** Máximo de tentativas por rota/viewport (1 tentativa inicial + N retries). */
+const MAX_ATTEMPTS = Number(process.env.CATEQUESE_SCREENSHOT_MAX_ATTEMPTS ?? 2);
 
-      await page.goto(route.path, { waitUntil: "load" });
+/**
+ * Captura com retry: tenta até MAX_ATTEMPTS. Cada tentativa grava um PNG
+ * sufixado (`-attempt-N`) e, ao final, promove a última bem-sucedida para
+ * o nome canônico (`${route.name}-${vp.label}.png`) para que o script de
+ * pixel-parity continue encontrando o arquivo esperado.
+ */
+async function captureWithRetry(
+  page: Page,
+  route: Route,
+  vp: (typeof VIEWPORTS)[number],
+) {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    const attemptPath = resolve(
+      OUTPUT_DIR,
+      `${route.name}-${vp.label}-attempt-${attempt}.png`,
+    );
+    try {
+      if (attempt > 1) {
+        // Reset determinístico entre tentativas.
+        await page.goto(route.path, { waitUntil: "load" });
+      }
       await stabilizePage(page, route.ready);
-
+      await page.screenshot({
+        path: attemptPath,
+        fullPage: false,
+        animations: "disabled",
+        caret: "hide",
+        scale: "css",
+      });
+      // Promove como canônico (cópia via segundo screenshot no mesmo estado).
       await page.screenshot({
         path: resolve(OUTPUT_DIR, `${route.name}-${vp.label}.png`),
         fullPage: false,
@@ -187,6 +212,34 @@ for (const route of ROUTES) {
         caret: "hide",
         scale: "css",
       });
+      if (attempt > 1) {
+        console.warn(
+          `[catequese-baseline] ${route.name}/${vp.label} estabilizou na tentativa ${attempt}`,
+        );
+      }
+      return;
+    } catch (err) {
+      lastError = err;
+      console.warn(
+        `[catequese-baseline] falha tentativa ${attempt}/${MAX_ATTEMPTS} em ${route.name}/${vp.label}:`,
+        err instanceof Error ? err.message : err,
+      );
+      await page.waitForTimeout(250 * attempt);
+    }
+  }
+  throw lastError instanceof Error
+    ? lastError
+    : new Error(`Screenshot falhou após ${MAX_ATTEMPTS} tentativas`);
+}
+
+for (const route of ROUTES) {
+  for (const vp of VIEWPORTS) {
+    test(`catequese · ${route.path} · ${vp.label}`, async ({ page }) => {
+      await page.setViewportSize({ width: vp.width, height: vp.height });
+      await page.emulateMedia({ reducedMotion: "reduce" });
+
+      await page.goto(route.path, { waitUntil: "load" });
+      await captureWithRetry(page, route, vp);
 
       // Validação de redirect (path e, quando aplicável, search).
       if (route.expectFinalPath) {
