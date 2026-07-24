@@ -23,6 +23,8 @@ import {
   DialogHeader, DialogTitle,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { toast } from '@/hooks/use-toast';
 import { AlertTriangle, RefreshCcw, RotateCcw, FileText, ArrowUp, ArrowDown, ChevronsUpDown, Download, Search, X } from 'lucide-react';
 import {
