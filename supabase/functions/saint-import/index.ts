@@ -494,7 +494,9 @@ serve(async (req) => {
 
     if (Object.keys(aggUpdates).length === 0) {
       await admin.from("saint_import_logs").insert({
-        saint_id: saintId,
+        saint_id: canonicalId,
+        canonical_id: canonicalId,
+        redirected_from: redirectedFrom,
         provider: outcomes.map((o) => o.provider).join(","),
         status: "skipped",
         fields_skipped: Array.from(aggSkipped),
@@ -509,7 +511,10 @@ serve(async (req) => {
         skipped: Array.from(aggSkipped),
         aliases_preview,
         editorial_score,
+        canonical_id: canonicalId,
+        redirected_from: redirectedFrom,
       });
+
     }
 
     if (dryRun) {
