@@ -21,6 +21,7 @@ import {
   fetchLibraryFeatured,
 } from '@/services/libraryService';
 import type { LibraryItem, LibraryKind } from '@/types/library';
+import AcervoContinueReadingPanel from './AcervoContinueReadingPanel';
 import { LIBRARY_KIND_LABELS } from '@/types/library';
 
 type CategoryStatus = 'live' | 'soon';
@@ -174,6 +175,9 @@ const AcervoHomePage: React.FC = () => {
       />
 
       <div className="max-w-6xl mx-auto px-spacing-md py-spacing-xl space-y-spacing-2xl">
+        {/* Continue lendo — "Onde parei?" (Onda 3) */}
+        <AcervoContinueReadingPanel />
+
         {/* CTA principal */}
         <section className="flex flex-col items-center gap-spacing-sm text-center">
           <p className="text-premium-md text-muted-foreground max-w-2xl leading-relaxed">
