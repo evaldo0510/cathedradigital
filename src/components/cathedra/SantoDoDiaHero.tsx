@@ -188,17 +188,17 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
         <div className="absolute inset-x-0 bottom-0 p-spacing-md sm:p-spacing-lg md:p-spacing-2xl">
 
           <div className="max-w-3xl space-y-spacing-sm">
-            <p className="text-premium-xs font-black uppercase tracking-[0.28em] text-secondary">
+            <p className="text-premium-xs font-black uppercase tracking-[0.24em] sm:tracking-[0.28em] text-secondary line-clamp-2">
               Sanctorum · Santo do Dia · {dateLabel}
             </p>
             <h2
               id="santo-do-dia-title"
-              className="font-serif font-bold text-foreground text-premium-3xl md:text-premium-4xl leading-[1.05]"
+              className="font-serif font-bold text-foreground text-premium-2xl sm:text-premium-3xl md:text-premium-4xl leading-[1.1] md:leading-[1.05] break-words line-clamp-3"
             >
               {saint.name}
             </h2>
             {saint.title && (
-              <p className="font-serif italic text-primary text-premium-lg md:text-premium-xl leading-snug">
+              <p className="font-serif italic text-primary text-premium-base sm:text-premium-lg md:text-premium-xl leading-snug break-words line-clamp-2">
                 {saint.title}
               </p>
             )}
@@ -210,7 +210,7 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
               <span className="px-spacing-sm py-spacing-2xs rounded-premium-full bg-secondary/60 text-secondary-foreground text-premium-xs font-black uppercase tracking-widest">
                 {seculo}
               </span>
-              <span className="px-spacing-sm py-spacing-2xs rounded-premium-full border border-primary/30 text-primary text-premium-xs font-black uppercase tracking-widest">
+              <span className="px-spacing-sm py-spacing-2xs rounded-premium-full border border-primary/30 text-primary text-premium-xs font-black uppercase tracking-widest max-w-full truncate">
                 Virtude · {virtude}
               </span>
             </div>
