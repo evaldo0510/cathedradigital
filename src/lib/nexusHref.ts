@@ -1,22 +1,35 @@
 /**
- * nexusHref — resolução canônica de href por `NexusKind`.
+ * nexusHref — resolução canônica de href para o Nexus Theologicus.
  *
- * REGRA INEGOCIÁVEL: toda referência do Nexus Theologicus (Bíblia, CIC,
- * santos, orações, jornadas, glossário, liturgia, magistério, patrística)
- * DEVE abrir dentro do Cathedra por rota interna. Este módulo é a fonte
- * única de verdade para converter `(NexusKind, ref)` em URL interna.
+ * REGRA INEGOCIÁVEL: toda referência do Nexus (Bíblia, CIC, santos, orações,
+ * jornadas, glossário, liturgia, magistério, patrística) DEVE abrir dentro
+ * do Cathedra por rota interna. Este módulo é a fonte única de verdade para
+ * converter `(NexusKind, ref)` em URL interna.
  *
  * Consumidores devem SEMPRE usar `resolveNexusHref` — nunca duplicar
  * mapeamentos de rota. Novos kinds passam por aqui.
+ *
+ * Adapters de outros domínios (Coleções, Presets de canal) usam os helpers
+ * `collectionKindToNexusKind` e `nexusChannelToListingHref` para atravessar
+ * a fronteira sem reimplementar rotas.
  */
 import type { NexusKind, NexusRef } from '@/types/nexus';
+import type { NexusChannel } from '@/components/cathedra/nexus/nexusPresets';
 import { catechismInternalPath } from '@/lib/nexusNavigation';
+
+export type NexusRefLike =
+  | NexusRef
+  | Partial<NexusRef>
+  | Record<string, unknown>
+  | string
+  | null
+  | undefined;
 
 /**
  * Extrai o identificador natural de um `NexusRef` (JSONB variável).
  * Aceita `slug`, `id` e `ref` — nessa ordem — e valores string diretos.
  */
-export function extractNexusRefId(ref: NexusRef | string | null | undefined): string | null {
+export function extractNexusRefId(ref: NexusRefLike): string | null {
   if (ref == null) return null;
   if (typeof ref === 'string') return ref.length > 0 ? ref : null;
   const obj = ref as Record<string, unknown>;
@@ -34,8 +47,9 @@ export function extractNexusRefId(ref: NexusRef | string | null | undefined): st
  */
 export function resolveNexusHref(
   kind: NexusKind,
-  ref: NexusRef | string | null | undefined,
+  ref: NexusRefLike,
 ): string | null {
+
   const id = extractNexusRefId(ref);
   if (!id) return null;
 
@@ -65,4 +79,42 @@ export function resolveNexusHref(
     default:
       return null;
   }
+}
+
+/**
+ * Mapeamento CollectionItemType → NexusKind canônico.
+ * Coleções usam nomes curtos historicamente distintos do schema Nexus;
+ * este helper garante que o href passe pelo `resolveNexusHref`.
+ */
+const COLLECTION_TO_NEXUS: Record<string, NexusKind> = {
+  glossary: 'glossary',
+  prayer: 'prayer',
+  saint: 'saint',
+  bible: 'bible_verse',
+  liturgy: 'liturgy',
+  catechism: 'catechism_paragraph',
+  journey: 'journey',
+};
+
+export function collectionKindToNexusKind(kind: string): NexusKind | null {
+  return COLLECTION_TO_NEXUS[kind] ?? null;
+}
+
+/**
+ * Rota canônica de LISTAGEM (não de item) por canal editorial do Nexus.
+ * Usada apenas pelo Átrio do Nexus, onde cada "voz" leva à sua seção.
+ * NÃO substitui `resolveNexusHref` — este resolve entidades individuais.
+ */
+const CHANNEL_TO_LISTING: Record<NexusChannel, string> = {
+  bible: '/bible',
+  catechism: '/catechism',
+  magisterium: '/magisterium',
+  father: '/patristica',
+  saint: '/santos',
+  journey: '/jornadas',
+  theme: '/buscar',
+};
+
+export function nexusChannelToListingHref(channel: NexusChannel): string {
+  return CHANNEL_TO_LISTING[channel];
 }
