@@ -376,10 +376,55 @@ const EditorialClosureRuns: React.FC = () => {
             diff antes/depois e rollback por <code>run_id</code>.
           </p>
         </div>
-        <Button variant="outline" onClick={() => void load()} disabled={loading}>
-          <RefreshCcw className="mr-2 h-4 w-4" />
-          Atualizar
-        </Button>
+        <div className="flex flex-col items-end gap-2">
+          <div className="flex items-center gap-2">
+            {newRunIds.size > 0 && (
+              <Button
+                size="sm"
+                variant="default"
+                onClick={() => setNewRunIds(new Set())}
+                title="Marcar novas runs como vistas"
+              >
+                {newRunIds.size} nova(s) run(s)
+              </Button>
+            )}
+            <Button variant="outline" onClick={() => void load()} disabled={loading || refreshing}>
+              <RefreshCcw className={`mr-2 h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+              Atualizar
+            </Button>
+          </div>
+          <div className="flex items-center gap-3 text-xs text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <Switch
+                id="auto-refresh"
+                checked={autoRefresh}
+                onCheckedChange={setAutoRefresh}
+                aria-label="Alternar atualização automática"
+              />
+              <Label htmlFor="auto-refresh" className="cursor-pointer">Auto-atualizar</Label>
+            </div>
+            <Select
+              value={String(intervalSec)}
+              onValueChange={(v) => setIntervalSec(Number(v))}
+              disabled={!autoRefresh}
+            >
+              <SelectTrigger className="h-7 w-[92px] text-xs"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="10">10s</SelectItem>
+                <SelectItem value="30">30s</SelectItem>
+                <SelectItem value="60">1min</SelectItem>
+                <SelectItem value="120">2min</SelectItem>
+                <SelectItem value="300">5min</SelectItem>
+              </SelectContent>
+            </Select>
+            <span aria-live="polite" data-tick={nowTick}>
+              {lastUpdatedAt
+                ? `Atualizado ${formatRelative(lastUpdatedAt)}`
+                : 'Aguardando primeira carga…'}
+              {pollPaused && autoRefresh ? ' · pausado' : ''}
+            </span>
+          </div>
+        </div>
       </header>
 
       <Card>
