@@ -5083,6 +5083,142 @@ export type Database = {
           },
         ]
       }
+      saint_work_chapters: {
+        Row: {
+          body_html: string
+          body_plain: string
+          created_at: string
+          id: string
+          metadata: Json
+          order: number
+          reading_minutes: number
+          subtitle: string | null
+          title: string
+          updated_at: string
+          work_id: string
+        }
+        Insert: {
+          body_html: string
+          body_plain?: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          order: number
+          reading_minutes?: number
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+          work_id: string
+        }
+        Update: {
+          body_html?: string
+          body_plain?: string
+          created_at?: string
+          id?: string
+          metadata?: Json
+          order?: number
+          reading_minutes?: number
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+          work_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saint_work_chapters_work_id_fkey"
+            columns: ["work_id"]
+            isOneToOne: false
+            referencedRelation: "saint_works"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      saint_works: {
+        Row: {
+          abstract: string | null
+          category: Database["public"]["Enums"]["saint_work_category"]
+          chapter_count: number
+          cover_image_url: string | null
+          created_at: string
+          editorial_score: number
+          id: string
+          is_public_domain: boolean
+          language: string
+          license: string | null
+          metadata: Json
+          original_language: string | null
+          original_title: string | null
+          published_at: string | null
+          saint_id: string
+          slug: string
+          source_url: string | null
+          status: Database["public"]["Enums"]["saint_work_status"]
+          title: string
+          total_reading_minutes: number
+          translation_credit: string | null
+          updated_at: string
+          year_written: number | null
+        }
+        Insert: {
+          abstract?: string | null
+          category?: Database["public"]["Enums"]["saint_work_category"]
+          chapter_count?: number
+          cover_image_url?: string | null
+          created_at?: string
+          editorial_score?: number
+          id?: string
+          is_public_domain?: boolean
+          language?: string
+          license?: string | null
+          metadata?: Json
+          original_language?: string | null
+          original_title?: string | null
+          published_at?: string | null
+          saint_id: string
+          slug: string
+          source_url?: string | null
+          status?: Database["public"]["Enums"]["saint_work_status"]
+          title: string
+          total_reading_minutes?: number
+          translation_credit?: string | null
+          updated_at?: string
+          year_written?: number | null
+        }
+        Update: {
+          abstract?: string | null
+          category?: Database["public"]["Enums"]["saint_work_category"]
+          chapter_count?: number
+          cover_image_url?: string | null
+          created_at?: string
+          editorial_score?: number
+          id?: string
+          is_public_domain?: boolean
+          language?: string
+          license?: string | null
+          metadata?: Json
+          original_language?: string | null
+          original_title?: string | null
+          published_at?: string | null
+          saint_id?: string
+          slug?: string
+          source_url?: string | null
+          status?: Database["public"]["Enums"]["saint_work_status"]
+          title?: string
+          total_reading_minutes?: number
+          translation_credit?: string | null
+          updated_at?: string
+          year_written?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saint_works_saint_id_fkey"
+            columns: ["saint_id"]
+            isOneToOne: false
+            referencedRelation: "saints"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       saints: {
         Row: {
           ai_reflection: Json | null
@@ -7658,6 +7794,13 @@ export type Database = {
         Args: { _min: string; _uid: string }
         Returns: boolean
       }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       immutable_unaccent: { Args: { "": string }; Returns: string }
       is_current_user_admin: { Args: never; Returns: boolean }
       journeys_correction_priority: {
@@ -8101,7 +8244,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user"
+      app_role: "admin" | "moderator" | "user" | "editor" | "reviewer"
       content_curation_status: "stub" | "partial" | "complete"
       prayer_category:
         | "fundamentais"
@@ -8114,6 +8257,19 @@ export type Database = {
         | "eucaristica"
         | "confissao_defuntos"
       saint_content_status: "stub" | "partial" | "complete"
+      saint_work_category:
+        | "patristica"
+        | "escolastica"
+        | "mistica"
+        | "monastica"
+        | "carmelita"
+        | "franciscana"
+        | "dominicana"
+        | "doutor"
+        | "espiritualidade"
+        | "apologetica"
+        | "liturgica"
+      saint_work_status: "draft" | "in_review" | "published" | "archived"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -8241,7 +8397,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "moderator", "user"],
+      app_role: ["admin", "moderator", "user", "editor", "reviewer"],
       content_curation_status: ["stub", "partial", "complete"],
       prayer_category: [
         "fundamentais",
@@ -8255,6 +8411,20 @@ export const Constants = {
         "confissao_defuntos",
       ],
       saint_content_status: ["stub", "partial", "complete"],
+      saint_work_category: [
+        "patristica",
+        "escolastica",
+        "mistica",
+        "monastica",
+        "carmelita",
+        "franciscana",
+        "dominicana",
+        "doutor",
+        "espiritualidade",
+        "apologetica",
+        "liturgica",
+      ],
+      saint_work_status: ["draft", "in_review", "published", "archived"],
     },
   },
 } as const
