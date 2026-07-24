@@ -4,9 +4,12 @@ import { Icons } from '@/constants';
 import { cn } from '@/lib/utils';
 import { BibleBook } from '@/data/bible-books';
 import { Button } from '@/components/ui/button';
-import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
-import { NexusPanel } from '@/components/reader';
-import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
+import {
+  ReaderShell,
+  NexusPanel,
+  ReaderContinuation,
+  EditorialHero,
+} from '@/components/reader';
 import { resolveBibleAutoNexus } from '@/core/knowledge/adapters/bibleAutoNexus';
 
 interface Verse {
