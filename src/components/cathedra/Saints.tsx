@@ -609,14 +609,22 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
               className="space-y-spacing-xl outline-none"
               tabIndex={0}
             >
-              <div className="text-center space-y-spacing-md max-w-spacing-2xl mx-auto px-spacing-md">
-                <h2 className="text-premium-2xl font-serif font-bold">
+              <header className="max-w-spacing-2xl mx-auto px-spacing-md space-y-spacing-sm text-center">
+                <p className="text-premium-xs font-black uppercase tracking-[0.22em] text-secondary">
+                  {viewMode === 'writers' ? 'Doctores Ecclesiae' : viewMode === 'popes' ? 'Cathedra Petri' : 'Sanctorum'}
+                </p>
+                <h2 className="font-serif text-premium-3xl text-foreground">
                   {viewMode === 'writers' ? 'Doutores e Escritores' : viewMode === 'popes' ? 'Sucessores de Pedro' : 'Base Sanctorum'}
                 </h2>
-                <p className="text-premium-sm text-muted-foreground italic">
-                  {viewMode === 'writers' ? '"A pena é a língua da alma..."' : viewMode === 'popes' ? '"Tu és Pedro..."' : 'Exibindo registros catalogados.'}
+                <div aria-hidden="true" className="mx-auto h-px w-16 bg-secondary/60" />
+                <p className="font-serif italic text-premium-sm text-muted-foreground">
+                  {viewMode === 'writers'
+                    ? '"A pena é a língua da alma…"'
+                    : viewMode === 'popes'
+                    ? '"Tu és Pedro, e sobre esta pedra edificarei a minha Igreja." — Mateus 16,18'
+                    : 'Exibindo registros catalogados em nosso acervo.'}
                 </p>
-              </div>
+              </header>
               <div className="max-w-5xl mx-auto px-spacing-md">
                 {isLoadingMode ? (
                   <div className="flex justify-center py-spacing-3xl"><Icons.Cross className="w-spacing-xl h-spacing-xl animate-spin opacity-20" /></div>
