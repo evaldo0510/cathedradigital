@@ -299,7 +299,18 @@ const DogmasPage: React.FC = () => {
   return (
     <>
     <SEOHead title="Dogmas da Fé Católica" description="Estude os dogmas da fé católica com referências bíblicas, do catecismo e do magistério. Depositum Fidei completo." path="/dogmas" keywords="dogmas católicos, depositum fidei, doutrina da igreja, verdades de fé" breadcrumbs={[{ name: "Início", path: "/" }, { name: "Dogmas", path: "/dogmas" }]} />
-    <div className="max-w-5xl mx-auto space-y-spacing-xl">
+    <ReaderShell
+      contentMaxWidth="max-w-5xl"
+      ariaLabel="Dogmas da Fé Católica"
+      hero={
+        <EditorialHero
+          kicker="Depositum Fidei"
+          title="Dogmas da Fé Católica"
+          subtitle="Verdades divinamente reveladas, definidas solenemente pela Igreja como parte do depósito da fé."
+        />
+      }
+    >
+    <div className="space-y-spacing-xl">
       <div className="text-center space-y-spacing-sm">
         <div className="inline-flex items-center gap-spacing-xs px-spacing-sm py-spacing-2xs bg-primary/10 rounded-premium">
           <Icons.Star className="w-spacing-md h-spacing-md text-primary" />
@@ -449,6 +460,7 @@ const DogmasPage: React.FC = () => {
         ))}
       </div>
     </div>
+    </ReaderShell>
     </>
   );
 };
