@@ -5118,6 +5118,7 @@ export type Database = {
           image_source_url: string | null
           last_scraped_at: string | null
           legacy: string | null
+          merged_into: string | null
           miracles: Json
           mission: string | null
           name: string
@@ -5134,6 +5135,7 @@ export type Database = {
           source_url: string | null
           sources: Json
           spiritual_practice: Json
+          status: string
           timeline: Json
           title: string | null
           updated_at: string | null
@@ -5175,6 +5177,7 @@ export type Database = {
           image_source_url?: string | null
           last_scraped_at?: string | null
           legacy?: string | null
+          merged_into?: string | null
           miracles?: Json
           mission?: string | null
           name: string
@@ -5191,6 +5194,7 @@ export type Database = {
           source_url?: string | null
           sources?: Json
           spiritual_practice?: Json
+          status?: string
           timeline?: Json
           title?: string | null
           updated_at?: string | null
@@ -5232,6 +5236,7 @@ export type Database = {
           image_source_url?: string | null
           last_scraped_at?: string | null
           legacy?: string | null
+          merged_into?: string | null
           miracles?: Json
           mission?: string | null
           name?: string
@@ -5248,6 +5253,7 @@ export type Database = {
           source_url?: string | null
           sources?: Json
           spiritual_practice?: Json
+          status?: string
           timeline?: Json
           title?: string | null
           updated_at?: string | null
@@ -5255,7 +5261,15 @@ export type Database = {
           vocation?: string | null
           works?: Json | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "saints_merged_into_fkey"
+            columns: ["merged_into"]
+            isOneToOne: false
+            referencedRelation: "saints"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       saints_audit: {
         Row: {
@@ -8015,6 +8029,7 @@ export type Database = {
           image_source_url: string | null
           last_scraped_at: string | null
           legacy: string | null
+          merged_into: string | null
           miracles: Json
           mission: string | null
           name: string
@@ -8031,6 +8046,7 @@ export type Database = {
           source_url: string | null
           sources: Json
           spiritual_practice: Json
+          status: string
           timeline: Json
           title: string | null
           updated_at: string | null
