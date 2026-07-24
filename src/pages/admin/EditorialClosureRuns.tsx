@@ -230,29 +230,64 @@ const EditorialClosureRuns: React.FC = () => {
       const fresh = (data ?? []) as unknown as LogRow[];
       setRows(fresh);
       setLastUpdatedAt(new Date());
-      // Diff de run_ids para destacar novas runs no refresh silencioso
       const currentIds = new Set<string>();
       for (const r of fresh) if (r.run_id) currentIds.add(r.run_id);
-      if (opts.silent && knownRunIdsRef.current.size > 0) {
-        const added = new Set<string>();
-        for (const id of currentIds) if (!knownRunIdsRef.current.has(id)) added.add(id);
-        if (added.size > 0) {
-          setNewRunIds((prev) => {
-            const next = new Set(prev);
-            for (const id of added) next.add(id);
-            return next;
+      const added: string[] = [];
+      if (knownRunIdsRef.current.size > 0) {
+        for (const id of currentIds) if (!knownRunIdsRef.current.has(id)) added.push(id);
+      }
+      if (added.length > 0) {
+        setNewRunIds((prev) => {
+          const next = new Set(prev);
+          for (const id of added) next.add(id);
+          return next;
+        });
+        if (!suppressToastRef.current) {
+          const count = added.length;
+          sonnerToast(`${count} nova(s) run(s) detectada(s)`, {
+            description: `Última: ${added[0].slice(0, 8)}…`,
+            action: {
+              label: 'Ver agora',
+              onClick: () => {
+                // Preserva filtros; volta para página 1 e limpa badge
+                updateParams({ page: 1 });
+                setNewRunIds(new Set());
+                if (typeof window !== 'undefined') window.scrollTo({ top: 0, behavior: 'smooth' });
+              },
+            },
           });
         }
       }
       knownRunIdsRef.current = currentIds;
+      suppressToastRef.current = false;
     }
     if (opts.silent) setRefreshing(false);
     else setLoading(false);
-  }, []);
+  }, [updateParams]);
 
   React.useEffect(() => { void load(); }, [load]);
 
-  // Polling: preserva filtros/ordenação/página (state em URL), pausa em aba oculta
+  // Presets
+  React.useEffect(() => { setPresets(loadPresets()); }, []);
+
+  // Realtime (SSE-equivalente via WebSocket) — dispara refresh silencioso ao
+  // inserir novas linhas no log; fallback: polling continua ativo.
+  React.useEffect(() => {
+    const channel = supabase
+      .channel('editorial-closure-runs')
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'editorial_closure_migration_log' },
+        () => { void load({ silent: true }); },
+      )
+      .subscribe((status) => {
+        setRealtimeConnected(status === 'SUBSCRIBED');
+      });
+    return () => { void supabase.removeChannel(channel); };
+  }, [load]);
+
+  // Polling: fallback quando realtime está offline OU garantia adicional.
+  // Preserva filtros/ordenação/página (state em URL), pausa em aba oculta
   // e enquanto houver diálogo aberto para não interferir na interação.
   const pollPaused = openRunId !== null || rollbackTarget !== null || rollingBack;
   React.useEffect(() => {
