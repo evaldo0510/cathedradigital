@@ -5664,24 +5664,33 @@ export type Database = {
           editorial_version: number | null
           external_source_label: string | null
           external_url: string | null
+          ficha_completeness: Database["public"]["Enums"]["saint_work_ficha_completeness"]
+          historical_context: string | null
           ice_score: number | null
           id: string
           is_public_domain: boolean
           language: string
           license: string | null
+          main_themes: string[] | null
           metadata: Json
           original_language: string | null
           original_title: string | null
           published_at: string | null
+          reading_level:
+            | Database["public"]["Enums"]["saint_work_reading_level"]
+            | null
+          recommended_audience: string | null
           saint_id: string
           slug: string
           source_url: string | null
           status: Database["public"]["Enums"]["saint_work_status"]
+          synopsis: string | null
           title: string
           total_reading_minutes: number
           translation_credit: string | null
           updated_at: string
           voice_version: string | null
+          why_it_matters: string | null
           year_written: number | null
         }
         Insert: {
@@ -5703,24 +5712,33 @@ export type Database = {
           editorial_version?: number | null
           external_source_label?: string | null
           external_url?: string | null
+          ficha_completeness?: Database["public"]["Enums"]["saint_work_ficha_completeness"]
+          historical_context?: string | null
           ice_score?: number | null
           id?: string
           is_public_domain?: boolean
           language?: string
           license?: string | null
+          main_themes?: string[] | null
           metadata?: Json
           original_language?: string | null
           original_title?: string | null
           published_at?: string | null
+          reading_level?:
+            | Database["public"]["Enums"]["saint_work_reading_level"]
+            | null
+          recommended_audience?: string | null
           saint_id: string
           slug: string
           source_url?: string | null
           status?: Database["public"]["Enums"]["saint_work_status"]
+          synopsis?: string | null
           title: string
           total_reading_minutes?: number
           translation_credit?: string | null
           updated_at?: string
           voice_version?: string | null
+          why_it_matters?: string | null
           year_written?: number | null
         }
         Update: {
@@ -5742,24 +5760,33 @@ export type Database = {
           editorial_version?: number | null
           external_source_label?: string | null
           external_url?: string | null
+          ficha_completeness?: Database["public"]["Enums"]["saint_work_ficha_completeness"]
+          historical_context?: string | null
           ice_score?: number | null
           id?: string
           is_public_domain?: boolean
           language?: string
           license?: string | null
+          main_themes?: string[] | null
           metadata?: Json
           original_language?: string | null
           original_title?: string | null
           published_at?: string | null
+          reading_level?:
+            | Database["public"]["Enums"]["saint_work_reading_level"]
+            | null
+          recommended_audience?: string | null
           saint_id?: string
           slug?: string
           source_url?: string | null
           status?: Database["public"]["Enums"]["saint_work_status"]
+          synopsis?: string | null
           title?: string
           total_reading_minutes?: number
           translation_credit?: string | null
           updated_at?: string
           voice_version?: string | null
+          why_it_matters?: string | null
           year_written?: number | null
         }
         Relationships: [
@@ -9093,6 +9120,8 @@ export type Database = {
         | "espiritualidade"
         | "apologetica"
         | "liturgica"
+      saint_work_ficha_completeness: "stub" | "minimal" | "complete"
+      saint_work_reading_level: "beginner" | "intermediate" | "advanced"
       saint_work_status: "draft" | "in_review" | "published" | "archived"
     }
     CompositeTypes: {
@@ -9286,6 +9315,8 @@ export const Constants = {
         "apologetica",
         "liturgica",
       ],
+      saint_work_ficha_completeness: ["stub", "minimal", "complete"],
+      saint_work_reading_level: ["beginner", "intermediate", "advanced"],
       saint_work_status: ["draft", "in_review", "published", "archived"],
     },
   },
