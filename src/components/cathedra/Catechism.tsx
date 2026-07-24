@@ -23,7 +23,9 @@ import { useFavorites } from '@/hooks/useFavorites';
 import { useAuth } from '@/hooks/useAuth';
 import { useCatechismParagraph, usePrefetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
-import { normalizeCatechismText } from '@/lib/catechismTextNormalizer';
+import { normalizeCatechismTextWithReport, totalChanges } from '@/lib/catechismTextNormalizer';
+import { CatechismNormalizationDiff } from './CatechismNormalizationDiff';
+import { trackEvent } from '@/lib/analytics';
 import CatechismPopover from './CatechismPopover';
 import AudioButton from './AudioButton';
 import { CatechismParagraphSkeleton } from './SacredSkeleton';
@@ -134,11 +136,28 @@ const CatechismContent: React.FC<{
     }
   }, [refetch, paragraph]);
 
-  const segments = useMemo(() => {
-    if (!data?.content || data.status === 'not_cached') return [];
-    const normalized = normalizeCatechismText(data.content);
-    return parseTheologicalReferences(normalized);
+  const normalization = useMemo(() => {
+    if (!data?.content || data.status === 'not_cached') return null;
+    return normalizeCatechismTextWithReport(data.content);
   }, [data?.content, data?.status]);
+
+  const segments = useMemo(() => {
+    if (!normalization) return [];
+    return parseTheologicalReferences(normalization.text);
+  }, [normalization]);
+
+  // Telemetria: registra quando a normalização alterou o conteúdo do §.
+  useEffect(() => {
+    if (!normalization?.changed) return;
+    trackEvent('catechism_normalization_diff', {
+      paragraph,
+      total_changes: totalChanges(normalization.changes),
+      original_length: normalization.originalLength,
+      normalized_length: normalization.normalizedLength,
+      duration_ms: Number(normalization.durationMs.toFixed(3)),
+      ...normalization.changes,
+    });
+  }, [normalization, paragraph]);
 
   if (!isVisible) {
     return (
@@ -263,6 +282,13 @@ const CatechismContent: React.FC<{
       "prose prose-lg dark:prose-invert max-w-none transition-all",
       settings.reduceAnimations ? "duration-0" : "duration-300"
     )}>
+      {normalization && data?.content && (
+        <CatechismNormalizationDiff
+          paragraph={paragraph}
+          original={data.content}
+          report={normalization}
+        />
+      )}
       {segments.map((seg, i) =>
         seg.type === 'bibleRef' && seg.abbr ? (
           <BibleVersePopover key={i} abbr={seg.abbr} chapter={seg.chapter!} verse={seg.verse} label={seg.value} onNavigate={onNavigateToBible} />

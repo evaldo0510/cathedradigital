@@ -17,26 +17,17 @@ const MULTI_SPACE_RE = /[ \t]{2,}/g;
 const CRLF_RE = /\r\n?/g;
 const TRAILING_WS_RE = /[ \t]+$/gm;
 const LEADING_WS_RE = /^[ \t]+/gm;
-// 3+ quebras → parágrafo duplo
 const EXCESS_BREAKS_RE = /\n{3,}/g;
 
-// Marcadores comuns de lista: – • * — precedidos por quebra
 const BULLET_INLINE_RE = /([.;:])\s*([–•●▪·])\s+/g;
-// Item numerado colado a texto: "algo.1. Novo item"
 const NUMBERED_INLINE_RE = /([.;:])\s*(\d{1,2})\.\s+(?=[A-ZÁÀÂÃÉÊÍÓÔÕÚÇ])/g;
 
-// Falta espaço após pontuação (não em números decimais nem em §/n.)
 const MISSING_SPACE_AFTER_PUNCT_RE = /([.,;:!?])(?=[A-ZÁÀÂÃÉÊÍÓÔÕÚÇ])/g;
-// Espaço antes de pontuação
 const SPACE_BEFORE_PUNCT_RE = /\s+([.,;:!?])/g;
 
-// Notas de rodapé em sobrescrito coladas: "palavra12" → separar quando entre letra e dígito seguido de maiúscula ou espaço.
-// Muito específico para não quebrar datas: aplicamos apenas quando o dígito vem depois de letra minúscula seguida por 1-3 dígitos e depois espaço/pontuação.
 const FOOTNOTE_GLUED_RE = /([a-záàâãéêíóôõúç])(\d{1,3})(?=[\s.,;:)])/g;
 
-// Aspas retas → curvas em português
 function fixQuotes(text: string): string {
-  // Substituição balanceada simples
   let open = true;
   return text.replace(/"/g, () => {
     const q = open ? '\u201C' : '\u201D';
@@ -46,11 +37,8 @@ function fixQuotes(text: string): string {
 }
 
 export interface NormalizeOptions {
-  /** Converter marcadores de lista inline em quebras Markdown */
   extractInlineLists?: boolean;
-  /** Corrigir notas de rodapé coladas (heurística) */
   fixFootnotes?: boolean;
-  /** Normalizar aspas retas para curvas */
   normalizeQuotes?: boolean;
 }
 
@@ -60,53 +48,153 @@ const DEFAULTS: Required<NormalizeOptions> = {
   normalizeQuotes: true,
 };
 
-export function normalizeCatechismText(
+export interface NormalizationChanges {
+  invisibleCharsRemoved: number;
+  nbspReplaced: number;
+  multiSpacesCollapsed: number;
+  crlfReplaced: number;
+  excessBreaksCollapsed: number;
+  bulletsExtracted: number;
+  numberedExtracted: number;
+  missingSpacesAfterPunct: number;
+  spacesBeforePunctRemoved: number;
+  footnotesSeparated: number;
+  quotesConverted: number;
+}
+
+export interface NormalizationReport {
+  text: string;
+  changed: boolean;
+  changes: NormalizationChanges;
+  originalLength: number;
+  normalizedLength: number;
+  durationMs: number;
+}
+
+function countMatches(text: string, re: RegExp): number {
+  let n = 0;
+  const local = new RegExp(re.source, re.flags.includes('g') ? re.flags : re.flags + 'g');
+  while (local.exec(text) !== null) n++;
+  return n;
+}
+
+/**
+ * Versão instrumentada — retorna texto normalizado + relatório detalhado.
+ * Use em modo dev para auditoria. Em produção prefira `normalizeCatechismText`
+ * (mesma lógica, sem overhead de contagem).
+ */
+export function normalizeCatechismTextWithReport(
   input: string | null | undefined,
   options: NormalizeOptions = {}
-): string {
-  if (!input) return '';
+): NormalizationReport {
   const opts = { ...DEFAULTS, ...options };
-  let text = String(input);
+  const originalLength = input?.length ?? 0;
+  const t0 =
+    typeof performance !== 'undefined' && performance.now
+      ? performance.now()
+      : Date.now();
 
-  // 1. Line endings + invisíveis
+  if (!input) {
+    return {
+      text: '',
+      changed: false,
+      changes: emptyChanges(),
+      originalLength: 0,
+      normalizedLength: 0,
+      durationMs: 0,
+    };
+  }
+
+  let text = String(input);
+  const changes = emptyChanges();
+
+  changes.crlfReplaced = countMatches(text, CRLF_RE);
   text = text.replace(CRLF_RE, '\n');
+
+  changes.invisibleCharsRemoved = countMatches(text, INVISIBLE_CHARS_RE);
   text = text.replace(INVISIBLE_CHARS_RE, '');
+
+  changes.nbspReplaced = countMatches(text, NBSP_RE);
   text = text.replace(NBSP_RE, ' ');
 
-  // 2. Notas de rodapé antes de outras normalizações
   if (opts.fixFootnotes) {
+    changes.footnotesSeparated = countMatches(text, FOOTNOTE_GLUED_RE);
     text = text.replace(FOOTNOTE_GLUED_RE, '$1');
   }
 
-  // 3. Marcadores de lista inline → quebras
   if (opts.extractInlineLists) {
+    changes.bulletsExtracted = countMatches(text, BULLET_INLINE_RE);
     text = text.replace(BULLET_INLINE_RE, '$1\n\n- ');
+    changes.numberedExtracted = countMatches(text, NUMBERED_INLINE_RE);
     text = text.replace(NUMBERED_INLINE_RE, '$1\n\n$2. ');
   }
 
-  // 4. Pontuação
+  changes.spacesBeforePunctRemoved = countMatches(text, SPACE_BEFORE_PUNCT_RE);
   text = text.replace(SPACE_BEFORE_PUNCT_RE, '$1');
+
+  changes.missingSpacesAfterPunct = countMatches(text, MISSING_SPACE_AFTER_PUNCT_RE);
   text = text.replace(MISSING_SPACE_AFTER_PUNCT_RE, '$1 ');
 
-  // 5. Espaços por linha
   text = text.replace(TRAILING_WS_RE, '');
   text = text.replace(LEADING_WS_RE, (match, offset, str) => {
-    // Preservar indentação de itens de lista markdown
-    const lineStart = str.lastIndexOf('\n', offset) + 1;
     const rest = str.slice(offset);
     if (/^[-*]\s|^\d+\.\s/.test(rest.trimStart())) return match;
     return '';
   });
+
+  changes.multiSpacesCollapsed = countMatches(text, MULTI_SPACE_RE);
   text = text.replace(MULTI_SPACE_RE, ' ');
 
-  // 6. Quebras de parágrafo
+  changes.excessBreaksCollapsed = countMatches(text, EXCESS_BREAKS_RE);
   text = text.replace(EXCESS_BREAKS_RE, '\n\n');
 
-  // 7. Aspas
   if (opts.normalizeQuotes) {
+    changes.quotesConverted = countMatches(text, /"/g);
     text = fixQuotes(text);
   }
 
-  // 8. Trim final
-  return text.trim();
+  text = text.trim();
+
+  const t1 =
+    typeof performance !== 'undefined' && performance.now
+      ? performance.now()
+      : Date.now();
+
+  const changed = text !== input;
+
+  return {
+    text,
+    changed,
+    changes,
+    originalLength,
+    normalizedLength: text.length,
+    durationMs: t1 - t0,
+  };
+}
+
+export function normalizeCatechismText(
+  input: string | null | undefined,
+  options: NormalizeOptions = {}
+): string {
+  return normalizeCatechismTextWithReport(input, options).text;
+}
+
+function emptyChanges(): NormalizationChanges {
+  return {
+    invisibleCharsRemoved: 0,
+    nbspReplaced: 0,
+    multiSpacesCollapsed: 0,
+    crlfReplaced: 0,
+    excessBreaksCollapsed: 0,
+    bulletsExtracted: 0,
+    numberedExtracted: 0,
+    missingSpacesAfterPunct: 0,
+    spacesBeforePunctRemoved: 0,
+    footnotesSeparated: 0,
+    quotesConverted: 0,
+  };
+}
+
+export function totalChanges(c: NormalizationChanges): number {
+  return Object.values(c).reduce((a, b) => a + b, 0);
 }
