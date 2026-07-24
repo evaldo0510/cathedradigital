@@ -630,13 +630,7 @@ const MagisteriumViewer: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           className="flex-1 w-full relative"
         >
-            {/* Cabeçalho editorial — padrão R2 (Reader Universal) */}
-            <EditorialReaderHeader
-              kicker={`Magistério${docMeta?.category ? ` · ${docMeta.category}` : ''}`}
-              title={docMeta?.title ?? content.title}
-              subtitle={docMeta ? [docMeta.type, docMeta.author].filter(Boolean).join(' · ') : undefined}
-              meta={docMeta?.year ? String(docMeta.year) : undefined}
-            />
+            {/* Cabeçalho editorial migrado para o slot `hero` do ReaderShell (C0.5.b). */}
 
             {/* STAB-004.2: Ficha rica do documento (só renderiza campos existentes) */}
             {docMeta && <MagisteriumDocumentHeader doc={docMeta} />}
@@ -803,29 +797,7 @@ const MagisteriumViewer: React.FC = () => {
       {/* STAB-004.3: Navegação entre documentos (derivada de MAGISTERIUM_DOCUMENTS) */}
       {id && <MagisteriumDocumentNav currentId={id} />}
 
-      {(() => {
-        const nexus = resolveMagisteriumAutoNexus({
-          docId: id ?? 'documento',
-          title: content.title,
-          themes: [content.title],
-        });
-        return (
-          <>
-            <div className="mb-spacing-lg">
-              <NexusPanel output={nexus} kicker={`Conexões · ${content.title}`} />
-            </div>
-            <ReaderContinuation
-              context={{
-                kind: 'magisterium',
-                id: id ?? undefined,
-                graphNodeId: nexus.selfId ?? undefined,
-                meta: { theme: content.title },
-              }}
-              suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
-            />
-          </>
-        );
-      })()}
+      {/* NexusPanel + ReaderContinuation migrados para slots `nexus` e `continuation` do ReaderShell (C0.5.b). */}
 
       <div className="mt-spacing-4xl pt-spacing-3xl border-t border-primary/5 flex flex-col items-center gap-spacing-2xl">
         <div className="text-center space-y-spacing-md">
@@ -881,7 +853,7 @@ const MagisteriumViewer: React.FC = () => {
         </div>
       )}
       <MagisteriumDiagnosticPanel />
-    </div>
+    </ReaderShell>
   );
 };
 
