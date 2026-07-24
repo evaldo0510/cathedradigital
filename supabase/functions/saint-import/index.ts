@@ -382,6 +382,28 @@ serve(async (req) => {
       return json({ error: "update_failed", details: upErr.message }, 500);
     }
 
+    // Upsert aliases (idempotente via UNIQUE saint_id+alias_norm+language)
+    const aliasCandidates = outcomes.flatMap((o) => o.aliases);
+    const seen = new Set<string>();
+    const aliasRows = aliasCandidates
+      .filter((a) => a.alias && a.alias.trim() && a.alias.trim().toLowerCase() !== String(saint.name).trim().toLowerCase())
+      .filter((a) => {
+        const k = `${a.language}::${a.alias.trim().toLowerCase()}`;
+        if (seen.has(k)) return false;
+        seen.add(k);
+        return true;
+      })
+      .map((a) => ({ saint_id: saintId, alias: a.alias.trim(), language: a.language, type: a.type, source: a.source }));
+
+    let aliases_inserted = 0;
+    if (aliasRows.length > 0) {
+      const { error: aErr, count } = await admin
+        .from("saint_aliases")
+        .upsert(aliasRows, { onConflict: "saint_id,alias_norm,language", ignoreDuplicates: true, count: "exact" });
+      if (aErr) console.warn(`saint-import: alias upsert failed for ${saintId}:`, aErr.message);
+      else aliases_inserted = count ?? aliasRows.length;
+    }
+
     await admin.from("saint_import_logs").insert({
       saint_id: saintId,
       provider: outcomes.map((o) => o.provider).join(","),
@@ -389,7 +411,7 @@ serve(async (req) => {
       fields_updated: Array.from(aggApplied),
       fields_skipped: Array.from(aggSkipped),
       confidence: bestConfidence,
-      payload: sourceMetadata,
+      payload: { ...sourceMetadata, aliases_inserted },
     });
 
     return json({
@@ -397,6 +419,7 @@ serve(async (req) => {
       status: "success",
       applied: Array.from(aggApplied),
       skipped: Array.from(aggSkipped),
+      aliases_inserted,
       editorial_score,
       confidence: bestConfidence,
     });
