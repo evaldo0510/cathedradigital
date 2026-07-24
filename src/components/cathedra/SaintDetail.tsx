@@ -23,7 +23,7 @@ import AudioContentPlayer from './AudioContentPlayer';
 import SourceAttribution from './SourceAttribution';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import { resolveSaintAutoNexus } from '@/core/knowledge/adapters/saintAutoNexus';
-import NexusBubbles from '@/components/cathedra/NexusBubbles';
+import { NexusPanel } from '@/components/reader';
 import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
 import EditorialReaderChrome from '@/components/editorial/EditorialReaderChrome';
 import SanctumEditorial, { SanctumCurationBadge } from './SanctumEditorial';
@@ -465,10 +465,6 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           lastScrapedAt={(saint as any).last_scraped_at || (saint as any).lastScrapedAt}
         />
 
-        {/* Sprint 1 — Fechar dead-end: próximo passo pela comunhão dos santos */}
-        <div className="mb-spacing-lg">
-          <NexusBubbles />
-        </div>
         {(() => {
           const saintSlug = (saint as any).slug || (saint as any).id;
           const nexus = resolveSaintAutoNexus({
@@ -477,15 +473,20 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             virtues: saint.virtues ?? [],
           });
           return (
-            <ReaderContinuation
-              context={{
-                kind: 'saint',
-                id: saintSlug,
-                graphNodeId: nexus.selfId ?? undefined,
-                meta: { theme: saint.virtues?.[0] },
-              }}
-              suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
-            />
+            <>
+              <div className="mb-spacing-lg">
+                <NexusPanel output={nexus} kicker={`Conexões · ${saint.name ?? saint.title ?? ''}`} />
+              </div>
+              <ReaderContinuation
+                context={{
+                  kind: 'saint',
+                  id: saintSlug,
+                  graphNodeId: nexus.selfId ?? undefined,
+                  meta: { theme: saint.virtues?.[0] },
+                }}
+                suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
+              />
+            </>
           );
         })()}
 

@@ -34,6 +34,9 @@ jobs:
       - name: Prayer Engine — Auditoria C0.3 (Reader Template Master)
         run: bunx tsx scripts/prayer-engine-audit.ts
 
+      - name: Nexus Unification — Auditoria C0.4
+        run: bunx tsx scripts/nexus-unification-audit.ts
+
       - name: Benchmark do normalizador do Catecismo (budget-gated)
         env:
           NORM_BUDGET_PER_MS: '2'
