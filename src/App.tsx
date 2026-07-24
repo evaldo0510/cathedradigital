@@ -231,6 +231,7 @@ const CollectionEditor = lazy(() => import('./pages/admin/CollectionEditor'));
 const BibliotecaPatristicaAdmin = lazy(() => import('./pages/admin/BibliotecaPatristicaAdmin'));
 const BiblePhasesAdmin = lazy(() => import('./pages/admin/BiblePhasesAdmin'));
 const EditorialClosureValidator = lazy(() => import('./pages/admin/EditorialClosureValidator'));
+const EditorialClosureRuns = lazy(() => import('./pages/admin/EditorialClosureRuns'));
 const InstagramGalleryPage = lazy(() => import('./pages/admin/InstagramGallery'));
 const PrayerAdmin = lazy(() => import('./pages/admin/PrayerAdmin'));
 const LiturgyMeditationFallbackPanel = lazy(() => import('./pages/admin/LiturgyMeditationFallbackPanel'));
@@ -840,6 +841,7 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/biblioteca-patristica" element={<BibliotecaPatristicaAdmin />} />
                       <Route path="/admin/bible-phases" element={<BiblePhasesAdmin />} />
                       <Route path="/admin/editorial-closure-validator" element={<EditorialClosureValidator />} />
+                      <Route path="/admin/editorial-closure-runs" element={<EditorialClosureRuns />} />
                       <Route path="/admin/instagram-gallery" element={<Suspense fallback={<LoadingFallback />}><InstagramGalleryPage /></Suspense>} />
 
 
