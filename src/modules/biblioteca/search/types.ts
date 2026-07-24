@@ -40,16 +40,19 @@ export interface LibraryResult {
   /** Estimativa de leitura em minutos (quando disponível). */
   readingMinutes?: number;
 
-  // ── Campos AI-ready (B.1.4). Vazios agora; preenchidos pelo MCP depois. ──
-  /** Similaridade semântica (0-1) vinda de embeddings. */
+  // ── Campos AI-ready (B.1.4). Preenchidos pelo semantic adapter. ──
+  /** Similaridade semântica (0-1) vinda do adapter MCP/embeddings. */
   semanticScore?: number;
-  /** Justificativa curta gerada pela IA ("Aparece em §§ 232-267 do CIC"). */
+  /** Justificativa curta ("Aparece em §§ 232-267 do CIC"). */
   reason?: string;
   /** Conceitos teológicos detectados no match. */
   matchedConcepts?: string[];
   /** Sinônimos/aliases da entidade. */
   aliases?: string[];
+  /** Nível de formação sugerido (usado pela Catequese na Sprint K). */
+  formationLevel?: 'fundamental' | 'intermediate' | 'advanced';
 }
+
 
 export interface LibrarySearchOptions {
   query: string;
