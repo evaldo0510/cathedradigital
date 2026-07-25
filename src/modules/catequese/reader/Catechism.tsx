@@ -277,10 +277,16 @@ const CatechismContent: React.FC<{
     );
   }
 
+  const activeHighlight = highlights.find(n => n.paragraph === paragraph && n.highlight_color);
+  // Divide o texto normalizado em parágrafos reais (quebras duplas),
+  // depois aplica o parser de referências dentro de cada parágrafo.
+  // Isso evita que conectivos curtos entre refs (ex.: " e ") virem parágrafos soltos.
+  const paragraphsText = (normalization?.text ?? '').split(/\n{2,}/).map(s => s.trim()).filter(Boolean);
+
   return (
     <div className={cn(
-      "reader-text text-foreground/90 font-size-", settings.fontSize, 
-      "font-family-", settings.fontFamily, 
+      "reader-text text-foreground/90 font-size-", settings.fontSize,
+      "font-family-", settings.fontFamily,
       "prose prose-lg dark:prose-invert max-w-none transition-all",
       settings.reduceAnimations ? "duration-0" : "duration-300"
     )}>
@@ -291,35 +297,45 @@ const CatechismContent: React.FC<{
           report={normalization}
         />
       )}
-      {segments.map((seg, i) =>
-        seg.type === 'bibleRef' && seg.abbr ? (
-          <BibleVersePopover key={i} abbr={seg.abbr} chapter={seg.chapter!} verse={seg.verse} label={seg.value} onNavigate={onNavigateToBible} />
-        ) : seg.type === 'catechismRef' && seg.paragraph ? (
-          <CatechismPopover key={i} paragraph={seg.paragraph} />
-        ) : (
-          <ReactMarkdown key={i} components={{
-              p: (props) => {
-                const h = highlights.find(n => n.paragraph === paragraph && n.highlight_color);
-                if (h) {
-                  return (
-                    <p
-                      onClick={() => onHighlightClick?.(h)}
-                      className={`highlight-${h.highlight_color} px-spacing-2xs py-spacing-2xs mb-spacing-md last:mb-0 rounded-premium-sm cursor-pointer hover:brightness-95 transition-all leading-relaxed`}
-                    >
-                      {props.children}
-                    </p>
-                  );
-                }
-                return (
-                  <p className="mb-spacing-md last:mb-0 leading-relaxed">
-                    {props.children}
-                  </p>
-                );
-              },
-            }}>{seg.value}</ReactMarkdown>
+      {paragraphsText.map((paraText, pi) => {
+        const paraSegments = parseTheologicalReferences(paraText);
+        const inline = paraSegments.map((seg, i) => {
+          if (seg.type === 'bibleRef' && seg.abbr) {
+            return (
+              <BibleVersePopover
+                key={i}
+                abbr={seg.abbr}
+                chapter={seg.chapter!}
+                verse={seg.verse}
+                label={seg.value}
+                onNavigate={onNavigateToBible}
+              />
+            );
+          }
+          if (seg.type === 'catechismRef' && seg.paragraph) {
+            return <CatechismPopover key={i} paragraph={seg.paragraph} />;
+          }
+          // Texto puro: preserva quebras de linha simples como espaço, sem virar bloco.
+          return <React.Fragment key={i}>{seg.value.replace(/\n/g, ' ')}</React.Fragment>;
+        });
 
-        )
-      )}
+        if (activeHighlight) {
+          return (
+            <p
+              key={pi}
+              onClick={() => onHighlightClick?.(activeHighlight)}
+              className={`highlight-${activeHighlight.highlight_color} px-spacing-2xs py-spacing-2xs mb-spacing-md last:mb-0 rounded-premium-sm cursor-pointer hover:brightness-95 transition-all leading-relaxed`}
+            >
+              {inline}
+            </p>
+          );
+        }
+        return (
+          <p key={pi} className="mb-spacing-md last:mb-0 leading-relaxed">
+            {inline}
+          </p>
+        );
+      })}
       {data?.content && (
         <div className="mt-spacing-md pt-spacing-sm border-t border-primary/[0.06]">
           <PassageActions
