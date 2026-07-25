@@ -26,7 +26,10 @@
       ]
     },
     {
-      "//": "/planos é 301 → /pricing. Não emitimos noindex no redirect: Google desaconselha combinar 301 com noindex (o sinal de consolidação da autoridade se perde). A desindexação do alias é garantida pelo próprio redirect e por ROUTE_META['/planos'] (SPA fallback em dev/preview)."
+      "source": "/planos",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
     },
     {
       "source": "/sitemap.xml",
