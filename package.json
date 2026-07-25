@@ -228,5 +228,11 @@
     "vitest": "^3.2.4",
     "vitest-axe": "^0.1.0",
     "@lhci/cli": "^0.15.1"
+  },
+  "overrides": {
+    "tar": "^7.5.15"
+  },
+  "resolutions": {
+    "tar": "^7.5.15"
   }
 }
