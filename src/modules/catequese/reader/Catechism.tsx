@@ -143,10 +143,8 @@ const CatechismContent: React.FC<{
     return normalizeCatechismTextCached(paragraph, data.content);
   }, [data?.content, data?.status]);
 
-  const segments = useMemo(() => {
-    if (!normalization) return [];
-    return parseTheologicalReferences(normalization.text);
-  }, [normalization]);
+  // (segments antigos removidos — parsing agora é feito por parágrafo no render)
+
 
   // Telemetria: registra quando a normalização alterou o conteúdo do §.
   useEffect(() => {
