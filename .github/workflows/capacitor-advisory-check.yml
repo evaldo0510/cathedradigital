@@ -1,0 +1,62 @@
+name: Capacitor Advisory — Auto Update
+
+on:
+  schedule:
+    - cron: '0 6 * * *' # diariamente 06:00 UTC (após dependency-audit)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  check-and-open-pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Verificar release do @capacitor/cli
+        id: check
+        run: node scripts/check-capacitor-advisory.mjs
+
+      - name: Sair se ainda não houver correção upstream
+        if: steps.check.outputs.update_available != 'true'
+        run: echo "Nada a fazer — advisory ainda não resolvido no upstream."
+
+      - name: Atualizar dependências Capacitor
+        if: steps.check.outputs.update_available == 'true'
+        run: |
+          bun install --frozen-lockfile
+          bun update @capacitor/cli @capacitor/core @capacitor/ios @capacitor/android
+          bun audit --json > audit-after-update.json || true
+
+      - name: Abrir PR de atualização
+        if: steps.check.outputs.update_available == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: chore/capacitor-cli-advisory-fix
+          commit-message: "chore(deps): atualizar @capacitor/cli para ${{ steps.check.outputs.latest }} (advisory tar resolvido)"
+          title: "chore(deps): @capacitor/cli ${{ steps.check.outputs.latest }} — resolve advisory `tar`"
+          body: |
+            Atualização automática disparada pelo workflow `capacitor-advisory-check.yml`.
+
+            - `@capacitor/cli` mais recente: **${{ steps.check.outputs.latest }}**
+            - `tar` mínimo declarado pelo cli: **${{ steps.check.outputs.tar_min }}** (baseline seguro: `7.5.15`)
+
+            ### Checklist antes de mergear
+            - [ ] `bun audit` sem findings high/critical
+            - [ ] `bun run typecheck` / `bun run build` OK
+            - [ ] Se `overrides.tar` no `package.json` não for mais necessário, remover
+            - [ ] Mover `docs/tasks/CAPACITOR-CLI-ADVISORY.md` para `docs/tasks/_done/`
+
+            Relatório anexo: `REPORTS/capacitor-advisory.json`.
+          labels: |
+            dependencies
+            security
+          add-paths: |
+            package.json
+            bun.lock
+            REPORTS/capacitor-advisory.json
