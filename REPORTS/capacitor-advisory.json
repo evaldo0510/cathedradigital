@@ -1,0 +1,13 @@
+{
+  "package": "@capacitor/cli",
+  "currentRange": "^8.4.2",
+  "installedGuess": "",
+  "latest": "8.4.2",
+  "latestTarRange": "^7.5.3",
+  "latestTarMin": "7.5.3",
+  "fixedTarBaseline": "7.5.15",
+  "isNewerVersion": "",
+  "tarLooksFixed": false,
+  "updateAvailable": false,
+  "checkedAt": "2026-07-26T19:49:18.654Z"
+}

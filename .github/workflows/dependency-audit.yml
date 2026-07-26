@@ -15,6 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      pull-requests: write
+      issues: write
     steps:
       - uses: actions/checkout@v4
 
@@ -24,31 +26,82 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      # Baixa o findings.json da execução anterior (main) para calcular diff.
+      - name: Download baseline (execução anterior em main)
+        id: baseline
+        continue-on-error: true
+        uses: dawidd6/action-download-artifact@v6
+        with:
+          workflow: dependency-audit.yml
+          branch: main
+          name: dependency-audit-report
+          path: REPORTS/audit-baseline
+          if_no_artifact_found: warn
+
+      - name: Preparar baseline
+        run: |
+          mkdir -p REPORTS/audit
+          if [ -f REPORTS/audit-baseline/findings.json ]; then
+            cp REPORTS/audit-baseline/findings.json REPORTS/audit/previous-findings.json
+            echo "Baseline carregada."
+          else
+            echo "Sem baseline anterior — diff será omitido."
+          fi
+
       - name: Run bun audit (produção + dev)
-        id: audit
+        id: raw
         run: |
           set -o pipefail
           bun audit --json > audit.json || true
-          HIGH=$(jq '[.. | objects | select(.severity? == "high")]     | length' audit.json 2>/dev/null || echo 0)
-          CRIT=$(jq '[.. | objects | select(.severity? == "critical")] | length' audit.json 2>/dev/null || echo 0)
-          echo "high=$HIGH"     >> "$GITHUB_OUTPUT"
-          echo "critical=$CRIT" >> "$GITHUB_OUTPUT"
-          echo "::notice::deps high=$HIGH critical=$CRIT"
+          echo "Bytes: $(wc -c < audit.json)"
 
-      - name: Fail on new high/critical vulnerabilities
-        run: |
-          HIGH=${{ steps.audit.outputs.high }}
-          CRIT=${{ steps.audit.outputs.critical }}
-          if [ "${CRIT:-0}" -gt 0 ] || [ "${HIGH:-0}" -gt 0 ]; then
-            echo "::error::Build bloqueado: encontradas $CRIT crítica(s) e $HIGH alta(s) em dependências."
-            echo "Rode 'bun audit' localmente, atualize o pacote afetado e reabra o PR."
-            exit 1
-          fi
-          echo "✅ Nenhuma vulnerabilidade high/critical encontrada."
+      - name: Gerar resumo + diff
+        id: summary
+        run: node scripts/audit-summary.mjs audit.json
 
-      - name: Upload audit report
+      - name: Publicar resumo no Job Summary
+        if: always()
+        run: cat REPORTS/audit/summary.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload relatório completo
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: dependency-audit
-          path: audit.json
+          name: dependency-audit-report
+          path: |
+            audit.json
+            REPORTS/audit/summary.md
+            REPORTS/audit/findings.json
+          retention-days: 90
+
+      - name: Comentar no PR (sticky) com o resumo
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: dependency-audit
+          path: REPORTS/audit/summary.md
+
+      - name: Notificar Slack em high/critical
+        if: >-
+          always() &&
+          (steps.summary.outputs.critical != '0' || steps.summary.outputs.high != '0') &&
+          env.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_SECURITY_WEBHOOK_URL }}
+          CRIT: ${{ steps.summary.outputs.critical }}
+          HIGH: ${{ steps.summary.outputs.high }}
+          REPO: ${{ github.repository }}
+          RUN: ${{ github.run_id }}
+          REF: ${{ github.ref_name }}
+        run: |
+          PKGS=$(jq -r '[.[] | select(.severity=="critical" or .severity=="high") | .name] | unique | join(", ")' REPORTS/audit/findings.json)
+          TEXT=":rotating_light: *Dependency audit* — ${CRIT} crítica(s), ${HIGH} alta(s) em \`${REPO}@${REF}\`\nPacotes: ${PKGS:-—}\n<https://github.com/${REPO}/actions/runs/${RUN}|Ver execução>"
+          curl -sS -X POST -H 'Content-type: application/json' \
+            --data "$(jq -nc --arg t "$TEXT" '{text:$t}')" \
+            "$SLACK_WEBHOOK_URL"
+
+      - name: Falhar build em high/critical
+        if: steps.summary.outputs.critical != '0' || steps.summary.outputs.high != '0'
+        run: |
+          echo "::error::Build bloqueado: ${{ steps.summary.outputs.critical }} crítica(s), ${{ steps.summary.outputs.high }} alta(s). Veja REPORTS/audit/summary.md."
+          exit 1
