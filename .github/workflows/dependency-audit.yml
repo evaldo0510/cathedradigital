@@ -9,6 +9,19 @@ on:
     # Reexecução diária às 05:00 UTC para pegar novos advisories sem novos commits
     - cron: '0 5 * * *'
   workflow_dispatch:
+    inputs:
+      force_notify:
+        description: 'Enviar Slack/comentário mesmo se o conjunto de high/critical não mudou'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
+      reset_baseline:
+        description: 'Ignorar baseline anterior (força regeneração completa)'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
 
 jobs:
   audit:
@@ -17,6 +30,7 @@ jobs:
       contents: read
       pull-requests: write
       issues: write
+      checks: write
     steps:
       - uses: actions/checkout@v4
 
@@ -26,9 +40,9 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      # Baixa o findings.json da execução anterior (main) para calcular diff.
       - name: Download baseline (execução anterior em main)
         id: baseline
+        if: inputs.reset_baseline != 'true'
         continue-on-error: true
         uses: dawidd6/action-download-artifact@v6
         with:
@@ -48,16 +62,20 @@ jobs:
             echo "Sem baseline anterior — diff será omitido."
           fi
 
-      - name: Run bun audit (produção + dev)
-        id: raw
+      - name: Run bun audit
         run: |
           set -o pipefail
           bun audit --json > audit.json || true
           echo "Bytes: $(wc -c < audit.json)"
 
-      - name: Gerar resumo + diff
+      - name: Montar URL do artefato
+        id: artifact_url
+        run: |
+          echo "url=https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts" >> "$GITHUB_OUTPUT"
+
+      - name: Gerar resumo + diff + recomendações
         id: summary
-        run: node scripts/audit-summary.mjs audit.json
+        run: node scripts/audit-summary.mjs audit.json --artifact-url "${{ steps.artifact_url.outputs.url }}"
 
       - name: Publicar resumo no Job Summary
         if: always()
@@ -72,19 +90,35 @@ jobs:
             audit.json
             REPORTS/audit/summary.md
             REPORTS/audit/findings.json
+            REPORTS/audit/blockers.json
           retention-days: 90
 
-      - name: Comentar no PR (sticky) com o resumo
-        if: github.event_name == 'pull_request'
+      - name: Atualizar GitHub Check com o resumo
+        if: always()
+        uses: LouisBrunner/checks-action@v2.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: Dependency Audit — Resumo
+          conclusion: ${{ steps.summary.outputs.has_blockers == 'true' && 'failure' || 'success' }}
+          output: |
+            {"title":"crit=${{ steps.summary.outputs.critical }} · high=${{ steps.summary.outputs.high }} · mod=${{ steps.summary.outputs.moderate }} · low=${{ steps.summary.outputs.low }}","summary":"Δ novas=${{ steps.summary.outputs.added }} · resolvidas=${{ steps.summary.outputs.removed }} · blockers_changed=${{ steps.summary.outputs.blockers_changed }}"}
+          output_text_description_file: REPORTS/audit/summary.md
+
+      # Só comenta no PR quando o conjunto de high/critical mudou — ou quando force_notify=true.
+      - name: Comentar no PR (sticky) — apenas se mudou
+        if: >-
+          github.event_name == 'pull_request' &&
+          (steps.summary.outputs.blockers_changed == 'true' || inputs.force_notify == 'true')
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           header: dependency-audit
           path: REPORTS/audit/summary.md
 
-      - name: Notificar Slack em high/critical
+      - name: Notificar Slack — apenas em mudança de high/critical
         if: >-
           always() &&
-          (steps.summary.outputs.critical != '0' || steps.summary.outputs.high != '0') &&
+          steps.summary.outputs.has_blockers == 'true' &&
+          (steps.summary.outputs.blockers_changed == 'true' || inputs.force_notify == 'true') &&
           env.SLACK_WEBHOOK_URL != ''
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_SECURITY_WEBHOOK_URL }}
@@ -93,15 +127,16 @@ jobs:
           REPO: ${{ github.repository }}
           RUN: ${{ github.run_id }}
           REF: ${{ github.ref_name }}
+          ARTIFACT_URL: ${{ steps.artifact_url.outputs.url }}
         run: |
-          PKGS=$(jq -r '[.[] | select(.severity=="critical" or .severity=="high") | .name] | unique | join(", ")' REPORTS/audit/findings.json)
-          TEXT=":rotating_light: *Dependency audit* — ${CRIT} crítica(s), ${HIGH} alta(s) em \`${REPO}@${REF}\`\nPacotes: ${PKGS:-—}\n<https://github.com/${REPO}/actions/runs/${RUN}|Ver execução>"
+          PKGS=$(jq -r '[.[] | "\(.name) → \(.recommended // "sem alvo")"] | join("\n• ")' REPORTS/audit/blockers.json)
+          TEXT=$(printf ":rotating_light: *Dependency audit* — %s crítica(s), %s alta(s) em \`%s@%s\`\n• %s\n<%s|Baixar audit.json>" "$CRIT" "$HIGH" "$REPO" "$REF" "$PKGS" "$ARTIFACT_URL")
           curl -sS -X POST -H 'Content-type: application/json' \
             --data "$(jq -nc --arg t "$TEXT" '{text:$t}')" \
             "$SLACK_WEBHOOK_URL"
 
       - name: Falhar build em high/critical
-        if: steps.summary.outputs.critical != '0' || steps.summary.outputs.high != '0'
+        if: steps.summary.outputs.has_blockers == 'true'
         run: |
-          echo "::error::Build bloqueado: ${{ steps.summary.outputs.critical }} crítica(s), ${{ steps.summary.outputs.high }} alta(s). Veja REPORTS/audit/summary.md."
+          echo "::error::Build bloqueado: ${{ steps.summary.outputs.critical }} crítica(s), ${{ steps.summary.outputs.high }} alta(s). Veja o Check 'Dependency Audit — Resumo' ou o artefato."
           exit 1
