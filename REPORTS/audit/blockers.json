@@ -6,6 +6,9 @@
     "vulnerable_range": "<7.5.15",
     "fixed_in": ">=7.5.15",
     "title": "tar path traversal",
-    "url": "https://github.com/advisories/GHSA-xxxx"
+    "url": "https://github.com/advisories/GHSA-xxxx",
+    "latest": "7.5.22",
+    "recommended": "7.5.15",
+    "source": "registry"
   }
 ]
