@@ -723,10 +723,7 @@ const GlossaryTermPage: React.FC = () => {
                   url: 'https://www.cathedradigital.com.br',
                 },
               },
-              ...(() => {
-                const faqJsonLd = buildFaqPageJsonLd(term.faq);
-                return faqJsonLd ? [faqJsonLd] : [];
-              })(),
+              ...(faqJsonLd ? [faqJsonLd] : []),
             ],
           })}
         </script>
