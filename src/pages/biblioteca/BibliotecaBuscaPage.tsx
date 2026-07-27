@@ -155,17 +155,21 @@ const BibliotecaBuscaPage: React.FC = () => {
           <p className="text-center text-muted-foreground py-spacing-lg">Buscando…</p>
         )}
 
-        {!loading && q.trim().length >= 2 && result && result.hits.length === 0 && (
-          <div className="text-center py-spacing-2xl space-y-spacing-sm">
-            <Icons.BookOpen className="w-10 h-10 mx-auto text-muted-foreground" aria-hidden />
-            <p className="text-muted-foreground">
-              Nenhum trecho encontrado para <strong>“{q}”</strong>.
-            </p>
-            <Button variant="outline" onClick={() => navigate('/biblioteca/escritos')}>
-              Voltar ao índice
-            </Button>
-          </div>
-        )}
+        {!loading &&
+          q.trim().length >= 2 &&
+          result &&
+          result.hits.length === 0 &&
+          collectionHits.length === 0 && (
+            <div className="text-center py-spacing-2xl space-y-spacing-sm">
+              <Icons.BookOpen className="w-10 h-10 mx-auto text-muted-foreground" aria-hidden />
+              <p className="text-muted-foreground">
+                Nenhum trecho ou coleção encontrado para <strong>“{q}”</strong>.
+              </p>
+              <Button variant="outline" onClick={() => navigate('/biblioteca/escritos')}>
+                Voltar ao índice
+              </Button>
+            </div>
+          )}
 
         {/* Coleções (só na página 1, acima dos trechos) */}
         {!loading && page === 1 && collectionHits.length > 0 && (
