@@ -867,6 +867,38 @@ const GlossaryTermPage: React.FC = () => {
                   {k === 'faq' && (
                     <>
                       <FaqSanitizationBadge stats={faqStats} slug={term.slug} />
+                      {isDevEnv && (
+                        <div className="max-w-[68ch] mx-auto mb-4 flex items-center justify-end">
+                          <button
+                            type="button"
+                            onClick={() => setShowRawFaq((v) => !v)}
+                            data-testid="faq-raw-toggle"
+                            className="text-xs font-mono px-3 py-1 rounded border border-dashed border-amber-500/60 bg-amber-50/40 text-amber-900 hover:bg-amber-100/60"
+                            aria-pressed={showRawFaq}
+                          >
+                            [dev] {showRawFaq ? 'Ocultar FAQ bruto' : 'Mostrar FAQ bruto + sanitizado'}
+                          </button>
+                        </div>
+                      )}
+                      {isDevEnv && showRawFaq && (
+                        <div
+                          data-testid="faq-raw-panel"
+                          className="max-w-[68ch] mx-auto mb-6 grid md:grid-cols-2 gap-4 text-xs"
+                        >
+                          <div className="rounded border border-amber-400/60 bg-amber-50/40 p-3">
+                            <div className="font-semibold mb-2 text-amber-900">Original (bruto)</div>
+                            <pre className="whitespace-pre-wrap break-words max-h-96 overflow-auto text-amber-950/90">
+{JSON.stringify(rawFaq, null, 2)}
+                            </pre>
+                          </div>
+                          <div className="rounded border border-emerald-500/60 bg-emerald-50/40 p-3">
+                            <div className="font-semibold mb-2 text-emerald-900">Sanitizado</div>
+                            <pre className="whitespace-pre-wrap break-words max-h-96 overflow-auto text-emerald-950/90">
+{JSON.stringify(term.faq, null, 2)}
+                            </pre>
+                          </div>
+                        </div>
+                      )}
                       <FaqBlock items={term.faq} />
                     </>
                   )}
