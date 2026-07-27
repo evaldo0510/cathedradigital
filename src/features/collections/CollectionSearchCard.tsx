@@ -31,13 +31,12 @@ export const CollectionSearchCard: React.FC<{ hit: CollectionSearchHit }> = ({ h
       to={`/colecoes/${hit.slug}`}
       onClick={() =>
         trackCollectionEvent('collection_search_result_clicked', {
-          collection_id: hit.id,
           collection_slug: hit.slug,
           collection_title: hit.title,
-          category: hit.category ?? null,
           difficulty_level: hit.difficulty_level ?? null,
           estimated_reading_time_minutes: hit.estimated_reading_time_minutes ?? null,
           has_certificate: Boolean(hit.certificate_eligible),
+          extra: { track: hit.track ?? null },
         })
       }
       className="group flex gap-spacing-md p-spacing-md rounded-premium border border-border bg-card hover:border-primary/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
