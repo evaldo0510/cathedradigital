@@ -331,6 +331,11 @@ const PublicLanding = () => {
 
           <EditorialDivider />
 
+          {/* ---------------- Depoimentos ---------------- */}
+          <TestimonialsSection />
+
+          <EditorialDivider />
+
           {/* ---------------- FAQ ---------------- */}
           <LandingFAQ />
         </EditorialShell>
