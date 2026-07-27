@@ -904,19 +904,36 @@ const GlossaryTermPage: React.FC = () => {
                     <>
                       <FaqSanitizationBadge stats={faqStats} slug={term.slug} />
                       {isDevEnv && (
-                        <div className="max-w-[68ch] mx-auto mb-4 flex items-center justify-end">
-                          <button
-                            type="button"
-                            onClick={() => setShowRawFaq((v) => !v)}
-                            data-testid="faq-raw-toggle"
-                            className="text-xs font-mono px-3 py-1 rounded border border-dashed border-amber-500/60 bg-amber-50/40 text-amber-900 hover:bg-amber-100/60"
-                            aria-pressed={showRawFaq}
-                          >
-                            [dev] {showRawFaq ? 'Ocultar FAQ bruto' : 'Mostrar FAQ bruto + sanitizado'}
-                          </button>
+                        <div
+                          className="max-w-[68ch] mx-auto mb-4 flex items-center justify-end gap-2"
+                          role="group"
+                          aria-label="[dev] Modo de inspeção do FAQ"
+                        >
+                          {(['off', 'raw', 'diff'] as const).map((mode) => (
+                            <button
+                              key={mode}
+                              type="button"
+                              onClick={() => setDevMode(mode)}
+                              data-testid={`faq-devmode-${mode}`}
+                              className={cn(
+                                'text-xs font-mono px-3 py-1 rounded border border-dashed transition-colors',
+                                devMode === mode
+                                  ? 'border-amber-500 bg-amber-100 text-amber-950'
+                                  : 'border-amber-500/60 bg-amber-50/40 text-amber-900 hover:bg-amber-100/60',
+                              )}
+                              aria-pressed={devMode === mode}
+                            >
+                              [dev]{' '}
+                              {mode === 'off'
+                                ? 'Ocultar'
+                                : mode === 'raw'
+                                  ? 'Bruto + Sanitizado'
+                                  : 'Diff por item'}
+                            </button>
+                          ))}
                         </div>
                       )}
-                      {isDevEnv && showRawFaq && (
+                      {isDevEnv && devMode === 'raw' && (
                         <div
                           data-testid="faq-raw-panel"
                           className="max-w-[68ch] mx-auto mb-6 grid md:grid-cols-2 gap-4 text-xs"
@@ -933,6 +950,71 @@ const GlossaryTermPage: React.FC = () => {
 {JSON.stringify(term.faq, null, 2)}
                             </pre>
                           </div>
+                        </div>
+                      )}
+                      {isDevEnv && devMode === 'diff' && (
+                        <div
+                          data-testid="faq-diff-panel"
+                          className="max-w-[68ch] mx-auto mb-6 space-y-3 text-xs"
+                        >
+                          {faqDiff.length === 0 && (
+                            <div className="italic text-stitch-on-surface-variant">
+                              Nenhum item bruto disponível.
+                            </div>
+                          )}
+                          {faqDiff.map((d) => {
+                            const clean =
+                              !d.dropped &&
+                              !d.questionChanged &&
+                              !d.answerChanged &&
+                              d.removedFromQuestion.length === 0 &&
+                              d.removedFromAnswer.length === 0;
+                            return (
+                              <div
+                                key={d.index}
+                                className={cn(
+                                  'rounded border p-3',
+                                  d.dropped
+                                    ? 'border-red-500/70 bg-red-50/60'
+                                    : clean
+                                      ? 'border-emerald-500/40 bg-emerald-50/30'
+                                      : 'border-amber-500/60 bg-amber-50/50',
+                                )}
+                              >
+                                <div className="font-semibold mb-1">
+                                  Item #{d.index}{' '}
+                                  {d.dropped && <span className="text-red-700">· descartado ({d.reason})</span>}
+                                  {clean && <span className="text-emerald-700">· inalterado</span>}
+                                </div>
+                                {(d.questionChanged || d.removedFromQuestion.length > 0) && (
+                                  <div className="mb-1">
+                                    <span className="text-amber-800 font-semibold">question:</span>{' '}
+                                    <span className="line-through text-red-700">
+                                      {String(d.rawQuestion ?? '')}
+                                    </span>{' '}
+                                    → <span className="text-emerald-800">{d.sanitizedQuestion || '∅'}</span>
+                                  </div>
+                                )}
+                                {(d.answerChanged || d.removedFromAnswer.length > 0) && (
+                                  <div className="mb-1">
+                                    <span className="text-amber-800 font-semibold">answer:</span>{' '}
+                                    <span className="line-through text-red-700">
+                                      {String(d.rawAnswer ?? '')}
+                                    </span>{' '}
+                                    → <span className="text-emerald-800">{d.sanitizedAnswer || '∅'}</span>
+                                  </div>
+                                )}
+                                {(d.removedFromQuestion.length > 0 || d.removedFromAnswer.length > 0) && (
+                                  <div className="mt-1 text-red-700">
+                                    <span className="font-semibold">Removido:</span>{' '}
+                                    {[...d.removedFromQuestion, ...d.removedFromAnswer]
+                                      .map((s) => JSON.stringify(s))
+                                      .join(' · ')}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
                         </div>
                       )}
                       <FaqBlock items={term.faq} />
