@@ -96,6 +96,43 @@ function main() {
   mkdirSync(REPORT_DIR, { recursive: true });
   writeFileSync(join(REPORT_DIR, 'faq-coverage.json'), JSON.stringify(report, null, 2));
 
+  // Markdown standalone (também upado como artifact do CI)
+  const mdLines = [
+    '# FAQ Coverage Report',
+    '',
+    `_Gerado em ${report.generatedAt}_`,
+    '',
+    `Arquivos analisados: **${perFile.length}**`,
+    '',
+    '## Categorias',
+    '',
+    '| Categoria | Casos | Status |',
+    '|---|---:|:---:|',
+    ...Object.entries(CATEGORIES).map(([k, cfg]) => {
+      const n = totals[k];
+      return `| ${cfg.label} | ${n} | ${n > 0 ? '✅' : '❌'} |`;
+    }),
+    '',
+    missing.length > 0
+      ? `> ❌ Categorias sem cobertura: **${missing.join(', ')}**`
+      : '> ✅ Todas as categorias cobertas.',
+    '',
+    '## Detalhes por arquivo',
+    '',
+    '| Arquivo | ' + Object.values(CATEGORIES).map((c) => c.label).join(' | ') + ' |',
+    '|---' + Object.keys(CATEGORIES).map(() => '|---:').join('') + '|',
+    ...perFile.map(
+      (f) =>
+        `| \`${f.file}\` | ` +
+        Object.keys(CATEGORIES)
+          .map((k) => f.hits[k])
+          .join(' | ') +
+        ' |',
+    ),
+    '',
+  ];
+  writeFileSync(join(REPORT_DIR, 'faq-coverage.md'), mdLines.join('\n'));
+
   // Console
   console.log('\n== FAQ Coverage Report ==');
   console.log(`Arquivos analisados: ${perFile.length}`);
