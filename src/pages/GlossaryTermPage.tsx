@@ -402,8 +402,13 @@ function FaqSanitizationBadge({
   );
 }
 
+const FAQ_PAGE_SIZE = 20;
+const FAQ_PAGINATION_THRESHOLD = 50;
+
 function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
   const safeItems = items ?? [];
+  const [visible, setVisible] = useState(FAQ_PAGE_SIZE);
+
   if (safeItems.length === 0) {
     return (
       <EditorialEmptyState
@@ -413,9 +418,14 @@ function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
       />
     );
   }
+
+  const paginate = safeItems.length > FAQ_PAGINATION_THRESHOLD;
+  const rendered = paginate ? safeItems.slice(0, visible) : safeItems;
+  const hasMore = paginate && visible < safeItems.length;
+
   return (
     <div className="max-w-[68ch] mx-auto space-y-4">
-      {safeItems.map((item, i) => {
+      {rendered.map((item, i) => {
         const answer = typeof item.answer === 'string' ? item.answer : '';
         const paragraphs = answer.trim() ? answer.split(/\n{2,}/) : [];
         return (
@@ -448,6 +458,16 @@ function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
           </details>
         );
       })}
+      {hasMore && (
+        <div className="pt-4 flex justify-center">
+          <button
+            type="button"
+            onClick={() => setVisible((v) => v + FAQ_PAGE_SIZE)}
+            data-testid="faq-load-more"
+            className="px-5 py-2 rounded-full border border-stitch-outline-variant/60 bg-stitch-surface-container-lowest text-stitch-label-sm font-stitch-label uppercase tracking-[0.18em] hover:bg-stitch-secondary/10 transition-colors"
+            aria-label={`Carregar mais perguntas (${safeItems.length - visible} restantes)`}
+          >
+            Carregar mais ({safeItems.length - visible})
     </div>
   );
 }
