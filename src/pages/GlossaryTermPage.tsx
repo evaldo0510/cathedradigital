@@ -915,7 +915,7 @@ const GlossaryTermPage: React.FC = () => {
                           role="group"
                           aria-label="[dev] Modo de inspeção do FAQ"
                         >
-                          {(['off', 'raw', 'diff'] as const).map((mode) => (
+                          {(['off', 'raw', 'diff', 'jsonld'] as const).map((mode) => (
                             <button
                               key={mode}
                               type="button"
@@ -934,7 +934,9 @@ const GlossaryTermPage: React.FC = () => {
                                 ? 'Ocultar'
                                 : mode === 'raw'
                                   ? 'Bruto + Sanitizado'
-                                  : 'Diff por item'}
+                                  : mode === 'diff'
+                                    ? 'Diff por item'
+                                    : 'Preview JSON-LD'}
                             </button>
                           ))}
                         </div>
