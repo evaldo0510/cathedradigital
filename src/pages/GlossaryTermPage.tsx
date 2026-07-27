@@ -422,6 +422,12 @@ function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
     );
   }
 
+  // Virtualização real (react-window) acima do threshold — melhora custo de DOM
+  // em glossários com FAQs muito longos (200+). Preserva `<details>` para SEO.
+  if (safeItems.length >= FAQ_VIRTUALIZATION_THRESHOLD) {
+    return <FaqVirtualList items={safeItems} />;
+  }
+
   const paginate = safeItems.length > FAQ_PAGINATION_THRESHOLD;
   const rendered = paginate ? safeItems.slice(0, visible) : safeItems;
   const hasMore = paginate && visible < safeItems.length;
