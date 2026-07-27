@@ -175,3 +175,56 @@ export function buildFaqPageJsonLd(items: FaqItem[] | null | undefined): FaqPage
   return parsed.data;
 }
 
+
+/* -------------------------------------------------------------------- */
+/* Sanitização de HTML e caracteres de controle para JSON-LD            */
+/* -------------------------------------------------------------------- */
+
+// Tags perigosas cujos conteúdos devem ser DESCARTADOS por inteiro
+// (script/style/iframe podem executar código ou exfiltrar dados mesmo escapados
+// se um consumidor decidir renderizar como HTML por engano).
+const DANGEROUS_TAG_BLOCK = /<\s*(script|style|iframe|object|embed|noscript|template)\b[^>]*>[\s\S]*?<\s*\/\s*\1\s*>/gi;
+// Também remove tags "solitárias" perigosas sem fechamento
+const DANGEROUS_TAG_LOOSE = /<\s*\/?\s*(script|style|iframe|object|embed|noscript|template|link|meta|base|form|input|button|svg|math)\b[^>]*>/gi;
+// Handlers inline (onerror=, onclick=, etc.) — mesmo após escape, evitamos deixar padrões suspeitos
+const INLINE_EVENT_HANDLER = /\son[a-z]+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)/gi;
+// javascript:/data: URIs em atributos href/src
+const DANGEROUS_URI = /(?:href|src)\s*=\s*(?:"|')?\s*(?:javascript|data|vbscript):[^"'>\s]*/gi;
+// Caracteres de controle (exceto \t \n \r) — quebram JSON-LD e podem esconder payloads
+const CONTROL_CHARS = /[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g;
+
+function escapeHtmlEntities(input: string): string {
+  return input
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+/**
+ * Sanitiza um `answer`/`question` antes de emiti-lo dentro do JSON-LD `FAQPage`.
+ *
+ * Etapas:
+ *  1. Remove blocos de tags perigosas (script/style/iframe...) incluindo o conteúdo.
+ *  2. Remove qualquer tag perigosa solitária remanescente.
+ *  3. Remove handlers inline (onerror=, onclick=) e URIs javascript:/data:.
+ *  4. Remove caracteres de controle.
+ *  5. Escapa entidades HTML restantes (`< > & " '`).
+ *  6. Normaliza espaços e faz trim final.
+ *
+ * O objetivo é garantir que o `text` do `Answer` seja seguro para consumo
+ * por buscadores e por qualquer renderer que trate o conteúdo como HTML.
+ */
+export function sanitizeAnswerForJsonLd(input: unknown): string {
+  if (typeof input !== 'string') return '';
+  let out = input;
+  out = out.replace(DANGEROUS_TAG_BLOCK, ' ');
+  out = out.replace(DANGEROUS_TAG_LOOSE, ' ');
+  out = out.replace(INLINE_EVENT_HANDLER, '');
+  out = out.replace(DANGEROUS_URI, '');
+  out = out.replace(CONTROL_CHARS, '');
+  out = escapeHtmlEntities(out);
+  out = out.replace(/[ \t]+/g, ' ').replace(/\s+\n/g, '\n').trim();
+  return out;
+}
