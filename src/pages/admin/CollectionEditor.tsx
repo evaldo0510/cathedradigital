@@ -288,6 +288,129 @@ export default function CollectionEditor() {
 
           <Card>
             <CardHeader>
+              <CardTitle className="text-base">Metadados editoriais</CardTitle>
+              <p className="text-xs text-muted-foreground">
+                Preencha e revise antes de publicar. Todos os campos aparecem na página pública da trilha.
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <Label>Tempo estimado (minutos)</Label>
+                  <Input
+                    type="number"
+                    min={0}
+                    value={form.estimated_reading_time_minutes}
+                    onChange={(e) =>
+                      setForm({ ...form, estimated_reading_time_minutes: e.target.value })
+                    }
+                    placeholder="Ex.: 45"
+                  />
+                </div>
+                <div>
+                  <Label>Nível</Label>
+                  <Select
+                    value={form.difficulty_level || 'none'}
+                    onValueChange={(v) =>
+                      setForm({
+                        ...form,
+                        difficulty_level:
+                          v === 'none' ? '' : (v as typeof form.difficulty_level),
+                      })
+                    }
+                  >
+                    <SelectTrigger><SelectValue placeholder="Selecione…" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Não definido</SelectItem>
+                      <SelectItem value="iniciante">Iniciante</SelectItem>
+                      <SelectItem value="intermediario">Intermediário</SelectItem>
+                      <SelectItem value="avancado">Avançado</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-3">
+                <div>
+                  <Label>Citação do herói</Label>
+                  <Textarea
+                    rows={2}
+                    value={form.hero_quote}
+                    onChange={(e) => setForm({ ...form, hero_quote: e.target.value })}
+                    placeholder="Frase-âncora da trilha (sem aspas)"
+                  />
+                </div>
+                <div className="md:w-64">
+                  <Label>Autor da citação</Label>
+                  <Input
+                    value={form.hero_quote_author}
+                    onChange={(e) => setForm({ ...form, hero_quote_author: e.target.value })}
+                    placeholder="Ex.: São Tomás de Aquino"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <Label>Objetivos da trilha (um por linha)</Label>
+                  <Textarea
+                    rows={5}
+                    value={form.learning_objectives}
+                    onChange={(e) =>
+                      setForm({ ...form, learning_objectives: e.target.value })
+                    }
+                    placeholder={'Compreender a doutrina da graça\nRelacionar Escritura e Tradição\n...'}
+                  />
+                  <p className="text-[11px] text-muted-foreground mt-1">
+                    {form.learning_objectives
+                      .split('\n')
+                      .map((l) => l.trim())
+                      .filter(Boolean).length} objetivo(s)
+                  </p>
+                </div>
+                <div>
+                  <Label>Pré-requisitos (um por linha)</Label>
+                  <Textarea
+                    rows={5}
+                    value={form.prerequisites}
+                    onChange={(e) => setForm({ ...form, prerequisites: e.target.value })}
+                    placeholder={'Leitura básica do Credo\nFamiliaridade com o CIC §§1-100\n...'}
+                  />
+                  <p className="text-[11px] text-muted-foreground mt-1">
+                    {form.prerequisites
+                      .split('\n')
+                      .map((l) => l.trim())
+                      .filter(Boolean).length} pré-requisito(s)
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <Label>Mensagem de conclusão</Label>
+                <Textarea
+                  rows={3}
+                  value={form.completion_message}
+                  onChange={(e) => setForm({ ...form, completion_message: e.target.value })}
+                  placeholder="Aparece na tela final e no certificado"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 pt-2 border-t border-border">
+                <Switch
+                  checked={form.certificate_eligible}
+                  onCheckedChange={(v) => setForm({ ...form, certificate_eligible: v })}
+                  id="certificate_eligible"
+                />
+                <Label htmlFor="certificate_eligible" className="cursor-pointer">
+                  Trilha certificável — libera <code className="text-xs">/colecoes/{form.slug || ':slug'}/certificado</code>
+                </Label>
+              </div>
+            </CardContent>
+          </Card>
+
+
+          <Card>
+            <CardHeader>
               <CardTitle className="text-base">
                 Itens da coleção ({data.items.length})
               </CardTitle>
