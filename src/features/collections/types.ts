@@ -32,6 +32,8 @@ export interface CollectionItem {
   title_override: string | null;
   description_override: string | null;
   metadata: CollectionItemMetadata;
+  /** Onda 3 · quando true, item só desbloqueia após o anterior ser concluído. */
+  is_locked_until_prev?: boolean | null;
 }
 
 /**
