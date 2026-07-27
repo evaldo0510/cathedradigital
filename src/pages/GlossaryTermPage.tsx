@@ -389,9 +389,7 @@ function MeditationBlock({ children }: { children: string | null | undefined }) 
 
 
 function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
-  const safeItems = (items ?? []).filter(
-    (it): it is FaqItem => !!it && typeof it.question === 'string' && it.question.trim().length > 0,
-  );
+  const safeItems = items ?? [];
   if (safeItems.length === 0) {
     return (
       <EditorialEmptyState
