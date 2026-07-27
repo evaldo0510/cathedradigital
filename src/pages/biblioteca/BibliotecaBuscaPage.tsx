@@ -64,6 +64,7 @@ const BibliotecaBuscaPage: React.FC = () => {
 
   const [input, setInput] = useState(q);
   const [result, setResult] = useState<PatristicSearchResult | null>(null);
+  const [collectionHits, setCollectionHits] = useState<CollectionSearchHit[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => setInput(q), [q]);
@@ -73,12 +74,19 @@ const BibliotecaBuscaPage: React.FC = () => {
     let alive = true;
     if (q.trim().length < 2) {
       setResult(null);
+      setCollectionHits([]);
       return;
     }
     setLoading(true);
-    searchPatristicLibrary(q, page, PAGE_SIZE)
-      .then((r) => {
-        if (alive) setResult(r);
+    Promise.all([
+      searchPatristicLibrary(q, page, PAGE_SIZE),
+      // Coleções só na primeira página — resultado curto e curado.
+      page === 1 ? searchCollections(q, 6) : Promise.resolve<CollectionSearchHit[]>([]),
+    ])
+      .then(([r, cols]) => {
+        if (!alive) return;
+        setResult(r);
+        setCollectionHits(cols);
       })
       .finally(() => {
         if (alive) setLoading(false);
