@@ -642,16 +642,19 @@ const GlossaryTermPage: React.FC = () => {
                   url: 'https://www.cathedradigital.com.br',
                 },
               },
-              ...(Array.isArray(term.faq) && term.faq.length > 0
-                ? [{
-                    '@type': 'FAQPage',
-                    mainEntity: term.faq.map((f) => ({
-                      '@type': 'Question',
-                      name: f.question,
-                      acceptedAnswer: { '@type': 'Answer', text: f.answer },
-                    })),
-                  }]
-                : []),
+              ...(() => {
+                const faqForJsonLd = filterFaqForJsonLd(term.faq);
+                return faqForJsonLd.length > 0
+                  ? [{
+                      '@type': 'FAQPage',
+                      mainEntity: faqForJsonLd.map((f) => ({
+                        '@type': 'Question',
+                        name: f.question,
+                        acceptedAnswer: { '@type': 'Answer', text: f.answer },
+                      })),
+                    }]
+                  : [];
+              })(),
             ],
           })}
         </script>
