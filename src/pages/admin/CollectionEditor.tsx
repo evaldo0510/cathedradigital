@@ -124,6 +124,14 @@ export default function CollectionEditor() {
 
   const save = async () => {
     try {
+      const minutes = form.estimated_reading_time_minutes.trim();
+      const parsedMinutes = minutes ? Number(minutes) : null;
+      if (minutes && (!Number.isFinite(parsedMinutes) || (parsedMinutes ?? 0) < 0)) {
+        toast.error('Tempo estimado inválido.');
+        return;
+      }
+      const splitLines = (s: string): string[] =>
+        s.split('\n').map((l) => l.trim()).filter(Boolean);
       await update.mutateAsync({
         slug: form.slug,
         title: form.title,
@@ -134,6 +142,14 @@ export default function CollectionEditor() {
         featured: form.featured,
         space: form.space,
         eyebrow: form.eyebrow || null,
+        estimated_reading_time_minutes: parsedMinutes,
+        difficulty_level: form.difficulty_level || null,
+        hero_quote: form.hero_quote || null,
+        hero_quote_author: form.hero_quote_author || null,
+        learning_objectives: splitLines(form.learning_objectives),
+        prerequisites: splitLines(form.prerequisites),
+        completion_message: form.completion_message || null,
+        certificate_eligible: form.certificate_eligible,
       });
       toast.success('Coleção salva.');
     } catch (e) {
