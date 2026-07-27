@@ -10,6 +10,23 @@ vi.mock('@/hooks/useAuth', () => ({
   useAuth: () => ({ user: null, isPremium: false }),
 }));
 
+// Card usa ReadingSettingsContext (irrelevante para esta suíte). Mock para elementos simples.
+vi.mock('@/components/ui/card', () => {
+  const mk = (tag: string) =>
+    ({ children, ...props }: any) => {
+      const El: any = tag;
+      return <El {...props}>{children}</El>;
+    };
+  return {
+    Card: mk('div'),
+    CardHeader: mk('div'),
+    CardContent: mk('div'),
+    CardTitle: mk('h3'),
+    CardDescription: mk('p'),
+    CardFooter: mk('div'),
+  };
+});
+
 const renderPage = () =>
   render(
     <HelmetProvider>
