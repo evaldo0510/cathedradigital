@@ -89,9 +89,9 @@ export const CollectionCompletionCTA: React.FC<Props> = ({
 
         {/* Próximos passos via Nexus */}
         {suggestions.length > 0 && (
-          <div className="space-y-spacing-sm">
+          <div className="space-y-spacing-sm" data-testid="collection-nexus-recommendations">
             <h3 className="text-[10px] font-black uppercase tracking-[0.25em] text-primary/70">
-              Próximo passo
+              Agora recomendamos
             </h3>
             <div className="space-y-spacing-xs">
               {suggestions.map((s) => (

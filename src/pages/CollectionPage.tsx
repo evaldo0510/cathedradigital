@@ -19,6 +19,8 @@ import {
   Landmark,
   HandHeart,
   Map as MapIcon,
+  Lock,
+  Award,
 } from 'lucide-react';
 import { EditorialSurface } from '@/components/editorial';
 import {
