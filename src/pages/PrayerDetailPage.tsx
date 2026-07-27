@@ -44,7 +44,7 @@ const FONT_STEPS = [
 type FontStepKey = typeof FONT_STEPS[number]['key'];
 const FONT_STORAGE_KEY = 'cathedra:prayer:font-size';
 
-const PrayerDetailPage: React.FC = () => {
+const PrayerDetailPageInner: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
   const { prayer, loading, error } = usePrayer(slug);
@@ -52,6 +52,7 @@ const PrayerDetailPage: React.FC = () => {
   const { items: favorites, toggle } = useDevotionalFavorites('prayer');
   const sectionSlug = searchParams.get('set') ?? undefined;
   const hierarchy = usePrayerHierarchy(slug, sectionSlug);
+  const { user } = useAuth();
 
   const [fontKey, setFontKey] = useState<FontStepKey>('md');
   useEffect(() => {
