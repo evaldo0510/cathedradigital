@@ -236,6 +236,7 @@ const NEXUS_ORDER: readonly ReaderNexusBucket[] = [
 
 function useGlossaryTerm(slug: string | undefined) {
   const [term, setTerm] = useState<GlossaryTerm | null>(null);
+  const [rawFaq, setRawFaq] = useState<unknown>(null);
   const [faqStats, setFaqStats] = useState<SanitizeFaqStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -264,11 +265,16 @@ function useGlossaryTerm(slug: string | undefined) {
         return;
       }
       if (data) {
-        const sanitized = sanitizeFaqItemsDetailed((data as any).faq, slug);
+        const rawFaqValue = (data as any).faq;
+        const sanitized = sanitizeFaqItemsDetailed(rawFaqValue, slug);
         setTerm({ ...(data as any), faq: sanitized.items } as GlossaryTerm);
+        setRawFaq(rawFaqValue);
         setFaqStats(sanitized.stats);
+        // Métricas (Sentry + gtag) em dev e produção
+        reportFaqMetrics({ route: `/glossario/${slug}`, slug }, sanitized.stats);
       } else {
         setTerm(null);
+        setRawFaq(null);
         setFaqStats(null);
       }
       setLoading(false);
@@ -279,7 +285,7 @@ function useGlossaryTerm(slug: string | undefined) {
     };
   }, [slug]);
 
-  return { term, loading, error, faqStats };
+  return { term, loading, error, faqStats, rawFaq };
 }
 
 
