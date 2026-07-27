@@ -853,6 +853,7 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/oracoes" element={<PrayerAdmin />} />
                       <Route path="/admin/liturgia-meditation-fallback" element={<LiturgyMeditationFallbackPanel />} />
                       <Route path="/admin/collections" element={<CollectionsAdmin />} />
+                      <Route path="/admin/collections/metrics" element={<Suspense fallback={<LoadingFallback />}><CollectionsMetricsPage /></Suspense>} />
                       <Route path="/admin/collections/:id" element={<CollectionEditor />} />
                       <Route path="/admin/biblioteca-patristica" element={<BibliotecaPatristicaAdmin />} />
                       <Route path="/admin/bible-phases" element={<BiblePhasesAdmin />} />
