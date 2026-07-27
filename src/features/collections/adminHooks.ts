@@ -114,6 +114,10 @@ export function useUpdateCollection(id: string) {
       const dbPatch: Record<string, unknown> = {};
       const keys: (keyof CollectionInput)[] = [
         'slug', 'title', 'subtitle', 'description', 'cover', 'category', 'featured',
+        'estimated_reading_time_minutes', 'difficulty_level',
+        'hero_quote', 'hero_quote_author',
+        'learning_objectives', 'prerequisites',
+        'completion_message', 'certificate_eligible',
       ];
       keys.forEach((k) => {
         if (patch[k] !== undefined) dbPatch[k] = patch[k];
