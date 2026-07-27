@@ -75,6 +75,9 @@ jobs:
       - name: Rodar SEO checklist
         run: bun run scripts/seo-checklist.ts
 
+      - name: Consistência /pricing (preços, canonical, meta tags)
+        run: bun run scripts/validate-pricing-consistency.ts
+
       - name: Checklist de indexação do Glossário
         run: bun run scripts/glossary-indexing-checklist.ts
 
