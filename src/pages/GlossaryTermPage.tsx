@@ -72,6 +72,7 @@ import {
   sanitizeFaqItemsDetailed,
   buildFaqPageJsonLd,
   explainFaqSanitization,
+  validateFaqJsonLdLive,
   type FaqItem,
   type FaqSanitizationDiff,
   type SanitizeFaqStats,
