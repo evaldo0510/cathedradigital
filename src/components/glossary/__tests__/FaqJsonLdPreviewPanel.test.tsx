@@ -92,41 +92,49 @@ describe('FaqJsonLdPreviewPanel', () => {
 
   it('botão Exportar gera payload com jsonLd + removedFields + versão da política', () => {
     const created: Array<{ href: string; download: string }> = [];
-    const capturedBlobs: Blob[] = [];
+    const capturedParts: BlobPart[][] = [];
+    const capturedOpts: BlobPropertyBag[] = [];
 
-    // Stub URL.createObjectURL para capturar o Blob gerado.
+    const OriginalBlob = globalThis.Blob;
+    class CapturingBlob extends OriginalBlob {
+      constructor(parts: BlobPart[] = [], options: BlobPropertyBag = {}) {
+        super(parts, options);
+        capturedParts.push(parts);
+        capturedOpts.push(options);
+      }
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (globalThis as any).Blob = CapturingBlob;
+
     const originalCreate = URL.createObjectURL;
     const originalRevoke = URL.revokeObjectURL;
-    URL.createObjectURL = vi.fn((blob: Blob) => {
-      capturedBlobs.push(blob);
-      return 'blob:mock';
-    }) as any;
+    URL.createObjectURL = vi.fn(() => 'blob:mock') as unknown as typeof URL.createObjectURL;
     URL.revokeObjectURL = vi.fn();
 
-    // Intercepta o clique do <a> para não navegar.
     const anchorClick = vi
       .spyOn(HTMLAnchorElement.prototype, 'click')
       .mockImplementation(function (this: HTMLAnchorElement) {
         created.push({ href: this.href, download: this.download });
       });
 
-    render(
-      <FaqJsonLdPreviewPanel
-        slug="oracao"
-        items={[
-          { question: 'O que é oração?', answer: 'Elevação da alma a Deus.' },
-        ]}
-      />,
-    );
+    try {
+      render(
+        <FaqJsonLdPreviewPanel
+          slug="oracao"
+          items={[
+            { question: 'O que é oração?', answer: 'Elevação da alma a Deus.' },
+          ]}
+        />,
+      );
 
-    fireEvent.click(screen.getByTestId('faq-jsonld-export'));
+      fireEvent.click(screen.getByTestId('faq-jsonld-export'));
 
-    expect(anchorClick).toHaveBeenCalledTimes(1);
-    expect(created[0].download).toMatch(/^faq-jsonld-oracao-\d+\.json$/);
-    expect(capturedBlobs).toHaveLength(1);
-    expect(capturedBlobs[0].type).toBe('application/json');
+      expect(anchorClick).toHaveBeenCalledTimes(1);
+      expect(created[0].download).toMatch(/^faq-jsonld-oracao-\d+\.json$/);
+      expect(capturedParts).toHaveLength(1);
+      expect(capturedOpts[0]?.type).toBe('application/json');
 
-    return capturedBlobs[0].text().then((raw) => {
+      const raw = String(capturedParts[0][0]);
       const parsed = JSON.parse(raw);
       expect(parsed.slug).toBe('oracao');
       expect(parsed.ok).toBe(true);
@@ -135,9 +143,11 @@ describe('FaqJsonLdPreviewPanel', () => {
       expect(parsed.jsonLd?.mainEntity).toHaveLength(1);
       expect(Array.isArray(parsed.removedFields)).toBe(true);
       expect(Array.isArray(parsed.droppedIndices)).toBe(true);
-
+    } finally {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (globalThis as any).Blob = OriginalBlob;
       URL.createObjectURL = originalCreate;
       URL.revokeObjectURL = originalRevoke;
-    });
+    }
   });
 });
