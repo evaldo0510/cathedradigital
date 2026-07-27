@@ -165,3 +165,47 @@ jobs:
         run: |
           echo "::error::Build bloqueado: ${{ steps.summary.outputs.critical }} crítica(s), ${{ steps.summary.outputs.high }} alta(s). Veja o Check 'Dependency Audit — Resumo' ou o artefato."
           exit 1
+
+  open-update-pr:
+    needs: audit
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      inputs.open_update_pr == 'true' &&
+      needs.audit.outputs.blockers_changed == 'true' &&
+      needs.audit.outputs.has_pr_commands == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Baixar artefato da execução do audit
+        uses: actions/download-artifact@v4
+        with:
+          name: dependency-audit-report
+          path: REPORTS/audit-run
+
+      - name: Aplicar bun add nas versões-alvo
+        run: |
+          bun install --frozen-lockfile
+          chmod +x REPORTS/audit-run/pr-commands.sh
+          bash REPORTS/audit-run/pr-commands.sh
+
+      - name: Abrir PR de atualização
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: chore/dependency-audit-auto-update
+          commit-message: 'chore(deps): atualizar dependências high/critical (bun audit)'
+          title: 'chore(deps): atualizar dependências high/critical'
+          body-path: REPORTS/audit-run/pr-body.md
+          labels: |
+            dependencies
+            security
+          add-paths: |
+            package.json
+            bun.lock
+
