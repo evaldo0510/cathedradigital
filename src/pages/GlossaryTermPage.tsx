@@ -77,6 +77,7 @@ import {
   type SanitizeFaqStats,
 } from '@/lib/glossary/sanitizeFaq';
 import { reportFaqMetrics } from '@/lib/glossary/faqMetrics';
+import { FaqVirtualList } from '@/components/glossary/FaqVirtualList';
 
 
 
@@ -406,6 +407,7 @@ function FaqSanitizationBadge({
 
 const FAQ_PAGE_SIZE = 20;
 const FAQ_PAGINATION_THRESHOLD = 50;
+const FAQ_VIRTUALIZATION_THRESHOLD = 100;
 
 function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
   const safeItems = items ?? [];
@@ -419,6 +421,12 @@ function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
         description="Serão publicadas em breve."
       />
     );
+  }
+
+  // Virtualização real (react-window) acima do threshold — melhora custo de DOM
+  // em glossários com FAQs muito longos (200+). Preserva `<details>` para SEO.
+  if (safeItems.length >= FAQ_VIRTUALIZATION_THRESHOLD) {
+    return <FaqVirtualList items={safeItems} />;
   }
 
   const paginate = safeItems.length > FAQ_PAGINATION_THRESHOLD;
@@ -954,6 +962,39 @@ const GlossaryTermPage: React.FC = () => {
                           data-testid="faq-diff-panel"
                           className="max-w-[68ch] mx-auto mb-6 space-y-3 text-xs"
                         >
+                          <div className="flex justify-end">
+                            <button
+                              type="button"
+                              data-testid="faq-diff-export"
+                              onClick={() => {
+                                const payload = {
+                                  slug: term.slug,
+                                  generatedAt: new Date().toISOString(),
+                                  total: faqDiff.length,
+                                  dropped: faqDiff.filter((d) => d.dropped).length,
+                                  changed: faqDiff.filter(
+                                    (d) => d.questionChanged || d.answerChanged,
+                                  ).length,
+                                  items: faqDiff,
+                                };
+                                const blob = new Blob(
+                                  [JSON.stringify(payload, null, 2)],
+                                  { type: 'application/json' },
+                                );
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = `faq-diff-${term.slug}-${Date.now()}.json`;
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                URL.revokeObjectURL(url);
+                              }}
+                              className="text-xs font-mono px-3 py-1 rounded border border-dashed border-amber-500/70 bg-amber-50/60 text-amber-950 hover:bg-amber-100/80"
+                            >
+                              [dev] Exportar diff (JSON)
+                            </button>
+                          </div>
                           {faqDiff.length === 0 && (
                             <div className="italic text-stitch-on-surface-variant">
                               Nenhum item bruto disponível.

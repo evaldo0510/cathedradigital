@@ -174,13 +174,18 @@ export function buildFaqPageJsonLd(items: FaqItem[] | null | undefined): FaqPage
 
   const parsed = FaqPageJsonLdSchema.safeParse(candidate);
   if (!parsed.success) {
-    const isDev =
-      typeof import.meta !== 'undefined' &&
-      (import.meta as any).env &&
-      (import.meta as any).env.DEV;
-    if (isDev) {
-      console.error('[Glossary/FAQ] JSON-LD inválido — descartado', parsed.error.flatten());
-    }
+    const details = parsed.error.issues.map((iss) => ({
+      path: iss.path.join('.'),
+      code: iss.code,
+      message: iss.message,
+    }));
+    // Log estruturado sempre (dev + prod) — crawlers não podem receber JSON-LD inválido.
+    // Em prod fica visível no Sentry via console.error interceptado.
+    console.error('[Glossary/FAQ] JSON-LD FAQPage rejeitado pelo schema Zod', {
+      totalIssues: details.length,
+      firstIssues: details.slice(0, 10),
+      questionCount: candidate.mainEntity.length,
+    });
     return store(null);
   }
   return store(parsed.data);
