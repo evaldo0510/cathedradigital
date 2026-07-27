@@ -110,8 +110,12 @@ jobs:
           path: |
             audit.json
             REPORTS/audit/summary.md
+            REPORTS/audit/summary.html
             REPORTS/audit/findings.json
             REPORTS/audit/blockers.json
+            REPORTS/audit/ignored.json
+            REPORTS/audit/pr-body.md
+            REPORTS/audit/pr-commands.sh
           retention-days: 90
 
       - name: Atualizar GitHub Check com o resumo
