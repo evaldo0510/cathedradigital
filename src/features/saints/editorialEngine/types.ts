@@ -52,8 +52,12 @@ export interface SaintWritingRef {
   title: string;
   slug?: string; // rota /biblioteca/escritos/:slug quando hospedado
   externalUrl?: string; // fallback quando apenas linkado
+  externalSourceLabel?: string; // ex.: "Vatican.va", "Documenta Catholica Omnia"
   attribution?: string;
   license?: string;
+  isPublicDomain?: boolean;
+  publicDomainNote?: string; // notas de domínio público (país, ano, autor)
+  canonicalUrl?: string; // URL canônica da fonte oficial
   summary?: string;
 }
 
