@@ -544,7 +544,9 @@ function BibliographyBlock({ items }: { items: BibliographyItem[] | null | undef
 const GlossaryTermPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const { term, loading, error, faqStats } = useGlossaryTerm(slug);
+  const { term, loading, error, faqStats, rawFaq } = useGlossaryTerm(slug);
+  const isDevEnv = import.meta.env.DEV;
+  const [showRawFaq, setShowRawFaq] = useState(false);
   const { toggleFavorite, isFavorite } = useFavorites('glossary');
 
   useHistoryRegistration(term);
