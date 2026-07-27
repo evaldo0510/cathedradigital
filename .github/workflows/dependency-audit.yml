@@ -22,15 +22,30 @@ on:
         default: 'false'
         type: choice
         options: ['false', 'true']
+      baseline_ref:
+        description: 'Ref para baixar o baseline (branch, tag ou commit). Padrão: main'
+        required: false
+        default: 'main'
+        type: string
+      open_update_pr:
+        description: 'Abrir PR automático com bun add nas versões-alvo quando o conjunto de blockers mudar'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
 
 jobs:
   audit:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
       issues: write
       checks: write
+    outputs:
+      has_blockers: ${{ steps.summary.outputs.has_blockers }}
+      blockers_changed: ${{ steps.summary.outputs.blockers_changed }}
+      has_pr_commands: ${{ steps.summary.outputs.has_pr_commands }}
     steps:
       - uses: actions/checkout@v4
 
@@ -40,14 +55,20 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Download baseline (execução anterior em main)
+      - name: Resolver ref do baseline
+        id: baseline_ref
+        run: |
+          REF="${{ inputs.baseline_ref }}"
+          echo "ref=${REF:-main}" >> "$GITHUB_OUTPUT"
+
+      - name: Download baseline (execução anterior em ${{ steps.baseline_ref.outputs.ref }})
         id: baseline
         if: inputs.reset_baseline != 'true'
         continue-on-error: true
         uses: dawidd6/action-download-artifact@v6
         with:
           workflow: dependency-audit.yml
-          branch: main
+          branch: ${{ steps.baseline_ref.outputs.ref }}
           name: dependency-audit-report
           path: REPORTS/audit-baseline
           if_no_artifact_found: warn
@@ -57,9 +78,9 @@ jobs:
           mkdir -p REPORTS/audit
           if [ -f REPORTS/audit-baseline/findings.json ]; then
             cp REPORTS/audit-baseline/findings.json REPORTS/audit/previous-findings.json
-            echo "Baseline carregada."
+            echo "Baseline carregada de ref: ${{ steps.baseline_ref.outputs.ref }}"
           else
-            echo "Sem baseline anterior — diff será omitido."
+            echo "Sem baseline em ${{ steps.baseline_ref.outputs.ref }} — diff será omitido."
           fi
 
       - name: Run bun audit
@@ -89,8 +110,12 @@ jobs:
           path: |
             audit.json
             REPORTS/audit/summary.md
+            REPORTS/audit/summary.html
             REPORTS/audit/findings.json
             REPORTS/audit/blockers.json
+            REPORTS/audit/ignored.json
+            REPORTS/audit/pr-body.md
+            REPORTS/audit/pr-commands.sh
           retention-days: 90
 
       - name: Atualizar GitHub Check com o resumo
@@ -140,3 +165,47 @@ jobs:
         run: |
           echo "::error::Build bloqueado: ${{ steps.summary.outputs.critical }} crítica(s), ${{ steps.summary.outputs.high }} alta(s). Veja o Check 'Dependency Audit — Resumo' ou o artefato."
           exit 1
+
+  open-update-pr:
+    needs: audit
+    if: >-
+      github.event_name == 'workflow_dispatch' &&
+      inputs.open_update_pr == 'true' &&
+      needs.audit.outputs.blockers_changed == 'true' &&
+      needs.audit.outputs.has_pr_commands == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+
+      - name: Baixar artefato da execução do audit
+        uses: actions/download-artifact@v4
+        with:
+          name: dependency-audit-report
+          path: REPORTS/audit-run
+
+      - name: Aplicar bun add nas versões-alvo
+        run: |
+          bun install --frozen-lockfile
+          chmod +x REPORTS/audit-run/pr-commands.sh
+          bash REPORTS/audit-run/pr-commands.sh
+
+      - name: Abrir PR de atualização
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: chore/dependency-audit-auto-update
+          commit-message: 'chore(deps): atualizar dependências high/critical (bun audit)'
+          title: 'chore(deps): atualizar dependências high/critical'
+          body-path: REPORTS/audit-run/pr-body.md
+          labels: |
+            dependencies
+            security
+          add-paths: |
+            package.json
+            bun.lock
+

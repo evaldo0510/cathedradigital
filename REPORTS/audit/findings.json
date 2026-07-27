@@ -1,11 +1,1 @@
-[
-  {
-    "name": "tar",
-    "severity": "high",
-    "installed": "7.5.3",
-    "vulnerable_range": "<7.5.15",
-    "fixed_in": ">=7.5.15",
-    "title": "tar path traversal",
-    "url": "https://github.com/advisories/GHSA-xxxx"
-  }
-]
+[]

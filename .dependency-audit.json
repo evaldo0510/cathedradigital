@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json.schemastore.org/base",
+  "_doc": "Ignora findings do bun audit. Correspondência por nome exato (packages) ou por URL/ID do advisory (advisories, substring case-insensitive). Use 'reason' para documentar cada exclusão.",
+  "ignore": {
+    "packages": [],
+    "advisories": [],
+    "reason": {}
+  }
+}
