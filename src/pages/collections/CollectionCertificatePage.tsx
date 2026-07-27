@@ -203,9 +203,10 @@ const CollectionCertificatePage: React.FC = () => {
             Progresso por conteúdo
           </h2>
           <ol className="space-y-spacing-2xs">
-            {items.map((it, i) => {
-              const st = getStatus(it.id);
-              const c = st === 'completed';
+            {itemStates.map((st, i) => {
+              const it = st.item;
+              const c = st.status === 'completed';
+              const locked = st.locked;
               return (
                 <li
                   key={it.id}
@@ -216,6 +217,8 @@ const CollectionCertificatePage: React.FC = () => {
                   </span>
                   {c ? (
                     <CheckCircle2 className="w-4 h-4 text-primary flex-shrink-0" aria-hidden />
+                  ) : locked ? (
+                    <Lock className="w-4 h-4 text-muted-foreground flex-shrink-0" aria-hidden />
                   ) : (
                     <Circle className="w-4 h-4 text-muted-foreground flex-shrink-0" aria-hidden />
                   )}
@@ -225,15 +228,16 @@ const CollectionCertificatePage: React.FC = () => {
                   <span
                     className={cn(
                       'text-[10px] uppercase tracking-widest',
-                      c ? 'text-primary' : 'text-muted-foreground/60',
+                      c ? 'text-primary' : locked ? 'text-muted-foreground/50' : 'text-muted-foreground/60',
                     )}
                   >
-                    {c ? 'Concluído' : 'Pendente'}
+                    {c ? 'Concluído' : locked ? 'Bloqueado' : 'Pendente'}
                   </span>
                 </li>
               );
             })}
           </ol>
+
         </section>
       </ReaderShell>
     </>
