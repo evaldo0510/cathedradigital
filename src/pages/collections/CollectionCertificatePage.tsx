@@ -8,7 +8,8 @@
  * Não emite PDF — apenas certifica na tela e registra `certificate_issued_at`
  * em `collection_progress` (linha sintética por item já cobre o resto).
  */
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { trackCollectionEvent } from '@/features/collections/collectionAnalytics';
 import { Link, useParams, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {
