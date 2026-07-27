@@ -90,6 +90,7 @@ interface ItemRowProps {
   index: number;
   status: CollectionProgressStatus;
   href: string | null;
+  locked?: boolean;
   onOpen: () => void;
   onToggleComplete: () => void;
 }
@@ -99,6 +100,7 @@ const ItemRow: React.FC<ItemRowProps> = ({
   index,
   status,
   href,
+  locked = false,
   onOpen,
   onToggleComplete,
 }) => {
