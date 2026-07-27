@@ -467,7 +467,7 @@ export default function CollectionPage() {
         {items.length > 0 && totalCompleted === items.length && (
           <CollectionCompletionCTA
             collection={collection}
-            reflection={meta.final_reflection}
+            reflection={completionMessage ?? meta.final_reflection}
           />
         )}
       </ReaderShell>
