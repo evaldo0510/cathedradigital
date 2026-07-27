@@ -113,6 +113,7 @@ export function filterFaqForJsonLd(items: FaqItem[] | null | undefined): FaqItem
 /* -------------------------------------------------------------------- */
 
 import { z } from 'zod';
+import { reportSanitizationIssue } from './sanitizePolicy';
 
 const nonEmptyString = z.string().trim().min(1);
 
