@@ -259,6 +259,7 @@ const PrototypeFormacao = lazy(() => import('./pages/prototype-2.0/screens/Forma
 const PrototypeRezar = lazy(() => import('./pages/prototype-2.0/screens/Rezar'));
 const PrototypeMinhaJornada = lazy(() => import('./pages/prototype-2.0/screens/MinhaJornada'));
 const CollectionPage = lazy(() => import('./pages/CollectionPage'));
+const CollectionCertificatePage = lazy(() => import('./pages/collections/CollectionCertificatePage'));
 const CollectionsMetricsPage = lazy(() => import('./pages/admin/CollectionsMetricsPage'));
 const BibliotecaAcervoPage = lazy(() => import('./pages/BibliotecaAcervoPage'));
 
