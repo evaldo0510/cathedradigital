@@ -259,6 +259,7 @@ const PrototypeFormacao = lazy(() => import('./pages/prototype-2.0/screens/Forma
 const PrototypeRezar = lazy(() => import('./pages/prototype-2.0/screens/Rezar'));
 const PrototypeMinhaJornada = lazy(() => import('./pages/prototype-2.0/screens/MinhaJornada'));
 const CollectionPage = lazy(() => import('./pages/CollectionPage'));
+const CollectionsMetricsPage = lazy(() => import('./pages/admin/CollectionsMetricsPage'));
 const BibliotecaAcervoPage = lazy(() => import('./pages/BibliotecaAcervoPage'));
 
 // Cathedra 2.0 — Ambiente Átrio (Sprint 2.0.1, preview isolado)
@@ -678,6 +679,8 @@ const AppLayout: React.FC = () => {
 
               {/* Coleções — caminhos espirituais */}
               <Route path="/colecoes/:slug" element={<Suspense fallback={<LoadingFallback />}><CollectionPage /></Suspense>} />
+              <Route path="/acervo/colecoes/:slug" element={<Suspense fallback={<LoadingFallback />}><CollectionPage /></Suspense>} />
+
 
               {/* Biblioteca — acervos (hubs por módulo) */}
               <Route path="/biblioteca/acervo/:slug" element={<Suspense fallback={<LoadingFallback />}><BibliotecaAcervoPage /></Suspense>} />
@@ -850,6 +853,7 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/oracoes" element={<PrayerAdmin />} />
                       <Route path="/admin/liturgia-meditation-fallback" element={<LiturgyMeditationFallbackPanel />} />
                       <Route path="/admin/collections" element={<CollectionsAdmin />} />
+                      <Route path="/admin/collections/metrics" element={<Suspense fallback={<LoadingFallback />}><CollectionsMetricsPage /></Suspense>} />
                       <Route path="/admin/collections/:id" element={<CollectionEditor />} />
                       <Route path="/admin/biblioteca-patristica" element={<BibliotecaPatristicaAdmin />} />
                       <Route path="/admin/bible-phases" element={<BiblePhasesAdmin />} />

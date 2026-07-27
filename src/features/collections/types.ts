@@ -32,6 +32,8 @@ export interface CollectionItem {
   title_override: string | null;
   description_override: string | null;
   metadata: CollectionItemMetadata;
+  /** Onda 3 · quando true, item só desbloqueia após o anterior ser concluído. */
+  is_locked_until_prev?: boolean | null;
 }
 
 /**
@@ -55,6 +57,12 @@ export interface CollectionMetadata {
 }
 
 
+export type OfficialTrack =
+  | 'formacao-fundamental'
+  | 'santos-espiritualidade'
+  | 'liturgia'
+  | 'vida-crista';
+
 export interface Collection {
   id: string;
   slug: string;
@@ -67,6 +75,18 @@ export interface Collection {
   featured: boolean;
   nexus_refs: unknown[];
   metadata: CollectionMetadata;
+  // Onda 3 · Coleções Inteligentes — colunas dedicadas
+  estimated_reading_time_minutes?: number | null;
+  difficulty_level?: CollectionLevel | null;
+  recommended_for?: string[] | null;
+  hero_quote?: string | null;
+  hero_quote_author?: string | null;
+  learning_objectives?: string[] | null;
+  prerequisites?: string[] | null;
+  completion_message?: string | null;
+  certificate_eligible?: boolean | null;
+  program_slug?: string | null;
+  track?: OfficialTrack | string | null;
 }
 
 export interface CollectionWithItems {

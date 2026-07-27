@@ -90,6 +90,7 @@ interface ItemRowProps {
   index: number;
   status: CollectionProgressStatus;
   href: string | null;
+  locked?: boolean;
   onOpen: () => void;
   onToggleComplete: () => void;
 }
@@ -99,6 +100,7 @@ const ItemRow: React.FC<ItemRowProps> = ({
   index,
   status,
   href,
+  locked = false,
   onOpen,
   onToggleComplete,
 }) => {
@@ -114,7 +116,9 @@ const ItemRow: React.FC<ItemRowProps> = ({
       className={cn(
         'flex items-start gap-spacing-md p-spacing-md transition-colors',
         done && 'bg-primary/5',
+        locked && 'opacity-60',
       )}
+      aria-disabled={locked || undefined}
     >
       {/* Número + ícone */}
       <div className="flex flex-col items-center gap-spacing-2xs flex-shrink-0 pt-1">
@@ -160,7 +164,12 @@ const ItemRow: React.FC<ItemRowProps> = ({
         )}
 
         <div className="flex items-center gap-spacing-md pt-spacing-2xs">
-          {href ? (
+          {locked ? (
+            <span className="text-premium-xs text-muted-foreground italic inline-flex items-center gap-1">
+              <Circle className="w-3 h-3" aria-hidden />
+              Conclua o item anterior para desbloquear
+            </span>
+          ) : href ? (
             <Link
               to={href}
               onClick={onOpen}
@@ -174,14 +183,16 @@ const ItemRow: React.FC<ItemRowProps> = ({
               Conteúdo em preparação
             </span>
           )}
-          <button
-            type="button"
-            onClick={onToggleComplete}
-            className="text-premium-xs text-muted-foreground hover:text-primary underline underline-offset-4"
-            aria-pressed={done}
-          >
-            {done ? 'Desmarcar' : 'Marcar como concluído'}
-          </button>
+          {!locked && (
+            <button
+              type="button"
+              onClick={onToggleComplete}
+              className="text-premium-xs text-muted-foreground hover:text-primary underline underline-offset-4"
+              aria-pressed={done}
+            >
+              {done ? 'Desmarcar' : 'Marcar como concluído'}
+            </button>
+          )}
         </div>
       </div>
     </EditorialSurface>
@@ -234,9 +245,17 @@ export default function CollectionPage() {
   const { collection, items } = data;
   const meta = collection.metadata ?? {};
   const eyebrow = meta.eyebrow ?? 'COLEÇÃO';
-  const level = meta.level as CollectionLevel | undefined;
-  const duration = formatDuration(meta.estimated_minutes);
+  const level =
+    (collection.difficulty_level as CollectionLevel | undefined) ??
+    (meta.level as CollectionLevel | undefined);
+  const duration = formatDuration(
+    collection.estimated_reading_time_minutes ?? meta.estimated_minutes,
+  );
   const editorialGoal = meta.editorial_goal;
+  const heroQuote = collection.hero_quote ?? null;
+  const heroQuoteAuthor = collection.hero_quote_author ?? null;
+  const learningObjectives = collection.learning_objectives ?? [];
+  const completionMessage = collection.completion_message ?? null;
 
   const totalCompleted = Object.values(progress).filter(
     (p) => p.status === 'completed',
@@ -245,9 +264,21 @@ export default function CollectionPage() {
     (p) => p.status !== 'not_started',
   ).length;
 
-  // Próximo item pendente para o CTA principal
+  // Bloqueios por is_locked_until_prev
+  const lockedItemIds = new Set<string>();
+  for (let i = 0; i < items.length; i++) {
+    const it = items[i];
+    const prev = items[i - 1];
+    if (it.is_locked_until_prev && prev && getStatus(prev.id) !== 'completed') {
+      lockedItemIds.add(it.id);
+    }
+  }
+
+  // Próximo item pendente (ignora bloqueados) para o CTA principal
   const nextItem =
-    items.find((i) => getStatus(i.id) !== 'completed') ?? items[0];
+    items.find(
+      (i) => getStatus(i.id) !== 'completed' && !lockedItemIds.has(i.id),
+    ) ?? items[0];
   const nextHref = nextItem
     ? hrefBySlug.get(`${nextItem.item_type}:${nextItem.item_slug}`) ?? null
     : null;
@@ -331,10 +362,43 @@ export default function CollectionPage() {
             </span>
           </div>
 
+          {heroQuote && (
+            <blockquote className="border-l-2 border-primary/40 pl-spacing-md italic font-serif text-premium-md text-foreground/90 leading-relaxed max-w-2xl">
+              “{heroQuote}”
+              {heroQuoteAuthor && (
+                <footer className="mt-spacing-2xs not-italic text-premium-xs text-muted-foreground">
+                  — {heroQuoteAuthor}
+                </footer>
+              )}
+            </blockquote>
+          )}
+
           {(editorialGoal || collection.description) && (
             <p className="font-serif text-premium-md text-muted-foreground leading-relaxed max-w-2xl">
               {editorialGoal ?? collection.description}
             </p>
+          )}
+
+          {learningObjectives.length > 0 && (
+            <div className="space-y-spacing-2xs">
+              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70">
+                Objetivos da trilha
+              </h2>
+              <ul className="space-y-spacing-2xs">
+                {learningObjectives.map((obj, i) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-spacing-xs text-premium-sm text-foreground/90"
+                  >
+                    <CheckCircle2
+                      className="w-4 h-4 text-primary/60 flex-shrink-0 mt-[3px]"
+                      aria-hidden
+                    />
+                    <span>{obj}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
 
           {items.length > 0 && (
@@ -371,6 +435,7 @@ export default function CollectionPage() {
           {items.map((item, idx) => {
             const status = getStatus(item.id);
             const href = hrefBySlug.get(`${item.item_type}:${item.item_slug}`) ?? null;
+            const locked = lockedItemIds.has(item.id);
             return (
               <li key={item.id}>
                 <ItemRow
@@ -378,6 +443,7 @@ export default function CollectionPage() {
                   index={idx}
                   status={status}
                   href={href}
+                  locked={locked}
                   onOpen={() => {
                     if (status === 'not_started') {
                       void startItem(item.id).catch(() => undefined);
@@ -401,7 +467,7 @@ export default function CollectionPage() {
         {items.length > 0 && totalCompleted === items.length && (
           <CollectionCompletionCTA
             collection={collection}
-            reflection={meta.final_reflection}
+            reflection={completionMessage ?? meta.final_reflection}
           />
         )}
       </ReaderShell>

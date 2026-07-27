@@ -2182,6 +2182,7 @@ export type Database = {
           created_at: string
           description_override: string | null
           id: string
+          is_locked_until_prev: boolean
           item_slug: string
           item_type: string
           metadata: Json
@@ -2194,6 +2195,7 @@ export type Database = {
           created_at?: string
           description_override?: string | null
           id?: string
+          is_locked_until_prev?: boolean
           item_slug: string
           item_type: string
           metadata?: Json
@@ -2206,6 +2208,7 @@ export type Database = {
           created_at?: string
           description_override?: string | null
           id?: string
+          is_locked_until_prev?: boolean
           item_slug?: string
           item_type?: string
           metadata?: Json
@@ -2280,10 +2283,13 @@ export type Database = {
       collections: {
         Row: {
           category: string
+          certificate_eligible: boolean
+          completion_message: string | null
           constitution_version: string | null
           cover: string | null
           created_at: string
           description: string | null
+          difficulty_level: string | null
           editorial_author: string | null
           editorial_reviewed_at: string | null
           editorial_reviewer: string | null
@@ -2291,24 +2297,35 @@ export type Database = {
             | Database["public"]["Enums"]["editorial_status_enum"]
             | null
           editorial_version: number | null
+          estimated_reading_time_minutes: number | null
           featured: boolean
+          hero_quote: string | null
+          hero_quote_author: string | null
           ice_score: number | null
           id: string
+          learning_objectives: string[]
           metadata: Json
           nexus_refs: Json
+          prerequisites: string[]
+          program_slug: string | null
+          recommended_for: string[]
           slug: string
           status: string
           subtitle: string | null
           title: string
+          track: string | null
           updated_at: string
           voice_version: string | null
         }
         Insert: {
           category?: string
+          certificate_eligible?: boolean
+          completion_message?: string | null
           constitution_version?: string | null
           cover?: string | null
           created_at?: string
           description?: string | null
+          difficulty_level?: string | null
           editorial_author?: string | null
           editorial_reviewed_at?: string | null
           editorial_reviewer?: string | null
@@ -2316,24 +2333,35 @@ export type Database = {
             | Database["public"]["Enums"]["editorial_status_enum"]
             | null
           editorial_version?: number | null
+          estimated_reading_time_minutes?: number | null
           featured?: boolean
+          hero_quote?: string | null
+          hero_quote_author?: string | null
           ice_score?: number | null
           id?: string
+          learning_objectives?: string[]
           metadata?: Json
           nexus_refs?: Json
+          prerequisites?: string[]
+          program_slug?: string | null
+          recommended_for?: string[]
           slug: string
           status?: string
           subtitle?: string | null
           title: string
+          track?: string | null
           updated_at?: string
           voice_version?: string | null
         }
         Update: {
           category?: string
+          certificate_eligible?: boolean
+          completion_message?: string | null
           constitution_version?: string | null
           cover?: string | null
           created_at?: string
           description?: string | null
+          difficulty_level?: string | null
           editorial_author?: string | null
           editorial_reviewed_at?: string | null
           editorial_reviewer?: string | null
@@ -2341,15 +2369,23 @@ export type Database = {
             | Database["public"]["Enums"]["editorial_status_enum"]
             | null
           editorial_version?: number | null
+          estimated_reading_time_minutes?: number | null
           featured?: boolean
+          hero_quote?: string | null
+          hero_quote_author?: string | null
           ice_score?: number | null
           id?: string
+          learning_objectives?: string[]
           metadata?: Json
           nexus_refs?: Json
+          prerequisites?: string[]
+          program_slug?: string | null
+          recommended_for?: string[]
           slug?: string
           status?: string
           subtitle?: string | null
           title?: string
+          track?: string | null
           updated_at?: string
           voice_version?: string | null
         }
@@ -8380,6 +8416,7 @@ export type Database = {
           nexus: number
         }[]
       }
+      collections_metrics_v1: { Args: never; Returns: Json }
       collections_quality_gate: { Args: { _slug: string }; Returns: boolean }
       compute_glossary_editorial_snapshot: {
         Args: { _trigger?: string }
