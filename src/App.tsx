@@ -110,6 +110,7 @@ import { setLastRoute, resolveAuthHome } from './lib/lastRoute';
 const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
 const SpiritualProfile = lazy(() => import('./components/cathedra/SpiritualProfile'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
+const SaintAutoPageRoute = lazy(() => import('./features/saints/editorialEngine/SaintAutoPageRoute'));
 const BibliotecaEscritosPage = lazy(() => import('./pages/biblioteca/BibliotecaEscritosPage'));
 const BibliotecaBuscaPage = lazy(() => import('./pages/biblioteca/BibliotecaBuscaPage'));
 const SaintWorkOverviewPage = lazy(() => import('./pages/biblioteca/SaintWorkOverviewPage'));
@@ -649,7 +650,7 @@ const AppLayout: React.FC = () => {
 
               {/* Santos & Devoções */}
               <Route path="/santos" element={<Suspense fallback={<LoadingFallback />}><Saints /></Suspense>} />
-              <Route path="/santos/:id" element={<Suspense fallback={<LoadingFallback />}><Saints /></Suspense>} />
+              <Route path="/santos/:id" element={<Suspense fallback={<LoadingFallback />}><SaintAutoPageRoute /></Suspense>} />
               <Route path="/saints-legacy/:id" element={<Suspense fallback={<LoadingFallback />}><Saints legacyReader /></Suspense>} />
               <Route path="/papas" element={<Suspense fallback={<LoadingFallback />}><PopesPage /></Suspense>} />
               <Route path="/aparicoes" element={<Suspense fallback={<LoadingFallback />}><AparicoesPage /></Suspense>} />
