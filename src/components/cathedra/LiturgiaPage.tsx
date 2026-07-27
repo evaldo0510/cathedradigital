@@ -13,6 +13,7 @@ import { useDailyLiturgy } from '@/hooks/useDailyLiturgy';
 import { useSaintOfDay } from '@/hooks/useSaintOfDay';
 import { toIsoDateKey } from '@/core/liturgy/LiturgyProvider';
 import { LiturgiaSkeleton } from './LiturgiaSkeleton';
+import SacredImage from './SacredImage';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 import ContemplativeLayout from './ContemplativeLayout';
 import {
