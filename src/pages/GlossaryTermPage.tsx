@@ -236,6 +236,7 @@ const NEXUS_ORDER: readonly ReaderNexusBucket[] = [
 
 function useGlossaryTerm(slug: string | undefined) {
   const [term, setTerm] = useState<GlossaryTerm | null>(null);
+  const [faqStats, setFaqStats] = useState<SanitizeFaqStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -262,11 +263,14 @@ function useGlossaryTerm(slug: string | undefined) {
         setLoading(false);
         return;
       }
-      setTerm(
-        data
-          ? ({ ...(data as any), faq: sanitizeFaqItems((data as any).faq, slug) } as GlossaryTerm)
-          : null,
-      );
+      if (data) {
+        const sanitized = sanitizeFaqItemsDetailed((data as any).faq, slug);
+        setTerm({ ...(data as any), faq: sanitized.items } as GlossaryTerm);
+        setFaqStats(sanitized.stats);
+      } else {
+        setTerm(null);
+        setFaqStats(null);
+      }
       setLoading(false);
     })();
 
@@ -275,8 +279,9 @@ function useGlossaryTerm(slug: string | undefined) {
     };
   }, [slug]);
 
-  return { term, loading, error };
+  return { term, loading, error, faqStats };
 }
+
 
 /* ------------------------------------------------------------------ */
 /* Registro em user_history                                            */
