@@ -826,7 +826,12 @@ const GlossaryTermPage: React.FC = () => {
                   )}
                   {k === 'application' && <TextSection>{term.practical_application}</TextSection>}
                   {k === 'meditation' && <MeditationBlock>{term.logos_meditation}</MeditationBlock>}
-                  {k === 'faq' && <FaqBlock items={term.faq} />}
+                  {k === 'faq' && (
+                    <>
+                      <FaqSanitizationBadge stats={faqStats} slug={term.slug} />
+                      <FaqBlock items={term.faq} />
+                    </>
+                  )}
                   {k === 'next_steps' && <NextStepsBlock items={term.next_steps} />}
                   {k === 'bibliography' && <BibliographyBlock items={term.bibliography} />}
                 </section>
