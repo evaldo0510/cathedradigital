@@ -468,6 +468,9 @@ function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
             aria-label={`Carregar mais perguntas (${safeItems.length - visible} restantes)`}
           >
             Carregar mais ({safeItems.length - visible})
+          </button>
+        </div>
+      )}
     </div>
   );
 }
