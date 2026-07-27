@@ -84,3 +84,5 @@ for (const slug of SLUGS) {
     // Nenhum vestígio de URIs perigosas
     expect(serialized).not.toMatch(/vbscript:/i);
     expect(serialized).not.toMatch(/\bdata:text\/html/i);
+  });
+}
