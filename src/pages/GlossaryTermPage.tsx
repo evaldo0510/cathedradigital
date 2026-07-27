@@ -571,8 +571,19 @@ const GlossaryTermPage: React.FC = () => {
   const navigate = useNavigate();
   const { term, loading, error, faqStats, rawFaq } = useGlossaryTerm(slug);
   const isDevEnv = import.meta.env.DEV;
-  const [showRawFaq, setShowRawFaq] = useState(false);
+  const [devMode, setDevMode] = useState<'off' | 'raw' | 'diff'>('off');
+  const showRawFaq = devMode !== 'off';
   const { toggleFavorite, isFavorite } = useFavorites('glossary');
+
+  // JSON-LD memoizado — evita reconstruir/sanitizar a cada re-render.
+  // O `buildFaqPageJsonLd` também cacheia por referência via WeakMap.
+  const faqJsonLd = useMemo(() => buildFaqPageJsonLd(term?.faq), [term?.faq]);
+
+  // Diff bruto x sanitizado, calculado só quando o dev abre o painel.
+  const faqDiff = useMemo<FaqSanitizationDiff[]>(
+    () => (isDevEnv && showRawFaq ? explainFaqSanitization(rawFaq) : []),
+    [isDevEnv, showRawFaq, rawFaq],
+  );
 
   useHistoryRegistration(term);
 
