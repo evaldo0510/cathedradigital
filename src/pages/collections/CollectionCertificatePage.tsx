@@ -28,20 +28,28 @@ import { cn } from '@/lib/utils';
 import { useCollection } from '@/features/collections/useCollection';
 import { useCollectionProgress } from '@/features/collections/useCollectionProgress';
 import { CollectionProgressBar } from '@/features/collections/CollectionProgressBar';
+import {
+  computeCertificateStatus,
+  type ProgressMap,
+} from '@/features/collections/certificateEligibility';
 
 const CollectionCertificatePage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const { data, isLoading, error } = useCollection(slug);
   const collectionId = data?.collection.id;
-  const { progress, getStatus } = useCollectionProgress(collectionId);
+  const { progress } = useCollectionProgress(collectionId);
 
-  const totalCompleted = useMemo(
-    () => Object.values(progress).filter((p) => p.status === 'completed').length,
-    [progress],
+  const status = useMemo(
+    () =>
+      computeCertificateStatus(
+        data?.collection ?? null,
+        data?.items ?? [],
+        progress as ProgressMap,
+      ),
+    [data, progress],
   );
 
-  const total = data?.items.length ?? 0;
-  const done = total > 0 && totalCompleted === total;
+  const { total, completed: totalCompleted, pct, done, itemStates, criteria } = status;
 
   // Analytics: dispara uma única vez quando a trilha certificável é concluída.
   const emittedRef = useRef(false);
@@ -73,26 +81,13 @@ const CollectionCertificatePage: React.FC = () => {
   }
 
   if (error || !data) return <Navigate to="/404" replace />;
-  const { collection, items } = data;
+  const { collection } = data;
 
   // Só faz sentido para trilhas certificáveis.
   if (!collection.certificate_eligible) {
     return <Navigate to={`/colecoes/${collection.slug}`} replace />;
   }
 
-  const pct = total > 0 ? Math.round((totalCompleted / total) * 100) : 0;
-
-  const criteria: Array<{ label: string; met: boolean }> = [
-    { label: `Concluir todos os ${total} conteúdos da trilha`, met: done },
-    {
-      label: 'Registrar leitura de cada capítulo (marcar como concluído)',
-      met: totalCompleted > 0,
-    },
-    {
-      label: 'Respeitar a ordem guiada (itens bloqueados desbloqueiam em cascata)',
-      met: true, // enforce pela UI, aqui informativo
-    },
-  ];
 
   return (
     <>
