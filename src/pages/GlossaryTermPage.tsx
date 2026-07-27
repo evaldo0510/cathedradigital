@@ -354,7 +354,10 @@ function MeditationBlock({ children }: { children: string | null | undefined }) 
 
 
 function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
-  if (!items || items.length === 0) {
+  const safeItems = (items ?? []).filter(
+    (it): it is FaqItem => !!it && typeof it.question === 'string' && it.question.trim().length > 0,
+  );
+  if (safeItems.length === 0) {
     return (
       <EditorialEmptyState
         kicker="Em preparação"
@@ -365,29 +368,39 @@ function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
   }
   return (
     <div className="max-w-[68ch] mx-auto space-y-4">
-      {items.map((item, i) => (
-        <details
-          key={i}
-          className="group border border-stitch-outline-variant/40 rounded-[var(--stitch-radius-xl)] bg-stitch-surface-container-lowest overflow-hidden"
-        >
-          <summary className="cursor-pointer list-none px-6 py-4 flex items-baseline justify-between gap-4 font-stitch-display italic text-stitch-body-lg text-stitch-on-background hover:text-stitch-secondary transition-colors">
-            <span>{item.question}</span>
-            <span
-              aria-hidden="true"
-              className="font-stitch-label text-stitch-label-sm text-stitch-secondary transition-transform group-open:rotate-45"
-            >
-              +
-            </span>
-          </summary>
-          <div className="px-6 pb-6 pt-2 font-stitch-serif text-stitch-body text-stitch-on-surface leading-relaxed border-t border-stitch-outline-variant/30">
-            {item.answer.split(/\n{2,}/).map((p, k) => (
-              <p key={k} className="mb-3 last:mb-0">
-                {p}
-              </p>
-            ))}
-          </div>
-        </details>
-      ))}
+      {safeItems.map((item, i) => {
+        const answer = typeof item.answer === 'string' ? item.answer : '';
+        const paragraphs = answer.trim() ? answer.split(/\n{2,}/) : [];
+        return (
+          <details
+            key={i}
+            className="group border border-stitch-outline-variant/40 rounded-[var(--stitch-radius-xl)] bg-stitch-surface-container-lowest overflow-hidden"
+          >
+            <summary className="cursor-pointer list-none px-6 py-4 flex items-baseline justify-between gap-4 font-stitch-display italic text-stitch-body-lg text-stitch-on-background hover:text-stitch-secondary transition-colors">
+              <span>{item.question}</span>
+              <span
+                aria-hidden="true"
+                className="font-stitch-label text-stitch-label-sm text-stitch-secondary transition-transform group-open:rotate-45"
+              >
+                +
+              </span>
+            </summary>
+            <div className="px-6 pb-6 pt-2 font-stitch-serif text-stitch-body text-stitch-on-surface leading-relaxed border-t border-stitch-outline-variant/30">
+              {paragraphs.length > 0 ? (
+                paragraphs.map((p, k) => (
+                  <p key={k} className="mb-3 last:mb-0">
+                    {p}
+                  </p>
+                ))
+              ) : (
+                <p className="mb-0 italic text-stitch-on-surface-variant">
+                  Resposta em preparação.
+                </p>
+              )}
+            </div>
+          </details>
+        );
+      })}
     </div>
   );
 }
