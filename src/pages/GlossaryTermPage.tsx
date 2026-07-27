@@ -962,6 +962,39 @@ const GlossaryTermPage: React.FC = () => {
                           data-testid="faq-diff-panel"
                           className="max-w-[68ch] mx-auto mb-6 space-y-3 text-xs"
                         >
+                          <div className="flex justify-end">
+                            <button
+                              type="button"
+                              data-testid="faq-diff-export"
+                              onClick={() => {
+                                const payload = {
+                                  slug: term.slug,
+                                  generatedAt: new Date().toISOString(),
+                                  total: faqDiff.length,
+                                  dropped: faqDiff.filter((d) => d.dropped).length,
+                                  changed: faqDiff.filter(
+                                    (d) => d.questionChanged || d.answerChanged,
+                                  ).length,
+                                  items: faqDiff,
+                                };
+                                const blob = new Blob(
+                                  [JSON.stringify(payload, null, 2)],
+                                  { type: 'application/json' },
+                                );
+                                const url = URL.createObjectURL(blob);
+                                const a = document.createElement('a');
+                                a.href = url;
+                                a.download = `faq-diff-${term.slug}-${Date.now()}.json`;
+                                document.body.appendChild(a);
+                                a.click();
+                                document.body.removeChild(a);
+                                URL.revokeObjectURL(url);
+                              }}
+                              className="text-xs font-mono px-3 py-1 rounded border border-dashed border-amber-500/70 bg-amber-50/60 text-amber-950 hover:bg-amber-100/80"
+                            >
+                              [dev] Exportar diff (JSON)
+                            </button>
+                          </div>
                           {faqDiff.length === 0 && (
                             <div className="italic text-stitch-on-surface-variant">
                               Nenhum item bruto disponível.
