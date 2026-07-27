@@ -5,6 +5,23 @@ import { HelmetProvider } from 'react-helmet-async';
 
 import PricingPage, { PRICING_GROUPS, FeatureList } from '@/components/cathedra/PricingPage';
 
+// framer-motion aciona IntersectionObserver em jsdom — stubar para elementos simples.
+vi.mock('framer-motion', () => {
+  const React = require('react');
+  const proxy: any = new Proxy(
+    {},
+    {
+      get: (_t, tag: string) =>
+        React.forwardRef(({ children, ...props }: any, ref: any) => {
+          const clean = { ...props };
+          for (const k of ['initial', 'animate', 'variants', 'custom', 'whileInView', 'viewport', 'transition', 'exit', 'whileHover', 'whileTap']) delete clean[k];
+          return React.createElement(tag as string, { ...clean, ref }, children);
+        }),
+    },
+  );
+  return { motion: proxy, AnimatePresence: ({ children }: any) => children };
+});
+
 // useAuth mock
 vi.mock('@/hooks/useAuth', () => ({
   useAuth: () => ({ user: null, isPremium: false }),
