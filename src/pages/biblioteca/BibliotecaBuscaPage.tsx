@@ -18,6 +18,11 @@ import {
   type PatristicSearchHit,
   type PatristicSearchResult,
 } from '@/services/saintWorksService';
+import {
+  searchCollections,
+  type CollectionSearchHit,
+} from '@/features/collections/searchCollections';
+import CollectionSearchCard from '@/features/collections/CollectionSearchCard';
 
 const PAGE_SIZE = 10;
 
