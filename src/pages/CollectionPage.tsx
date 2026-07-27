@@ -116,7 +116,9 @@ const ItemRow: React.FC<ItemRowProps> = ({
       className={cn(
         'flex items-start gap-spacing-md p-spacing-md transition-colors',
         done && 'bg-primary/5',
+        locked && 'opacity-60',
       )}
+      aria-disabled={locked || undefined}
     >
       {/* Número + ícone */}
       <div className="flex flex-col items-center gap-spacing-2xs flex-shrink-0 pt-1">
