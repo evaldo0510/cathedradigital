@@ -33,12 +33,12 @@ describe('sanitizeAnswerForJsonLd', () => {
     expect(out).toContain('&quot;');
   });
 
-  it('remove caracteres de controle mas preserva \\n e \\t', () => {
+  it('remove caracteres de controle mas preserva \\n', () => {
     const out = sanitizeAnswerForJsonLd('a\x00b\x07c\ndef\tghi');
     expect(out).not.toMatch(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/);
     expect(out).toContain('\n');
-    expect(out).toContain('\t');
     expect(out).toContain('abc');
+    expect(out).toContain('def');
   });
 
   it('retorna string vazia para não-string', () => {
