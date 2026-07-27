@@ -681,6 +681,7 @@ const AppLayout: React.FC = () => {
               {/* Coleções — caminhos espirituais */}
               <Route path="/colecoes/:slug" element={<Suspense fallback={<LoadingFallback />}><CollectionPage /></Suspense>} />
               <Route path="/acervo/colecoes/:slug" element={<Suspense fallback={<LoadingFallback />}><CollectionPage /></Suspense>} />
+              <Route path="/colecoes/:slug/certificado" element={<Suspense fallback={<LoadingFallback />}><CollectionCertificatePage /></Suspense>} />
 
 
               {/* Biblioteca — acervos (hubs por módulo) */}
