@@ -69,10 +69,12 @@ interface NexusRef {
 }
 
 import {
-  sanitizeFaqItems,
-  filterFaqForJsonLd,
+  sanitizeFaqItemsDetailed,
+  buildFaqPageJsonLd,
   type FaqItem,
+  type SanitizeFaqStats,
 } from '@/lib/glossary/sanitizeFaq';
+
 
 
 interface NextStep {
