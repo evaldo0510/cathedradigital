@@ -59,6 +59,14 @@ export default function CollectionEditor() {
     featured: false,
     space: 'church' as 'church' | 'library' | 'cloister' | 'atrium',
     eyebrow: '',
+    estimated_reading_time_minutes: '' as string,
+    difficulty_level: '' as '' | 'iniciante' | 'intermediario' | 'avancado',
+    hero_quote: '',
+    hero_quote_author: '',
+    learning_objectives: '' as string, // uma linha por item
+    prerequisites: '' as string,
+    completion_message: '',
+    certificate_eligible: false,
   });
 
   useEffect(() => {
@@ -74,6 +82,15 @@ export default function CollectionEditor() {
       featured: c.featured,
       space: ((c.metadata?.space as typeof form.space) ?? 'church'),
       eyebrow: (c.metadata?.eyebrow as string) ?? '',
+      estimated_reading_time_minutes:
+        c.estimated_reading_time_minutes != null ? String(c.estimated_reading_time_minutes) : '',
+      difficulty_level: (c.difficulty_level as typeof form.difficulty_level) ?? '',
+      hero_quote: c.hero_quote ?? '',
+      hero_quote_author: c.hero_quote_author ?? '',
+      learning_objectives: (c.learning_objectives ?? []).join('\n'),
+      prerequisites: (c.prerequisites ?? []).join('\n'),
+      completion_message: c.completion_message ?? '',
+      certificate_eligible: Boolean(c.certificate_eligible),
     });
   }, [data]);
 
