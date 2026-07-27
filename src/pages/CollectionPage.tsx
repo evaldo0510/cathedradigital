@@ -164,7 +164,12 @@ const ItemRow: React.FC<ItemRowProps> = ({
         )}
 
         <div className="flex items-center gap-spacing-md pt-spacing-2xs">
-          {href ? (
+          {locked ? (
+            <span className="text-premium-xs text-muted-foreground italic inline-flex items-center gap-1">
+              <Circle className="w-3 h-3" aria-hidden />
+              Conclua o item anterior para desbloquear
+            </span>
+          ) : href ? (
             <Link
               to={href}
               onClick={onOpen}
@@ -178,14 +183,16 @@ const ItemRow: React.FC<ItemRowProps> = ({
               Conteúdo em preparação
             </span>
           )}
-          <button
-            type="button"
-            onClick={onToggleComplete}
-            className="text-premium-xs text-muted-foreground hover:text-primary underline underline-offset-4"
-            aria-pressed={done}
-          >
-            {done ? 'Desmarcar' : 'Marcar como concluído'}
-          </button>
+          {!locked && (
+            <button
+              type="button"
+              onClick={onToggleComplete}
+              className="text-premium-xs text-muted-foreground hover:text-primary underline underline-offset-4"
+              aria-pressed={done}
+            >
+              {done ? 'Desmarcar' : 'Marcar como concluído'}
+            </button>
+          )}
         </div>
       </div>
     </EditorialSurface>
