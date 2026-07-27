@@ -64,6 +64,25 @@ export const CollectionCompletionCTA: React.FC<Props> = ({
     staleTime: 5 * 60 * 1000,
   });
 
+  // Analytics: dispara uma vez por sessão desta coleção quando o bloco de
+  // recomendações Nexus estiver visível (o usuário concluiu 100%).
+  const emittedRef = useRef(false);
+  useEffect(() => {
+    if (emittedRef.current) return;
+    emittedRef.current = true;
+    trackCollectionEvent('collection_completed', {
+      collection_id: collection.id,
+      collection_slug: collection.slug,
+      collection_title: collection.title,
+      category: collection.category,
+      difficulty_level: collection.difficulty_level ?? null,
+      estimated_reading_time_minutes:
+        collection.estimated_reading_time_minutes ?? null,
+      has_certificate: Boolean(collection.certificate_eligible),
+      extra: { recommendations_count: suggestions.length },
+    });
+  }, [collection, suggestions.length]);
+
   return (
     <section
       aria-labelledby="collection-completion-heading"
