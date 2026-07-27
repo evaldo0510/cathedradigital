@@ -295,15 +295,22 @@ export default function CollectionPage() {
     (p) => p.status !== 'not_started',
   ).length;
 
-  // Bloqueios por is_locked_until_prev
+  // Bloqueios por is_locked_until_prev — mapeia também qual item anterior está barrando.
   const lockedItemIds = new Set<string>();
+  const blockingLabelById = new Map<string, string>();
   for (let i = 0; i < items.length; i++) {
     const it = items[i];
     const prev = items[i - 1];
     if (it.is_locked_until_prev && prev && getStatus(prev.id) !== 'completed') {
       lockedItemIds.add(it.id);
+      blockingLabelById.set(
+        it.id,
+        prev.title_override ?? prev.item_slug.replace(/-/g, ' '),
+      );
     }
   }
+
+  const prerequisites = collection.prerequisites ?? [];
 
   // Próximo item pendente (ignora bloqueados) para o CTA principal
   const nextItem =
