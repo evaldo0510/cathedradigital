@@ -69,10 +69,12 @@ interface NexusRef {
 }
 
 import {
-  sanitizeFaqItems,
-  filterFaqForJsonLd,
+  sanitizeFaqItemsDetailed,
+  buildFaqPageJsonLd,
   type FaqItem,
+  type SanitizeFaqStats,
 } from '@/lib/glossary/sanitizeFaq';
+
 
 
 interface NextStep {
@@ -234,6 +236,7 @@ const NEXUS_ORDER: readonly ReaderNexusBucket[] = [
 
 function useGlossaryTerm(slug: string | undefined) {
   const [term, setTerm] = useState<GlossaryTerm | null>(null);
+  const [faqStats, setFaqStats] = useState<SanitizeFaqStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -260,11 +263,14 @@ function useGlossaryTerm(slug: string | undefined) {
         setLoading(false);
         return;
       }
-      setTerm(
-        data
-          ? ({ ...(data as any), faq: sanitizeFaqItems((data as any).faq, slug) } as GlossaryTerm)
-          : null,
-      );
+      if (data) {
+        const sanitized = sanitizeFaqItemsDetailed((data as any).faq, slug);
+        setTerm({ ...(data as any), faq: sanitized.items } as GlossaryTerm);
+        setFaqStats(sanitized.stats);
+      } else {
+        setTerm(null);
+        setFaqStats(null);
+      }
       setLoading(false);
     })();
 
@@ -273,8 +279,9 @@ function useGlossaryTerm(slug: string | undefined) {
     };
   }, [slug]);
 
-  return { term, loading, error };
+  return { term, loading, error, faqStats };
 }
+
 
 /* ------------------------------------------------------------------ */
 /* Registro em user_history                                            */
@@ -358,6 +365,35 @@ function MeditationBlock({ children }: { children: string | null | undefined }) 
 /* Ver: docs/reader-architecture-master.md                             */
 
 
+
+function FaqSanitizationBadge({
+  stats,
+  slug,
+}: {
+  stats: SanitizeFaqStats | null;
+  slug?: string;
+}) {
+  // Só aparece em dev e quando houve descarte ou normalização
+  const isDev =
+    typeof import.meta !== 'undefined' &&
+    (import.meta as any).env &&
+    (import.meta as any).env.DEV;
+  if (!isDev || !stats) return null;
+  if (stats.dropped === 0 && stats.normalized === 0 && stats.total === 0) return null;
+
+  return (
+    <div
+      data-testid="faq-sanitization-badge"
+      className="max-w-[68ch] mx-auto mb-4 rounded-md border border-dashed border-amber-400/60 bg-amber-50/60 px-4 py-2 text-xs font-mono text-amber-900"
+      role="note"
+      aria-label="Resumo de sanitização do FAQ (apenas em desenvolvimento)"
+    >
+      <span className="font-semibold">[dev] FAQ · {slug ?? '?'}</span>{' '}
+      total={stats.total} · mantidos={stats.kept} · descartados={stats.dropped} ·
+      normalizados={stats.normalized}
+    </div>
+  );
+}
 
 function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
   const safeItems = items ?? [];
@@ -501,7 +537,7 @@ function BibliographyBlock({ items }: { items: BibliographyItem[] | null | undef
 const GlossaryTermPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const { term, loading, error } = useGlossaryTerm(slug);
+  const { term, loading, error, faqStats } = useGlossaryTerm(slug);
   const { toggleFavorite, isFavorite } = useFavorites('glossary');
 
   useHistoryRegistration(term);
@@ -643,17 +679,8 @@ const GlossaryTermPage: React.FC = () => {
                 },
               },
               ...(() => {
-                const faqForJsonLd = filterFaqForJsonLd(term.faq);
-                return faqForJsonLd.length > 0
-                  ? [{
-                      '@type': 'FAQPage',
-                      mainEntity: faqForJsonLd.map((f) => ({
-                        '@type': 'Question',
-                        name: f.question,
-                        acceptedAnswer: { '@type': 'Answer', text: f.answer },
-                      })),
-                    }]
-                  : [];
+                const faqJsonLd = buildFaqPageJsonLd(term.faq);
+                return faqJsonLd ? [faqJsonLd] : [];
               })(),
             ],
           })}
@@ -828,7 +855,12 @@ const GlossaryTermPage: React.FC = () => {
                   )}
                   {k === 'application' && <TextSection>{term.practical_application}</TextSection>}
                   {k === 'meditation' && <MeditationBlock>{term.logos_meditation}</MeditationBlock>}
-                  {k === 'faq' && <FaqBlock items={term.faq} />}
+                  {k === 'faq' && (
+                    <>
+                      <FaqSanitizationBadge stats={faqStats} slug={term.slug} />
+                      <FaqBlock items={term.faq} />
+                    </>
+                  )}
                   {k === 'next_steps' && <NextStepsBlock items={term.next_steps} />}
                   {k === 'bibliography' && <BibliographyBlock items={term.bibliography} />}
                 </section>
