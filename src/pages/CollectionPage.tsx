@@ -362,10 +362,43 @@ export default function CollectionPage() {
             </span>
           </div>
 
+          {heroQuote && (
+            <blockquote className="border-l-2 border-primary/40 pl-spacing-md italic font-serif text-premium-md text-foreground/90 leading-relaxed max-w-2xl">
+              “{heroQuote}”
+              {heroQuoteAuthor && (
+                <footer className="mt-spacing-2xs not-italic text-premium-xs text-muted-foreground">
+                  — {heroQuoteAuthor}
+                </footer>
+              )}
+            </blockquote>
+          )}
+
           {(editorialGoal || collection.description) && (
             <p className="font-serif text-premium-md text-muted-foreground leading-relaxed max-w-2xl">
               {editorialGoal ?? collection.description}
             </p>
+          )}
+
+          {learningObjectives.length > 0 && (
+            <div className="space-y-spacing-2xs">
+              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/70">
+                Objetivos da trilha
+              </h2>
+              <ul className="space-y-spacing-2xs">
+                {learningObjectives.map((obj, i) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-spacing-xs text-premium-sm text-foreground/90"
+                  >
+                    <CheckCircle2
+                      className="w-4 h-4 text-primary/60 flex-shrink-0 mt-[3px]"
+                      aria-hidden
+                    />
+                    <span>{obj}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
           )}
 
           {items.length > 0 && (
