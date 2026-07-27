@@ -110,6 +110,7 @@ import { setLastRoute, resolveAuthHome } from './lib/lastRoute';
 const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
 const SpiritualProfile = lazy(() => import('./components/cathedra/SpiritualProfile'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
+const SaintAutoPageRoute = lazy(() => import('./features/saints/editorialEngine/SaintAutoPageRoute'));
 const BibliotecaEscritosPage = lazy(() => import('./pages/biblioteca/BibliotecaEscritosPage'));
 const BibliotecaBuscaPage = lazy(() => import('./pages/biblioteca/BibliotecaBuscaPage'));
 const SaintWorkOverviewPage = lazy(() => import('./pages/biblioteca/SaintWorkOverviewPage'));
