@@ -57,6 +57,11 @@ import { installSessionRenewal } from './lib/sessionRenewal';
 import SwipeNavigation from './components/cathedra/SwipeNavigation';
 import ContrastInspector from './components/dev/ContrastInspector';
 
+const MagisterioLegacyRedirect = () => {
+  const { id } = useParams<{ id: string }>();
+  return <Navigate to={`/magisterium/${id ?? ''}`} replace />;
+};
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
