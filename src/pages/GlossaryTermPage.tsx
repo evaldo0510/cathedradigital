@@ -74,6 +74,7 @@ import {
   type FaqItem,
   type SanitizeFaqStats,
 } from '@/lib/glossary/sanitizeFaq';
+import { reportFaqMetrics } from '@/lib/glossary/faqMetrics';
 
 
 
