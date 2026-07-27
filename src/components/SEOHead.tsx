@@ -87,18 +87,13 @@ const SEOHead = ({ title, description, path, keywords, type = 'website', breadcr
     ]
   };
 
-  const faqLD = faqs && faqs.length > 0 ? {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": faqs.map(f => ({
-      "@type": "Question",
-      "name": f.question,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": f.answer
-      }
-    }))
-  } : null;
+  // Sanitiza question/answer e memoiza a construção do JSON-LD.
+  // Reutiliza a mesma pipeline do GlossaryTermPage para garantir que o que
+  // vai ao crawler seja sempre a versão limpa (sem <script>, controle, etc.).
+  const faqLD = useMemo(() => {
+    const built = buildFaqPageJsonLd(faqs);
+    return built ? { '@context': 'https://schema.org', ...built } : null;
+  }, [faqs]);
 
   const websiteSchema = {
     "@context": "https://schema.org",
