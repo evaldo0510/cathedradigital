@@ -512,13 +512,13 @@ export default function CollectionPage() {
                   status={status}
                   href={href}
                   locked={locked}
+                  blockingItemLabel={blockingLabelById.get(item.id) ?? null}
                   onOpen={() => {
                     if (status === 'not_started') {
                       void startItem(item.id).catch(() => undefined);
                     }
                   }}
                   onToggleComplete={() => {
-                    // Simples toggle: se concluído → reabre em leitura; senão marca concluído.
                     if (status === 'completed') {
                       void startItem(item.id).catch(() => undefined);
                     } else {
