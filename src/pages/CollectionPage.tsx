@@ -439,6 +439,28 @@ export default function CollectionPage() {
             </div>
           )}
 
+          {prerequisites.length > 0 && (
+            <div className="space-y-spacing-2xs" data-testid="collection-prerequisites">
+              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-700 dark:text-amber-400">
+                Pré-requisitos recomendados
+              </h2>
+              <ul className="space-y-spacing-2xs">
+                {prerequisites.map((pr, i) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-spacing-xs text-premium-sm text-foreground/90"
+                  >
+                    <Lock
+                      className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-[4px]"
+                      aria-hidden
+                    />
+                    <span>{pr}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {items.length > 0 && (
             <>
               <CollectionProgressBar completed={totalCompleted} total={items.length} />
@@ -454,6 +476,14 @@ export default function CollectionPage() {
                   <Button size="lg" disabled>
                     <Play className="w-4 h-4 mr-2" aria-hidden />
                     {ctaLabel}
+                  </Button>
+                )}
+                {collection.certificate_eligible && (
+                  <Button asChild variant="outline" size="lg">
+                    <Link to={`/colecoes/${collection.slug}/certificado`}>
+                      <Award className="w-4 h-4 mr-2" aria-hidden />
+                      {totalCompleted === items.length ? 'Ver certificado' : 'Status do certificado'}
+                    </Link>
                   </Button>
                 )}
                 {totalStarted > 0 && nextItem && (
