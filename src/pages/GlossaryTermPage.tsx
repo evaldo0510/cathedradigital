@@ -68,41 +68,12 @@ interface NexusRef {
   label?: string;
 }
 
-interface FaqItem {
-  question: string;
-  answer: string;
-}
+import {
+  sanitizeFaqItems,
+  filterFaqForJsonLd,
+  type FaqItem,
+} from '@/lib/glossary/sanitizeFaq';
 
-/**
- * Sanitiza o array de FAQs vindo do banco: descarta entradas nulas ou
- * sem `question` válida e normaliza `answer` para string (nunca undefined).
- * Loga avisos em dev para facilitar auditoria editorial.
- */
-function sanitizeFaqItems(raw: unknown, slug?: string): FaqItem[] {
-  if (!Array.isArray(raw)) return [];
-  const result: FaqItem[] = [];
-  raw.forEach((item, idx) => {
-    if (!item || typeof item !== 'object') {
-      if (import.meta.env.DEV) {
-        console.warn(`[Glossary/FAQ] item #${idx} inválido em "${slug}"`, item);
-      }
-      return;
-    }
-    const q = (item as any).question;
-    const a = (item as any).answer;
-    if (typeof q !== 'string' || !q.trim()) {
-      if (import.meta.env.DEV) {
-        console.warn(`[Glossary/FAQ] item #${idx} sem question em "${slug}"`, item);
-      }
-      return;
-    }
-    result.push({
-      question: q.trim(),
-      answer: typeof a === 'string' ? a : '',
-    });
-  });
-  return result;
-}
 
 interface NextStep {
   label: string;
