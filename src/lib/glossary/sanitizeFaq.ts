@@ -107,3 +107,68 @@ export function filterFaqForJsonLd(items: FaqItem[] | null | undefined): FaqItem
       it.answer.trim().length > 0,
   );
 }
+
+/* -------------------------------------------------------------------- */
+/* JSON-LD builder + validação Zod                                      */
+/* -------------------------------------------------------------------- */
+
+import { z } from 'zod';
+
+const nonEmptyString = z.string().trim().min(1);
+
+export const FaqPageJsonLdSchema = z.object({
+  '@type': z.literal('FAQPage'),
+  mainEntity: z
+    .array(
+      z.object({
+        '@type': z.literal('Question'),
+        name: nonEmptyString,
+        acceptedAnswer: z.object({
+          '@type': z.literal('Answer'),
+          text: nonEmptyString,
+        }),
+      }),
+    )
+    .min(1),
+});
+
+export type FaqPageJsonLd = z.infer<typeof FaqPageJsonLdSchema>;
+
+/**
+ * Constrói o objeto JSON-LD `FAQPage` a partir de itens já sanitizados,
+ * aplicando `filterFaqForJsonLd` + validação Zod em runtime.
+ *
+ * Retorna `null` quando não há itens válidos (não emitir schema vazio).
+ * Em dev, loga erro de validação; em prod, retorna `null` silenciosamente
+ * para nunca enviar structured data malformado ao Google.
+ */
+export function buildFaqPageJsonLd(items: FaqItem[] | null | undefined): FaqPageJsonLd | null {
+  const eligible = filterFaqForJsonLd(items);
+  if (eligible.length === 0) return null;
+
+  const candidate = {
+    '@type': 'FAQPage' as const,
+    mainEntity: eligible.map((f) => ({
+      '@type': 'Question' as const,
+      name: f.question,
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: f.answer,
+      },
+    })),
+  };
+
+  const parsed = FaqPageJsonLdSchema.safeParse(candidate);
+  if (!parsed.success) {
+    const isDev =
+      typeof import.meta !== 'undefined' &&
+      (import.meta as any).env &&
+      (import.meta as any).env.DEV;
+    if (isDev) {
+      console.error('[Glossary/FAQ] JSON-LD inválido — descartado', parsed.error.flatten());
+    }
+    return null;
+  }
+  return parsed.data;
+}
+
