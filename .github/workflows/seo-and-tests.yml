@@ -34,6 +34,17 @@ jobs:
       - name: FAQ Coverage Report (categorias de sanitização)
         run: node scripts/faq-coverage-report.mjs
 
+      - name: Upload FAQ coverage report (artifact)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: faq-coverage-report
+          path: |
+            reports/faq-coverage.json
+            reports/faq-coverage.md
+          if-no-files-found: warn
+          retention-days: 30
+
       - name: Prayer Engine — Auditoria C0.3 (Reader Template Master)
         run: bunx tsx scripts/prayer-engine-audit.ts
 
