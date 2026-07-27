@@ -148,15 +148,18 @@ export function buildFaqPageJsonLd(items: FaqItem[] | null | undefined): FaqPage
 
   const candidate = {
     '@type': 'FAQPage' as const,
-    mainEntity: eligible.map((f) => ({
-      '@type': 'Question' as const,
-      name: f.question,
-      acceptedAnswer: {
-        '@type': 'Answer' as const,
-        text: f.answer,
-      },
-    })),
+    mainEntity: eligible
+      .map((f) => ({
+        '@type': 'Question' as const,
+        name: sanitizeAnswerForJsonLd(f.question),
+        acceptedAnswer: {
+          '@type': 'Answer' as const,
+          text: sanitizeAnswerForJsonLd(f.answer),
+        },
+      }))
+      .filter((q) => q.name.length > 0 && q.acceptedAnswer.text.length > 0),
   };
+  if (candidate.mainEntity.length === 0) return null;
 
   const parsed = FaqPageJsonLdSchema.safeParse(candidate);
   if (!parsed.success) {
