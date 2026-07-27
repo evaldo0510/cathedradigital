@@ -420,4 +420,35 @@ const PrayerDetailPageInner: React.FC = () => {
   );
 };
 
+/**
+ * Wrapper com Error Boundary contextual — captura React #300 e outros
+ * crashes durante o carregamento da hierarquia/portal contemplativo,
+ * enviando slug + params + estado de hierarquia para telemetria.
+ */
+const PrayerDetailPage: React.FC = () => {
+  const { slug } = useParams<{ slug: string }>();
+  const [searchParams] = useSearchParams();
+  const { user } = useAuth();
+
+  const context: PrayerErrorContext = useMemo(
+    () => ({
+      slug: slug ?? null,
+      searchParams: serializeSearchParams(searchParams),
+      userId: user?.id ?? null,
+      route: typeof window !== 'undefined' ? window.location.pathname : undefined,
+    }),
+    [slug, searchParams, user?.id],
+  );
+
+  useEffect(() => {
+    logPrayerDiagnostics('PrayerDetailPage:mount', context);
+  }, [context]);
+
+  return (
+    <PrayerErrorBoundary context={context}>
+      <PrayerDetailPageInner />
+    </PrayerErrorBoundary>
+  );
+};
+
 export default PrayerDetailPage;
