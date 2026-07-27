@@ -18,6 +18,11 @@ import {
   type PatristicSearchHit,
   type PatristicSearchResult,
 } from '@/services/saintWorksService';
+import {
+  searchCollections,
+  type CollectionSearchHit,
+} from '@/features/collections/searchCollections';
+import CollectionSearchCard from '@/features/collections/CollectionSearchCard';
 
 const PAGE_SIZE = 10;
 
@@ -59,6 +64,7 @@ const BibliotecaBuscaPage: React.FC = () => {
 
   const [input, setInput] = useState(q);
   const [result, setResult] = useState<PatristicSearchResult | null>(null);
+  const [collectionHits, setCollectionHits] = useState<CollectionSearchHit[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => setInput(q), [q]);
@@ -68,12 +74,19 @@ const BibliotecaBuscaPage: React.FC = () => {
     let alive = true;
     if (q.trim().length < 2) {
       setResult(null);
+      setCollectionHits([]);
       return;
     }
     setLoading(true);
-    searchPatristicLibrary(q, page, PAGE_SIZE)
-      .then((r) => {
-        if (alive) setResult(r);
+    Promise.all([
+      searchPatristicLibrary(q, page, PAGE_SIZE),
+      // Coleções só na primeira página — resultado curto e curado.
+      page === 1 ? searchCollections(q, 6) : Promise.resolve<CollectionSearchHit[]>([]),
+    ])
+      .then(([r, cols]) => {
+        if (!alive) return;
+        setResult(r);
+        setCollectionHits(cols);
       })
       .finally(() => {
         if (alive) setLoading(false);
@@ -142,16 +155,42 @@ const BibliotecaBuscaPage: React.FC = () => {
           <p className="text-center text-muted-foreground py-spacing-lg">Buscando…</p>
         )}
 
-        {!loading && q.trim().length >= 2 && result && result.hits.length === 0 && (
-          <div className="text-center py-spacing-2xl space-y-spacing-sm">
-            <Icons.BookOpen className="w-10 h-10 mx-auto text-muted-foreground" aria-hidden />
-            <p className="text-muted-foreground">
-              Nenhum trecho encontrado para <strong>“{q}”</strong>.
-            </p>
-            <Button variant="outline" onClick={() => navigate('/biblioteca/escritos')}>
-              Voltar ao índice
-            </Button>
-          </div>
+        {!loading &&
+          q.trim().length >= 2 &&
+          result &&
+          result.hits.length === 0 &&
+          collectionHits.length === 0 && (
+            <div className="text-center py-spacing-2xl space-y-spacing-sm">
+              <Icons.BookOpen className="w-10 h-10 mx-auto text-muted-foreground" aria-hidden />
+              <p className="text-muted-foreground">
+                Nenhum trecho ou coleção encontrado para <strong>“{q}”</strong>.
+              </p>
+              <Button variant="outline" onClick={() => navigate('/biblioteca/escritos')}>
+                Voltar ao índice
+              </Button>
+            </div>
+          )}
+
+        {/* Coleções (só na página 1, acima dos trechos) */}
+        {!loading && page === 1 && collectionHits.length > 0 && (
+          <section aria-labelledby="col-search-heading" className="space-y-spacing-sm" data-testid="collections-search-section">
+            <div className="flex items-baseline justify-between">
+              <h2 id="col-search-heading" className="text-[10px] font-black uppercase tracking-[0.25em] text-primary/70">
+                Coleções encontradas · {collectionHits.length}
+              </h2>
+              <Link
+                to="/acervo"
+                className="text-premium-xs text-muted-foreground hover:text-primary underline underline-offset-4"
+              >
+                Ver todas
+              </Link>
+            </div>
+            <div className="grid gap-spacing-sm md:grid-cols-2">
+              {collectionHits.map((c) => (
+                <CollectionSearchCard key={c.slug} hit={c} />
+              ))}
+            </div>
+          </section>
         )}
 
         {!loading && result && result.hits.length > 0 && (

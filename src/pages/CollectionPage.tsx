@@ -19,6 +19,8 @@ import {
   Landmark,
   HandHeart,
   Map as MapIcon,
+  Lock,
+  Award,
 } from 'lucide-react';
 import { EditorialSurface } from '@/components/editorial';
 import {
@@ -91,6 +93,8 @@ interface ItemRowProps {
   status: CollectionProgressStatus;
   href: string | null;
   locked?: boolean;
+  /** Nome do item anterior que precisa ser concluído para desbloquear. */
+  blockingItemLabel?: string | null;
   onOpen: () => void;
   onToggleComplete: () => void;
 }
@@ -101,6 +105,7 @@ const ItemRow: React.FC<ItemRowProps> = ({
   status,
   href,
   locked = false,
+  blockingItemLabel = null,
   onOpen,
   onToggleComplete,
 }) => {
@@ -116,9 +121,11 @@ const ItemRow: React.FC<ItemRowProps> = ({
       className={cn(
         'flex items-start gap-spacing-md p-spacing-md transition-colors',
         done && 'bg-primary/5',
-        locked && 'opacity-60',
+        locked && 'opacity-70',
       )}
       aria-disabled={locked || undefined}
+      data-locked={locked || undefined}
+      data-testid="collection-item-row"
     >
       {/* Número + ícone */}
       <div className="flex flex-col items-center gap-spacing-2xs flex-shrink-0 pt-1">
@@ -128,11 +135,15 @@ const ItemRow: React.FC<ItemRowProps> = ({
         <div
           className={cn(
             'w-10 h-10 rounded-full flex items-center justify-center',
-            done ? 'bg-primary text-primary-foreground' : 'bg-primary/10 text-primary',
+            done
+              ? 'bg-primary text-primary-foreground'
+              : locked
+                ? 'bg-muted text-muted-foreground'
+                : 'bg-primary/10 text-primary',
           )}
           aria-hidden
         >
-          <Icon className="w-5 h-5" />
+          {locked ? <Lock className="w-4 h-4" /> : <Icon className="w-5 h-5" />}
         </div>
       </div>
 
@@ -153,6 +164,15 @@ const ItemRow: React.FC<ItemRowProps> = ({
             {done ? <CheckCircle2 className="w-3 h-3" /> : <Circle className="w-3 h-3" />}
             {STATUS_LABEL[status]}
           </span>
+          {locked && (
+            <span
+              className="inline-flex items-center gap-1 text-[10px] font-medium uppercase tracking-widest text-amber-600 dark:text-amber-400"
+              data-testid="collection-item-lock-badge"
+            >
+              <Lock className="w-3 h-3" aria-hidden />
+              Bloqueado
+            </span>
+          )}
         </div>
         <h3 className="font-serif text-premium-md md:text-premium-lg text-foreground leading-tight">
           {item.title_override ?? item.item_slug.replace(/-/g, ' ')}
@@ -163,11 +183,22 @@ const ItemRow: React.FC<ItemRowProps> = ({
           </p>
         )}
 
+        {locked && blockingItemLabel && (
+          <p
+            className="text-premium-xs text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-md px-spacing-xs py-spacing-2xs inline-flex items-start gap-1"
+            data-testid="collection-item-lock-reason"
+          >
+            <Lock className="w-3 h-3 mt-[2px] flex-shrink-0" aria-hidden />
+            <span>
+              Conclua <strong className="font-semibold">{blockingItemLabel}</strong> para desbloquear este conteúdo.
+            </span>
+          </p>
+        )}
+
         <div className="flex items-center gap-spacing-md pt-spacing-2xs">
           {locked ? (
-            <span className="text-premium-xs text-muted-foreground italic inline-flex items-center gap-1">
-              <Circle className="w-3 h-3" aria-hidden />
-              Conclua o item anterior para desbloquear
+            <span className="text-premium-xs text-muted-foreground italic">
+              Trilha guiada — ordem obrigatória
             </span>
           ) : href ? (
             <Link
@@ -264,15 +295,22 @@ export default function CollectionPage() {
     (p) => p.status !== 'not_started',
   ).length;
 
-  // Bloqueios por is_locked_until_prev
+  // Bloqueios por is_locked_until_prev — mapeia também qual item anterior está barrando.
   const lockedItemIds = new Set<string>();
+  const blockingLabelById = new Map<string, string>();
   for (let i = 0; i < items.length; i++) {
     const it = items[i];
     const prev = items[i - 1];
     if (it.is_locked_until_prev && prev && getStatus(prev.id) !== 'completed') {
       lockedItemIds.add(it.id);
+      blockingLabelById.set(
+        it.id,
+        prev.title_override ?? prev.item_slug.replace(/-/g, ' '),
+      );
     }
   }
+
+  const prerequisites = collection.prerequisites ?? [];
 
   // Próximo item pendente (ignora bloqueados) para o CTA principal
   const nextItem =
@@ -401,6 +439,28 @@ export default function CollectionPage() {
             </div>
           )}
 
+          {prerequisites.length > 0 && (
+            <div className="space-y-spacing-2xs" data-testid="collection-prerequisites">
+              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-700 dark:text-amber-400">
+                Pré-requisitos recomendados
+              </h2>
+              <ul className="space-y-spacing-2xs">
+                {prerequisites.map((pr, i) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-spacing-xs text-premium-sm text-foreground/90"
+                  >
+                    <Lock
+                      className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-[4px]"
+                      aria-hidden
+                    />
+                    <span>{pr}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {items.length > 0 && (
             <>
               <CollectionProgressBar completed={totalCompleted} total={items.length} />
@@ -416,6 +476,14 @@ export default function CollectionPage() {
                   <Button size="lg" disabled>
                     <Play className="w-4 h-4 mr-2" aria-hidden />
                     {ctaLabel}
+                  </Button>
+                )}
+                {collection.certificate_eligible && (
+                  <Button asChild variant="outline" size="lg">
+                    <Link to={`/colecoes/${collection.slug}/certificado`}>
+                      <Award className="w-4 h-4 mr-2" aria-hidden />
+                      {totalCompleted === items.length ? 'Ver certificado' : 'Status do certificado'}
+                    </Link>
                   </Button>
                 )}
                 {totalStarted > 0 && nextItem && (
@@ -444,13 +512,13 @@ export default function CollectionPage() {
                   status={status}
                   href={href}
                   locked={locked}
+                  blockingItemLabel={blockingLabelById.get(item.id) ?? null}
                   onOpen={() => {
                     if (status === 'not_started') {
                       void startItem(item.id).catch(() => undefined);
                     }
                   }}
                   onToggleComplete={() => {
-                    // Simples toggle: se concluído → reabre em leitura; senão marca concluído.
                     if (status === 'completed') {
                       void startItem(item.id).catch(() => undefined);
                     } else {
