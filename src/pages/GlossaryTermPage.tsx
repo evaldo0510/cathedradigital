@@ -579,7 +579,7 @@ const GlossaryTermPage: React.FC = () => {
   const navigate = useNavigate();
   const { term, loading, error, faqStats, rawFaq } = useGlossaryTerm(slug);
   const isDevEnv = import.meta.env.DEV;
-  const [devMode, setDevMode] = useState<'off' | 'raw' | 'diff'>('off');
+  const [devMode, setDevMode] = useState<'off' | 'raw' | 'diff' | 'jsonld'>('off');
   const showRawFaq = devMode !== 'off';
   const { toggleFavorite, isFavorite } = useFavorites('glossary');
 
