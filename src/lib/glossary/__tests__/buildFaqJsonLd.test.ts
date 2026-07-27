@@ -96,7 +96,6 @@ describe('buildFaqPageJsonLd — snapshots', () => {
             "acceptedAnswer": {
               "@type": "Answer",
               "text": "Linha 1
-
       Linha 2",
             },
             "name": "Multi?",
