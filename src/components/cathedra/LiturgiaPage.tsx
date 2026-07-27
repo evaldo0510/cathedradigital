@@ -13,6 +13,7 @@ import { useDailyLiturgy } from '@/hooks/useDailyLiturgy';
 import { useSaintOfDay } from '@/hooks/useSaintOfDay';
 import { toIsoDateKey } from '@/core/liturgy/LiturgyProvider';
 import { LiturgiaSkeleton } from './LiturgiaSkeleton';
+import SacredImage from './SacredImage';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 import ContemplativeLayout from './ContemplativeLayout';
 import {
@@ -284,11 +285,9 @@ const LiturgiaPage: React.FC = () => {
 
               {saint && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="bg-muted/30 border border-border rounded-[2rem] p-spacing-xl flex flex-col items-center text-center space-y-spacing-md">
-                  {saint.image && (
-                    <div className="w-spacing-3xl h-spacing-3xl rounded-premium overflow-hidden border-2 border-secondary p-spacing-2xs shadow-premium shadow-secondary/10">
-                      <img src={saint.image} alt={saint.name} className="w-full h-full object-cover rounded-premium-full" />
-                    </div>
-                  )}
+                  <div className="w-spacing-3xl h-spacing-3xl rounded-premium-full overflow-hidden border-2 border-secondary p-spacing-2xs shadow-premium shadow-secondary/10">
+                    <SacredImage src={saint.image} alt={saint.name} category={(saint as any).category} className="w-full h-full object-cover rounded-premium-full" />
+                  </div>
                   <div className="space-y-spacing-2xs">
                     <p className="text-premium-xs font-black uppercase tracking-[0.3em] text-secondary">Santo do Dia</p>
                     <h3 className="text-premium-xl font-display font-black text-primary">{saint.name}</h3>

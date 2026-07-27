@@ -17,19 +17,27 @@ const ScrollToTop = () => {
     // Deep-link com âncora: navegador cuida do scroll para o hash.
     if (hash) return;
 
-    // Voltar/avançar do navegador: preserva scroll (comportamento nativo).
+    // Voltar/avançar: preserva scroll (comportamento nativo do navegador).
     if (navType === 'POP') return;
 
-    const prefersReduced =
-      typeof window !== 'undefined' &&
-      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    const behavior: ScrollBehavior = prefersReduced ? 'auto' : 'auto';
-
-    const main = document.getElementById('main-content');
-    if (main && typeof main.scrollTo === 'function') {
-      main.scrollTo({ top: 0, left: 0, behavior });
-    }
-    window.scrollTo({ top: 0, left: 0, behavior });
+    // Reseta window + qualquer container de scroll interno conhecido.
+    // Feito no próximo frame para depois do layout do novo route.
+    const reset = () => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      document
+        .querySelectorAll<HTMLElement>(
+          '#main-content, [data-scroll-container], main, [role="main"]',
+        )
+        .forEach((el) => {
+          if (typeof el.scrollTo === 'function') el.scrollTo(0, 0);
+          else el.scrollTop = 0;
+        });
+    };
+    reset();
+    const raf = requestAnimationFrame(reset);
+    return () => cancelAnimationFrame(raf);
   }, [pathname, hash, navType]);
 
   return null;

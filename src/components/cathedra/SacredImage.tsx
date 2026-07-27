@@ -3,29 +3,42 @@ import { Icons } from '../../constants';
 import { resolveColors, buildImageSrc, getInitials } from '@/lib/sacredPalette';
 
 interface SacredImageProps {
-  src: string | string[];
+  src?: string | string[] | null;
   alt: string;
   className: string;
   priority?: boolean;
   liturgicalColor?: string;
   dominantColor?: string;
+  /** Categoria do santo (doctor/father/martyr/saint) para colorir o fallback. */
+  category?: string;
 }
 
-const SacredImage = React.forwardRef<HTMLDivElement, SacredImageProps>(({ src, alt, className, priority = false, liturgicalColor, dominantColor }, ref) => {
+const SacredImage = React.forwardRef<HTMLDivElement, SacredImageProps>(({ src, alt, className, priority = false, liturgicalColor, dominantColor, category }, ref) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(false);
   const [currentSrcIndex, setCurrentSrcIndex] = useState(0);
 
   const sources = useMemo(() => {
+    if (!src) return [];
     const s = Array.isArray(src) ? src : [src];
-    return s.filter(Boolean).map(url => buildImageSrc(url, priority));
+    return s.filter(Boolean).map((url) => buildImageSrc(url as string, priority));
   }, [src, priority]);
 
   const mainSrc = sources[currentSrcIndex];
-  const colors = useMemo(() => resolveColors(liturgicalColor, dominantColor), [liturgicalColor, dominantColor]);
+  const colors = useMemo(
+    () => resolveColors(liturgicalColor, dominantColor, category),
+    [liturgicalColor, dominantColor, category],
+  );
   const initials = useMemo(() => getInitials(alt || ''), [alt]);
+  const noSource = sources.length === 0;
 
   useEffect(() => {
+    // Sem fonte alguma: mostra fallback editorial (sem spinner, sem erro).
+    if (noSource) {
+      setError(false);
+      setIsLoaded(true);
+      return;
+    }
     if (!mainSrc) {
       if (currentSrcIndex < sources.length - 1) {
         setCurrentSrcIndex(prev => prev + 1);
@@ -84,7 +97,7 @@ const SacredImage = React.forwardRef<HTMLDivElement, SacredImageProps>(({ src, a
       >
         <div className="absolute inset-[-50%] opacity-60" style={{ background: `radial-gradient(circle at 40% 40%, ${colors.accent} 0%, transparent 70%)`, animation: 'drift-slow 15s ease-in-out infinite' }} />
         <div className="absolute inset-0 " />
-        {error && (
+        {(error || noSource) && (
           <div className="absolute inset-0 flex flex-col items-center justify-center z-[5] p-4 text-center gap-2">
             <Icons.Cross className="w-8 h-8 text-white/40" aria-hidden />
             <span
@@ -93,15 +106,15 @@ const SacredImage = React.forwardRef<HTMLDivElement, SacredImageProps>(({ src, a
             >
               {initials}
             </span>
-            <span className="text-white/60 text-xs uppercase tracking-widest select-none" role="status">
-              Retrato indisponível
+            <span className="text-white/60 text-[10px] uppercase tracking-widest select-none" role="status">
+              {noSource ? 'Retrato em curadoria' : 'Retrato indisponível'}
             </span>
           </div>
         )}
       </div>
 
-      {/* Actual image */}
-      {!error && (
+      {/* Actual image — só quando há fonte válida */}
+      {!error && !noSource && (
         <img
           src={mainSrc}
           alt={alt}
@@ -112,8 +125,8 @@ const SacredImage = React.forwardRef<HTMLDivElement, SacredImageProps>(({ src, a
         />
       )}
 
-      {/* Loading spinner */}
-      {!isLoaded && (
+      {/* Loading spinner — só quando esperando imagem real */}
+      {!isLoaded && !noSource && (
         <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
           <Icons.Cross className="w-spacing-xl h-spacing-xl opacity-20 text-secondary animate-spin" style={{ animationDuration: '12s' }} />
         </div>

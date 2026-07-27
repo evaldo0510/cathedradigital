@@ -104,6 +104,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
           <SacredImage
             src={saint.image}
             alt={saint.name}
+            category={(saint as any).category}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
           />
         </div>
@@ -145,6 +146,7 @@ const SaintOfTheDayCard: React.FC<SaintOfTheDayCardProps> = ({
       <div className="w-full sm:w-spacing-2xs/3 h-spacing-4xl sm:h-auto relative shrink-0 overflow-hidden">
         <SacredImage 
           src={saint.image} 
+          category={(saint as any).category}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
           alt={saint.name} 
         />
