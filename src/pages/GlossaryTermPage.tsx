@@ -406,6 +406,7 @@ function FaqSanitizationBadge({
 
 const FAQ_PAGE_SIZE = 20;
 const FAQ_PAGINATION_THRESHOLD = 50;
+const FAQ_VIRTUALIZATION_THRESHOLD = 100;
 
 function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
   const safeItems = items ?? [];
