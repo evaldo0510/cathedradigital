@@ -179,6 +179,7 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
           <SacredImage
             src={saint.image}
             alt={saint.name}
+            category={(saint as any).category}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent" />

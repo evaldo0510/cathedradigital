@@ -666,6 +666,7 @@ const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ s
       <div className="relative h-spacing-4xl overflow-hidden">
         <SacredImage 
           src={saint.image || ''} 
+          category={saint.category}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
           alt={saint.name} 
         />
