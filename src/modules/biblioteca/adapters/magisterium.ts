@@ -29,6 +29,7 @@ async function listSpiritualContents(type: string, limit: number, offset: number
 
 function toItem(module: 'magisterium' | 'patristics', row: SpiritualRow): LibraryItem {
   const slug = row.reference_id ?? String(row.id);
+  const encoded = encodeURIComponent(slug);
   return {
     id: String(row.id),
     module,
@@ -36,7 +37,7 @@ function toItem(module: 'magisterium' | 'patristics', row: SpiritualRow): Librar
     slug,
     summary: row.content_text ? row.content_text.slice(0, 220) : undefined,
     themes: row.tags ?? undefined,
-    href: module === 'magisterium' ? `/magisterio/${slug}` : `/biblioteca/padres/${slug}`,
+    href: module === 'magisterium' ? `/magisterium/${encoded}` : `/biblioteca/padres/${encoded}`,
     updatedAt: row.created_at ?? undefined,
   };
 }
@@ -49,7 +50,7 @@ export const magisteriumAdapter: LibraryAdapter = {
     return rows.map((r) => toItem('magisterium', r));
   },
   resolveHref({ slug }) {
-    return `/magisterio/${slug}`;
+    return `/magisterium/${encodeURIComponent(slug)}`;
   },
 };
 
