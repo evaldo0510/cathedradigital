@@ -7,7 +7,7 @@
  * comportamento nativo em listas curtas.
  */
 
-import { memo, useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { List, useDynamicRowHeight, type RowComponentProps } from 'react-window';
 import { cn } from '@/lib/utils';
 import type { FaqItem } from '@/lib/glossary/sanitizeFaq';
