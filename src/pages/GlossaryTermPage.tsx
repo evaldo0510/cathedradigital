@@ -650,17 +650,8 @@ const GlossaryTermPage: React.FC = () => {
                 },
               },
               ...(() => {
-                const faqForJsonLd = filterFaqForJsonLd(term.faq);
-                return faqForJsonLd.length > 0
-                  ? [{
-                      '@type': 'FAQPage',
-                      mainEntity: faqForJsonLd.map((f) => ({
-                        '@type': 'Question',
-                        name: f.question,
-                        acceptedAnswer: { '@type': 'Answer', text: f.answer },
-                      })),
-                    }]
-                  : [];
+                const faqJsonLd = buildFaqPageJsonLd(term.faq);
+                return faqJsonLd ? [faqJsonLd] : [];
               })(),
             ],
           })}
