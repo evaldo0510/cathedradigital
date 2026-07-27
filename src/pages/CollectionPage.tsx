@@ -441,25 +441,12 @@ export default function CollectionPage() {
           )}
 
           {prerequisites.length > 0 && (
-            <div className="space-y-spacing-2xs" data-testid="collection-prerequisites">
-              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-700 dark:text-amber-400">
-                Pré-requisitos recomendados
-              </h2>
-              <ul className="space-y-spacing-2xs">
-                {prerequisites.map((pr, i) => (
-                  <li
-                    key={i}
-                    className="flex items-start gap-spacing-xs text-premium-sm text-foreground/90"
-                  >
-                    <Lock
-                      className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-[4px]"
-                      aria-hidden
-                    />
-                    <span>{pr}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <PrerequisitesBlock
+              prerequisites={prerequisites}
+              collection={collection}
+              itemsTotal={items.length}
+              itemsCompleted={totalCompleted}
+            />
           )}
 
           {items.length > 0 && (
