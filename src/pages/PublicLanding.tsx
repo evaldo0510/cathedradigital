@@ -327,6 +327,11 @@ const PublicLanding = () => {
               })}
             </EditorialGrid>
           </EditorialSection>
+
+          <EditorialDivider />
+
+          {/* ---------------- FAQ ---------------- */}
+          <LandingFAQ />
         </EditorialShell>
       </main>
 
