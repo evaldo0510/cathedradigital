@@ -74,15 +74,19 @@ export function saintToEditorialData(saint: Saint): SaintEditorialData {
   const writings: SaintWritingRef[] = (saint.works ?? [])
     .filter((w) => w && w.title)
     .map((w) => {
-      const externalUrl = w.url;
-      // Regra: obra com URL do próprio Cathedra vira link interno (hosted).
-      const isInternal = Boolean(externalUrl && /^\/(biblioteca|acervo|escritos)\//.test(externalUrl));
+      const url = w.url;
+      const isInternal = Boolean(url && /^\/(biblioteca|acervo|escritos)\//.test(url));
+      let externalSourceLabel: string | undefined;
+      if (url && !isInternal) {
+        try { externalSourceLabel = new URL(url).hostname.replace(/^www\./, ''); }
+        catch { externalSourceLabel = undefined; }
+      }
       return {
         id: slugifyWork(w.title),
         title: w.title,
-        slug: isInternal ? externalUrl!.replace(/^\/biblioteca\/escritos\//, '') : undefined,
-        externalUrl: isInternal ? undefined : externalUrl,
-        externalSourceLabel: externalUrl ? new URL(externalUrl, 'https://cathedra').hostname : undefined,
+        slug: isInternal ? url!.replace(/^\/biblioteca\/escritos\//, '') : undefined,
+        externalUrl: isInternal ? undefined : url,
+        externalSourceLabel,
       };
     });
 
