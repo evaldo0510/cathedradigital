@@ -75,7 +75,7 @@ function FaqRow({
       </div>
     </div>
   );
-});
+}
 
 interface FaqVirtualListProps {
   items: FaqItem[];
