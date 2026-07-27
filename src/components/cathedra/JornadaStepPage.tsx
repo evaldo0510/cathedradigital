@@ -132,6 +132,10 @@ const JornadaStepPage: React.FC = () => {
   useEffect(() => {
     if (stepId && journeyId) {
       loadData();
+    } else {
+      // URL sem step= ou sem journeyId → não há o que carregar; encerra o loading
+      // para renderizar a tela de "etapa não encontrada".
+      setLoading(false);
     }
      
   }, [stepId, journeyId, user?.id]);
@@ -489,21 +493,57 @@ const JornadaStepPage: React.FC = () => {
   }
 
   if (!step) {
+    const missingStepParam = !stepId;
     return createPortal(
-      <div className="fixed inset-0 z-[200] flex items-center justify-center bg-stitch-background">
-        <div className="space-y-4 text-center">
-          <p className="font-stitch-body text-stitch-on-surface-variant">Etapa não encontrada.</p>
-          <button
-            onClick={() => navigate(-1)}
-            className="border-b border-stitch-secondary/40 pb-0.5 font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-secondary hover:border-stitch-secondary"
-          >
-            Voltar
-          </button>
+      <div
+        role="alert"
+        aria-live="assertive"
+        className="fixed inset-0 z-[200] flex items-center justify-center overflow-hidden bg-stitch-background px-6 py-10 text-stitch-on-background"
+        style={{ backgroundImage: 'url("https://www.transparenttextures.com/patterns/p6.png")' }}
+      >
+        <div className="mx-auto flex w-full max-w-[520px] flex-col items-center gap-6 text-center">
+          <div className="flex h-14 w-14 items-center justify-center rounded-full border border-stitch-secondary/30 bg-stitch-surface-container-lowest/60">
+            <BookOpen className="h-6 w-6 text-stitch-secondary" aria-hidden="true" />
+          </div>
+
+          <div className="space-y-3">
+            <p className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
+              Etapa indisponível
+            </p>
+            <h1 className="font-serif text-3xl font-bold leading-tight text-stitch-on-background">
+              {missingStepParam ? 'Nenhuma etapa selecionada' : 'Não encontramos esta etapa'}
+            </h1>
+            <p className="font-stitch-body text-[15px] leading-relaxed text-stitch-on-surface-variant">
+              {missingStepParam
+                ? 'O endereço da etapa está incompleto. Abra a jornada e escolha por onde recomeçar.'
+                : 'A etapa que você tentou abrir não existe mais ou foi movida. Volte à jornada para retomar de onde parou.'}
+            </p>
+          </div>
+
+          <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-center">
+            {journeyId && (
+              <button
+                onClick={() => navigate(`/jornadas/${journeyId}`)}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-stitch-secondary px-6 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-background transition-colors hover:bg-stitch-secondary/90 min-h-[44px]"
+              >
+                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                Voltar à jornada
+              </button>
+            )}
+            <button
+              onClick={() => navigate('/jornadas')}
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-stitch-secondary/40 px-6 py-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-secondary transition-colors hover:border-stitch-secondary hover:bg-stitch-secondary/5 min-h-[44px]"
+            >
+              Ver todas as jornadas
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </div>
         </div>
       </div>,
       document.body,
     );
   }
+
 
   const bibleRef = content.bible_ref;
   const finalPrompt =
