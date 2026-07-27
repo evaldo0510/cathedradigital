@@ -132,6 +132,10 @@ const JornadaStepPage: React.FC = () => {
   useEffect(() => {
     if (stepId && journeyId) {
       loadData();
+    } else {
+      // URL sem step= ou sem journeyId → não há o que carregar; encerra o loading
+      // para renderizar a tela de "etapa não encontrada".
+      setLoading(false);
     }
      
   }, [stepId, journeyId, user?.id]);
