@@ -6,6 +6,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Clock, GraduationCap, Award, ScrollText, ArrowRight } from 'lucide-react';
 import type { CollectionSearchHit } from './searchCollections';
+import { trackCollectionEvent } from './collectionAnalytics';
 
 const LEVEL_LABEL: Record<string, string> = {
   iniciante: 'Iniciante',
