@@ -12,7 +12,18 @@
 
 export type SanitizeSeverity = 'warn' | 'strict' | 'throw';
 
+/**
+ * Versão da política de sanitização. Bump obrigatório sempre que:
+ *  - as regras de descarte (schema Zod, sanitizers) mudarem;
+ *  - o mapeamento env → severity mudar;
+ *  - novos flags forem adicionados/removidos de `SanitizePolicy`.
+ * Registrada no JSON-LD preview e nos exports para auditoria/reprodutibilidade.
+ */
+export const SANITIZE_POLICY_VERSION = '1.1.0';
+
 export interface SanitizePolicy {
+  /** Versão da política aplicada (semver). */
+  version: string;
   env: 'dev' | 'prod' | 'test';
   severity: SanitizeSeverity;
   /** Loga descartes/normalizações no console. */
