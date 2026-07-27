@@ -582,7 +582,7 @@ const AppLayout: React.FC = () => {
               <Route path="/catecismo" element={<Navigate to="/catechism" replace />} />
               <Route path="/magisterium" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
               <Route path="/magisterio" element={<Navigate to="/magisterium" replace />} />
-              <Route path="/magisterio/:id" element={<Navigate to="/magisterium/:id" replace />} />
+              <Route path="/magisterio/:id" element={<MagisterioLegacyRedirect />} />
               <Route path="/magisterium/:id" element={<Suspense fallback={<LoadingFallback />}><AtriumMagisteriumViewer /></Suspense>} />
               <Route path="/magisterium-legacy/:id" element={<Suspense fallback={<LoadingFallback />}><MagisteriumViewer /></Suspense>} />
 
