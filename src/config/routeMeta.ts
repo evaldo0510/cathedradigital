@@ -387,6 +387,22 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
     },
   },
   {
+    test: /^\/acervo\/colecoes\/[^/]+$/,
+    meta: {
+      title: 'Coleção do Acervo — Cathedra',
+      description: 'Trilha de formação do Acervo Cathedra: leituras, orações e reflexões conectadas em uma coleção editorial.',
+    },
+  },
+  {
+    test: /^\/colecoes\/[^/]+\/certificado$/,
+    meta: {
+      title: 'Certificado da Coleção — Cathedra',
+      description: 'Status de conclusão e critérios da coleção editorial no Cathedra.',
+      noindex: true,
+    },
+  },
+
+  {
     test: /^\/temas\/[^/]+$/,
     meta: {
       title: 'Tema da Fé Católica — Cathedra',
