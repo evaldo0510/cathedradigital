@@ -19,7 +19,8 @@ type EventName =
   | 'first_access_dismissed'
   | 'session_silent_refresh'
   | 'session_remember_device_toggle'
-  | 'catechism_normalization_diff';
+  | 'catechism_normalization_diff'
+  | 'glossary_faq_sanitized';
 
 export const trackEvent = (name: EventName, properties?: Record<string, any>) => {
   if (import.meta.env.DEV) {
