@@ -1,7 +1,8 @@
 import { Helmet } from 'react-helmet-async';
 import { useSEO } from '@/hooks/useSEO';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { SEO_CONFIG } from '@/config/seo';
+import { buildFaqPageJsonLd } from '@/lib/glossary/sanitizeFaq';
 
 interface BreadcrumbItem {
   name: string;
