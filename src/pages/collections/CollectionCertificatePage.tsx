@@ -80,8 +80,6 @@ const CollectionCertificatePage: React.FC = () => {
     return <Navigate to={`/colecoes/${collection.slug}`} replace />;
   }
 
-  const total = items.length;
-  const done = total > 0 && totalCompleted === total;
   const pct = total > 0 ? Math.round((totalCompleted / total) * 100) : 0;
 
   const criteria: Array<{ label: string; met: boolean }> = [
