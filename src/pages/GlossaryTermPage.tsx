@@ -289,7 +289,11 @@ function useGlossaryTerm(slug: string | undefined) {
         setLoading(false);
         return;
       }
-      setTerm(data as GlossaryTerm | null);
+      setTerm(
+        data
+          ? ({ ...(data as any), faq: sanitizeFaqItems((data as any).faq, slug) } as GlossaryTerm)
+          : null,
+      );
       setLoading(false);
     })();
 
