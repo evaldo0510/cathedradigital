@@ -26,6 +26,7 @@ import {
 } from "@/components/editorial";
 
 const SEOHead = lazy(() => import("@/components/SEOHead"));
+import LandingFAQ, { LANDING_FAQS } from "@/components/landing/LandingFAQ";
 
 /* --------------------------------------------------------------------- */
 /* Dados das seções                                                       */
@@ -130,6 +131,7 @@ const PublicLanding = () => {
           title="Cathedra Digital — Sanctuarium Digital da Tradição Católica"
           description="Bíblia, Catecismo, Liturgia, Orações e Logos AI em uma biblioteca viva. Entrai no silêncio."
           path="/"
+          faqs={LANDING_FAQS}
         />
       </Suspense>
 
@@ -325,6 +327,11 @@ const PublicLanding = () => {
               })}
             </EditorialGrid>
           </EditorialSection>
+
+          <EditorialDivider />
+
+          {/* ---------------- FAQ ---------------- */}
+          <LandingFAQ />
         </EditorialShell>
       </main>
 
