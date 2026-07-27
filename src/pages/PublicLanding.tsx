@@ -131,6 +131,7 @@ const PublicLanding = () => {
           title="Cathedra Digital — Sanctuarium Digital da Tradição Católica"
           description="Bíblia, Catecismo, Liturgia, Orações e Logos AI em uma biblioteca viva. Entrai no silêncio."
           path="/"
+          faqs={LANDING_FAQS}
         />
       </Suspense>
 
