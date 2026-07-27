@@ -1066,7 +1066,7 @@ const GlossaryTermPage: React.FC = () => {
                             data-testid="faq-jsonld-panel"
                             className="max-w-[68ch] mx-auto mb-6 space-y-3 text-xs"
                           >
-                            <div className="flex items-center justify-between gap-3">
+                            <div className="flex items-center justify-between gap-3 flex-wrap">
                               <div
                                 className={cn(
                                   'font-mono px-2 py-1 rounded border',
@@ -1082,21 +1082,68 @@ const GlossaryTermPage: React.FC = () => {
                                   <> · descartados: {live.droppedIndices.length}</>
                                 )}
                               </div>
-                              <button
-                                type="button"
-                                data-testid="faq-jsonld-copy"
-                                onClick={() => {
-                                  const payload = JSON.stringify(
-                                    live.jsonLd ?? { error: live.issues },
-                                    null,
-                                    2,
-                                  );
-                                  navigator.clipboard?.writeText(payload).catch(() => {});
-                                }}
-                                className="text-xs font-mono px-3 py-1 rounded border border-dashed border-amber-500/70 bg-amber-50/60 text-amber-950 hover:bg-amber-100/80"
+                              <div
+                                data-testid="faq-jsonld-policy"
+                                className="font-mono text-[11px] px-2 py-1 rounded border border-dashed border-stitch-outline-variant/60 bg-stitch-surface/40 text-stitch-on-surface-variant"
+                                title="Versão da política de sanitização aplicada"
                               >
-                                Copiar JSON-LD
-                              </button>
+                                policy v{live.policyVersion} · {live.policyEnv}
+                              </div>
+                              <div className="flex gap-2">
+                                <button
+                                  type="button"
+                                  data-testid="faq-jsonld-copy"
+                                  onClick={() => {
+                                    const payload = JSON.stringify(
+                                      live.jsonLd ?? { error: live.issues },
+                                      null,
+                                      2,
+                                    );
+                                    navigator.clipboard?.writeText(payload).catch(() => {});
+                                  }}
+                                  className="text-xs font-mono px-3 py-1 rounded border border-dashed border-amber-500/70 bg-amber-50/60 text-amber-950 hover:bg-amber-100/80"
+                                >
+                                  Copiar JSON-LD
+                                </button>
+                                <button
+                                  type="button"
+                                  data-testid="faq-jsonld-export"
+                                  onClick={() => {
+                                    const payload = {
+                                      slug: term.slug,
+                                      generatedAt: new Date().toISOString(),
+                                      policy: {
+                                        version: live.policyVersion,
+                                        env: live.policyEnv,
+                                        appliedAt: live.appliedAt,
+                                      },
+                                      ok: live.ok,
+                                      jsonLd: live.jsonLd,
+                                      removedFields: live.issues.map((i) => ({
+                                        path: i.path,
+                                        code: i.code,
+                                        message: i.message,
+                                      })),
+                                      droppedIndices: live.droppedIndices,
+                                    };
+                                    const blob = new Blob(
+                                      [JSON.stringify(payload, null, 2)],
+                                      { type: 'application/json' },
+                                    );
+                                    const url = URL.createObjectURL(blob);
+                                    const a = document.createElement('a');
+                                    a.href = url;
+                                    a.download = `faq-jsonld-${term.slug}-${Date.now()}.json`;
+                                    document.body.appendChild(a);
+                                    a.click();
+                                    document.body.removeChild(a);
+                                    URL.revokeObjectURL(url);
+                                  }}
+                                  className="text-xs font-mono px-3 py-1 rounded border border-dashed border-emerald-500/70 bg-emerald-50/60 text-emerald-950 hover:bg-emerald-100/80"
+                                >
+                                  Exportar JSON-LD (.json)
+                                </button>
+                              </div>
                             </div>
                             {live.issues.length > 0 && (
                               <ul
