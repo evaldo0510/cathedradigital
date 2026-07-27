@@ -55,9 +55,11 @@ let cached: SanitizePolicy | null = null;
 export function getSanitizePolicy(): SanitizePolicy {
   if (cached) return cached;
   const env = detectEnv();
+  const base = { version: SANITIZE_POLICY_VERSION } as const;
   cached =
     env === 'prod'
       ? {
+          ...base,
           env,
           severity: 'strict',
           verboseLogs: false,
@@ -66,6 +68,7 @@ export function getSanitizePolicy(): SanitizePolicy {
         }
       : env === 'test'
         ? {
+            ...base,
             env,
             severity: 'throw',
             verboseLogs: false,
@@ -73,6 +76,7 @@ export function getSanitizePolicy(): SanitizePolicy {
             emitMetrics: false,
           }
         : {
+            ...base,
             env,
             severity: 'warn',
             verboseLogs: true,
