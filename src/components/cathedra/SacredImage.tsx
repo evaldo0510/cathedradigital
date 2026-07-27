@@ -3,27 +3,34 @@ import { Icons } from '../../constants';
 import { resolveColors, buildImageSrc, getInitials } from '@/lib/sacredPalette';
 
 interface SacredImageProps {
-  src: string | string[];
+  src?: string | string[] | null;
   alt: string;
   className: string;
   priority?: boolean;
   liturgicalColor?: string;
   dominantColor?: string;
+  /** Categoria do santo (doctor/father/martyr/saint) para colorir o fallback. */
+  category?: string;
 }
 
-const SacredImage = React.forwardRef<HTMLDivElement, SacredImageProps>(({ src, alt, className, priority = false, liturgicalColor, dominantColor }, ref) => {
+const SacredImage = React.forwardRef<HTMLDivElement, SacredImageProps>(({ src, alt, className, priority = false, liturgicalColor, dominantColor, category }, ref) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(false);
   const [currentSrcIndex, setCurrentSrcIndex] = useState(0);
 
   const sources = useMemo(() => {
+    if (!src) return [];
     const s = Array.isArray(src) ? src : [src];
-    return s.filter(Boolean).map(url => buildImageSrc(url, priority));
+    return s.filter(Boolean).map((url) => buildImageSrc(url as string, priority));
   }, [src, priority]);
 
   const mainSrc = sources[currentSrcIndex];
-  const colors = useMemo(() => resolveColors(liturgicalColor, dominantColor), [liturgicalColor, dominantColor]);
+  const colors = useMemo(
+    () => resolveColors(liturgicalColor, dominantColor, category),
+    [liturgicalColor, dominantColor, category],
+  );
   const initials = useMemo(() => getInitials(alt || ''), [alt]);
+  const noSource = sources.length === 0;
 
   useEffect(() => {
     if (!mainSrc) {

@@ -16,9 +16,28 @@ export function getInitials(name: string): string {
   return (words[0][0] + words[words.length - 1][0]).toUpperCase();
 }
 
-export function resolveColors(liturgicalColor?: string, dominantColor?: string) {
+// Paleta por categoria — usada como fallback quando não há retrato disponível.
+// Doutor = ouro sobre azul-profundo (sapientia). Padre = bordô/ocre (tradição).
+// Mártir = vermelho-carmim (sangue). Santo = azul-cathedra padrão.
+const CATEGORY_PALETTE: Record<
+  string,
+  { primary: string; accent: string; depth: string }
+> = {
+  doctor: { primary: '#0D2442', accent: '#D4B36A', depth: '#050F1E' },
+  father: { primary: '#3A1E17', accent: '#BFA366', depth: '#1F0F0B' },
+  martyr: { primary: '#5A0E14', accent: '#D4B36A', depth: '#2A060A' },
+  saint:  { primary: '#0D2442', accent: '#BFA366', depth: '#061221' },
+};
+
+export function resolveColors(
+  liturgicalColor?: string,
+  dominantColor?: string,
+  category?: string,
+) {
+  const catKey = (category || '').toLowerCase();
+  const catPalette = CATEGORY_PALETTE[catKey];
   const colorKey = liturgicalColor?.toLowerCase() || 'gold';
-  const palette = SACRED_PALETTE[colorKey] || SACRED_PALETTE.gold;
+  const palette = catPalette || SACRED_PALETTE[colorKey] || SACRED_PALETTE.gold;
   return {
     base: dominantColor || palette.primary,
     accent: dominantColor ? `${dominantColor}cc` : palette.accent,
