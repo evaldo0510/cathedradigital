@@ -172,6 +172,57 @@ const SaintWorkCard: React.FC<Props> = ({ work, authorRef }) => {
         </p>
       )}
 
+      {/* Proveniência: hospedagem, atribuição e licença */}
+      <div
+        className="rounded-md border border-border/60 bg-muted/30 px-spacing-sm py-spacing-xs space-y-1 text-premium-xs"
+        aria-label="Proveniência do texto"
+      >
+        <p className="flex items-center gap-1 font-semibold text-foreground/80">
+          {isInternal ? (
+            <>
+              <Icons.BookOpen className="w-3 h-3 text-primary" aria-hidden />
+              Hospedado no Cathedra
+            </>
+          ) : (
+            <>
+              <Icons.ExternalLink className="w-3 h-3 text-amber-600 dark:text-amber-400" aria-hidden />
+              Conteúdo linkado
+              {work.external_source_label && (
+                <span className="font-normal text-muted-foreground">
+                  {' · '}
+                  {work.external_source_label}
+                </span>
+              )}
+            </>
+          )}
+        </p>
+        {work.translation_credit && (
+          <p className="text-muted-foreground">
+            <span className="font-semibold text-foreground/70">Atribuição: </span>
+            {work.translation_credit}
+          </p>
+        )}
+        {(work.is_public_domain || work.license) && (
+          <p className="text-muted-foreground">
+            <span className="font-semibold text-foreground/70">Licença: </span>
+            {work.is_public_domain ? 'Domínio público' : work.license}
+            {work.is_public_domain && work.license ? ` · ${work.license}` : ''}
+          </p>
+        )}
+        {work.source_url && (
+          <p className="truncate">
+            <a
+              href={work.source_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary/80 hover:text-primary underline decoration-dotted underline-offset-2"
+            >
+              Fonte canônica
+            </a>
+          </p>
+        )}
+      </div>
+
       {/* CTA */}
       <footer className="mt-auto pt-spacing-sm border-t border-border/50 flex flex-wrap items-center gap-spacing-sm">
         <Link
@@ -195,6 +246,7 @@ const SaintWorkCard: React.FC<Props> = ({ work, authorRef }) => {
           </a>
         )}
       </footer>
+
     </article>
   );
 };
