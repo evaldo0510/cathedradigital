@@ -19,13 +19,13 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.admin-bulk-seed-saints]
-verify_jwt = false
+verify_jwt = true
 
 [functions.admin-incremental-reimport-saints]
-verify_jwt = false
+verify_jwt = true
 
 [functions.admin-apply-saints-reimport-run]
-verify_jwt = false
+verify_jwt = true
 
 
 
