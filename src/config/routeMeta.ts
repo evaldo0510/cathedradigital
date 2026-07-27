@@ -279,6 +279,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
 
   // ─── Aliases (Navigate replace) — noindex + canonical ao destino
   '/home': { title: 'Cathedra Digital', description: 'Alias para a página inicial.', noindex: true, canonicalPath: '/' },
+  '/sobre': { title: 'Sobre — Cathedra', description: 'Alias para /about.', noindex: true, canonicalPath: '/about' },
   '/biblia': { title: 'Bíblia — Cathedra', description: 'Alias para /bible.', noindex: true, canonicalPath: '/bible' },
   '/catecismo': { title: 'Catecismo — Cathedra', description: 'Alias para /catechism.', noindex: true, canonicalPath: '/catechism' },
   '/magisterio': { title: 'Magistério — Cathedra', description: 'Alias para /magisterium.', noindex: true, canonicalPath: '/magisterium' },
