@@ -59,6 +59,14 @@ export default function CollectionEditor() {
     featured: false,
     space: 'church' as 'church' | 'library' | 'cloister' | 'atrium',
     eyebrow: '',
+    estimated_reading_time_minutes: '' as string,
+    difficulty_level: '' as '' | 'iniciante' | 'intermediario' | 'avancado',
+    hero_quote: '',
+    hero_quote_author: '',
+    learning_objectives: '' as string, // uma linha por item
+    prerequisites: '' as string,
+    completion_message: '',
+    certificate_eligible: false,
   });
 
   useEffect(() => {
@@ -74,6 +82,15 @@ export default function CollectionEditor() {
       featured: c.featured,
       space: ((c.metadata?.space as typeof form.space) ?? 'church'),
       eyebrow: (c.metadata?.eyebrow as string) ?? '',
+      estimated_reading_time_minutes:
+        c.estimated_reading_time_minutes != null ? String(c.estimated_reading_time_minutes) : '',
+      difficulty_level: (c.difficulty_level as typeof form.difficulty_level) ?? '',
+      hero_quote: c.hero_quote ?? '',
+      hero_quote_author: c.hero_quote_author ?? '',
+      learning_objectives: (c.learning_objectives ?? []).join('\n'),
+      prerequisites: (c.prerequisites ?? []).join('\n'),
+      completion_message: c.completion_message ?? '',
+      certificate_eligible: Boolean(c.certificate_eligible),
     });
   }, [data]);
 
@@ -107,6 +124,14 @@ export default function CollectionEditor() {
 
   const save = async () => {
     try {
+      const minutes = form.estimated_reading_time_minutes.trim();
+      const parsedMinutes = minutes ? Number(minutes) : null;
+      if (minutes && (!Number.isFinite(parsedMinutes) || (parsedMinutes ?? 0) < 0)) {
+        toast.error('Tempo estimado inválido.');
+        return;
+      }
+      const splitLines = (s: string): string[] =>
+        s.split('\n').map((l) => l.trim()).filter(Boolean);
       await update.mutateAsync({
         slug: form.slug,
         title: form.title,
@@ -117,6 +142,14 @@ export default function CollectionEditor() {
         featured: form.featured,
         space: form.space,
         eyebrow: form.eyebrow || null,
+        estimated_reading_time_minutes: parsedMinutes,
+        difficulty_level: form.difficulty_level || null,
+        hero_quote: form.hero_quote || null,
+        hero_quote_author: form.hero_quote_author || null,
+        learning_objectives: splitLines(form.learning_objectives),
+        prerequisites: splitLines(form.prerequisites),
+        completion_message: form.completion_message || null,
+        certificate_eligible: form.certificate_eligible,
       });
       toast.success('Coleção salva.');
     } catch (e) {
@@ -252,6 +285,129 @@ export default function CollectionEditor() {
               </div>
             </CardContent>
           </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-base">Metadados editoriais</CardTitle>
+              <p className="text-xs text-muted-foreground">
+                Preencha e revise antes de publicar. Todos os campos aparecem na página pública da trilha.
+              </p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <Label>Tempo estimado (minutos)</Label>
+                  <Input
+                    type="number"
+                    min={0}
+                    value={form.estimated_reading_time_minutes}
+                    onChange={(e) =>
+                      setForm({ ...form, estimated_reading_time_minutes: e.target.value })
+                    }
+                    placeholder="Ex.: 45"
+                  />
+                </div>
+                <div>
+                  <Label>Nível</Label>
+                  <Select
+                    value={form.difficulty_level || 'none'}
+                    onValueChange={(v) =>
+                      setForm({
+                        ...form,
+                        difficulty_level:
+                          v === 'none' ? '' : (v as typeof form.difficulty_level),
+                      })
+                    }
+                  >
+                    <SelectTrigger><SelectValue placeholder="Selecione…" /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Não definido</SelectItem>
+                      <SelectItem value="iniciante">Iniciante</SelectItem>
+                      <SelectItem value="intermediario">Intermediário</SelectItem>
+                      <SelectItem value="avancado">Avançado</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-3">
+                <div>
+                  <Label>Citação do herói</Label>
+                  <Textarea
+                    rows={2}
+                    value={form.hero_quote}
+                    onChange={(e) => setForm({ ...form, hero_quote: e.target.value })}
+                    placeholder="Frase-âncora da trilha (sem aspas)"
+                  />
+                </div>
+                <div className="md:w-64">
+                  <Label>Autor da citação</Label>
+                  <Input
+                    value={form.hero_quote_author}
+                    onChange={(e) => setForm({ ...form, hero_quote_author: e.target.value })}
+                    placeholder="Ex.: São Tomás de Aquino"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div>
+                  <Label>Objetivos da trilha (um por linha)</Label>
+                  <Textarea
+                    rows={5}
+                    value={form.learning_objectives}
+                    onChange={(e) =>
+                      setForm({ ...form, learning_objectives: e.target.value })
+                    }
+                    placeholder={'Compreender a doutrina da graça\nRelacionar Escritura e Tradição\n...'}
+                  />
+                  <p className="text-[11px] text-muted-foreground mt-1">
+                    {form.learning_objectives
+                      .split('\n')
+                      .map((l) => l.trim())
+                      .filter(Boolean).length} objetivo(s)
+                  </p>
+                </div>
+                <div>
+                  <Label>Pré-requisitos (um por linha)</Label>
+                  <Textarea
+                    rows={5}
+                    value={form.prerequisites}
+                    onChange={(e) => setForm({ ...form, prerequisites: e.target.value })}
+                    placeholder={'Leitura básica do Credo\nFamiliaridade com o CIC §§1-100\n...'}
+                  />
+                  <p className="text-[11px] text-muted-foreground mt-1">
+                    {form.prerequisites
+                      .split('\n')
+                      .map((l) => l.trim())
+                      .filter(Boolean).length} pré-requisito(s)
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <Label>Mensagem de conclusão</Label>
+                <Textarea
+                  rows={3}
+                  value={form.completion_message}
+                  onChange={(e) => setForm({ ...form, completion_message: e.target.value })}
+                  placeholder="Aparece na tela final e no certificado"
+                />
+              </div>
+
+              <div className="flex items-center gap-2 pt-2 border-t border-border">
+                <Switch
+                  checked={form.certificate_eligible}
+                  onCheckedChange={(v) => setForm({ ...form, certificate_eligible: v })}
+                  id="certificate_eligible"
+                />
+                <Label htmlFor="certificate_eligible" className="cursor-pointer">
+                  Trilha certificável — libera <code className="text-xs">/colecoes/{form.slug || ':slug'}/certificado</code>
+                </Label>
+              </div>
+            </CardContent>
+          </Card>
+
 
           <Card>
             <CardHeader>

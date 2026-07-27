@@ -1,4 +1,5 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { trackCollectionEvent } from '@/features/collections/collectionAnalytics';
 import { Link, useParams, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {
@@ -440,25 +441,12 @@ export default function CollectionPage() {
           )}
 
           {prerequisites.length > 0 && (
-            <div className="space-y-spacing-2xs" data-testid="collection-prerequisites">
-              <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-700 dark:text-amber-400">
-                Pré-requisitos recomendados
-              </h2>
-              <ul className="space-y-spacing-2xs">
-                {prerequisites.map((pr, i) => (
-                  <li
-                    key={i}
-                    className="flex items-start gap-spacing-xs text-premium-sm text-foreground/90"
-                  >
-                    <Lock
-                      className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-[4px]"
-                      aria-hidden
-                    />
-                    <span>{pr}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <PrerequisitesBlock
+              prerequisites={prerequisites}
+              collection={collection}
+              itemsTotal={items.length}
+              itemsCompleted={totalCompleted}
+            />
           )}
 
           {items.length > 0 && (
@@ -543,3 +531,94 @@ export default function CollectionPage() {
   );
 }
 
+
+// ─────────────────────────────────────────────────────────────────────
+// PrerequisitesBlock — Lista de pré-requisitos + telemetria de visualização.
+// Dispara `collection_prerequisites_viewed` uma vez quando a seção aparece
+// na viewport (IntersectionObserver). Fallback: dispara no mount se o
+// IO não estiver disponível.
+// ─────────────────────────────────────────────────────────────────────
+interface PrerequisitesBlockProps {
+  prerequisites: string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  collection: any;
+  itemsTotal: number;
+  itemsCompleted: number;
+}
+
+const PrerequisitesBlock: React.FC<PrerequisitesBlockProps> = ({
+  prerequisites,
+  collection,
+  itemsTotal,
+  itemsCompleted,
+}) => {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const emittedRef = useRef(false);
+
+  useEffect(() => {
+    if (emittedRef.current) return;
+    const emit = () => {
+      if (emittedRef.current) return;
+      emittedRef.current = true;
+      trackCollectionEvent('collection_prerequisites_viewed', {
+        collection_id: collection.id,
+        collection_slug: collection.slug,
+        collection_title: collection.title,
+        category: collection.category,
+        difficulty_level: collection.difficulty_level ?? null,
+        estimated_reading_time_minutes:
+          collection.estimated_reading_time_minutes ?? null,
+        items_total: itemsTotal,
+        items_completed: itemsCompleted,
+        has_certificate: Boolean(collection.certificate_eligible),
+        extra: { prerequisites_count: prerequisites.length },
+      });
+    };
+
+    if (typeof IntersectionObserver === 'undefined' || !ref.current) {
+      emit();
+      return;
+    }
+    const el = ref.current;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            emit();
+            io.disconnect();
+            break;
+          }
+        }
+      },
+      { threshold: 0.35 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [collection, itemsTotal, itemsCompleted, prerequisites.length]);
+
+  return (
+    <div
+      ref={ref}
+      className="space-y-spacing-2xs"
+      data-testid="collection-prerequisites"
+    >
+      <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-amber-700 dark:text-amber-400">
+        Pré-requisitos recomendados
+      </h2>
+      <ul className="space-y-spacing-2xs">
+        {prerequisites.map((pr, i) => (
+          <li
+            key={i}
+            className="flex items-start gap-spacing-xs text-premium-sm text-foreground/90"
+          >
+            <Lock
+              className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-[4px]"
+              aria-hidden
+            />
+            <span>{pr}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};

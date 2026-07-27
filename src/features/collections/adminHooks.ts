@@ -66,6 +66,15 @@ export interface CollectionInput {
   featured?: boolean;
   space?: 'church' | 'library' | 'cloister' | 'atrium';
   eyebrow?: string | null;
+  // Metadados editoriais estendidos (Onda 3 · Coleções Inteligentes)
+  estimated_reading_time_minutes?: number | null;
+  difficulty_level?: 'iniciante' | 'intermediario' | 'avancado' | null;
+  hero_quote?: string | null;
+  hero_quote_author?: string | null;
+  learning_objectives?: string[] | null;
+  prerequisites?: string[] | null;
+  completion_message?: string | null;
+  certificate_eligible?: boolean | null;
 }
 
 export function useCreateCollection() {
@@ -105,6 +114,10 @@ export function useUpdateCollection(id: string) {
       const dbPatch: Record<string, unknown> = {};
       const keys: (keyof CollectionInput)[] = [
         'slug', 'title', 'subtitle', 'description', 'cover', 'category', 'featured',
+        'estimated_reading_time_minutes', 'difficulty_level',
+        'hero_quote', 'hero_quote_author',
+        'learning_objectives', 'prerequisites',
+        'completion_message', 'certificate_eligible',
       ];
       keys.forEach((k) => {
         if (patch[k] !== undefined) dbPatch[k] = patch[k];

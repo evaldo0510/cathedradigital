@@ -8,7 +8,8 @@
  * Não emite PDF — apenas certifica na tela e registra `certificate_issued_at`
  * em `collection_progress` (linha sintética por item já cobre o resto).
  */
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
+import { trackCollectionEvent } from '@/features/collections/collectionAnalytics';
 import { Link, useParams, Navigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import {
@@ -39,6 +40,30 @@ const CollectionCertificatePage: React.FC = () => {
     [progress],
   );
 
+  const total = data?.items.length ?? 0;
+  const done = total > 0 && totalCompleted === total;
+
+  // Analytics: dispara uma única vez quando a trilha certificável é concluída.
+  const emittedRef = useRef(false);
+  useEffect(() => {
+    if (emittedRef.current) return;
+    if (!data?.collection || !done) return;
+    if (!data.collection.certificate_eligible) return;
+    emittedRef.current = true;
+    const c = data.collection;
+    trackCollectionEvent('collection_certificate_completed', {
+      collection_id: c.id,
+      collection_slug: c.slug,
+      collection_title: c.title,
+      category: c.category,
+      difficulty_level: c.difficulty_level ?? null,
+      estimated_reading_time_minutes: c.estimated_reading_time_minutes ?? null,
+      items_total: total,
+      items_completed: totalCompleted,
+      has_certificate: true,
+    });
+  }, [data, done, total, totalCompleted]);
+
   if (isLoading) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
@@ -55,8 +80,6 @@ const CollectionCertificatePage: React.FC = () => {
     return <Navigate to={`/colecoes/${collection.slug}`} replace />;
   }
 
-  const total = items.length;
-  const done = total > 0 && totalCompleted === total;
   const pct = total > 0 ? Math.round((totalCompleted / total) * 100) : 0;
 
   const criteria: Array<{ label: string; met: boolean }> = [
