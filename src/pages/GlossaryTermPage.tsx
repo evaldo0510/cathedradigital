@@ -74,6 +74,7 @@ import {
   type FaqItem,
   type SanitizeFaqStats,
 } from '@/lib/glossary/sanitizeFaq';
+import { reportFaqMetrics } from '@/lib/glossary/faqMetrics';
 
 
 
@@ -236,6 +237,7 @@ const NEXUS_ORDER: readonly ReaderNexusBucket[] = [
 
 function useGlossaryTerm(slug: string | undefined) {
   const [term, setTerm] = useState<GlossaryTerm | null>(null);
+  const [rawFaq, setRawFaq] = useState<unknown>(null);
   const [faqStats, setFaqStats] = useState<SanitizeFaqStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -264,11 +266,16 @@ function useGlossaryTerm(slug: string | undefined) {
         return;
       }
       if (data) {
-        const sanitized = sanitizeFaqItemsDetailed((data as any).faq, slug);
+        const rawFaqValue = (data as any).faq;
+        const sanitized = sanitizeFaqItemsDetailed(rawFaqValue, slug);
         setTerm({ ...(data as any), faq: sanitized.items } as GlossaryTerm);
+        setRawFaq(rawFaqValue);
         setFaqStats(sanitized.stats);
+        // Métricas (Sentry + gtag) em dev e produção
+        reportFaqMetrics({ route: `/glossario/${slug}`, slug }, sanitized.stats);
       } else {
         setTerm(null);
+        setRawFaq(null);
         setFaqStats(null);
       }
       setLoading(false);
@@ -279,7 +286,7 @@ function useGlossaryTerm(slug: string | undefined) {
     };
   }, [slug]);
 
-  return { term, loading, error, faqStats };
+  return { term, loading, error, faqStats, rawFaq };
 }
 
 
@@ -537,7 +544,9 @@ function BibliographyBlock({ items }: { items: BibliographyItem[] | null | undef
 const GlossaryTermPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
-  const { term, loading, error, faqStats } = useGlossaryTerm(slug);
+  const { term, loading, error, faqStats, rawFaq } = useGlossaryTerm(slug);
+  const isDevEnv = import.meta.env.DEV;
+  const [showRawFaq, setShowRawFaq] = useState(false);
   const { toggleFavorite, isFavorite } = useFavorites('glossary');
 
   useHistoryRegistration(term);
@@ -858,6 +867,38 @@ const GlossaryTermPage: React.FC = () => {
                   {k === 'faq' && (
                     <>
                       <FaqSanitizationBadge stats={faqStats} slug={term.slug} />
+                      {isDevEnv && (
+                        <div className="max-w-[68ch] mx-auto mb-4 flex items-center justify-end">
+                          <button
+                            type="button"
+                            onClick={() => setShowRawFaq((v) => !v)}
+                            data-testid="faq-raw-toggle"
+                            className="text-xs font-mono px-3 py-1 rounded border border-dashed border-amber-500/60 bg-amber-50/40 text-amber-900 hover:bg-amber-100/60"
+                            aria-pressed={showRawFaq}
+                          >
+                            [dev] {showRawFaq ? 'Ocultar FAQ bruto' : 'Mostrar FAQ bruto + sanitizado'}
+                          </button>
+                        </div>
+                      )}
+                      {isDevEnv && showRawFaq && (
+                        <div
+                          data-testid="faq-raw-panel"
+                          className="max-w-[68ch] mx-auto mb-6 grid md:grid-cols-2 gap-4 text-xs"
+                        >
+                          <div className="rounded border border-amber-400/60 bg-amber-50/40 p-3">
+                            <div className="font-semibold mb-2 text-amber-900">Original (bruto)</div>
+                            <pre className="whitespace-pre-wrap break-words max-h-96 overflow-auto text-amber-950/90">
+{JSON.stringify(rawFaq, null, 2)}
+                            </pre>
+                          </div>
+                          <div className="rounded border border-emerald-500/60 bg-emerald-50/40 p-3">
+                            <div className="font-semibold mb-2 text-emerald-900">Sanitizado</div>
+                            <pre className="whitespace-pre-wrap break-words max-h-96 overflow-auto text-emerald-950/90">
+{JSON.stringify(term.faq, null, 2)}
+                            </pre>
+                          </div>
+                        </div>
+                      )}
                       <FaqBlock items={term.faq} />
                     </>
                   )}
