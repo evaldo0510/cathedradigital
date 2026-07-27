@@ -30,6 +30,9 @@ import { EditorialHero } from '@/components/editorial/harmony';
 import PrayerPortal from '@/components/prayer/PrayerPortal';
 import { resolvePortalTheme } from '@/lib/prayer/portalTheme';
 import PoenitentiaPage from '@/components/cathedra/PoenitentiaPage';
+import PrayerErrorBoundary from '@/components/prayer/PrayerErrorBoundary';
+import { useAuth } from '@/hooks/useAuth';
+import { logPrayerDiagnostics, serializeSearchParams, type PrayerErrorContext } from '@/lib/prayer/telemetry';
 
 
 const FONT_STEPS = [
@@ -41,7 +44,7 @@ const FONT_STEPS = [
 type FontStepKey = typeof FONT_STEPS[number]['key'];
 const FONT_STORAGE_KEY = 'cathedra:prayer:font-size';
 
-const PrayerDetailPage: React.FC = () => {
+const PrayerDetailPageInner: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const [searchParams] = useSearchParams();
   const { prayer, loading, error } = usePrayer(slug);
@@ -49,6 +52,7 @@ const PrayerDetailPage: React.FC = () => {
   const { items: favorites, toggle } = useDevotionalFavorites('prayer');
   const sectionSlug = searchParams.get('set') ?? undefined;
   const hierarchy = usePrayerHierarchy(slug, sectionSlug);
+  const { user } = useAuth();
 
   const [fontKey, setFontKey] = useState<FontStepKey>('md');
   useEffect(() => {
@@ -413,6 +417,37 @@ const PrayerDetailPage: React.FC = () => {
 
       <MobileBottomNav />
     </>
+  );
+};
+
+/**
+ * Wrapper com Error Boundary contextual — captura React #300 e outros
+ * crashes durante o carregamento da hierarquia/portal contemplativo,
+ * enviando slug + params + estado de hierarquia para telemetria.
+ */
+const PrayerDetailPage: React.FC = () => {
+  const { slug } = useParams<{ slug: string }>();
+  const [searchParams] = useSearchParams();
+  const { user } = useAuth();
+
+  const context: PrayerErrorContext = useMemo(
+    () => ({
+      slug: slug ?? null,
+      searchParams: serializeSearchParams(searchParams),
+      userId: user?.id ?? null,
+      route: typeof window !== 'undefined' ? window.location.pathname : undefined,
+    }),
+    [slug, searchParams, user?.id],
+  );
+
+  useEffect(() => {
+    logPrayerDiagnostics('PrayerDetailPage:mount', context);
+  }, [context]);
+
+  return (
+    <PrayerErrorBoundary context={context}>
+      <PrayerDetailPageInner />
+    </PrayerErrorBoundary>
   );
 };
 
