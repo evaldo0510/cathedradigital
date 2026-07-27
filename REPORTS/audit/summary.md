@@ -16,4 +16,4 @@ bun add tar@7.5.15   # ou via overrides se for transitiva
 ### 📈 Diferença vs. execução anterior
 _sem baseline — esta é a primeira execução registrada_
 
-_Gerado por `scripts/audit-summary.mjs` em 2026-07-26T19:51:56.003Z_
+_Gerado por `scripts/audit-summary.mjs` em 2026-07-27T00:35:42.373Z_
