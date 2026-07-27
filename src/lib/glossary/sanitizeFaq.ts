@@ -179,16 +179,64 @@ export function buildFaqPageJsonLd(items: FaqItem[] | null | undefined): FaqPage
       code: iss.code,
       message: iss.message,
     }));
-    // Log estruturado sempre (dev + prod) — crawlers não podem receber JSON-LD inválido.
-    // Em prod fica visível no Sentry via console.error interceptado.
-    console.error('[Glossary/FAQ] JSON-LD FAQPage rejeitado pelo schema Zod', {
-      totalIssues: details.length,
-      firstIssues: details.slice(0, 10),
-      questionCount: candidate.mainEntity.length,
-    });
+    // Política por ambiente controla severidade — mas a rejeição dos campos
+    // obrigatórios do FAQPage é SEMPRE garantida (retorna null).
+    reportSanitizationIssue(
+      'Glossary/FAQ',
+      'JSON-LD FAQPage rejeitado pelo schema Zod',
+      {
+        totalIssues: details.length,
+        firstIssues: details.slice(0, 10),
+        questionCount: candidate.mainEntity.length,
+      },
+    );
     return store(null);
   }
   return store(parsed.data);
+}
+
+/**
+ * Validação em tempo real usada por painéis de preview.
+ * Retorna estrutura enxuta para renderização em UI.
+ */
+export interface FaqJsonLdValidation {
+  ok: boolean;
+  jsonLd: FaqPageJsonLd | null;
+  issues: Array<{ path: string; code: string; message: string }>;
+  droppedIndices: number[];
+}
+
+export function validateFaqJsonLdLive(items: FaqItem[] | null | undefined): FaqJsonLdValidation {
+  const raw = Array.isArray(items) ? items : [];
+  const eligible = filterFaqForJsonLd(raw);
+  const droppedIndices: number[] = [];
+  raw.forEach((it, i) => {
+    if (!eligible.includes(it)) droppedIndices.push(i);
+  });
+  const candidate = {
+    '@type': 'FAQPage' as const,
+    mainEntity: eligible.map((f) => ({
+      '@type': 'Question' as const,
+      name: sanitizeAnswerForJsonLd(f.question),
+      acceptedAnswer: {
+        '@type': 'Answer' as const,
+        text: sanitizeAnswerForJsonLd(f.answer),
+      },
+    })),
+  };
+  if (candidate.mainEntity.length === 0) {
+    return { ok: false, jsonLd: null, issues: [{ path: 'mainEntity', code: 'empty', message: 'nenhum item elegível' }], droppedIndices };
+  }
+  const parsed = FaqPageJsonLdSchema.safeParse(candidate);
+  if (!parsed.success) {
+    return {
+      ok: false,
+      jsonLd: null,
+      issues: parsed.error.issues.map((i) => ({ path: i.path.join('.'), code: i.code, message: i.message })),
+      droppedIndices,
+    };
+  }
+  return { ok: true, jsonLd: parsed.data, issues: [], droppedIndices };
 }
 
 /**
