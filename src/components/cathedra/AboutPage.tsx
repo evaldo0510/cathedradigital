@@ -212,6 +212,9 @@ const AboutPage: React.FC = () => (
       </div>
     </div>
 
+    {/* Depoimentos */}
+    <TestimonialsSection id="depoimentos-sobre" />
+
     {/* Footer Quote */}
     <div className="py-spacing-3xl text-center space-y-spacing-md">
       <p className="text-premium-2xl font-serif font-bold text-foreground tracking-tight uppercase">Ad Maiorem Dei Gloriam</p>
