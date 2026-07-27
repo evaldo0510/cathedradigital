@@ -167,6 +167,28 @@ const BibliotecaBuscaPage: React.FC = () => {
           </div>
         )}
 
+        {/* Coleções (só na página 1, acima dos trechos) */}
+        {!loading && page === 1 && collectionHits.length > 0 && (
+          <section aria-labelledby="col-search-heading" className="space-y-spacing-sm" data-testid="collections-search-section">
+            <div className="flex items-baseline justify-between">
+              <h2 id="col-search-heading" className="text-[10px] font-black uppercase tracking-[0.25em] text-primary/70">
+                Coleções encontradas · {collectionHits.length}
+              </h2>
+              <Link
+                to="/acervo"
+                className="text-premium-xs text-muted-foreground hover:text-primary underline underline-offset-4"
+              >
+                Ver todas
+              </Link>
+            </div>
+            <div className="grid gap-spacing-sm md:grid-cols-2">
+              {collectionHits.map((c) => (
+                <CollectionSearchCard key={c.slug} hit={c} />
+              ))}
+            </div>
+          </section>
+        )}
+
         {!loading && result && result.hits.length > 0 && (
           <>
             <div className="flex flex-wrap items-baseline justify-between gap-spacing-xs text-premium-xs text-muted-foreground">
