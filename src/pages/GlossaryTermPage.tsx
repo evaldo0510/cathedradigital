@@ -366,6 +366,35 @@ function MeditationBlock({ children }: { children: string | null | undefined }) 
 
 
 
+function FaqSanitizationBadge({
+  stats,
+  slug,
+}: {
+  stats: SanitizeFaqStats | null;
+  slug?: string;
+}) {
+  // Só aparece em dev e quando houve descarte ou normalização
+  const isDev =
+    typeof import.meta !== 'undefined' &&
+    (import.meta as any).env &&
+    (import.meta as any).env.DEV;
+  if (!isDev || !stats) return null;
+  if (stats.dropped === 0 && stats.normalized === 0 && stats.total === 0) return null;
+
+  return (
+    <div
+      data-testid="faq-sanitization-badge"
+      className="max-w-[68ch] mx-auto mb-4 rounded-md border border-dashed border-amber-400/60 bg-amber-50/60 px-4 py-2 text-xs font-mono text-amber-900"
+      role="note"
+      aria-label="Resumo de sanitização do FAQ (apenas em desenvolvimento)"
+    >
+      <span className="font-semibold">[dev] FAQ · {slug ?? '?'}</span>{' '}
+      total={stats.total} · mantidos={stats.kept} · descartados={stats.dropped} ·
+      normalizados={stats.normalized}
+    </div>
+  );
+}
+
 function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
   const safeItems = items ?? [];
   if (safeItems.length === 0) {
