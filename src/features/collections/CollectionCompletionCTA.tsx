@@ -6,12 +6,13 @@
  * Lê `collection.metadata.related_slugs: string[]` para sugerir próximas
  * trilhas. Se ausente, cai em `collections.featured = true` (exceto a atual).
  */
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { ArrowRight, Sparkles, ScrollText } from 'lucide-react';
 import type { Collection } from './types';
+import { trackCollectionEvent } from './collectionAnalytics';
 
 interface Props {
   collection: Collection;
