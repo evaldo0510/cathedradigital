@@ -71,7 +71,9 @@ interface NexusRef {
 import {
   sanitizeFaqItemsDetailed,
   buildFaqPageJsonLd,
+  explainFaqSanitization,
   type FaqItem,
+  type FaqSanitizationDiff,
   type SanitizeFaqStats,
 } from '@/lib/glossary/sanitizeFaq';
 import { reportFaqMetrics } from '@/lib/glossary/faqMetrics';
