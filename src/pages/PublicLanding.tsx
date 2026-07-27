@@ -26,6 +26,7 @@ import {
 } from "@/components/editorial";
 
 const SEOHead = lazy(() => import("@/components/SEOHead"));
+import LandingFAQ, { LANDING_FAQS } from "@/components/landing/LandingFAQ";
 
 /* --------------------------------------------------------------------- */
 /* Dados das seções                                                       */
