@@ -73,6 +73,37 @@ interface FaqItem {
   answer: string;
 }
 
+/**
+ * Sanitiza o array de FAQs vindo do banco: descarta entradas nulas ou
+ * sem `question` válida e normaliza `answer` para string (nunca undefined).
+ * Loga avisos em dev para facilitar auditoria editorial.
+ */
+function sanitizeFaqItems(raw: unknown, slug?: string): FaqItem[] {
+  if (!Array.isArray(raw)) return [];
+  const result: FaqItem[] = [];
+  raw.forEach((item, idx) => {
+    if (!item || typeof item !== 'object') {
+      if (import.meta.env.DEV) {
+        console.warn(`[Glossary/FAQ] item #${idx} inválido em "${slug}"`, item);
+      }
+      return;
+    }
+    const q = (item as any).question;
+    const a = (item as any).answer;
+    if (typeof q !== 'string' || !q.trim()) {
+      if (import.meta.env.DEV) {
+        console.warn(`[Glossary/FAQ] item #${idx} sem question em "${slug}"`, item);
+      }
+      return;
+    }
+    result.push({
+      question: q.trim(),
+      answer: typeof a === 'string' ? a : '',
+    });
+  });
+  return result;
+}
+
 interface NextStep {
   label: string;
   href?: string;
@@ -258,7 +289,11 @@ function useGlossaryTerm(slug: string | undefined) {
         setLoading(false);
         return;
       }
-      setTerm(data as GlossaryTerm | null);
+      setTerm(
+        data
+          ? ({ ...(data as any), faq: sanitizeFaqItems((data as any).faq, slug) } as GlossaryTerm)
+          : null,
+      );
       setLoading(false);
     })();
 
@@ -354,9 +389,7 @@ function MeditationBlock({ children }: { children: string | null | undefined }) 
 
 
 function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
-  const safeItems = (items ?? []).filter(
-    (it): it is FaqItem => !!it && typeof it.question === 'string' && it.question.trim().length > 0,
-  );
+  const safeItems = items ?? [];
   if (safeItems.length === 0) {
     return (
       <EditorialEmptyState
