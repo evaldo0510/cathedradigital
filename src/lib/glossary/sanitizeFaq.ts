@@ -142,9 +142,20 @@ export type FaqPageJsonLd = z.infer<typeof FaqPageJsonLdSchema>;
  * Em dev, loga erro de validação; em prod, retorna `null` silenciosamente
  * para nunca enviar structured data malformado ao Google.
  */
+const JSON_LD_CACHE = new WeakMap<object, FaqPageJsonLd | null>();
+
 export function buildFaqPageJsonLd(items: FaqItem[] | null | undefined): FaqPageJsonLd | null {
+  if (Array.isArray(items) && JSON_LD_CACHE.has(items)) {
+    return JSON_LD_CACHE.get(items)!;
+  }
+
   const eligible = filterFaqForJsonLd(items);
-  if (eligible.length === 0) return null;
+  const store = (v: FaqPageJsonLd | null) => {
+    if (Array.isArray(items)) JSON_LD_CACHE.set(items, v);
+    return v;
+  };
+
+  if (eligible.length === 0) return store(null);
 
   const candidate = {
     '@type': 'FAQPage' as const,
@@ -159,7 +170,7 @@ export function buildFaqPageJsonLd(items: FaqItem[] | null | undefined): FaqPage
       }))
       .filter((q) => q.name.length > 0 && q.acceptedAnswer.text.length > 0),
   };
-  if (candidate.mainEntity.length === 0) return null;
+  if (candidate.mainEntity.length === 0) return store(null);
 
   const parsed = FaqPageJsonLdSchema.safeParse(candidate);
   if (!parsed.success) {
@@ -170,9 +181,69 @@ export function buildFaqPageJsonLd(items: FaqItem[] | null | undefined): FaqPage
     if (isDev) {
       console.error('[Glossary/FAQ] JSON-LD inválido — descartado', parsed.error.flatten());
     }
-    return null;
+    return store(null);
   }
-  return parsed.data;
+  return store(parsed.data);
+}
+
+/**
+ * Explica, por item, o que a sanitização removeu ou normalizou entre a
+ * versão bruta e a versão emitida no JSON-LD. Usado apenas por painéis
+ * de dev/QA — não deve ser importado em código de produção crítico.
+ */
+export interface FaqSanitizationDiff {
+  index: number;
+  rawQuestion: unknown;
+  rawAnswer: unknown;
+  sanitizedQuestion: string;
+  sanitizedAnswer: string;
+  questionChanged: boolean;
+  answerChanged: boolean;
+  removedFromQuestion: string[];
+  removedFromAnswer: string[];
+  dropped: boolean;
+  reason?: string;
+}
+
+function collectRemoved(raw: unknown): string[] {
+  if (typeof raw !== 'string') return [];
+  const hits: string[] = [];
+  for (const rx of [DANGEROUS_TAG_BLOCK, DANGEROUS_TAG_LOOSE, INLINE_EVENT_HANDLER, DANGEROUS_URI]) {
+    const re = new RegExp(rx.source, rx.flags);
+    const matches = raw.match(re);
+    if (matches) hits.push(...matches);
+  }
+  if (/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/.test(raw)) hits.push('[control-chars]');
+  return hits;
+}
+
+export function explainFaqSanitization(rawList: unknown): FaqSanitizationDiff[] {
+  if (!Array.isArray(rawList)) return [];
+  return rawList.map((item, index) => {
+    const rawQuestion = (item && typeof item === 'object') ? (item as any).question : undefined;
+    const rawAnswer = (item && typeof item === 'object') ? (item as any).answer : undefined;
+    const sanitizedQuestion = sanitizeAnswerForJsonLd(rawQuestion);
+    const sanitizedAnswer = sanitizeAnswerForJsonLd(rawAnswer);
+    const dropped = sanitizedQuestion.length === 0 || sanitizedAnswer.length === 0;
+    const reason = !sanitizedQuestion
+      ? 'question vazia após sanitização'
+      : !sanitizedAnswer
+        ? 'answer vazia após sanitização'
+        : undefined;
+    return {
+      index,
+      rawQuestion,
+      rawAnswer,
+      sanitizedQuestion,
+      sanitizedAnswer,
+      questionChanged: typeof rawQuestion === 'string' && rawQuestion !== sanitizedQuestion,
+      answerChanged: typeof rawAnswer === 'string' && rawAnswer !== sanitizedAnswer,
+      removedFromQuestion: collectRemoved(rawQuestion),
+      removedFromAnswer: collectRemoved(rawAnswer),
+      dropped,
+      reason,
+    };
+  });
 }
 
 

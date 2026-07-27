@@ -71,7 +71,9 @@ interface NexusRef {
 import {
   sanitizeFaqItemsDetailed,
   buildFaqPageJsonLd,
+  explainFaqSanitization,
   type FaqItem,
+  type FaqSanitizationDiff,
   type SanitizeFaqStats,
 } from '@/lib/glossary/sanitizeFaq';
 import { reportFaqMetrics } from '@/lib/glossary/faqMetrics';
@@ -402,8 +404,13 @@ function FaqSanitizationBadge({
   );
 }
 
+const FAQ_PAGE_SIZE = 20;
+const FAQ_PAGINATION_THRESHOLD = 50;
+
 function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
   const safeItems = items ?? [];
+  const [visible, setVisible] = useState(FAQ_PAGE_SIZE);
+
   if (safeItems.length === 0) {
     return (
       <EditorialEmptyState
@@ -413,9 +420,14 @@ function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
       />
     );
   }
+
+  const paginate = safeItems.length > FAQ_PAGINATION_THRESHOLD;
+  const rendered = paginate ? safeItems.slice(0, visible) : safeItems;
+  const hasMore = paginate && visible < safeItems.length;
+
   return (
     <div className="max-w-[68ch] mx-auto space-y-4">
-      {safeItems.map((item, i) => {
+      {rendered.map((item, i) => {
         const answer = typeof item.answer === 'string' ? item.answer : '';
         const paragraphs = answer.trim() ? answer.split(/\n{2,}/) : [];
         return (
@@ -448,6 +460,19 @@ function FaqBlock({ items }: { items: FaqItem[] | null | undefined }) {
           </details>
         );
       })}
+      {hasMore && (
+        <div className="pt-4 flex justify-center">
+          <button
+            type="button"
+            onClick={() => setVisible((v) => v + FAQ_PAGE_SIZE)}
+            data-testid="faq-load-more"
+            className="px-5 py-2 rounded-full border border-stitch-outline-variant/60 bg-stitch-surface-container-lowest text-stitch-label-sm font-stitch-label uppercase tracking-[0.18em] hover:bg-stitch-secondary/10 transition-colors"
+            aria-label={`Carregar mais perguntas (${safeItems.length - visible} restantes)`}
+          >
+            Carregar mais ({safeItems.length - visible})
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -546,8 +571,19 @@ const GlossaryTermPage: React.FC = () => {
   const navigate = useNavigate();
   const { term, loading, error, faqStats, rawFaq } = useGlossaryTerm(slug);
   const isDevEnv = import.meta.env.DEV;
-  const [showRawFaq, setShowRawFaq] = useState(false);
+  const [devMode, setDevMode] = useState<'off' | 'raw' | 'diff'>('off');
+  const showRawFaq = devMode !== 'off';
   const { toggleFavorite, isFavorite } = useFavorites('glossary');
+
+  // JSON-LD memoizado — evita reconstruir/sanitizar a cada re-render.
+  // O `buildFaqPageJsonLd` também cacheia por referência via WeakMap.
+  const faqJsonLd = useMemo(() => buildFaqPageJsonLd(term?.faq), [term?.faq]);
+
+  // Diff bruto x sanitizado, calculado só quando o dev abre o painel.
+  const faqDiff = useMemo<FaqSanitizationDiff[]>(
+    () => (isDevEnv && showRawFaq ? explainFaqSanitization(rawFaq) : []),
+    [isDevEnv, showRawFaq, rawFaq],
+  );
 
   useHistoryRegistration(term);
 
@@ -687,10 +723,7 @@ const GlossaryTermPage: React.FC = () => {
                   url: 'https://www.cathedradigital.com.br',
                 },
               },
-              ...(() => {
-                const faqJsonLd = buildFaqPageJsonLd(term.faq);
-                return faqJsonLd ? [faqJsonLd] : [];
-              })(),
+              ...(faqJsonLd ? [faqJsonLd] : []),
             ],
           })}
         </script>
@@ -868,19 +901,36 @@ const GlossaryTermPage: React.FC = () => {
                     <>
                       <FaqSanitizationBadge stats={faqStats} slug={term.slug} />
                       {isDevEnv && (
-                        <div className="max-w-[68ch] mx-auto mb-4 flex items-center justify-end">
-                          <button
-                            type="button"
-                            onClick={() => setShowRawFaq((v) => !v)}
-                            data-testid="faq-raw-toggle"
-                            className="text-xs font-mono px-3 py-1 rounded border border-dashed border-amber-500/60 bg-amber-50/40 text-amber-900 hover:bg-amber-100/60"
-                            aria-pressed={showRawFaq}
-                          >
-                            [dev] {showRawFaq ? 'Ocultar FAQ bruto' : 'Mostrar FAQ bruto + sanitizado'}
-                          </button>
+                        <div
+                          className="max-w-[68ch] mx-auto mb-4 flex items-center justify-end gap-2"
+                          role="group"
+                          aria-label="[dev] Modo de inspeção do FAQ"
+                        >
+                          {(['off', 'raw', 'diff'] as const).map((mode) => (
+                            <button
+                              key={mode}
+                              type="button"
+                              onClick={() => setDevMode(mode)}
+                              data-testid={`faq-devmode-${mode}`}
+                              className={cn(
+                                'text-xs font-mono px-3 py-1 rounded border border-dashed transition-colors',
+                                devMode === mode
+                                  ? 'border-amber-500 bg-amber-100 text-amber-950'
+                                  : 'border-amber-500/60 bg-amber-50/40 text-amber-900 hover:bg-amber-100/60',
+                              )}
+                              aria-pressed={devMode === mode}
+                            >
+                              [dev]{' '}
+                              {mode === 'off'
+                                ? 'Ocultar'
+                                : mode === 'raw'
+                                  ? 'Bruto + Sanitizado'
+                                  : 'Diff por item'}
+                            </button>
+                          ))}
                         </div>
                       )}
-                      {isDevEnv && showRawFaq && (
+                      {isDevEnv && devMode === 'raw' && (
                         <div
                           data-testid="faq-raw-panel"
                           className="max-w-[68ch] mx-auto mb-6 grid md:grid-cols-2 gap-4 text-xs"
@@ -897,6 +947,71 @@ const GlossaryTermPage: React.FC = () => {
 {JSON.stringify(term.faq, null, 2)}
                             </pre>
                           </div>
+                        </div>
+                      )}
+                      {isDevEnv && devMode === 'diff' && (
+                        <div
+                          data-testid="faq-diff-panel"
+                          className="max-w-[68ch] mx-auto mb-6 space-y-3 text-xs"
+                        >
+                          {faqDiff.length === 0 && (
+                            <div className="italic text-stitch-on-surface-variant">
+                              Nenhum item bruto disponível.
+                            </div>
+                          )}
+                          {faqDiff.map((d) => {
+                            const clean =
+                              !d.dropped &&
+                              !d.questionChanged &&
+                              !d.answerChanged &&
+                              d.removedFromQuestion.length === 0 &&
+                              d.removedFromAnswer.length === 0;
+                            return (
+                              <div
+                                key={d.index}
+                                className={cn(
+                                  'rounded border p-3',
+                                  d.dropped
+                                    ? 'border-red-500/70 bg-red-50/60'
+                                    : clean
+                                      ? 'border-emerald-500/40 bg-emerald-50/30'
+                                      : 'border-amber-500/60 bg-amber-50/50',
+                                )}
+                              >
+                                <div className="font-semibold mb-1">
+                                  Item #{d.index}{' '}
+                                  {d.dropped && <span className="text-red-700">· descartado ({d.reason})</span>}
+                                  {clean && <span className="text-emerald-700">· inalterado</span>}
+                                </div>
+                                {(d.questionChanged || d.removedFromQuestion.length > 0) && (
+                                  <div className="mb-1">
+                                    <span className="text-amber-800 font-semibold">question:</span>{' '}
+                                    <span className="line-through text-red-700">
+                                      {String(d.rawQuestion ?? '')}
+                                    </span>{' '}
+                                    → <span className="text-emerald-800">{d.sanitizedQuestion || '∅'}</span>
+                                  </div>
+                                )}
+                                {(d.answerChanged || d.removedFromAnswer.length > 0) && (
+                                  <div className="mb-1">
+                                    <span className="text-amber-800 font-semibold">answer:</span>{' '}
+                                    <span className="line-through text-red-700">
+                                      {String(d.rawAnswer ?? '')}
+                                    </span>{' '}
+                                    → <span className="text-emerald-800">{d.sanitizedAnswer || '∅'}</span>
+                                  </div>
+                                )}
+                                {(d.removedFromQuestion.length > 0 || d.removedFromAnswer.length > 0) && (
+                                  <div className="mt-1 text-red-700">
+                                    <span className="font-semibold">Removido:</span>{' '}
+                                    {[...d.removedFromQuestion, ...d.removedFromAnswer]
+                                      .map((s) => JSON.stringify(s))
+                                      .join(' · ')}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
                         </div>
                       )}
                       <FaqBlock items={term.faq} />
