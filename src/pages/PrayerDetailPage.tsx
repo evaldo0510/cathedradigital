@@ -30,6 +30,9 @@ import { EditorialHero } from '@/components/editorial/harmony';
 import PrayerPortal from '@/components/prayer/PrayerPortal';
 import { resolvePortalTheme } from '@/lib/prayer/portalTheme';
 import PoenitentiaPage from '@/components/cathedra/PoenitentiaPage';
+import PrayerErrorBoundary from '@/components/prayer/PrayerErrorBoundary';
+import { useAuth } from '@/hooks/useAuth';
+import { logPrayerDiagnostics, serializeSearchParams, type PrayerErrorContext } from '@/lib/prayer/telemetry';
 
 
 const FONT_STEPS = [
