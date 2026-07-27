@@ -205,9 +205,21 @@ export interface FaqJsonLdValidation {
   jsonLd: FaqPageJsonLd | null;
   issues: Array<{ path: string; code: string; message: string }>;
   droppedIndices: number[];
+  /** Versão da SanitizePolicy que produziu esse resultado. */
+  policyVersion: string;
+  /** Ambiente resolvido (dev/prod/test). */
+  policyEnv: 'dev' | 'prod' | 'test';
+  /** Instante em que a validação rodou (ISO). */
+  appliedAt: string;
 }
 
 export function validateFaqJsonLdLive(items: FaqItem[] | null | undefined): FaqJsonLdValidation {
+  const policy = getSanitizePolicy();
+  const meta = {
+    policyVersion: policy.version,
+    policyEnv: policy.env,
+    appliedAt: new Date().toISOString(),
+  } as const;
   const raw = Array.isArray(items) ? items : [];
   const eligible = filterFaqForJsonLd(raw);
   const droppedIndices: number[] = [];
@@ -226,7 +238,7 @@ export function validateFaqJsonLdLive(items: FaqItem[] | null | undefined): FaqJ
     })),
   };
   if (candidate.mainEntity.length === 0) {
-    return { ok: false, jsonLd: null, issues: [{ path: 'mainEntity', code: 'empty', message: 'nenhum item elegível' }], droppedIndices };
+    return { ok: false, jsonLd: null, issues: [{ path: 'mainEntity', code: 'empty', message: 'nenhum item elegível' }], droppedIndices, ...meta };
   }
   const parsed = FaqPageJsonLdSchema.safeParse(candidate);
   if (!parsed.success) {
@@ -235,9 +247,10 @@ export function validateFaqJsonLdLive(items: FaqItem[] | null | undefined): FaqJ
       jsonLd: null,
       issues: parsed.error.issues.map((i) => ({ path: i.path.join('.'), code: i.code, message: i.message })),
       droppedIndices,
+      ...meta,
     };
   }
-  return { ok: true, jsonLd: parsed.data, issues: [], droppedIndices };
+  return { ok: true, jsonLd: parsed.data, issues: [], droppedIndices, ...meta };
 }
 
 /**
