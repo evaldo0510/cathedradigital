@@ -234,9 +234,17 @@ export default function CollectionPage() {
   const { collection, items } = data;
   const meta = collection.metadata ?? {};
   const eyebrow = meta.eyebrow ?? 'COLEÇÃO';
-  const level = meta.level as CollectionLevel | undefined;
-  const duration = formatDuration(meta.estimated_minutes);
+  const level =
+    (collection.difficulty_level as CollectionLevel | undefined) ??
+    (meta.level as CollectionLevel | undefined);
+  const duration = formatDuration(
+    collection.estimated_reading_time_minutes ?? meta.estimated_minutes,
+  );
   const editorialGoal = meta.editorial_goal;
+  const heroQuote = collection.hero_quote ?? null;
+  const heroQuoteAuthor = collection.hero_quote_author ?? null;
+  const learningObjectives = collection.learning_objectives ?? [];
+  const completionMessage = collection.completion_message ?? null;
 
   const totalCompleted = Object.values(progress).filter(
     (p) => p.status === 'completed',
@@ -245,9 +253,21 @@ export default function CollectionPage() {
     (p) => p.status !== 'not_started',
   ).length;
 
-  // Próximo item pendente para o CTA principal
+  // Bloqueios por is_locked_until_prev
+  const lockedItemIds = new Set<string>();
+  for (let i = 0; i < items.length; i++) {
+    const it = items[i];
+    const prev = items[i - 1];
+    if (it.is_locked_until_prev && prev && getStatus(prev.id) !== 'completed') {
+      lockedItemIds.add(it.id);
+    }
+  }
+
+  // Próximo item pendente (ignora bloqueados) para o CTA principal
   const nextItem =
-    items.find((i) => getStatus(i.id) !== 'completed') ?? items[0];
+    items.find(
+      (i) => getStatus(i.id) !== 'completed' && !lockedItemIds.has(i.id),
+    ) ?? items[0];
   const nextHref = nextItem
     ? hrefBySlug.get(`${nextItem.item_type}:${nextItem.item_slug}`) ?? null
     : null;
