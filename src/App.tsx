@@ -259,6 +259,7 @@ const PrototypeFormacao = lazy(() => import('./pages/prototype-2.0/screens/Forma
 const PrototypeRezar = lazy(() => import('./pages/prototype-2.0/screens/Rezar'));
 const PrototypeMinhaJornada = lazy(() => import('./pages/prototype-2.0/screens/MinhaJornada'));
 const CollectionPage = lazy(() => import('./pages/CollectionPage'));
+const CollectionsMetricsPage = lazy(() => import('./pages/admin/CollectionsMetricsPage'));
 const BibliotecaAcervoPage = lazy(() => import('./pages/BibliotecaAcervoPage'));
 
 // Cathedra 2.0 — Ambiente Átrio (Sprint 2.0.1, preview isolado)
