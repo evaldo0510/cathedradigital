@@ -728,6 +728,7 @@ const AppLayout: React.FC = () => {
 
               {/* Institucional */}
               <Route path="/about" element={<Suspense fallback={<LoadingFallback />}><AboutPage /></Suspense>} />
+              <Route path="/sobre" element={<Suspense fallback={<LoadingFallback />}><AboutPage /></Suspense>} />
               <Route path="/manifesto" element={<Suspense fallback={<LoadingFallback />}><ManifestoPage /></Suspense>} />
               <Route path="/legal" element={<Suspense fallback={<LoadingFallback />}><LegalCenterPage /></Suspense>} />
               <Route path="/legal/privacy" element={<Suspense fallback={<LoadingFallback />}><PrivacyPage /></Suspense>} />

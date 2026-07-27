@@ -27,6 +27,7 @@ import {
 
 const SEOHead = lazy(() => import("@/components/SEOHead"));
 import LandingFAQ, { LANDING_FAQS } from "@/components/landing/LandingFAQ";
+import TestimonialsSection from "@/components/landing/TestimonialsSection";
 
 /* --------------------------------------------------------------------- */
 /* Dados das seções                                                       */
@@ -327,6 +328,11 @@ const PublicLanding = () => {
               })}
             </EditorialGrid>
           </EditorialSection>
+
+          <EditorialDivider />
+
+          {/* ---------------- Depoimentos ---------------- */}
+          <TestimonialsSection />
 
           <EditorialDivider />
 

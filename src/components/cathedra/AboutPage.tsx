@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Icons } from '../../constants';
 import { SOCIAL_LINKS } from '@/config/site-config';
 import { trackEvent } from '@/lib/analytics';
+import TestimonialsSection from '@/components/landing/TestimonialsSection';
 
 const AboutPage: React.FC = () => (
   <div className="w-full space-y-spacing-3xl py-spacing-md animate-in fade-in slide-in-from-bottom-spacing-md duration-1000">
@@ -210,6 +211,9 @@ const AboutPage: React.FC = () => (
         </div>
       </div>
     </div>
+
+    {/* Depoimentos */}
+    <TestimonialsSection id="depoimentos-sobre" />
 
     {/* Footer Quote */}
     <div className="py-spacing-3xl text-center space-y-spacing-md">
