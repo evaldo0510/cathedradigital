@@ -72,6 +72,7 @@ import {
   sanitizeFaqItemsDetailed,
   buildFaqPageJsonLd,
   explainFaqSanitization,
+  validateFaqJsonLdLive,
   type FaqItem,
   type FaqSanitizationDiff,
   type SanitizeFaqStats,
@@ -579,7 +580,7 @@ const GlossaryTermPage: React.FC = () => {
   const navigate = useNavigate();
   const { term, loading, error, faqStats, rawFaq } = useGlossaryTerm(slug);
   const isDevEnv = import.meta.env.DEV;
-  const [devMode, setDevMode] = useState<'off' | 'raw' | 'diff'>('off');
+  const [devMode, setDevMode] = useState<'off' | 'raw' | 'diff' | 'jsonld'>('off');
   const showRawFaq = devMode !== 'off';
   const { toggleFavorite, isFavorite } = useFavorites('glossary');
 
@@ -914,7 +915,7 @@ const GlossaryTermPage: React.FC = () => {
                           role="group"
                           aria-label="[dev] Modo de inspeção do FAQ"
                         >
-                          {(['off', 'raw', 'diff'] as const).map((mode) => (
+                          {(['off', 'raw', 'diff', 'jsonld'] as const).map((mode) => (
                             <button
                               key={mode}
                               type="button"
@@ -933,7 +934,9 @@ const GlossaryTermPage: React.FC = () => {
                                 ? 'Ocultar'
                                 : mode === 'raw'
                                   ? 'Bruto + Sanitizado'
-                                  : 'Diff por item'}
+                                  : mode === 'diff'
+                                    ? 'Diff por item'
+                                    : 'Preview JSON-LD'}
                             </button>
                           ))}
                         </div>
@@ -1055,6 +1058,84 @@ const GlossaryTermPage: React.FC = () => {
                           })}
                         </div>
                       )}
+                      {isDevEnv && devMode === 'jsonld' && (() => {
+                        const live = validateFaqJsonLdLive(term.faq);
+                        const removedPaths = new Set(live.issues.map((i) => i.path));
+                        return (
+                          <div
+                            data-testid="faq-jsonld-panel"
+                            className="max-w-[68ch] mx-auto mb-6 space-y-3 text-xs"
+                          >
+                            <div className="flex items-center justify-between gap-3">
+                              <div
+                                className={cn(
+                                  'font-mono px-2 py-1 rounded border',
+                                  live.ok
+                                    ? 'border-emerald-500/60 bg-emerald-50/60 text-emerald-900'
+                                    : 'border-red-500/60 bg-red-50/60 text-red-900',
+                                )}
+                                data-testid="faq-jsonld-status"
+                              >
+                                {live.ok ? '✓ JSON-LD válido' : '✗ JSON-LD inválido'}
+                                {' · '}itens: {live.jsonLd?.mainEntity.length ?? 0}
+                                {live.droppedIndices.length > 0 && (
+                                  <> · descartados: {live.droppedIndices.length}</>
+                                )}
+                              </div>
+                              <button
+                                type="button"
+                                data-testid="faq-jsonld-copy"
+                                onClick={() => {
+                                  const payload = JSON.stringify(
+                                    live.jsonLd ?? { error: live.issues },
+                                    null,
+                                    2,
+                                  );
+                                  navigator.clipboard?.writeText(payload).catch(() => {});
+                                }}
+                                className="text-xs font-mono px-3 py-1 rounded border border-dashed border-amber-500/70 bg-amber-50/60 text-amber-950 hover:bg-amber-100/80"
+                              >
+                                Copiar JSON-LD
+                              </button>
+                            </div>
+                            {live.issues.length > 0 && (
+                              <ul
+                                data-testid="faq-jsonld-issues"
+                                className="rounded border border-red-500/60 bg-red-50/50 p-3 text-red-900 space-y-1"
+                              >
+                                {live.issues.map((iss, i) => (
+                                  <li key={i} className="font-mono">
+                                    <span className="font-semibold">{iss.path || '(root)'}</span>{' '}
+                                    <span className="text-red-700">[{iss.code}]</span> {iss.message}
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                            {live.droppedIndices.length > 0 && (
+                              <div className="rounded border border-amber-500/60 bg-amber-50/50 p-3 text-amber-900">
+                                <span className="font-semibold">Itens removidos (índices):</span>{' '}
+                                <span className="font-mono">{live.droppedIndices.join(', ')}</span>
+                              </div>
+                            )}
+                            <pre
+                              className={cn(
+                                'rounded border p-3 whitespace-pre-wrap break-words max-h-[28rem] overflow-auto',
+                                live.ok
+                                  ? 'border-emerald-500/60 bg-emerald-50/40 text-emerald-950/90'
+                                  : 'border-red-500/60 bg-red-50/40 text-red-950/90',
+                              )}
+                              data-testid="faq-jsonld-output"
+                            >
+{JSON.stringify(live.jsonLd, null, 2)}
+                            </pre>
+                            {removedPaths.size > 0 && (
+                              <div className="text-[11px] italic text-stitch-on-surface-variant">
+                                Paths destacados no schema: {[...removedPaths].join(' · ')}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })()}
                       <FaqBlock items={term.faq} />
                     </>
                   )}

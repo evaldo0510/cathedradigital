@@ -76,6 +76,13 @@ for (const slug of SLUGS) {
     for (const q of faqBlock.mainEntity) {
       expect(q.name.trim().length).toBeGreaterThan(0);
       expect(q.acceptedAnswer.text.trim().length).toBeGreaterThan(0);
+      // Nenhum campo obrigatório do FAQPage pode conter apenas whitespace/escapes
+      expect(q.name).not.toMatch(/^[\s\u200B\u00A0]+$/);
+      expect(q.acceptedAnswer.text).not.toMatch(/^[\s\u200B\u00A0]+$/);
     }
+
+    // Nenhum vestígio de URIs perigosas
+    expect(serialized).not.toMatch(/vbscript:/i);
+    expect(serialized).not.toMatch(/\bdata:text\/html/i);
   });
 }
