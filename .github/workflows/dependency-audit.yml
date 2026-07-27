@@ -22,15 +22,30 @@ on:
         default: 'false'
         type: choice
         options: ['false', 'true']
+      baseline_ref:
+        description: 'Ref para baixar o baseline (branch, tag ou commit). Padrão: main'
+        required: false
+        default: 'main'
+        type: string
+      open_update_pr:
+        description: 'Abrir PR automático com bun add nas versões-alvo quando o conjunto de blockers mudar'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
 
 jobs:
   audit:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
       issues: write
       checks: write
+    outputs:
+      has_blockers: ${{ steps.summary.outputs.has_blockers }}
+      blockers_changed: ${{ steps.summary.outputs.blockers_changed }}
+      has_pr_commands: ${{ steps.summary.outputs.has_pr_commands }}
     steps:
       - uses: actions/checkout@v4
 
@@ -40,14 +55,20 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
-      - name: Download baseline (execução anterior em main)
+      - name: Resolver ref do baseline
+        id: baseline_ref
+        run: |
+          REF="${{ inputs.baseline_ref }}"
+          echo "ref=${REF:-main}" >> "$GITHUB_OUTPUT"
+
+      - name: Download baseline (execução anterior em ${{ steps.baseline_ref.outputs.ref }})
         id: baseline
         if: inputs.reset_baseline != 'true'
         continue-on-error: true
         uses: dawidd6/action-download-artifact@v6
         with:
           workflow: dependency-audit.yml
-          branch: main
+          branch: ${{ steps.baseline_ref.outputs.ref }}
           name: dependency-audit-report
           path: REPORTS/audit-baseline
           if_no_artifact_found: warn
@@ -57,9 +78,9 @@ jobs:
           mkdir -p REPORTS/audit
           if [ -f REPORTS/audit-baseline/findings.json ]; then
             cp REPORTS/audit-baseline/findings.json REPORTS/audit/previous-findings.json
-            echo "Baseline carregada."
+            echo "Baseline carregada de ref: ${{ steps.baseline_ref.outputs.ref }}"
           else
-            echo "Sem baseline anterior — diff será omitido."
+            echo "Sem baseline em ${{ steps.baseline_ref.outputs.ref }} — diff será omitido."
           fi
 
       - name: Run bun audit
