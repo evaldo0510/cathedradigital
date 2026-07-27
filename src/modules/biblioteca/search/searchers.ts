@@ -174,12 +174,13 @@ async function searchSpiritual(
     .limit(limit);
   return (data ?? []).map((r) => {
     const slug = r.reference_id ?? String(r.id);
+    const encoded = encodeURIComponent(slug);
     return {
       type,
       id: String(r.id),
       title: r.title ?? '',
       excerpt: r.content_text ? String(r.content_text).slice(0, 240) : undefined,
-      href: type === 'magisterium' ? `/magisterio/${slug}` : `/biblioteca/padres/${slug}`,
+      href: type === 'magisterium' ? `/magisterium/${encoded}` : `/biblioteca/padres/${encoded}`,
     };
   });
 }

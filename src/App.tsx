@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useContext } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
-import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { resolveSpaceForPath } from '@/lib/spaces/resolveSpace';
 
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
@@ -56,6 +56,11 @@ import { installSessionRenewal } from './lib/sessionRenewal';
 
 import SwipeNavigation from './components/cathedra/SwipeNavigation';
 import ContrastInspector from './components/dev/ContrastInspector';
+
+const MagisterioLegacyRedirect = () => {
+  const { id } = useParams<{ id: string }>();
+  return <Navigate to={`/magisterium/${id ?? ''}`} replace />;
+};
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -582,6 +587,7 @@ const AppLayout: React.FC = () => {
               <Route path="/catecismo" element={<Navigate to="/catechism" replace />} />
               <Route path="/magisterium" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
               <Route path="/magisterio" element={<Navigate to="/magisterium" replace />} />
+              <Route path="/magisterio/:id" element={<MagisterioLegacyRedirect />} />
               <Route path="/magisterium/:id" element={<Suspense fallback={<LoadingFallback />}><AtriumMagisteriumViewer /></Suspense>} />
               <Route path="/magisterium-legacy/:id" element={<Suspense fallback={<LoadingFallback />}><MagisteriumViewer /></Suspense>} />
 
