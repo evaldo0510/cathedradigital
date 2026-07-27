@@ -55,8 +55,7 @@ const LandingFAQ = () => {
       <div className="space-y-3 mb-8">
         <EditorialHeader
           kicker="Interroga · Perguntas"
-          title="Perguntas frequentes"
-          titleId="faq-heading"
+          title={<span id="faq-heading">Perguntas frequentes</span>}
         />
         <p className="max-w-2xl text-base text-muted-foreground">
           O essencial antes de entrar no silêncio.
