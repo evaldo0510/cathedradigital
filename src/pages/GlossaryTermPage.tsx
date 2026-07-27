@@ -77,6 +77,7 @@ import {
   type SanitizeFaqStats,
 } from '@/lib/glossary/sanitizeFaq';
 import { reportFaqMetrics } from '@/lib/glossary/faqMetrics';
+import { FaqVirtualList } from '@/components/glossary/FaqVirtualList';
 
 
 
