@@ -17,7 +17,7 @@ interface RowProps {
   onRowResize: (index: number, height: number) => void;
 }
 
-const FaqRow = memo(function FaqRow({
+function FaqRow({
   index,
   style,
   items,
