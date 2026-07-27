@@ -435,6 +435,7 @@ export default function CollectionPage() {
           {items.map((item, idx) => {
             const status = getStatus(item.id);
             const href = hrefBySlug.get(`${item.item_type}:${item.item_slug}`) ?? null;
+            const locked = lockedItemIds.has(item.id);
             return (
               <li key={item.id}>
                 <ItemRow
@@ -442,6 +443,7 @@ export default function CollectionPage() {
                   index={idx}
                   status={status}
                   href={href}
+                  locked={locked}
                   onOpen={() => {
                     if (status === 'not_started') {
                       void startItem(item.id).catch(() => undefined);
