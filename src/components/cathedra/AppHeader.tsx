@@ -5,6 +5,8 @@ import { AppRoute, Language } from '@/types';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { useLang } from '@/hooks/useLang';
+import { LanguageSwitcher } from '@/components/i18n/LanguageSwitcher';
+
 
 import { cn } from '@/lib/utils';
 import { isLegitimateClick } from '@/lib/navigation-utils';
@@ -142,7 +144,9 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
               </div>
 
               <div className="flex items-center gap-spacing-2xs md:gap-spacing-md">
+                <LanguageSwitcher className="hidden sm:inline-flex" />
                 <div className="flex md:block">
+
                   {user ? (
                     <Button
                       variant="outline"
