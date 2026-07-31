@@ -6323,6 +6323,7 @@ export type Database = {
           id: string
           severity: string | null
           source: string | null
+          user_id: string | null
         }
         Insert: {
           details?: Json | null
@@ -6330,6 +6331,7 @@ export type Database = {
           id?: string
           severity?: string | null
           source?: string | null
+          user_id?: string | null
         }
         Update: {
           details?: Json | null
@@ -6337,6 +6339,7 @@ export type Database = {
           id?: string
           severity?: string | null
           source?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
