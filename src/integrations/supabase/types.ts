@@ -5443,6 +5443,36 @@ export type Database = {
         }
         Relationships: []
       }
+      rls_denial_events: {
+        Row: {
+          action: string
+          context: Json
+          created_at: string
+          id: string
+          reason: string | null
+          table_name: string
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          context?: Json
+          created_at?: string
+          id?: string
+          reason?: string | null
+          table_name: string
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          context?: Json
+          created_at?: string
+          id?: string
+          reason?: string | null
+          table_name?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       rls_test_results: {
         Row: {
           details: string | null
@@ -8688,6 +8718,15 @@ export type Database = {
           p_metadata?: Json
         }
         Returns: string
+      }
+      log_rls_denial: {
+        Args: {
+          p_action: string
+          p_context?: Json
+          p_reason?: string
+          p_table: string
+        }
+        Returns: undefined
       }
       log_security_event: {
         Args: {

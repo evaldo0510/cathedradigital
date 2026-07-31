@@ -1,0 +1,1 @@
+REVOKE ALL ON public.rls_denial_events FROM anon;
