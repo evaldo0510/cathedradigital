@@ -938,7 +938,7 @@ const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     <HelmetProvider>
       <Sentry.ErrorBoundary fallback={<AppErrorBoundary children={<LoadingFallback />} />}>
         <QueryClientProvider client={queryClient}>
-          <BrowserRouter>
+          <BrowserRouter basename={ROUTER_BASENAME}>
             <AuthProvider>
               <LangProvider>
                 <ReadingSettingsProvider>
