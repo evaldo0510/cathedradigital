@@ -142,7 +142,9 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
               </div>
 
               <div className="flex items-center gap-spacing-2xs md:gap-spacing-md">
+                <LanguageSwitcher className="hidden sm:inline-flex" />
                 <div className="flex md:block">
+
                   {user ? (
                     <Button
                       variant="outline"
