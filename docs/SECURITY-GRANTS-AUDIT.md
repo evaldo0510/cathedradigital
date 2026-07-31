@@ -90,3 +90,24 @@ Sete asserções (rollback ao final, não altera dados):
 propriedade: `profiles`, `notifications`, `journey_progress`, `reading_marks`,
 `reading_reflections`, `itineraria_progress`, `user_achievements`.
 `bible_cache_alerts` e `editorial_closure_migration_log` foram removidos.
+
+## 8. Trilha de auditoria — rescans
+
+| Data (UTC) | Total | Críticos | `community_likes` | Realtime | `secret_leaks` | Observação |
+|---|---|---|---|---|---|---|
+| 2026-07-31 (pré-hardening) | 123 | 1 (`secret_leaks` via JSON não verificado) | finding aberto | findings abertos | finding aberto | Estado antes das migrações de GRANT/RLS |
+| 2026-07-31 (pós-hardening) | 83 | 0 | **nenhum finding** | **nenhum finding** | **nenhum finding** | REVOKE de `anon` em 39 tabelas sensíveis |
+| 2026-07-31 10:43 (rescan de confirmação) | 83 | 0 | **nenhum finding** | **nenhum finding** | **nenhum finding** | Confirmação final |
+
+Composição dos 83 residuais no rescan de 2026-07-31 10:43:
+
+- **81 avisos** `SECURITY DEFINER function executable` (10 por `anon`, dentro da
+  allowlist documentada em [`SECURITY-DEFINER-ALLOWLIST.md`](./SECURITY-DEFINER-ALLOWLIST.md);
+  os demais por `authenticated`, exigidos pelas policies de RLS que os chamam).
+- **2 avisos** `PUBLIC_UNREVIEWED_CONTENT`: policies `USING (true)` em
+  `glossary` e `catechism_official` expõem linhas `status <> 'published'`.
+  **Ainda em aberto** — depende de decisão editorial sobre visibilidade de rascunhos.
+
+Nenhum finding restante toca `community_likes`, publicação Realtime ou
+`secret_leaks` — os três objetivos do hardening estão fechados.
+
