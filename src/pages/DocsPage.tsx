@@ -87,10 +87,10 @@ export default function DocsPage() {
                           {guide.title}
                         </span>
                         <span className="mt-2 flex-1 text-sm text-muted-foreground">{guide.summary}</span>
-                        <span className="mt-3 inline-flex items-center gap-1 text-xs font-semibold uppercase tracking-wider text-primary">
-                          {bundle.ui.onThisPage}
-                          <ArrowRight aria-hidden="true" className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                        </span>
+                        <ArrowRight
+                          aria-hidden="true"
+                          className="mt-3 h-4 w-4 text-primary transition-transform group-hover:translate-x-0.5"
+                        />
                       </Link>
                     </li>
                   ))}
