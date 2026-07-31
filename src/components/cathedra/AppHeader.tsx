@@ -5,6 +5,8 @@ import { AppRoute, Language } from '@/types';
 import { Icons } from '@/constants';
 import { Button } from '@/components/ui/button';
 import { useLang } from '@/hooks/useLang';
+import { LanguageSwitcher } from '@/components/i18n/LanguageSwitcher';
+
 
 import { cn } from '@/lib/utils';
 import { isLegitimateClick } from '@/lib/navigation-utils';
