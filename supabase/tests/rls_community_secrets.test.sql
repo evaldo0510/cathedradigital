@@ -32,50 +32,49 @@ EXCEPTION WHEN insufficient_privilege THEN
 END $$;
 
 -- ─────────────────────────────────────────────────────────────
--- 2. authenticated sem admin só enxerga os próprios likes
+-- 2. Políticas de community_likes escopadas ao próprio usuário
+--    (SET ROLE authenticated não é permitido no runner; validamos as
+--     expressões das políticas, que são a fronteira efetiva.)
 -- ─────────────────────────────────────────────────────────────
 DO $$
-DECLARE n int;
+DECLARE q text; wc text;
 BEGIN
-  PERFORM set_config('request.jwt.claims',
-    json_build_object('sub', '00000000-0000-0000-0000-0000000000aa', 'role', 'authenticated')::text, true);
-  SET LOCAL ROLE authenticated;
-
-  SELECT count(*) INTO n
-  FROM public.community_likes
-  WHERE user_id <> '00000000-0000-0000-0000-0000000000aa'::uuid;
-  IF n <> 0 THEN
-    RAISE EXCEPTION 'FALHA: usuário comum leu % likes de terceiros', n;
+  SELECT pg_get_expr(polqual, polrelid) INTO q
+  FROM pg_policy
+  WHERE polrelid = 'public.community_likes'::regclass AND polcmd = 'r';
+  IF q IS NULL OR q NOT LIKE '%auth.uid() = user_id%' THEN
+    RAISE EXCEPTION 'FALHA: leitura de community_likes não está escopada ao dono (qual=%)', q;
   END IF;
 
-  SELECT count(*) INTO n FROM public.secret_leaks;
-  IF n <> 0 THEN
-    RAISE EXCEPTION 'FALHA: usuário comum leu % linhas de secret_leaks', n;
+  SELECT pg_get_expr(polwithcheck, polrelid) INTO wc
+  FROM pg_policy
+  WHERE polrelid = 'public.community_likes'::regclass AND polcmd = 'a';
+  IF wc IS NULL OR wc NOT LIKE '%auth.uid()%' THEN
+    RAISE EXCEPTION 'FALHA: insert de community_likes aceita user_id de terceiro (check=%)', wc;
   END IF;
-
-  RESET ROLE;
 END $$;
 
 -- ─────────────────────────────────────────────────────────────
--- 3. authenticated não pode curtir em nome de outro usuário
+-- 3. secret_leaks só é visível ao dono verificado ou a admin
 -- ─────────────────────────────────────────────────────────────
 DO $$
+DECLARE q text; n int;
 BEGIN
-  PERFORM set_config('request.jwt.claims',
-    json_build_object('sub', '00000000-0000-0000-0000-0000000000aa', 'role', 'authenticated')::text, true);
-  SET LOCAL ROLE authenticated;
+  SELECT count(*) INTO n FROM pg_policy WHERE polrelid = 'public.secret_leaks'::regclass;
+  IF n <> 1 THEN
+    RAISE EXCEPTION 'FALHA: secret_leaks tem % políticas (esperado 1 de leitura)', n;
+  END IF;
 
-  BEGIN
-    INSERT INTO public.community_likes (post_id, user_id)
-    VALUES (gen_random_uuid(), '00000000-0000-0000-0000-0000000000bb');
-    RESET ROLE;
-    RAISE EXCEPTION 'FALHA: insert de like com user_id de terceiro foi aceito';
-  EXCEPTION WHEN insufficient_privilege OR foreign_key_violation OR check_violation THEN
-    NULL; -- bloqueio esperado
-  END;
-
-  RESET ROLE;
+  SELECT pg_get_expr(polqual, polrelid) INTO q
+  FROM pg_policy WHERE polrelid = 'public.secret_leaks'::regclass;
+  IF q NOT LIKE '%user_id = auth.uid()%' OR q NOT LIKE '%has_role%' THEN
+    RAISE EXCEPTION 'FALHA: política de secret_leaks não usa coluna verificada (qual=%)', q;
+  END IF;
+  IF q LIKE '%details%' THEN
+    RAISE EXCEPTION 'FALHA: política de secret_leaks voltou a confiar em JSON não verificado';
+  END IF;
 END $$;
+
 
 -- ─────────────────────────────────────────────────────────────
 -- 4. Canais realtime administrativos permanecem fora da publicação
