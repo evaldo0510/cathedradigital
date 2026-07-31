@@ -9,8 +9,9 @@ import { EditorialHero } from "@/components/editorial/harmony/EditorialHero";
 import { EditorialCard } from "@/components/editorial/harmony/EditorialCard";
 import { Button } from "@/components/ui/button";
 import {
-  Target, ClipboardList, Network, Library, Sparkles, GraduationCap, Compass, Users, ShieldCheck, ArrowRight,
+  Target, ClipboardList, Network, Library, Sparkles, GraduationCap, Compass, Users, ShieldCheck, ArrowRight, Activity,
 } from "lucide-react";
+
 import { useIsAdmin } from "@/hooks/useIsAdmin";
 
 const groups = [
@@ -31,8 +32,10 @@ const groups = [
   },
   {
     label: "Sistema", items: [
+      { icon: Activity,       title: "Site Health",      description: "Saúde da plataforma, atividade e auditoria.",        href: "/admin/site-health" },
       { icon: Users,          title: "Usuários",         description: "Papéis, permissões e vínculos.",                     href: "/admin/users" },
       { icon: ShieldCheck,    title: "Segurança e SEO",  description: "Diagnóstico, telemetria, alertas.",                  href: "/admin" },
+
     ],
   },
 ];

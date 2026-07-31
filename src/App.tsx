@@ -249,6 +249,10 @@ const BiblePhasesAdmin = lazy(() => import('./pages/admin/BiblePhasesAdmin'));
 const EditorialClosureValidator = lazy(() => import('./pages/admin/EditorialClosureValidator'));
 const EditorialClosureRuns = lazy(() => import('./pages/admin/EditorialClosureRuns'));
 const InstagramGalleryPage = lazy(() => import('./pages/admin/InstagramGallery'));
+const SiteHealthDashboard = lazy(() => import('./pages/admin/SiteHealthDashboard'));
+const DocsPage = lazy(() => import('./pages/DocsPage'));
+const DocsArticlePage = lazy(() => import('./pages/DocsArticlePage'));
+
 const PrayerAdmin = lazy(() => import('./pages/admin/PrayerAdmin'));
 const LiturgyMeditationFallbackPanel = lazy(() => import('./pages/admin/LiturgyMeditationFallbackPanel'));
 
@@ -758,6 +762,9 @@ const AppLayout: React.FC = () => {
               <Route path="/privacy" element={<Suspense fallback={<LoadingFallback />}><PrivacyPage /></Suspense>} />
               <Route path="/contato" element={<Suspense fallback={<LoadingFallback />}><ContactPage /></Suspense>} />
               <Route path="/contact" element={<Navigate to="/contato" replace />} />
+              <Route path="/docs" element={<Suspense fallback={<LoadingFallback />}><DocsPage /></Suspense>} />
+              <Route path="/docs/:slug" element={<Suspense fallback={<LoadingFallback />}><DocsArticlePage /></Suspense>} />
+
               <Route path="/offline" element={<Suspense fallback={<LoadingFallback />}><OfflinePage /></Suspense>} />
               <Route path="/cache-manager" element={<Suspense fallback={<LoadingFallback />}><CacheManager /></Suspense>} />
               <Route path="/bible-recovery" element={<Suspense fallback={<LoadingFallback />}><BibleRecoveryPanel /></Suspense>} />
@@ -877,6 +884,9 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/editorial-closure-validator" element={<EditorialClosureValidator />} />
                       <Route path="/admin/editorial-closure-runs" element={<EditorialClosureRuns />} />
                       <Route path="/admin/instagram-gallery" element={<Suspense fallback={<LoadingFallback />}><InstagramGalleryPage /></Suspense>} />
+                      <Route path="/admin/site-health" element={<SiteHealthDashboard />} />
+                      <Route path="/site-health" element={<SiteHealthDashboard />} />
+
 
 
 
