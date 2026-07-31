@@ -12,6 +12,14 @@ import { cn } from './lib/utils';
 import { AppRoute, Language } from './types';
 import { AuthProvider, useAuth } from './hooks/useAuth';
 import { LangContext, LangProvider } from './contexts/LangContext';
+import { resolveRouterBasename } from '@/lib/i18n/locales';
+
+/**
+ * Prefixo de idioma da URL (`/en`, `/es`, `/it`, `/la`). Calculado uma única
+ * vez no boot: a árvore de rotas permanece idêntica em todos os idiomas.
+ */
+const ROUTER_BASENAME = resolveRouterBasename();
+
 import { supabase } from '@/integrations/supabase/client';
 import AuthGuard from './components/cathedra/AuthGuard';
 import AdminGuard from './components/cathedra/AdminGuard';
