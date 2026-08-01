@@ -7,6 +7,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { fetchNexusTagContent } from '@/lib/nexusContent';
 import { HelmetProvider } from 'react-helmet-async';
 import React from 'react';
+import { TestContexts } from '@/test/providers';
 
 // Mocking related data
 const MOCK_THEMES = [
@@ -14,13 +15,18 @@ const MOCK_THEMES = [
   { id: 't-perdao', name: 'Perdão', slug: 'perdao', emoji: '🕊️', category: 'dores' },
 ];
 
-vi.mock('@/hooks/useAuth', () => ({
+vi.mock('@/hooks/useAuth', async () => {
+  const actual = await vi.importActual<typeof import('@/hooks/useAuth')>('@/hooks/useAuth');
+  return {
+    ...actual,
+
   useAuth: vi.fn(() => ({
     user: { id: 'user-123' },
     profile: { name: 'Teste' },
     loading: false,
   })),
-}));
+};
+});
 
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: { 
@@ -52,9 +58,9 @@ const renderWithProviders = (slug: string) => {
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <Routes>
+          <TestContexts><Routes>
             <Route path="/temas/:slug" element={<TemaDetailPage />} />
-          </Routes>
+          </Routes></TestContexts>
         </BrowserRouter>
       </QueryClientProvider>
     </HelmetProvider>

@@ -8,9 +8,14 @@ import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 window.HTMLElement.prototype.scrollIntoView = vi.fn();
 
 // Mock context and supabase
-vi.mock('@/contexts/ReadingSettingsContext', () => ({
+vi.mock('@/contexts/ReadingSettingsContext', async () => {
+  const actual = await vi.importActual<typeof import('@/contexts/ReadingSettingsContext')>('@/contexts/ReadingSettingsContext');
+  return {
+    ...actual,
+
   useReadingSettings: vi.fn(),
-}));
+};
+});
 
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: {

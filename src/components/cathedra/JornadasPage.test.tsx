@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { HelmetProvider } from 'react-helmet-async';
 import React from 'react';
+import { TestContexts } from '@/test/providers';
 
 // Simplified Supabase mock
 vi.mock('@/integrations/supabase/client', () => ({
@@ -19,9 +20,14 @@ vi.mock('@/integrations/supabase/client', () => ({
   }
 }));
 
-vi.mock('@/hooks/useAuth', () => ({
+vi.mock('@/hooks/useAuth', async () => {
+  const actual = await vi.importActual<typeof import('@/hooks/useAuth')>('@/hooks/useAuth');
+  return {
+    ...actual,
+
   useAuth: vi.fn(() => ({ user: null }))
-}));
+};
+});
 
 vi.mock('@/hooks/useFuzzySearch', () => ({
   useFuzzySearch: vi.fn(() => ({ results: [], isPending: false }))
@@ -36,7 +42,7 @@ const renderWithProviders = (ui: React.ReactElement) => {
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          {ui}
+          <TestContexts>{ui}</TestContexts>
         </BrowserRouter>
       </QueryClientProvider>
     </HelmetProvider>

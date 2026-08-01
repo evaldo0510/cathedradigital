@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
 import { SanctorumDateNav } from '../SanctorumDateNav';
+import { renderWithProviders } from '@/test/providers';
 
 /**
  * Snapshots do SanctorumDateNav em LTR e RTL para blindar:
@@ -24,7 +25,7 @@ function stripMarkup(html: string) {
 
 describe('SanctorumDateNav — snapshots LTR e RTL', () => {
   it('LTR: tira e pills preservam classes de layout', () => {
-    const { container } = render(
+    const { container } = renderWithProviders(
       <div dir="ltr">
         <SanctorumDateNav value={FIXED} onChange={() => {}} />
       </div>,
@@ -38,7 +39,7 @@ describe('SanctorumDateNav — snapshots LTR e RTL', () => {
   });
 
   it('RTL: tira e pills preservam classes de layout', () => {
-    const { container } = render(
+    const { container } = renderWithProviders(
       <div dir="rtl">
         <SanctorumDateNav value={FIXED} onChange={() => {}} />
       </div>,

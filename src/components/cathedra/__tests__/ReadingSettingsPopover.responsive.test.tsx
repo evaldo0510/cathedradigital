@@ -4,7 +4,11 @@ import ReadingSettingsPopover from '../ReadingSettingsPopover';
 
 // Mock do contexto para evitar Supabase/Auth durante o teste.
 const updateSettings = vi.fn();
-vi.mock('@/contexts/ReadingSettingsContext', () => ({
+vi.mock('@/contexts/ReadingSettingsContext', async () => {
+  const actual = await vi.importActual<typeof import('@/contexts/ReadingSettingsContext')>('@/contexts/ReadingSettingsContext');
+  return {
+    ...actual,
+
   useReadingSettings: () => ({
     settings: {
       theme: 'paper',
@@ -17,7 +21,8 @@ vi.mock('@/contexts/ReadingSettingsContext', () => ({
     },
     updateSettings,
   }),
-}));
+};
+});
 
 // Stub do ResizeObserver/PointerEvent exigidos pelo Radix em jsdom.
 beforeEach(() => {

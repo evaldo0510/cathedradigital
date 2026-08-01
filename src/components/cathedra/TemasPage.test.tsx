@@ -4,6 +4,7 @@ import TemasPage from './TemasPage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
+import { TestContexts } from '@/test/providers';
 
 // Mocking dependencies
 vi.mock('@/integrations/supabase/client', () => ({
@@ -35,7 +36,7 @@ const renderWithProviders = (ui: React.ReactElement) => {
   return render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        {ui}
+        <TestContexts>{ui}</TestContexts>
       </BrowserRouter>
     </QueryClientProvider>
   );

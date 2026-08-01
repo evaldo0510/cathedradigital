@@ -3,7 +3,11 @@ import { render, screen, fireEvent, act } from '@testing-library/react';
 import ReadingSettingsPopover from '../ReadingSettingsPopover';
 
 const updateSettings = vi.fn();
-vi.mock('@/contexts/ReadingSettingsContext', () => ({
+vi.mock('@/contexts/ReadingSettingsContext', async () => {
+  const actual = await vi.importActual<typeof import('@/contexts/ReadingSettingsContext')>('@/contexts/ReadingSettingsContext');
+  return {
+    ...actual,
+
   useReadingSettings: () => ({
     settings: {
       theme: 'paper',
@@ -16,7 +20,8 @@ vi.mock('@/contexts/ReadingSettingsContext', () => ({
     },
     updateSettings,
   }),
-}));
+};
+});
 
 beforeEach(() => {
   updateSettings.mockClear();

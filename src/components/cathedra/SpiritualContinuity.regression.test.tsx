@@ -4,9 +4,9 @@ import React from 'react';
 import { SpiritualContinuity } from './SpiritualContinuity';
 import { BrowserRouter } from 'react-router-dom';
 import { ReadingSettingsProvider } from '@/contexts/ReadingSettingsContext';
-import { AuthProvider } from '@/hooks/useAuth';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { LangContext } from '@/contexts/LangContext';
+import { TestContexts } from '@/test/providers';
 
 // Mock Supabase
 vi.mock('@/integrations/supabase/client', () => ({
@@ -28,7 +28,7 @@ vi.mock('@/integrations/supabase/client', () => ({
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
   <BrowserRouter>
-    <AuthProvider>
+    <TestContexts>
       <ReadingSettingsProvider>
         <TooltipProvider>
           <LangContext.Provider value={{ lang: 'pt', setLang: vi.fn(), t: (k) => k }}>
@@ -36,7 +36,7 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
           </LangContext.Provider>
         </TooltipProvider>
       </ReadingSettingsProvider>
-    </AuthProvider>
+    </TestContexts>
   </BrowserRouter>
 );
 

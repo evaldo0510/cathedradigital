@@ -9,9 +9,14 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { useDevotionalProgress } from "@/hooks/useDevotionalProgress";
 
-vi.mock("@/hooks/useAuth", () => ({
+vi.mock('@/hooks/useAuth', async () => {
+  const actual = await vi.importActual<typeof import('@/hooks/useAuth')>('@/hooks/useAuth');
+  return {
+    ...actual,
+
   useAuth: () => ({ user: null, profile: null, loading: false }),
-}));
+};
+});
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {

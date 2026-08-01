@@ -1,203 +1,5 @@
 [
   {
-    "timestamp": "2026-05-30T16:20:07.977Z",
-    "totalIssues": 0,
-    "categories": [
-      {
-        "id": "spacing",
-        "count": 0
-      },
-      {
-        "id": "typography",
-        "count": 0
-      },
-      {
-        "id": "rounding",
-        "count": 0
-      },
-      {
-        "id": "shadows",
-        "count": 0
-      }
-    ]
-  },
-  {
-    "timestamp": "2026-05-30T16:22:38.157Z",
-    "totalIssues": 0,
-    "categories": [
-      {
-        "id": "spacing",
-        "count": 0
-      },
-      {
-        "id": "typography",
-        "count": 0
-      },
-      {
-        "id": "rounding",
-        "count": 0
-      },
-      {
-        "id": "shadows",
-        "count": 0
-      }
-    ]
-  },
-  {
-    "timestamp": "2026-06-01T22:27:30.765Z",
-    "totalIssues": 0,
-    "categories": [
-      {
-        "id": "spacing",
-        "count": 0
-      },
-      {
-        "id": "typography",
-        "count": 0
-      },
-      {
-        "id": "rounding",
-        "count": 0
-      },
-      {
-        "id": "shadows",
-        "count": 0
-      }
-    ]
-  },
-  {
-    "timestamp": "2026-06-01T22:27:30.899Z",
-    "totalIssues": 0,
-    "categories": [
-      {
-        "id": "spacing",
-        "count": 0
-      },
-      {
-        "id": "typography",
-        "count": 0
-      },
-      {
-        "id": "rounding",
-        "count": 0
-      },
-      {
-        "id": "shadows",
-        "count": 0
-      }
-    ]
-  },
-  {
-    "timestamp": "2026-06-01T22:27:31.045Z",
-    "totalIssues": 0,
-    "categories": [
-      {
-        "id": "spacing",
-        "count": 0
-      },
-      {
-        "id": "typography",
-        "count": 0
-      },
-      {
-        "id": "rounding",
-        "count": 0
-      },
-      {
-        "id": "shadows",
-        "count": 0
-      }
-    ]
-  },
-  {
-    "timestamp": "2026-06-01T23:25:50.077Z",
-    "totalIssues": 0,
-    "categories": [
-      {
-        "id": "spacing",
-        "count": 0
-      },
-      {
-        "id": "typography",
-        "count": 0
-      },
-      {
-        "id": "rounding",
-        "count": 0
-      },
-      {
-        "id": "shadows",
-        "count": 0
-      }
-    ]
-  },
-  {
-    "timestamp": "2026-06-01T23:32:46.677Z",
-    "totalIssues": 21,
-    "categories": [
-      {
-        "id": "spacing",
-        "count": 21
-      },
-      {
-        "id": "typography",
-        "count": 0
-      },
-      {
-        "id": "rounding",
-        "count": 0
-      },
-      {
-        "id": "shadows",
-        "count": 0
-      }
-    ]
-  },
-  {
-    "timestamp": "2026-06-01T23:32:47.108Z",
-    "totalIssues": 21,
-    "categories": [
-      {
-        "id": "spacing",
-        "count": 21
-      },
-      {
-        "id": "typography",
-        "count": 0
-      },
-      {
-        "id": "rounding",
-        "count": 0
-      },
-      {
-        "id": "shadows",
-        "count": 0
-      }
-    ]
-  },
-  {
-    "timestamp": "2026-06-01T23:32:47.482Z",
-    "totalIssues": 21,
-    "categories": [
-      {
-        "id": "spacing",
-        "count": 21
-      },
-      {
-        "id": "typography",
-        "count": 0
-      },
-      {
-        "id": "rounding",
-        "count": 0
-      },
-      {
-        "id": "shadows",
-        "count": 0
-      }
-    ]
-  },
-  {
     "timestamp": "2026-06-02T00:04:34.457Z",
     "avgTotal": 85.83333333333333,
     "pages": [
@@ -791,6 +593,204 @@
   },
   {
     "timestamp": "2026-08-01T16:09:04.721Z",
+    "totalIssues": 7712,
+    "categories": [
+      {
+        "id": "spacing",
+        "count": 5031
+      },
+      {
+        "id": "typography",
+        "count": 1879
+      },
+      {
+        "id": "rounding",
+        "count": 697
+      },
+      {
+        "id": "shadows",
+        "count": 105
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-08-01T20:08:40.154Z",
+    "totalIssues": 7712,
+    "categories": [
+      {
+        "id": "spacing",
+        "count": 5031
+      },
+      {
+        "id": "typography",
+        "count": 1879
+      },
+      {
+        "id": "rounding",
+        "count": 697
+      },
+      {
+        "id": "shadows",
+        "count": 105
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-08-01T20:08:44.203Z",
+    "totalIssues": 7712,
+    "categories": [
+      {
+        "id": "spacing",
+        "count": 5031
+      },
+      {
+        "id": "typography",
+        "count": 1879
+      },
+      {
+        "id": "rounding",
+        "count": 697
+      },
+      {
+        "id": "shadows",
+        "count": 105
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-08-01T20:08:49.244Z",
+    "totalIssues": 7712,
+    "categories": [
+      {
+        "id": "spacing",
+        "count": 5031
+      },
+      {
+        "id": "typography",
+        "count": 1879
+      },
+      {
+        "id": "rounding",
+        "count": 697
+      },
+      {
+        "id": "shadows",
+        "count": 105
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-08-01T20:17:34.185Z",
+    "totalIssues": 7712,
+    "categories": [
+      {
+        "id": "spacing",
+        "count": 5031
+      },
+      {
+        "id": "typography",
+        "count": 1879
+      },
+      {
+        "id": "rounding",
+        "count": 697
+      },
+      {
+        "id": "shadows",
+        "count": 105
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-08-01T20:17:38.385Z",
+    "totalIssues": 7712,
+    "categories": [
+      {
+        "id": "spacing",
+        "count": 5031
+      },
+      {
+        "id": "typography",
+        "count": 1879
+      },
+      {
+        "id": "rounding",
+        "count": 697
+      },
+      {
+        "id": "shadows",
+        "count": 105
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-08-01T20:17:43.939Z",
+    "totalIssues": 7712,
+    "categories": [
+      {
+        "id": "spacing",
+        "count": 5031
+      },
+      {
+        "id": "typography",
+        "count": 1879
+      },
+      {
+        "id": "rounding",
+        "count": 697
+      },
+      {
+        "id": "shadows",
+        "count": 105
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-08-01T20:23:25.316Z",
+    "totalIssues": 7712,
+    "categories": [
+      {
+        "id": "spacing",
+        "count": 5031
+      },
+      {
+        "id": "typography",
+        "count": 1879
+      },
+      {
+        "id": "rounding",
+        "count": 697
+      },
+      {
+        "id": "shadows",
+        "count": 105
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-08-01T20:23:30.739Z",
+    "totalIssues": 7712,
+    "categories": [
+      {
+        "id": "spacing",
+        "count": 5031
+      },
+      {
+        "id": "typography",
+        "count": 1879
+      },
+      {
+        "id": "rounding",
+        "count": 697
+      },
+      {
+        "id": "shadows",
+        "count": 105
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-08-01T20:23:36.644Z",
     "totalIssues": 7712,
     "categories": [
       {

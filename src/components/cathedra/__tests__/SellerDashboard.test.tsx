@@ -4,23 +4,29 @@ import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import SellerDashboard from '../SellerDashboard';
 import { AppRoute } from '@/types';
 import '@testing-library/jest-dom';
+import { TestContexts } from '@/test/providers';
 
 // Mock useAuth hook
-vi.mock('@/hooks/useAuth', () => ({
+vi.mock('@/hooks/useAuth', async () => {
+  const actual = await vi.importActual<typeof import('@/hooks/useAuth')>('@/hooks/useAuth');
+  return {
+    ...actual,
+
   useAuth: vi.fn(() => ({
     user: { id: '123', email: 'test@vendedor.com' },
     profile: { role: 'user' },
     loading: false,
   })),
-}));
+};
+});
 
 describe('SellerDashboard Component', () => {
   it('deve renderizar a rota do vendedor e validar a presença dos componentes Histórico da Carteira e Solicitações de Saque', () => {
     render(
       <MemoryRouter initialEntries={[AppRoute.SELLER]}>
-        <Routes>
+        <TestContexts><Routes>
           <Route path={AppRoute.SELLER} element={<SellerDashboard />} />
-        </Routes>
+        </Routes></TestContexts>
       </MemoryRouter>
     );
 

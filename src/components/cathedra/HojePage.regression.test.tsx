@@ -4,7 +4,6 @@ import React from 'react';
 import HojePage from './HojePage';
 import { BrowserRouter } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AuthProvider } from '@/hooks/useAuth';
 import { LangContext } from '@/contexts/LangContext';
 import { ReadingSettingsProvider } from '@/contexts/ReadingSettingsContext';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -12,6 +11,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { useSaintsToday } from '@/hooks/useSaints';
 import { useDashboardData } from '@/hooks/useDashboardData';
 import { useEnhancedRecommendations } from '@/hooks/useEnhancedRecommendations';
+import { TestContexts } from '@/test/providers';
 
 
 
@@ -60,7 +60,7 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
   <BrowserRouter>
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
-        <AuthProvider>
+        <TestContexts>
           <ReadingSettingsProvider>
             <TooltipProvider>
               <LangContext.Provider value={{ lang: 'pt', setLang: vi.fn(), t: (k) => k }}>
@@ -68,7 +68,7 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
               </LangContext.Provider>
             </TooltipProvider>
           </ReadingSettingsProvider>
-        </AuthProvider>
+        </TestContexts>
       </HelmetProvider>
     </QueryClientProvider>
   </BrowserRouter>

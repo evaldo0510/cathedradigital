@@ -1,12 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ReadingSettingsPopover from '../ReadingSettingsPopover';
+import { renderWithProviders } from '@/test/providers';
 
 // Cenário: tema escuro + alto contraste. Garante que rótulos e
 // controles continuam presentes, com nomes acessíveis e marcações
 // ARIA corretas (legibilidade independe do tema CSS).
 const updateSettings = vi.fn();
-vi.mock('@/contexts/ReadingSettingsContext', () => ({
+vi.mock('@/contexts/ReadingSettingsContext', async () => {
+  const actual = await vi.importActual<typeof import('@/contexts/ReadingSettingsContext')>('@/contexts/ReadingSettingsContext');
+  return {
+    ...actual,
+
   useReadingSettings: () => ({
     settings: {
       theme: 'dark',
@@ -19,7 +24,8 @@ vi.mock('@/contexts/ReadingSettingsContext', () => ({
     },
     updateSettings,
   }),
-}));
+};
+});
 
 beforeEach(() => {
   updateSettings.mockClear();
@@ -47,7 +53,7 @@ describe.each([
     Object.defineProperty(window, 'innerWidth', { configurable: true, value: width });
     window.dispatchEvent(new Event('resize'));
 
-    render(<ReadingSettingsPopover debounceMs={0} />);
+    renderWithProviders(<ReadingSettingsPopover debounceMs={0} />);
     fireEvent.click(screen.getByRole('button', { name: /Configurações de Leitura/i }));
 
     // Diálogo presente e nomeado.

@@ -3,18 +3,19 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { format, addDays } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { SanctorumDateNav } from './SanctorumDateNav';
+import { renderWithProviders } from '@/test/providers';
 
 describe('SanctorumDateNav', () => {
   it('renderiza data corrente por extenso', () => {
     const date = new Date(2026, 0, 28); // 28 jan
-    render(<SanctorumDateNav value={date} onChange={() => {}} />);
+    renderWithProviders(<SanctorumDateNav value={date} onChange={() => {}} />);
     expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent(/28 de janeiro/);
   });
 
   it('"Dia anterior" chama onChange com -1 dia', () => {
     const onChange = vi.fn();
     const date = new Date(2026, 0, 10);
-    render(<SanctorumDateNav value={date} onChange={onChange} />);
+    renderWithProviders(<SanctorumDateNav value={date} onChange={onChange} />);
     fireEvent.click(screen.getByLabelText('Dia anterior'));
     expect(onChange).toHaveBeenCalledTimes(1);
     expect((onChange.mock.calls[0][0] as Date).getDate()).toBe(9);
@@ -23,7 +24,7 @@ describe('SanctorumDateNav', () => {
   it('"Semana anterior" chama onChange com -7 dias', () => {
     const onChange = vi.fn();
     const date = new Date(2026, 0, 15);
-    render(<SanctorumDateNav value={date} onChange={onChange} />);
+    renderWithProviders(<SanctorumDateNav value={date} onChange={onChange} />);
     fireEvent.click(screen.getByLabelText('Semana anterior'));
     expect((onChange.mock.calls[0][0] as Date).getDate()).toBe(8);
   });
@@ -31,13 +32,13 @@ describe('SanctorumDateNav', () => {
   it('"Próxima semana" chama onChange com +7 dias', () => {
     const onChange = vi.fn();
     const date = new Date(2026, 0, 15);
-    render(<SanctorumDateNav value={date} onChange={onChange} />);
+    renderWithProviders(<SanctorumDateNav value={date} onChange={onChange} />);
     fireEvent.click(screen.getByLabelText('Próxima semana'));
     expect((onChange.mock.calls[0][0] as Date).getDate()).toBe(22);
   });
 
   it('"Ir para hoje" fica desabilitado quando já é hoje', () => {
-    render(<SanctorumDateNav value={new Date()} onChange={() => {}} />);
+    renderWithProviders(<SanctorumDateNav value={new Date()} onChange={() => {}} />);
     const btn = screen.getByLabelText('Ir para hoje');
     expect(btn).toBeDisabled();
     expect(btn).toHaveAttribute('aria-current', 'date');
@@ -45,14 +46,14 @@ describe('SanctorumDateNav', () => {
 
   it('tira horizontal renderiza N dias (default 7) e marca o selecionado', () => {
     const date = new Date(2026, 0, 15);
-    render(<SanctorumDateNav value={date} onChange={() => {}} />);
+    renderWithProviders(<SanctorumDateNav value={date} onChange={() => {}} />);
     const pressed = screen.getByRole('button', { pressed: true });
     expect(pressed).toHaveTextContent('15');
   });
 
   it('respeita stripDays customizado', () => {
     const date = new Date(2026, 0, 15);
-    const { container } = render(
+    const { container } = renderWithProviders(
       <SanctorumDateNav value={date} onChange={() => {}} stripDays={5} />,
     );
     const strip = container.querySelector('.overflow-x-auto')!;
@@ -62,7 +63,7 @@ describe('SanctorumDateNav', () => {
   describe('pills cabem no mobile (largura fixa 56px)', () => {
     it('abreviação do dia da semana tem no máximo 3 caracteres (sem estourar 56px)', () => {
       const date = new Date(2026, 0, 15); // qui — cobre dom..sáb na tira de 7
-      const { container } = render(
+      const { container } = renderWithProviders(
         <SanctorumDateNav value={date} onChange={() => {}} />,
       );
       const strip = container.querySelector('.overflow-x-auto')!;
@@ -78,7 +79,7 @@ describe('SanctorumDateNav', () => {
 
     it('cada pill mantém min-width de 56px e layout em coluna (abreviação + dia)', () => {
       const date = new Date(2026, 0, 15);
-      const { container } = render(
+      const { container } = renderWithProviders(
         <SanctorumDateNav value={date} onChange={() => {}} />,
       );
       const strip = container.querySelector('.overflow-x-auto')!;
@@ -96,7 +97,7 @@ describe('SanctorumDateNav', () => {
 
     it('tira permite scroll horizontal e não quebra em várias linhas no mobile', () => {
       const date = new Date(2026, 0, 15);
-      const { container } = render(
+      const { container } = renderWithProviders(
         <SanctorumDateNav value={date} onChange={() => {}} />,
       );
       const strip = container.querySelector('.overflow-x-auto')!;
@@ -107,7 +108,7 @@ describe('SanctorumDateNav', () => {
 
     it('pills usam shrink-0 + whitespace-nowrap + max-w-[64px] como fallback de layout', () => {
       const date = new Date(2026, 0, 15);
-      const { container } = render(
+      const { container } = renderWithProviders(
         <SanctorumDateNav value={date} onChange={() => {}} />,
       );
       const pills = container.querySelector('.overflow-x-auto')!.querySelectorAll('button');
@@ -151,7 +152,7 @@ describe('SanctorumDateNav', () => {
     });
 
     it('componente renderiza as 7 siglas curtas na tira', () => {
-      const { container } = render(
+      const { container } = renderWithProviders(
         <SanctorumDateNav value={new Date(2026, 0, 21)} onChange={() => {}} />,
       );
       const strip = container.querySelector('.overflow-x-auto')!;
@@ -166,7 +167,7 @@ describe('SanctorumDateNav', () => {
   describe('rolagem e ordenação dos pills', () => {
     it('pills permanecem na ordem cronológica após simular scroll horizontal', () => {
       const date = new Date(2026, 0, 15); // qui
-      const { container } = render(
+      const { container } = renderWithProviders(
         <SanctorumDateNav value={date} onChange={() => {}} />,
       );
       const strip = container.querySelector('.overflow-x-auto') as HTMLElement;
@@ -191,7 +192,7 @@ describe('SanctorumDateNav', () => {
   describe('modo RTL', () => {
     it('mantém overflow-x-auto e min-w dos pills quando dir="rtl"', () => {
       const date = new Date(2026, 0, 15);
-      const { container } = render(
+      const { container } = renderWithProviders(
         <div dir="rtl">
           <SanctorumDateNav value={date} onChange={() => {}} />
         </div>,
@@ -219,7 +220,7 @@ describe('SanctorumDateNav', () => {
     zooms.forEach((zoom) => {
       it(`pills mantêm max-w-[64px] e truncate com zoom ${zoom}x`, () => {
         const date = new Date(2026, 0, 15);
-        const { container } = render(
+        const { container } = renderWithProviders(
           <div style={{ fontSize: `${16 * zoom}px` }}>
             <SanctorumDateNav value={date} onChange={() => {}} />
           </div>,
