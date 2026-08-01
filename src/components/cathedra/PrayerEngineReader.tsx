@@ -31,8 +31,6 @@ import { useContemplativeRhythm } from '@/hooks/useContemplativeRhythm';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
-import { MobileTopBar } from '@/components/mobile/MobileTopBar';
-import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import PrayerTTSButton from '@/components/cathedra/PrayerTTSButton';
 import PrayerModeSelector, { type PrayerMode } from '@/components/prayer/PrayerModeSelector';
 import PrayerAudioPlayer from '@/components/prayer/PrayerAudioPlayer';
@@ -492,7 +490,6 @@ export const PrayerEngineReader: React.FC<Props> = ({
           : null;
     return (
       <>
-        <MobileTopBar kicker={chromeKicker} title={prayer.title} showBack />
         <ReaderShell
           hero={
             <EditorialHero
@@ -559,7 +556,6 @@ export const PrayerEngineReader: React.FC<Props> = ({
             </div>
           </section>
         </ReaderShell>
-        <MobileBottomNav />
         <ResetDialog open={confirmReset} onOpenChange={setConfirmReset} onConfirm={handleReset} />
       </>
     );
@@ -1104,10 +1100,8 @@ export const PrayerEngineReader: React.FC<Props> = ({
   if (heroContent) {
     return (
       <>
-        <MobileTopBar kicker={chromeKicker} title={prayer.title} showBack />
         {heroContent}
         <div ref={prefetchSentinelRef} aria-hidden className="h-px w-full" />
-        <MobileBottomNav />
         <ResetDialog open={confirmReset} onOpenChange={setConfirmReset} onConfirm={handleReset} />
       </>
     );
@@ -1115,7 +1109,6 @@ export const PrayerEngineReader: React.FC<Props> = ({
 
   return (
     <>
-      <MobileTopBar kicker={chromeKicker} title={prayer.title} showBack />
       <ReaderShell
         hero={
           <EditorialHero
@@ -1161,7 +1154,6 @@ export const PrayerEngineReader: React.FC<Props> = ({
         {content}
       </ReaderShell>
       <div ref={prefetchSentinelRef} aria-hidden className="h-px w-full" />
-      <MobileBottomNav />
 
       <ResetDialog open={confirmReset} onOpenChange={setConfirmReset} onConfirm={handleReset} />
     </>
