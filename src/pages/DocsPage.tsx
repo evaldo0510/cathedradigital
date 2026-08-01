@@ -5,10 +5,11 @@
 import React, { useMemo, useState, useId } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { Search, BookOpen, ArrowRight } from 'lucide-react';
+import { Search, BookOpen, ArrowRight, Languages } from 'lucide-react';
 import { useLang } from '@/hooks/useLang';
 import { Input } from '@/components/ui/input';
-import { getDocsBundle, searchDocs, type DocCategory } from '@/content/docs';
+import { getDocsBundle, searchDocsDetailed, type DocCategory, type DocSearchResult } from '@/content/docs';
+import { highlightText } from '@/lib/highlightText';
 
 const CATEGORY_ORDER: DocCategory[] = ['inicio', 'leitura', 'oracao', 'estudo'];
 
@@ -18,14 +19,15 @@ export default function DocsPage() {
   const [query, setQuery] = useState('');
   const searchId = useId();
 
-  const results = useMemo(() => searchDocs(lang, query), [lang, query]);
+  const results = useMemo(() => searchDocsDetailed(lang, query), [lang, query]);
   const grouped = useMemo(() => {
-    const map = new Map<DocCategory, typeof results>();
-    for (const guide of results) {
-      map.set(guide.category, [...(map.get(guide.category) ?? []), guide]);
+    const map = new Map<DocCategory, DocSearchResult[]>();
+    for (const result of results) {
+      map.set(result.guide.category, [...(map.get(result.guide.category) ?? []), result]);
     }
     return map;
   }, [results]);
+
 
   return (
     <>
