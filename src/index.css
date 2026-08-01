@@ -130,6 +130,9 @@
     --sp-xl: 2.5rem;    /* 40px — bloco */
     --sp-xxl: 4rem;     /* 64px — seção */
     --rule-gold: 43 45% 54%;
+    /* Dourado legível como TEXTO (AA sobre fundo claro). O `--rule-gold`
+       permanece reservado a filetes, bordas e halos. */
+    --rule-gold-ink: 43 62% 30%;
     --rule-gold-soft: hsl(var(--rule-gold) / 0.2);
     --rule-gold-hair: hsl(var(--rule-gold) / 0.12);
     --font-display: 'Cormorant Garamond', ui-serif, Georgia, serif;
@@ -258,6 +261,7 @@
     
     --border: 45 15% 90% / 0.08;
     --shadow-premium: 0 20px 80px -20px rgba(0, 0, 0, 0.5);
+    --rule-gold-ink: 43 60% 72%;
   }
 
   /* Reading Themes - Consolidated with Core */
@@ -298,6 +302,15 @@
     --background: 0 0% 100% !important;
     --foreground: 0 0% 0% !important;
     --primary: 0 0% 0% !important;
+    /* Pares de legibilidade: sem eles, superfícies sólidas herdam o
+       foreground do tema anterior e produzem texto escuro sobre escuro. */
+    --primary-foreground: 0 0% 100% !important;
+    --secondary: 43 42% 28% !important;
+    --secondary-foreground: 0 0% 100% !important;
+    --card: 0 0% 100% !important;
+    --card-foreground: 0 0% 0% !important;
+    --muted-foreground: 0 0% 20% !important;
+    --accent-foreground: 0 0% 0% !important;
     --border: 0 0% 0% / 0.8 !important;
     --radius: 0 !important;
     --radius-premium: 0 !important;
@@ -313,6 +326,13 @@
     --background: 0 0% 0% !important;
     --foreground: 0 0% 100% !important;
     --primary: 0 0% 100% !important;
+    --primary-foreground: 0 0% 0% !important;
+    --secondary: 43 60% 78% !important;
+    --secondary-foreground: 0 0% 0% !important;
+    --card: 0 0% 0% !important;
+    --card-foreground: 0 0% 100% !important;
+    --muted-foreground: 0 0% 85% !important;
+    --accent-foreground: 0 0% 100% !important;
     --border: 0 0% 100% / 0.8 !important;
   }
 
@@ -1066,6 +1086,7 @@ header:hover {
   --stitch-on-secondary: 48 100% 12%;
   --stitch-outline: 42 20% 55%;
   --stitch-outline-variant: 42 30% 60%;
+  --rule-gold-ink: 43 60% 72%;
 }
 
 /* ─────────────────────────────────────────────────────────────

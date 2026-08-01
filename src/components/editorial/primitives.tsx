@@ -520,11 +520,11 @@ export const EditorialBookCover: React.FC<EditorialBookCoverProps> = ({
       />
     ) : (
       <div className="absolute inset-0 flex flex-col items-center justify-center p-3 text-center">
-        <span className="font-stitch-display italic text-stitch-on-primary text-sm md:text-base leading-tight">
+        <span className="font-stitch-display italic text-stitch-primary-foreground text-sm md:text-base leading-tight">
           {title}
         </span>
         {author && (
-          <span className="mt-2 font-stitch-label uppercase tracking-[0.28em] text-stitch-on-primary/70 text-[10px]">
+          <span className="mt-2 font-stitch-label uppercase tracking-[0.28em] text-stitch-primary-foreground/70 text-[10px]">
             {author}
           </span>
         )}
@@ -606,7 +606,7 @@ export const EditorialChapterCard: React.FC<EditorialChapterCardProps> = ({
         'flex items-center justify-center h-6 w-6 rounded-full',
         'font-stitch-label uppercase tracking-widest text-[10px]',
         state === 'current' &&
-          'bg-stitch-secondary text-stitch-on-primary shadow-[0_0_0_4px_hsl(var(--stitch-background))]',
+          'bg-stitch-secondary text-stitch-primary-foreground shadow-[0_0_0_4px_hsl(var(--stitch-background))]',
         state === 'done' &&
           'bg-stitch-surface-container border border-stitch-secondary/60 text-stitch-secondary',
         state === 'default' &&

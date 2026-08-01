@@ -224,7 +224,7 @@ const PrayerPortal: React.FC<Props> = ({
         </EditorialHero.Title>
         {quote && (
           <EditorialHero.Subtitle>
-            <span className="italic text-foreground">"{quote.text}"</span>
+            <span className="italic text-stitch-on-surface">"{quote.text}"</span>
             <span className="ml-2 not-italic font-stitch-body text-[13px] font-bold text-stitch-secondary">— {quote.ref}</span>
           </EditorialHero.Subtitle>
         )}
@@ -268,7 +268,7 @@ const PrayerPortal: React.FC<Props> = ({
             {resolvedHighlight.title}
           </h2>
           {resolvedHighlight.subtitle && (
-            <p className="mt-2 font-stitch-body text-sm font-medium text-foreground/90">
+            <p className="mt-2 font-stitch-body text-sm font-medium text-stitch-on-surface">
               {resolvedHighlight.subtitle}
             </p>
           )}
@@ -285,7 +285,7 @@ const PrayerPortal: React.FC<Props> = ({
                       <dt className="font-stitch-body text-[10px] font-black uppercase tracking-[0.22em] text-stitch-secondary">
                         {item.label}
                       </dt>
-                      <dd className="mt-0.5 font-stitch-body font-medium text-foreground">
+                      <dd className="mt-0.5 font-stitch-body font-medium text-stitch-on-surface">
                         {item.value}
                       </dd>
                     </div>
@@ -308,7 +308,7 @@ const PrayerPortal: React.FC<Props> = ({
         >
           Preparar o coração
         </h2>
-        <ul className="mt-3 space-y-2 font-stitch-body text-[15px] font-medium leading-relaxed text-foreground">
+        <ul className="mt-3 space-y-2 font-stitch-body text-[15px] font-medium leading-relaxed text-stitch-on-surface">
           <li>Faça alguns instantes de silêncio.</li>
           <li>Entregue suas intenções ao Senhor.</li>
           <li>Quando estiver pronto, inicie a oração.</li>
@@ -350,7 +350,7 @@ const PrayerPortal: React.FC<Props> = ({
           >
             Você parou no
           </span>
-          <p className="mt-2 font-stitch-display text-2xl leading-tight text-foreground md:text-3xl">
+          <p className="mt-2 font-stitch-display text-2xl leading-tight text-stitch-on-surface md:text-3xl">
             {resumeTitle}
           </p>
           <div className="mt-6 flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
