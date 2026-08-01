@@ -47,6 +47,7 @@ Disallow: /rosary
 Disallow: /rosary-legacy
 Disallow: /search
 Disallow: /security-audit
+Disallow: /sobre
 Disallow: /transactions
 Disallow: /upgrade
 Disallow: /vendedor
