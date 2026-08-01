@@ -63,6 +63,17 @@ import { resolveCatechismAutoNexus } from '@/core/knowledge/adapters/catechismAu
 import { EditorialDivider } from '@/components/editorial';
 import { EditorialClosure } from '@/components/reader';
 import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
+// Sprint 3 — motor editorial do Catecismo (dado puro + composição presentacional).
+import { resolveCatechismLocation } from '@/features/catechism/editorialEngine/catechismStructure';
+import {
+  resolveCatechismEditorial,
+  buildCatechismClosure,
+} from '@/features/catechism/editorialEngine/catechismEditorial';
+import {
+  CatechismEditorialOpening,
+  CatechismFurtherReading,
+} from '@/features/catechism/editorialEngine/CatechismEditorialFrame';
+
 
 
 const CatechismContent: React.FC<{ 
@@ -553,7 +564,31 @@ const Catechism: React.FC = memo(() => {
     return chapterNotes.filter(n => (n.paragraph || 0) >= startPara && (n.paragraph || 0) <= endPara);
   }, [chapterNotes, selectedSection, startPara, endPara]);
 
+  // Localização canônica (Parte/Seção/Capítulo/Artigo/Tema) e moldura editorial.
+  // Memoizadas por parágrafo — sem recomputar a cada scroll dentro do mesmo artigo.
+  const location = useMemo(
+    () => resolveCatechismLocation(currentParagraph),
+    [currentParagraph],
+  );
+  const editorial = useMemo(
+    () => resolveCatechismEditorial(location),
+    [location],
+  );
+  const catechismClosure = useMemo(() => {
+    const nextParagraph = Math.min(location.articleRange[1] + 1, 2865);
+    const next =
+      nextParagraph > currentParagraph
+        ? {
+            kicker: 'Continuar',
+            label: `Prosseguir em §${nextParagraph}`,
+            href: `${AppRoute.CATECHISM}?p=${nextParagraph}`,
+          }
+        : undefined;
+    return resolveEditorialClosure(buildCatechismClosure(location, editorial, next));
+  }, [location, editorial, currentParagraph]);
+
   const nextUnreadParagraph = 1; // Simplified for template consistency
+
 
   if (viewMode === 'reading' && selectedSection && selectedPart) {
     const sectionNexus = resolveCatechismAutoNexus({
@@ -578,8 +613,11 @@ const Catechism: React.FC = memo(() => {
             headerContext={
               <CatechesisContext
                 moduleTitle="Catecismo da Igreja Católica"
-                section={selectedSection.title}
-                level={selectedPart.part}
+                part={`${location.part} — ${location.partTitle}`}
+                section={location.section}
+                chapter={location.chapter}
+                article={location.article}
+                theme={location.theme}
               />
             }
             nexus={
@@ -591,10 +629,8 @@ const Catechism: React.FC = memo(() => {
             }
             continuation={
               <div className="flex flex-col gap-spacing-2xl">
-                {(() => {
-                  const closure = resolveEditorialClosure(selectedSection as unknown as { editorial_closure?: unknown });
-                  return closure ? <EditorialClosure {...closure} /> : null;
-                })()}
+                {catechismClosure && <EditorialClosure {...catechismClosure} />}
+
                 <ReaderContinuation
                   context={{
                     kind: 'catechism',
@@ -646,16 +682,21 @@ const Catechism: React.FC = memo(() => {
                 onJumpTo={(p) => document.getElementById(`p${p}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
               />
 
+              <CatechismEditorialOpening location={location} editorial={editorial} />
+
               <div className="space-y-spacing-xl md:space-y-spacing-3xl">
                 {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
                   <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={new Set()} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} highlights={currentChapterNotes} />
                 ))}
               </div>
 
+              <CatechismFurtherReading editorial={editorial} />
+
               <EditorialDivider variant="gold-fade" className="max-w-[240px] mx-auto mt-spacing-4xl mb-spacing-2xl" />
               <div>
                 <Relatio context={{ type: 'catechism', paragraph: currentParagraph }} onNavigateToBible={handleNavigateToBible} onNavigateToCIC={jumpToParagraph} onNavigateToDoc={handleNavigateToDoc} />
               </div>
+
             </div>
           </ReaderShell>
           <CatechismDiagnosticPanel />
