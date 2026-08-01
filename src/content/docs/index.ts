@@ -7,6 +7,7 @@
  */
 import type { Language } from '@/types';
 import { DEFAULT_LOCALE } from '@/lib/i18n/locales';
+import { getDocPopularity, popularityBoost } from '@/lib/docsPopularity';
 import type { DocGuide, DocsBundle } from './types';
 import { docsPt } from './pt';
 import { docsEn } from './en';
