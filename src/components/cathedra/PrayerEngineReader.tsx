@@ -114,6 +114,25 @@ const KIND_LABEL: Record<string, string> = {
   intro: 'Introdução',
 };
 
+/**
+ * Identidade de leitura por tipo de conteúdo litúrgico.
+ * Cada voz recebe tratamento tipográfico próprio via `[data-prayer-voice]`
+ * (definido em index.css) — sem cor hardcoded, sem CSS duplicado.
+ */
+const PRAYER_VOICE: Record<string, string> = {
+  psalm: 'salmo',
+  salmo: 'salmo',
+  antiphon: 'antifona',
+  antifona: 'antifona',
+  response: 'resposta',
+  responsorio: 'resposta',
+  refrain: 'refrao',
+  reading: 'leitura',
+  ave_maria: 'refrao',
+  gloria: 'refrao',
+};
+
+
 function bodyForTTS(b: PrayerBlock): string {
   const parts: string[] = [b.title];
   if (b.subtitle) parts.push(b.subtitle);
