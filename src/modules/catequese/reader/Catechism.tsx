@@ -682,16 +682,21 @@ const Catechism: React.FC = memo(() => {
                 onJumpTo={(p) => document.getElementById(`p${p}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })}
               />
 
+              <CatechismEditorialOpening location={location} editorial={editorial} />
+
               <div className="space-y-spacing-xl md:space-y-spacing-3xl">
                 {Array.from({ length: endPara - startPara + 1 }, (_, i) => startPara + i).map(p => (
                   <LazyParagraph key={p} paragraph={p} currentParagraph={currentParagraph} paragraphsRead={new Set()} isFavorite={isFavorite} toggleFavorite={toggleFavorite} handleNavigateToBible={handleNavigateToBible} highlights={currentChapterNotes} />
                 ))}
               </div>
 
+              <CatechismFurtherReading editorial={editorial} />
+
               <EditorialDivider variant="gold-fade" className="max-w-[240px] mx-auto mt-spacing-4xl mb-spacing-2xl" />
               <div>
                 <Relatio context={{ type: 'catechism', paragraph: currentParagraph }} onNavigateToBible={handleNavigateToBible} onNavigateToCIC={jumpToParagraph} onNavigateToDoc={handleNavigateToDoc} />
               </div>
+
             </div>
           </ReaderShell>
           <CatechismDiagnosticPanel />
