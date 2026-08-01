@@ -952,14 +952,23 @@ export const PrayerEngineReader: React.FC<Props> = ({
       )}
 
       {/* Navegação */}
-      <nav className="mt-10 flex items-center justify-between gap-4" aria-label="Navegação da oração">
+      <nav
+        className={cn(
+          'mt-[var(--sp-xxl)] flex items-center justify-between gap-4',
+          // Mobile: ancorado ao alcance do polegar, sem cobrir o texto.
+          'sticky bottom-[calc(var(--bottom-nav-height)+var(--sp-s))] z-20 rounded-full',
+          'border border-stitch-outline-variant/25 bg-stitch-surface/90 px-2 py-2 backdrop-blur',
+          'md:static md:border-0 md:bg-transparent md:px-0 md:py-0 md:backdrop-blur-none',
+        )}
+        aria-label="Navegação da oração"
+      >
         <Button
           type="button"
           variant="pill"
           size="pill"
           onClick={goPrev}
           disabled={cursorIndex === 0}
-          className="px-4 py-2"
+          className="min-h-11"
         >
           <ArrowLeft aria-hidden />
           Anterior
@@ -969,12 +978,13 @@ export const PrayerEngineReader: React.FC<Props> = ({
           variant="pill-active"
           size="pill"
           onClick={goNextRhythmed}
-          className="px-4 py-2"
+          className="min-h-11"
         >
           {isLastOverall ? 'Concluir' : 'Próximo'}
           {isLastOverall ? null : <ArrowRight aria-hidden />}
         </Button>
       </nav>
+
 
       {/* Meus marcadores */}
       {bookmarks.length > 0 && !focus && (
