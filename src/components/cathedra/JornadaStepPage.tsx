@@ -855,7 +855,7 @@ const JornadaStepPage: React.FC = () => {
               />
             </div>
           )}
-        </div>
+        </ReaderShell>
       </div>
 
       {/* ─── Ação inferior ────────────────────────────── */}
