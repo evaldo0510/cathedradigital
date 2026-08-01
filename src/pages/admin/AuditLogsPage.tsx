@@ -268,10 +268,15 @@ const AuditTable: React.FC<{ source: Source }> = ({ source }) => {
   const [facet, setFacet] = useState('all');
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
+  const [actorInput, setActorInput] = useState('');
+  const [actor, setActor] = useState('');
   const [page, setPage] = useState(0);
   const [exporting, setExporting] = useState(false);
 
-  const filters: Filters = useMemo(() => ({ days, facet, search }), [days, facet, search]);
+  const filters: Filters = useMemo(
+    () => ({ days, facet, search, actor }),
+    [days, facet, search, actor],
+  );
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['admin-audit-logs', source, filters, page],
@@ -294,7 +299,9 @@ const AuditTable: React.FC<{ source: Source }> = ({ source }) => {
     e.preventDefault();
     setPage(0);
     setSearch(searchInput);
+    setActor(actorInput);
   };
+
 
   const handleExport = async () => {
     setExporting(true);
