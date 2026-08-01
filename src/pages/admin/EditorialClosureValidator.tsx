@@ -10,7 +10,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { validateEditorialClosure } from '@/lib/editorial/closureSchema';
-import { EditorialClosure } from '@/components/reader/EditorialClosure';
+import { EditorialClosure } from '@/components/reader';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

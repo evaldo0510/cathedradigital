@@ -35,7 +35,7 @@ import { useFavorites } from '@/hooks/useFavorites';
 import { cn } from '@/lib/utils';
 import { resolveAutoNexus } from '@/core/knowledge/adapters/glossaryAutoNexus';
 import { BUCKET_LABEL, type ReaderNexusBucket } from '@/core/knowledge/adapters/ReaderAutoNexus';
-import { EditorialClosure } from '@/components/reader/EditorialClosure';
+import { EditorialClosure } from '@/components/reader';
 import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
 
 /* ------------------------------------------------------------------ */
