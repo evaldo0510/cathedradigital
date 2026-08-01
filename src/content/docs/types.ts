@@ -22,7 +22,10 @@ export interface DocGuide {
   /** Termos extras para a busca (sinônimos, nomes próprios). */
   keywords: string[];
   sections: DocSection[];
+  /** Preenchido quando o guia vem do idioma de referência por falta de tradução. */
+  fallbackFrom?: Language;
 }
+
 
 export interface DocsBundle {
   /** Rótulos das categorias no idioma. */
