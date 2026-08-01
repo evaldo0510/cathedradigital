@@ -613,8 +613,11 @@ const Catechism: React.FC = memo(() => {
             headerContext={
               <CatechesisContext
                 moduleTitle="Catecismo da Igreja Católica"
-                section={selectedSection.title}
-                level={selectedPart.part}
+                part={`${location.part} — ${location.partTitle}`}
+                section={location.section}
+                chapter={location.chapter}
+                article={location.article}
+                theme={location.theme}
               />
             }
             nexus={
@@ -626,10 +629,8 @@ const Catechism: React.FC = memo(() => {
             }
             continuation={
               <div className="flex flex-col gap-spacing-2xl">
-                {(() => {
-                  const closure = resolveEditorialClosure(selectedSection as unknown as { editorial_closure?: unknown });
-                  return closure ? <EditorialClosure {...closure} /> : null;
-                })()}
+                {catechismClosure && <EditorialClosure {...catechismClosure} />}
+
                 <ReaderContinuation
                   context={{
                     kind: 'catechism',
