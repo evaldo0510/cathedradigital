@@ -182,6 +182,13 @@ export const FORBIDDEN_IMPORTS = [
     label: '@radix-ui/react-popover (direto)',
     replacement: 'ReferencePopover ou src/components/ui/popover',
   },
+  {
+    id: 'reader-deep-import',
+    // Reader V2: primitivos só podem ser consumidos pelo barrel canônico.
+    pattern: /from\s+['"]@\/components\/reader\/[A-Za-z]/,
+    label: 'import profundo de primitivo do Reader',
+    replacement: "import { ... } from '@/components/reader'",
+  },
 ] as const;
 
 /**
@@ -204,5 +211,7 @@ export const GUARDRAIL_ALLOWLIST: readonly string[] = [
   'src/components/cathedra/BibleVersePopover.tsx',
   'src/components/cathedra/BibleDictionaryPopover.tsx',
   'src/lib/nexusContent.ts',
+  // Import type-only do contrato de EditorialClosure (evita ciclo com o barrel)
+  'src/lib/editorial/resolveClosure.ts',
 ];
 
