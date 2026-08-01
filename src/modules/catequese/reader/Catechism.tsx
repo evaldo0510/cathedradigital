@@ -63,6 +63,17 @@ import { resolveCatechismAutoNexus } from '@/core/knowledge/adapters/catechismAu
 import { EditorialDivider } from '@/components/editorial';
 import { EditorialClosure } from '@/components/reader';
 import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
+// Sprint 3 — motor editorial do Catecismo (dado puro + composição presentacional).
+import { resolveCatechismLocation } from '@/features/catechism/editorialEngine/catechismStructure';
+import {
+  resolveCatechismEditorial,
+  buildCatechismClosure,
+} from '@/features/catechism/editorialEngine/catechismEditorial';
+import {
+  CatechismEditorialOpening,
+  CatechismFurtherReading,
+} from '@/features/catechism/editorialEngine/CatechismEditorialFrame';
+
 
 
 const CatechismContent: React.FC<{ 
