@@ -187,7 +187,8 @@ const FooterSection = React.forwardRef<HTMLElement, FooterSectionProps>(({ title
       </div>
     </section>
   );
-};
+});
+FooterSection.displayName = 'FooterSection';
 
 const Footer: React.FC = React.memo(() => {
   const navigate = useNavigate();
