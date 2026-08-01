@@ -18,6 +18,22 @@ export interface RouteMeta {
  * aqui e podem ser sobrescritas pela própria página via <Helmet>.
  */
 export const ROUTE_META: Record<string, RouteMeta> = {
+  // ─── Documentação ─────────────────────────────────────────────
+  '/docs': {
+    title: 'Documentação Cathedra — Guias de Uso',
+    description:
+      'Guias práticos para usar a Cathedra: leitura bíblica, oração, liturgia e estudo. Disponíveis em português, inglês, espanhol, italiano e latim.',
+  },
+  '/docs/:slug': {
+    title: 'Guia — Documentação Cathedra',
+    description: 'Guia da documentação Cathedra com passo a passo para aproveitar o acervo e as ferramentas de estudo.',
+  },
+  '/admin/audit-logs': {
+    title: 'Trilha de Auditoria — Admin',
+    description: 'Painel administrativo de auditoria.',
+    noindex: true,
+  },
+
   // ─── Home / Átrio ─────────────────────────────────────────────
   '/': {
     title: 'Cathedra Digital — Bíblia, Catecismo e Vida Espiritual',

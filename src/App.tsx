@@ -250,6 +250,7 @@ const EditorialClosureValidator = lazy(() => import('./pages/admin/EditorialClos
 const EditorialClosureRuns = lazy(() => import('./pages/admin/EditorialClosureRuns'));
 const InstagramGalleryPage = lazy(() => import('./pages/admin/InstagramGallery'));
 const SiteHealthDashboard = lazy(() => import('./pages/admin/SiteHealthDashboard'));
+const AuditLogsPage = lazy(() => import('./pages/admin/AuditLogsPage'));
 const DocsPage = lazy(() => import('./pages/DocsPage'));
 const DocsArticlePage = lazy(() => import('./pages/DocsArticlePage'));
 
@@ -885,6 +886,7 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/editorial-closure-runs" element={<EditorialClosureRuns />} />
                       <Route path="/admin/instagram-gallery" element={<Suspense fallback={<LoadingFallback />}><InstagramGalleryPage /></Suspense>} />
                       <Route path="/admin/site-health" element={<SiteHealthDashboard />} />
+                      <Route path="/audit-logs" element={<Suspense fallback={<LoadingFallback />}><AuditLogsPage /></Suspense>} />
                       <Route path="/site-health" element={<SiteHealthDashboard />} />
 
 
