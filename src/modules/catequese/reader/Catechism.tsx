@@ -564,7 +564,31 @@ const Catechism: React.FC = memo(() => {
     return chapterNotes.filter(n => (n.paragraph || 0) >= startPara && (n.paragraph || 0) <= endPara);
   }, [chapterNotes, selectedSection, startPara, endPara]);
 
+  // Localização canônica (Parte/Seção/Capítulo/Artigo/Tema) e moldura editorial.
+  // Memoizadas por parágrafo — sem recomputar a cada scroll dentro do mesmo artigo.
+  const location = useMemo(
+    () => resolveCatechismLocation(currentParagraph),
+    [currentParagraph],
+  );
+  const editorial = useMemo(
+    () => resolveCatechismEditorial(location),
+    [location],
+  );
+  const catechismClosure = useMemo(() => {
+    const nextParagraph = Math.min(location.articleRange[1] + 1, 2865);
+    const next =
+      nextParagraph > currentParagraph
+        ? {
+            kicker: 'Continuar',
+            label: `Prosseguir em §${nextParagraph}`,
+            href: `${AppRoute.CATECHISM}?p=${nextParagraph}`,
+          }
+        : undefined;
+    return resolveEditorialClosure(buildCatechismClosure(location, editorial, next));
+  }, [location, editorial, currentParagraph]);
+
   const nextUnreadParagraph = 1; // Simplified for template consistency
+
 
   if (viewMode === 'reading' && selectedSection && selectedPart) {
     const sectionNexus = resolveCatechismAutoNexus({
