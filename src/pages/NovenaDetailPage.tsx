@@ -2,7 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams, Link, Navigate } from 'react-router-dom';
 import { Icons } from '@/constants';
 import { EditorialHero } from '@/components/editorial/harmony/EditorialHero';
-import { ReaderShell } from '@/components/reader';
+import { NexusPanel, ReaderShell } from '@/components/reader';
+import { resolvePrayerAutoNexus } from '@/core/knowledge/adapters/prayerAutoNexus';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import { EditorialCard } from '@/components/editorial/harmony/EditorialCard';
 import { Button } from '@/components/ui/button';
@@ -131,6 +132,16 @@ const NovenaDetailPage: React.FC = () => {
             </EditorialHero.Subtitle>
           )}
         </EditorialHero>
+      }
+      nexus={
+        <NexusPanel
+          output={resolvePrayerAutoNexus({
+            slug: novena.slug,
+            title: novena.title,
+            category: 'novena',
+          })}
+          kicker={`Conexões · ${novena.title}`}
+        />
       }
       continuation={
         <ReaderContinuation
