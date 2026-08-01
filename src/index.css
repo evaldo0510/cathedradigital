@@ -302,6 +302,15 @@
     --background: 0 0% 100% !important;
     --foreground: 0 0% 0% !important;
     --primary: 0 0% 0% !important;
+    /* Pares de legibilidade: sem eles, superfícies sólidas herdam o
+       foreground do tema anterior e produzem texto escuro sobre escuro. */
+    --primary-foreground: 0 0% 100% !important;
+    --secondary: 43 42% 28% !important;
+    --secondary-foreground: 0 0% 100% !important;
+    --card: 0 0% 100% !important;
+    --card-foreground: 0 0% 0% !important;
+    --muted-foreground: 0 0% 20% !important;
+    --accent-foreground: 0 0% 0% !important;
     --border: 0 0% 0% / 0.8 !important;
     --radius: 0 !important;
     --radius-premium: 0 !important;
@@ -317,6 +326,13 @@
     --background: 0 0% 0% !important;
     --foreground: 0 0% 100% !important;
     --primary: 0 0% 100% !important;
+    --primary-foreground: 0 0% 0% !important;
+    --secondary: 43 60% 78% !important;
+    --secondary-foreground: 0 0% 0% !important;
+    --card: 0 0% 0% !important;
+    --card-foreground: 0 0% 100% !important;
+    --muted-foreground: 0 0% 85% !important;
+    --accent-foreground: 0 0% 100% !important;
     --border: 0 0% 100% / 0.8 !important;
   }
 
