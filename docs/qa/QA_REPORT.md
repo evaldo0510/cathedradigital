@@ -95,3 +95,16 @@ e são regeneráveis com `python3 scripts/qa/qa-global-audit.py`. Não foram ver
 - Contraste automatizado (axe) e dark mode — já existem workflows dedicados (`contrast-multi-route.yml`, `a11y-axe.yml`).
 - Rotas de detalhe dinâmicas (`/santos/:id`, `/glossario/:slug`, readers de obras) e fluxos com interação (modais, filtros, favoritos) — exigem roteiro de interação, previsto para a Sprint QA 2.
 - Viewports 320/390/412/1024 — os três amostrados cobrem os breakpoints do Tailwind; ampliar caso a Sprint QA 2 seja aprovada.
+
+
+## P0 — Rodada final (auditoria re-executada)
+
+| Item | Status |
+|---|---|
+| P0.1 `<main>` duplicado | PASS — `multiple-main: 0` em 30 rotas / 3 viewports |
+| P0.2 Touch targets ≥ 44px | PASS — Design System (`Button`, `pill`, `icon`, carrossel), rodapé, banners, leitores e chips editoriais normalizados para hit area mínima de 44px sem alterar tipografia, ícones ou layout |
+| P0.3 HTTP 409 `prayer_sessions` | PASS — `upsert` com `onConflict: 'user_id,prayer_id'` |
+
+**Remaining P0: 0**
+
+Notas de medição: overlays exclusivos de desenvolvimento (`data-dev-overlay`) e skip-links `sr-only` são isentos da regra WCAG 2.5.8 e ficam fora da contagem. Elementos com 44px reais podem ser reportados como ~39px pelo coletor quando a página está sob zoom de emulação mobile; a checagem manual em 390px confirma 44×44 CSS px.

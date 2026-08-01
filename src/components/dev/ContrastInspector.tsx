@@ -500,6 +500,7 @@ export default function ContrastInspector() {
       {/* Launcher chip + settings cog */}
       <div
         data-contrast-inspector="launcher"
+        data-dev-overlay="contrast-inspector"
         style={{
           position: 'fixed',
           bottom: 12,

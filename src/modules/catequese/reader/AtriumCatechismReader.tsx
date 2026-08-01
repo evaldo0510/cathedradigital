@@ -118,7 +118,7 @@ const CatechismLanding: React.FC = () => {
                   </div>
                   <Link
                     to={`${AppRoute.CATECHISM}?p=${first}`}
-                    className="mt-[var(--sp-l)] inline-flex items-center gap-2 border-b border-stitch-secondary/40 pb-0.5 type-rubrica text-stitch-secondary transition-colors hover:border-stitch-secondary"
+                    className="mt-[var(--sp-l)] inline-flex min-h-[44px] items-center gap-2 border-b border-stitch-secondary/40 pb-0.5 type-rubrica text-stitch-secondary transition-colors hover:border-stitch-secondary"
                   >
                     Abrir §{first}
                     <ArrowRight className="h-3.5 w-3.5" />

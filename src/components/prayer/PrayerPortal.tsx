@@ -413,7 +413,7 @@ const PrayerPortal: React.FC<Props> = ({
       <div className="mt-10 flex justify-center">
         <Link
           to={backHref}
-          className="font-stitch-body text-xs font-semibold uppercase tracking-widest text-stitch-on-surface hover:text-stitch-secondary"
+          className="inline-flex min-h-[44px] items-center font-stitch-body text-xs font-semibold uppercase tracking-widest text-stitch-on-surface hover:text-stitch-secondary"
         >
           {backLabel}
         </Link>

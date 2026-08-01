@@ -222,7 +222,7 @@ const HojePage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => navigate('/jornadas')}
-                className="text-[11px] uppercase tracking-[0.3em] text-primary/60 border-b border-primary/40 pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
+                className="inline-flex min-h-[44px] items-center text-[11px] uppercase tracking-[0.3em] text-primary/60 border-b border-primary/40 pb-[3px] hover:text-secondary hover:border-secondary transition-colors"
               >
                 Explorar jornadas
               </button>

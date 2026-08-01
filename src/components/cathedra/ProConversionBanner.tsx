@@ -86,7 +86,7 @@ const ProConversionBanner: React.FC<ProConversionBannerProps> = ({ context, forc
         {/* Dismiss */}
         <Button
           onClick={handleDismiss}
-          className="absolute top-spacing-sm right-spacing-sm p-spacing-2xs rounded-premium-full hover:bg-primary/10 transition-colors"
+          className="absolute top-spacing-sm right-spacing-sm p-spacing-2xs min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-premium-full hover:bg-primary/10 transition-colors"
           aria-label="Fechar"
         >
           <Icons.X className="w-spacing-md h-spacing-md text-muted-foreground" />

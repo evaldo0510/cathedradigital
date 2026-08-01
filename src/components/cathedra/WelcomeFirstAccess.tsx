@@ -65,7 +65,7 @@ const WelcomeFirstAccess: React.FC = () => {
           type="button"
           aria-label="Fechar boas-vindas"
           onClick={() => dismiss('close')}
-          className="absolute top-spacing-sm right-spacing-sm p-spacing-2xs rounded-premium hover:bg-muted focus-visible:outline-2 focus-visible:outline-secondary"
+          className="absolute top-spacing-sm right-spacing-sm p-spacing-2xs min-h-[44px] min-w-[44px] inline-flex items-center justify-center rounded-premium hover:bg-muted focus-visible:outline-2 focus-visible:outline-secondary"
         >
           <X className="w-5 h-5" aria-hidden="true" />
         </button>
@@ -114,7 +114,7 @@ const WelcomeFirstAccess: React.FC = () => {
           <button
             type="button"
             onClick={() => dismiss('close')}
-            className="text-sm text-muted-foreground hover:text-foreground"
+            className="inline-flex min-h-[44px] items-center text-sm text-muted-foreground hover:text-foreground"
           >
             Explorar por conta própria
           </button>
