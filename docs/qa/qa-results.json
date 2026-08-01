@@ -1,0 +1,3434 @@
+[
+ {
+  "route": "/",
+  "label": "Home / Átrio",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "tap-target",
+    "detail": "15 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "a",
+      "txt": "Continuar",
+      "h": 23,
+      "w": 97
+     },
+     {
+      "tag": "a",
+      "txt": "Ver Histórico",
+      "h": 38,
+      "w": 89
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 2103,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/atrium"
+ },
+ {
+  "route": "/hoje",
+  "label": "Hoje",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "tap-target",
+    "detail": "13 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     }
+    ]
+   },
+   {
+    "code": "skeleton-preso",
+    "detail": "2 skeleton(s) ainda visíveis após carga"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 1180,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/hoje"
+ },
+ {
+  "route": "/bible",
+  "label": "Bíblia",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "tap-target",
+    "detail": "10 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     },
+     {
+      "tag": "button",
+      "txt": "Escolher livro",
+      "h": 35,
+      "w": 185
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 2556,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/bible"
+ },
+ {
+  "route": "/catechism",
+  "label": "Catecismo",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "tap-target",
+    "detail": "18 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "a",
+      "txt": "Abrir §1",
+      "h": 15,
+      "w": 77
+     },
+     {
+      "tag": "a",
+      "txt": "Abrir §26",
+      "h": 15,
+      "w": 87
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 1570,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/catechism"
+ },
+ {
+  "route": "/magisterium",
+  "label": "Magistério",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "tap-target",
+    "detail": "13 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 2631,
+   "hero": 1,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/magisterium"
+ },
+ {
+  "route": "/biblioteca",
+  "label": "Biblioteca",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "tap-target",
+    "detail": "24 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "button",
+      "txt": "Todos",
+      "h": 27,
+      "w": 71
+     },
+     {
+      "tag": "button",
+      "txt": "Glossário",
+      "h": 27,
+      "w": 89
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo, Todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 1639,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/biblioteca"
+ },
+ {
+  "route": "/santos",
+  "label": "Santos",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "tap-target",
+    "detail": "25 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "button",
+      "txt": "Hoje",
+      "h": 39,
+      "w": 58
+     },
+     {
+      "tag": "button",
+      "txt": "Filtros",
+      "h": 39,
+      "w": 87
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo, TODO"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 1988,
+   "hero": 1,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/santos?date=2026-08-01"
+ },
+ {
+  "route": "/glossario",
+  "label": "Glossário",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "tap-target",
+    "detail": "45 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "button",
+      "txt": "Todos",
+      "h": 38,
+      "w": 89
+     },
+     {
+      "tag": "button",
+      "txt": "Catecismo",
+      "h": 38,
+      "w": 131
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo, TODO"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 9526,
+   "hero": 1,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/glossario"
+ },
+ {
+  "route": "/temas",
+  "label": "Temas",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "tap-target",
+    "detail": "60 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "button",
+      "txt": "Todos",
+      "h": 36,
+      "w": 86
+     },
+     {
+      "tag": "button",
+      "txt": "Fundamentos",
+      "h": 38,
+      "w": 160
+     }
+    ]
+   },
+   {
+    "code": "skeleton-preso",
+    "detail": "5 skeleton(s) ainda visíveis após carga"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo, TODO"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 1154,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/temas"
+ },
+ {
+  "route": "/itineraria",
+  "label": "Itinerária",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "tap-target",
+    "detail": "13 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 1139,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/itineraria"
+ },
+ {
+  "route": "/liturgia",
+  "label": "Liturgia",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "tap-target",
+    "detail": "13 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     }
+    ]
+   },
+   {
+    "code": "skeleton-preso",
+    "detail": "1 skeleton(s) ainda visíveis após carga"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 4120,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/liturgia"
+ },
+ {
+  "route": "/missal",
+  "label": "Missal",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "tap-target",
+    "detail": "17 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "button",
+      "txt": "Guiado",
+      "h": 30,
+      "w": 92
+     },
+     {
+      "tag": "button",
+      "txt": "Contemplativo",
+      "h": 30,
+      "w": 149
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   },
+   {
+    "code": "rede-4xx-5xx",
+    "detail": "409 https://gpwrpmoniglarqwfyryp.supabase.co/rest/v1/prayer_sessions?select=*"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 1843,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/missal"
+ },
+ {
+  "route": "/breviary",
+  "label": "Breviário",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "tap-target",
+    "detail": "17 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "button",
+      "txt": "Guiado",
+      "h": 30,
+      "w": 92
+     },
+     {
+      "tag": "button",
+      "txt": "Contemplativo",
+      "h": 30,
+      "w": 149
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   },
+   {
+    "code": "rede-4xx-5xx",
+    "detail": "409 https://gpwrpmoniglarqwfyryp.supabase.co/rest/v1/prayer_sessions?select=*"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 1408,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/breviary"
+ },
+ {
+  "route": "/oracao",
+  "label": "Orações",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "tap-target",
+    "detail": "18 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "button",
+      "txt": "Todas",
+      "h": 32,
+      "w": 71
+     },
+     {
+      "tag": "button",
+      "txt": "Fundamentais · 8",
+      "h": 32,
+      "w": 146
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 2444,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/oracao"
+ },
+ {
+  "route": "/jornadas",
+  "label": "Jornadas",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "tap-target",
+    "detail": "21 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "button",
+      "txt": "Todas",
+      "h": 30,
+      "w": 73
+     },
+     {
+      "tag": "button",
+      "txt": "Cura",
+      "h": 30,
+      "w": 68
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 7841,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/jornadas"
+ },
+ {
+  "route": "/papas",
+  "label": "Papas",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "tap-target",
+    "detail": "13 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 3683,
+   "hero": 1,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/papas?date=2026-08-01"
+ },
+ {
+  "route": "/aparicoes",
+  "label": "Aparições",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "multiple-h1",
+    "detail": "2 H1: Aparições de Nossa Senhora | Aparições de Nossa Senhora"
+   },
+   {
+    "code": "tap-target",
+    "detail": "13 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 2873,
+   "hero": 1,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/aparicoes"
+ },
+ {
+  "route": "/dogmas",
+  "label": "Dogmas",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "multiple-h1",
+    "detail": "2 H1: Dogmas da Fé Católica | Dogmas da Fé Católica"
+   },
+   {
+    "code": "tap-target",
+    "detail": "13 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo, TODO"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 7452,
+   "hero": 1,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/dogmas"
+ },
+ {
+  "route": "/buscar",
+  "label": "Busca",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "tap-target",
+    "detail": "21 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "input",
+      "txt": "",
+      "h": 32,
+      "w": 297
+     },
+     {
+      "tag": "button",
+      "txt": "Livro / Capítulo",
+      "h": 32,
+      "w": 177
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 1409,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/buscar"
+ },
+ {
+  "route": "/calendar",
+  "label": "Calendário litúrgico",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "tap-target",
+    "detail": "16 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "button",
+      "txt": "Remover",
+      "h": 22,
+      "w": 63
+     },
+     {
+      "tag": "button",
+      "txt": "Remover",
+      "h": 22,
+      "w": 63
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 1449,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/calendar"
+ },
+ {
+  "route": "/pricing",
+  "label": "Planos",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "tap-target",
+    "detail": "13 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 1683,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/pricing"
+ },
+ {
+  "route": "/about",
+  "label": "Sobre",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "tap-target",
+    "detail": "24 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "a",
+      "txt": "Missão",
+      "h": 36,
+      "w": 98
+     },
+     {
+      "tag": "a",
+      "txt": "História",
+      "h": 36,
+      "w": 101
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 4523,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/about"
+ },
+ {
+  "route": "/conta/perfil",
+  "label": "Conta · Perfil",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "multiple-h1",
+    "detail": "2 H1: Meu Perfil | Evaldo poeta"
+   },
+   {
+    "code": "multiple-main",
+    "detail": "3 elementos <main>"
+   },
+   {
+    "code": "tap-target",
+    "detail": "14 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "button",
+      "txt": "Toggle Sidebar",
+      "h": 21,
+      "w": 21
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 1890,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/conta/perfil"
+ },
+ {
+  "route": "/conta/favoritos",
+  "label": "Conta · Favoritos",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "tap-target",
+    "detail": "15 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "button",
+      "txt": "Toggle Sidebar",
+      "h": 21,
+      "w": 21
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 42,
+      "w": 37
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 976,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/conta/favoritos"
+ },
+ {
+  "route": "/conta/diario",
+  "label": "Conta · Diário",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "missing-h1",
+    "detail": "Nenhum H1 na página"
+   },
+   {
+    "code": "multiple-main",
+    "detail": "3 elementos <main>"
+   },
+   {
+    "code": "tap-target",
+    "detail": "14 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "button",
+      "txt": "Toggle Sidebar",
+      "h": 21,
+      "w": 21
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 1201,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/conta/diario"
+ },
+ {
+  "route": "/diario",
+  "label": "Diário",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "missing-h1",
+    "detail": "Nenhum H1 na página"
+   },
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "tap-target",
+    "detail": "13 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 1174,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/diario"
+ },
+ {
+  "route": "/profile",
+  "label": "Perfil",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "multiple-h1",
+    "detail": "2 H1: Meu Perfil | Evaldo poeta"
+   },
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "tap-target",
+    "detail": "13 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 1863,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/profile"
+ },
+ {
+  "route": "/logos",
+  "label": "Logos AI",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "missing-h1",
+    "detail": "Nenhum H1 na página"
+   },
+   {
+    "code": "tap-target",
+    "detail": "15 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 28,
+      "w": 44
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 28,
+      "w": 28
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 859,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/logos"
+ },
+ {
+  "route": "/aquinas",
+  "label": "Aquinas",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "tap-target",
+    "detail": "13 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 3148,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/aquinas"
+ },
+ {
+  "route": "/guia-modulos",
+  "label": "Guia de módulos",
+  "viewport": "mobile",
+  "issues": [
+   {
+    "code": "tap-target",
+    "detail": "13 alvo(s) de toque < 40px",
+    "nodes": [
+     {
+      "tag": "a",
+      "txt": "Pular para o conteúdo",
+      "h": 1,
+      "w": 1
+     },
+     {
+      "tag": "button",
+      "txt": "",
+      "h": 25,
+      "w": 25
+     },
+     {
+      "tag": "button",
+      "txt": "Explorar por conta própri",
+      "h": 18,
+      "w": 153
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     },
+     {
+      "tag": "a",
+      "txt": "",
+      "h": 39,
+      "w": 39
+     }
+    ]
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 360,
+   "textLen": 2954,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/guia-modulos"
+ },
+ {
+  "route": "/",
+  "label": "Home / Átrio",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 2063,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/atrium"
+ },
+ {
+  "route": "/hoje",
+  "label": "Hoje",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "skeleton-preso",
+    "detail": "2 skeleton(s) ainda visíveis após carga"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 2730,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/hoje"
+ },
+ {
+  "route": "/bible",
+  "label": "Bíblia",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 2509,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/bible"
+ },
+ {
+  "route": "/catechism",
+  "label": "Catecismo",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 3422,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/catechism"
+ },
+ {
+  "route": "/magisterium",
+  "label": "Magistério",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 2645,
+   "hero": 1,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/magisterium"
+ },
+ {
+  "route": "/biblioteca",
+  "label": "Biblioteca",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo, Todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 3501,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/biblioteca"
+ },
+ {
+  "route": "/santos",
+  "label": "Santos",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo, TODO"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 3921,
+   "hero": 1,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/santos?date=2026-08-01"
+ },
+ {
+  "route": "/glossario",
+  "label": "Glossário",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo, TODO"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 9539,
+   "hero": 1,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/glossario"
+ },
+ {
+  "route": "/temas",
+  "label": "Temas",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "skeleton-preso",
+    "detail": "5 skeleton(s) ainda visíveis após carga"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo, TODO"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 3062,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/temas"
+ },
+ {
+  "route": "/itineraria",
+  "label": "Itinerária",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 2696,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/itineraria"
+ },
+ {
+  "route": "/liturgia",
+  "label": "Liturgia",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "skeleton-preso",
+    "detail": "1 skeleton(s) ainda visíveis após carga"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 4066,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/liturgia"
+ },
+ {
+  "route": "/missal",
+  "label": "Missal",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   },
+   {
+    "code": "rede-4xx-5xx",
+    "detail": "409 https://gpwrpmoniglarqwfyryp.supabase.co/rest/v1/prayer_sessions?select=*"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 3330,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/missal"
+ },
+ {
+  "route": "/breviary",
+  "label": "Breviário",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   },
+   {
+    "code": "rede-4xx-5xx",
+    "detail": "409 https://gpwrpmoniglarqwfyryp.supabase.co/rest/v1/prayer_sessions?select=*"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 2883,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/breviary"
+ },
+ {
+  "route": "/oracao",
+  "label": "Orações",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 2518,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/oracao"
+ },
+ {
+  "route": "/jornadas",
+  "label": "Jornadas",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 7853,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/jornadas"
+ },
+ {
+  "route": "/papas",
+  "label": "Papas",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 3692,
+   "hero": 1,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/papas?date=2026-08-01"
+ },
+ {
+  "route": "/aparicoes",
+  "label": "Aparições",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "multiple-h1",
+    "detail": "2 H1: Aparições de Nossa Senhora | Aparições de Nossa Senhora"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 2886,
+   "hero": 1,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/aparicoes"
+ },
+ {
+  "route": "/dogmas",
+  "label": "Dogmas",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "multiple-h1",
+    "detail": "2 H1: Dogmas da Fé Católica | Dogmas da Fé Católica"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo, TODO"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 7462,
+   "hero": 1,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/dogmas"
+ },
+ {
+  "route": "/buscar",
+  "label": "Busca",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 3275,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/buscar"
+ },
+ {
+  "route": "/calendar",
+  "label": "Calendário litúrgico",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 3372,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/calendar"
+ },
+ {
+  "route": "/pricing",
+  "label": "Planos",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 3228,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/pricing"
+ },
+ {
+  "route": "/about",
+  "label": "Sobre",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 4532,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/about"
+ },
+ {
+  "route": "/conta/perfil",
+  "label": "Conta · Perfil",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "multiple-h1",
+    "detail": "2 H1: Meu Perfil | Evaldo poeta"
+   },
+   {
+    "code": "multiple-main",
+    "detail": "3 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 4373,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/conta/perfil"
+ },
+ {
+  "route": "/conta/favoritos",
+  "label": "Conta · Favoritos",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 3102,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/conta/favoritos"
+ },
+ {
+  "route": "/conta/diario",
+  "label": "Conta · Diário",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "missing-h1",
+    "detail": "Nenhum H1 na página"
+   },
+   {
+    "code": "multiple-main",
+    "detail": "3 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 3327,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/conta/diario"
+ },
+ {
+  "route": "/diario",
+  "label": "Diário",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "missing-h1",
+    "detail": "Nenhum H1 na página"
+   },
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 2737,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/diario"
+ },
+ {
+  "route": "/profile",
+  "label": "Perfil",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "multiple-h1",
+    "detail": "2 H1: Meu Perfil | Evaldo poeta"
+   },
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 3772,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/profile"
+ },
+ {
+  "route": "/logos",
+  "label": "Logos AI",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "missing-h1",
+    "detail": "Nenhum H1 na página"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 2404,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/logos"
+ },
+ {
+  "route": "/aquinas",
+  "label": "Aquinas",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 3170,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/aquinas"
+ },
+ {
+  "route": "/guia-modulos",
+  "label": "Guia de módulos",
+  "viewport": "tablet",
+  "issues": [
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 768,
+   "textLen": 2973,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/guia-modulos"
+ },
+ {
+  "route": "/",
+  "label": "Home / Átrio",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 2026,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/atrium"
+ },
+ {
+  "route": "/hoje",
+  "label": "Hoje",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "skeleton-preso",
+    "detail": "2 skeleton(s) ainda visíveis após carga"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 2693,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/hoje"
+ },
+ {
+  "route": "/bible",
+  "label": "Bíblia",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 2509,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/bible"
+ },
+ {
+  "route": "/catechism",
+  "label": "Catecismo",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 3385,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/catechism"
+ },
+ {
+  "route": "/magisterium",
+  "label": "Magistério",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 2608,
+   "hero": 1,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/magisterium"
+ },
+ {
+  "route": "/biblioteca",
+  "label": "Biblioteca",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo, Todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 3464,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/biblioteca"
+ },
+ {
+  "route": "/santos",
+  "label": "Santos",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo, TODO"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 3884,
+   "hero": 1,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/santos?date=2026-08-01"
+ },
+ {
+  "route": "/glossario",
+  "label": "Glossário",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo, TODO"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 9502,
+   "hero": 1,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/glossario"
+ },
+ {
+  "route": "/temas",
+  "label": "Temas",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "skeleton-preso",
+    "detail": "5 skeleton(s) ainda visíveis após carga"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo, TODO"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 3025,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/temas"
+ },
+ {
+  "route": "/itineraria",
+  "label": "Itinerária",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 2659,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/itineraria"
+ },
+ {
+  "route": "/liturgia",
+  "label": "Liturgia",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "skeleton-preso",
+    "detail": "1 skeleton(s) ainda visíveis após carga"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 4029,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/liturgia"
+ },
+ {
+  "route": "/missal",
+  "label": "Missal",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   },
+   {
+    "code": "rede-4xx-5xx",
+    "detail": "409 https://gpwrpmoniglarqwfyryp.supabase.co/rest/v1/prayer_sessions?select=*"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 3293,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/missal"
+ },
+ {
+  "route": "/breviary",
+  "label": "Breviário",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   },
+   {
+    "code": "rede-4xx-5xx",
+    "detail": "409 https://gpwrpmoniglarqwfyryp.supabase.co/rest/v1/prayer_sessions?select=*"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 2846,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/breviary"
+ },
+ {
+  "route": "/oracao",
+  "label": "Orações",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 2481,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/oracao"
+ },
+ {
+  "route": "/jornadas",
+  "label": "Jornadas",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 7816,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/jornadas"
+ },
+ {
+  "route": "/papas",
+  "label": "Papas",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 3655,
+   "hero": 1,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/papas?date=2026-08-01"
+ },
+ {
+  "route": "/aparicoes",
+  "label": "Aparições",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "multiple-h1",
+    "detail": "2 H1: Aparições de Nossa Senhora | Aparições de Nossa Senhora"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 2849,
+   "hero": 1,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/aparicoes"
+ },
+ {
+  "route": "/dogmas",
+  "label": "Dogmas",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "multiple-h1",
+    "detail": "2 H1: Dogmas da Fé Católica | Dogmas da Fé Católica"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo, TODO"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 7425,
+   "hero": 1,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/dogmas"
+ },
+ {
+  "route": "/buscar",
+  "label": "Busca",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 3238,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/buscar"
+ },
+ {
+  "route": "/calendar",
+  "label": "Calendário litúrgico",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 3335,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/calendar"
+ },
+ {
+  "route": "/pricing",
+  "label": "Planos",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 3191,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/pricing"
+ },
+ {
+  "route": "/about",
+  "label": "Sobre",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 4495,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/about"
+ },
+ {
+  "route": "/conta/perfil",
+  "label": "Conta · Perfil",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "multiple-h1",
+    "detail": "2 H1: Meu Perfil | Evaldo poeta"
+   },
+   {
+    "code": "multiple-main",
+    "detail": "3 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 4336,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/conta/perfil"
+ },
+ {
+  "route": "/conta/favoritos",
+  "label": "Conta · Favoritos",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 3065,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/conta/favoritos"
+ },
+ {
+  "route": "/conta/diario",
+  "label": "Conta · Diário",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "missing-h1",
+    "detail": "Nenhum H1 na página"
+   },
+   {
+    "code": "multiple-main",
+    "detail": "3 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 3290,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/conta/diario"
+ },
+ {
+  "route": "/diario",
+  "label": "Diário",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "missing-h1",
+    "detail": "Nenhum H1 na página"
+   },
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 2700,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/diario"
+ },
+ {
+  "route": "/profile",
+  "label": "Perfil",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "multiple-h1",
+    "detail": "2 H1: Meu Perfil | Evaldo poeta"
+   },
+   {
+    "code": "multiple-main",
+    "detail": "2 elementos <main>"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 3735,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/profile"
+ },
+ {
+  "route": "/logos",
+  "label": "Logos AI",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "missing-h1",
+    "detail": "Nenhum H1 na página"
+   },
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 2367,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/logos"
+ },
+ {
+  "route": "/aquinas",
+  "label": "Aquinas",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 3133,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/aquinas"
+ },
+ {
+  "route": "/guia-modulos",
+  "label": "Guia de módulos",
+  "viewport": "desktop",
+  "issues": [
+   {
+    "code": "placeholder-editorial",
+    "detail": "Texto placeholder: todo"
+   },
+   {
+    "code": "console-error",
+    "detail": "Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at MaintenanceGate (http://localhost:8080/src/components/Mai || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s  \n    at App (http://localhost:8080/src/App.tsx?t=1785595301495:56 || Warning: Function components cannot be given refs. Attempts to access this ref will fail. Did you mean to use React.forwardRef()?%s%s \n\nCheck the render method of `App`. \n    at AppProviders (http://l"
+   }
+  ],
+  "meta": {
+   "scrollW": 1440,
+   "textLen": 2936,
+   "hero": 0,
+   "breadcrumb": 0
+  },
+  "url": "http://localhost:8080/guia-modulos"
+ }
+]
