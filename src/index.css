@@ -1087,7 +1087,81 @@ header:hover {
   --stitch-outline: 42 20% 55%;
   --stitch-outline-variant: 42 30% 60%;
   --rule-gold-ink: 43 60% 72%;
+
+  /* Os tokens shadcn também precisam acompanhar o ambiente escuro, senão
+     ReaderShell (`bg-background`), cards (`bg-card`), muted e bordas
+     desenham superfícies claras sob textos claros — o defeito de contraste
+     observado dentro do leitor de orações. */
+  --background: 220 42% 10%;
+  --foreground: 40 30% 92%;
+  --card: 222 38% 12%;
+  --card-foreground: 40 30% 92%;
+  --popover: 222 40% 11%;
+  --popover-foreground: 40 30% 92%;
+  --muted: 222 34% 16%;
+  --muted-foreground: 40 16% 74%;
+  --accent: 222 34% 17%;
+  --accent-foreground: 40 30% 92%;
+  --primary: 42 62% 62%;
+  --primary-foreground: 222 44% 10%;
+  --border: 42 24% 46%;
+  --input: 42 24% 46%;
+  --ring: 42 62% 62%;
 }
+
+/* ─────────────────────────────────────────────────────────────
+ * Leitor de Orações — ritmo contemplativo
+ * Classe já referenciada pelo PrayerEngineReader (`cathedra-reader-article`),
+ * até aqui sem definição. Define respiro, medida e hierarquia de leitura
+ * usando exclusivamente a escala oficial (--sp-*, --reading-column-*).
+ * ───────────────────────────────────────────────────────────── */
+.cathedra-reader-article {
+  --prayer-line-height: 1.72;
+}
+.cathedra-reader-article > * + * {
+  margin-top: var(--sp-xl);
+}
+.cathedra-reader-article p {
+  line-height: var(--reader-line-height, var(--prayer-line-height));
+  text-wrap: pretty;
+}
+.cathedra-reader-article [data-prayer-voice] + [data-prayer-voice] {
+  margin-top: var(--sp-l);
+}
+/* Cada tipo de conteúdo tem identidade própria, sem cor hardcoded. */
+.cathedra-reader-article [data-prayer-voice='oracao'] p {
+  font-family: var(--font-display);
+}
+.cathedra-reader-article [data-prayer-voice='resposta'] p,
+.cathedra-reader-article [data-prayer-voice='refrao'] p {
+  font-style: italic;
+}
+/* Salmodia: coluna mais estreita e versos respirando um a um. */
+.cathedra-reader-article [data-prayer-voice='salmo'] p {
+  font-family: var(--font-display);
+  max-width: 46ch;
+  line-height: 1.85;
+}
+/* Antífona: voz que abre e fecha o salmo — filete dourado discreto. */
+.cathedra-reader-article [data-prayer-voice='antifona'] {
+  border-inline-start: 1px solid hsl(var(--rule-gold) / 0.45);
+  padding-inline-start: var(--sp-m);
+}
+.cathedra-reader-article [data-prayer-voice='antifona'] p {
+  font-style: italic;
+}
+/* Leitura: prosa proclamada — corpo sans, medida ampla. */
+.cathedra-reader-article [data-prayer-voice='leitura'] p {
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+}
+
+@media (max-width: 767px) {
+  .cathedra-reader-article > * + * {
+    margin-top: var(--sp-l);
+  }
+}
+
 
 /* ─────────────────────────────────────────────────────────────
  * CAT-SP4 · Lote B.2 — Refinamentos do ambiente Igreja

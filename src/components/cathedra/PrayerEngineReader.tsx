@@ -31,8 +31,6 @@ import { useContemplativeRhythm } from '@/hooks/useContemplativeRhythm';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
-import { MobileTopBar } from '@/components/mobile/MobileTopBar';
-import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import PrayerTTSButton from '@/components/cathedra/PrayerTTSButton';
 import PrayerModeSelector, { type PrayerMode } from '@/components/prayer/PrayerModeSelector';
 import PrayerAudioPlayer from '@/components/prayer/PrayerAudioPlayer';
@@ -113,6 +111,25 @@ const KIND_LABEL: Record<string, string> = {
   closing: 'Encerramento',
   intro: 'Introdução',
 };
+
+/**
+ * Identidade de leitura por tipo de conteúdo litúrgico.
+ * Cada voz recebe tratamento tipográfico próprio via `[data-prayer-voice]`
+ * (definido em index.css) — sem cor hardcoded, sem CSS duplicado.
+ */
+const PRAYER_VOICE: Record<string, string> = {
+  psalm: 'salmo',
+  salmo: 'salmo',
+  antiphon: 'antifona',
+  antifona: 'antifona',
+  response: 'resposta',
+  responsorio: 'resposta',
+  refrain: 'refrao',
+  reading: 'leitura',
+  ave_maria: 'refrao',
+  gloria: 'refrao',
+};
+
 
 function bodyForTTS(b: PrayerBlock): string {
   const parts: string[] = [b.title];
@@ -473,7 +490,6 @@ export const PrayerEngineReader: React.FC<Props> = ({
           : null;
     return (
       <>
-        <MobileTopBar kicker={chromeKicker} title={prayer.title} showBack />
         <ReaderShell
           hero={
             <EditorialHero
@@ -540,7 +556,6 @@ export const PrayerEngineReader: React.FC<Props> = ({
             </div>
           </section>
         </ReaderShell>
-        <MobileBottomNav />
         <ResetDialog open={confirmReset} onOpenChange={setConfirmReset} onConfirm={handleReset} />
       </>
     );
@@ -598,9 +613,10 @@ export const PrayerEngineReader: React.FC<Props> = ({
         transition: isTransitioning ? `opacity ${rhythm.fadeMs}ms ease-out` : undefined,
       }}
       className={cn(
-        'cathedra-reader-article mx-auto w-full max-w-[720px] px-4 pb-24 pt-6 md:px-8 md:pt-10 animate-in fade-in motion-reduce:animate-none',
-        contemplative && 'max-w-[760px] [&_h2]:text-4xl md:[&_h2]:text-5xl [&_section]:mb-12 [&_p]:leading-[1.75]',
+        'cathedra-reader-article mx-auto w-full max-w-[60ch] px-[var(--sp-m)] pb-32 pt-[var(--sp-l)] md:px-0 md:pt-[var(--sp-xl)] animate-in fade-in motion-reduce:animate-none',
+        contemplative && 'max-w-[64ch] [&_h2]:text-4xl md:[&_h2]:text-5xl [&_p]:leading-[1.8]',
       )}
+
     >
       {/* Barra de progresso — hierárquica ou simples conforme o tipo de oração */}
       {isSimple ? (
@@ -755,44 +771,50 @@ export const PrayerEngineReader: React.FC<Props> = ({
         </>
       )}
 
-      {/* Corpo */}
+      {/* Corpo — voz principal da oração */}
       {current.body && (
-        <section className="prose-editorial mb-8">
-          <p className="whitespace-pre-line font-stitch-display text-2xl md:text-[26px] leading-[1.55] text-stitch-on-surface">
+        <section data-prayer-voice={PRAYER_VOICE[current.sourceType ?? ''] ?? 'oracao'}>
+          <p className="whitespace-pre-line font-stitch-display text-[1.4rem] md:text-[1.6rem] text-stitch-on-surface">
             {current.body}
           </p>
         </section>
       )}
 
       {current.meditation && (
-        <section className="mb-8 border-l-2 border-stitch-secondary/50 pl-4">
-          <p className="mb-1 font-stitch-body text-[11px] font-bold uppercase tracking-widest text-stitch-secondary">
+        <section
+          data-prayer-voice="meditacao"
+          className="border-l border-stitch-secondary/40 pl-[var(--sp-m)]"
+        >
+          <p className="mb-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
             Meditação
           </p>
-          <p className="font-stitch-body text-base leading-relaxed text-stitch-on-surface">
+          <p className="font-stitch-body text-[0.98rem] text-stitch-on-surface-variant">
             {current.meditation}
           </p>
         </section>
       )}
 
       {current.fruit && (
-        <section className="mb-8 text-center">
-          <p className="font-stitch-body text-[11px] font-bold uppercase tracking-widest text-stitch-secondary">
+        <section data-prayer-voice="fruto" className="text-center">
+          <p className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
             Fruto
           </p>
-          <p className="mt-1 font-stitch-display italic text-lg text-stitch-on-surface">
+          <p className="mt-2 font-stitch-display italic text-xl text-stitch-on-surface">
             {current.fruit}
           </p>
         </section>
       )}
 
       {(current.kind === 'mystery' || current.kind === 'decade') && current.repeat && (
-        <section className="mb-8 rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container/30 p-6">
-          <p className="text-center font-stitch-body text-[11px] font-bold uppercase tracking-widest text-stitch-secondary">
+        <section
+          data-prayer-voice="refrao"
+          className="rounded-premium border border-stitch-outline-variant/25 bg-stitch-surface-container-lowest/50 px-[var(--sp-l)] py-[var(--sp-l)]"
+        >
+          <p className="text-center font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
             {current.repeat.label} · {current.repeat.count}×
           </p>
           {current.repeat.text && (
-            <p className="mt-3 whitespace-pre-line text-center font-stitch-display text-lg italic leading-relaxed text-stitch-on-surface">
+            <p className="mt-3 whitespace-pre-line text-center font-stitch-display text-lg text-stitch-on-surface">
               {current.repeat.text}
             </p>
           )}
@@ -800,11 +822,11 @@ export const PrayerEngineReader: React.FC<Props> = ({
       )}
 
       {current.latin && (
-        <section className="mb-8">
-          <p className="mb-1 font-stitch-body text-[11px] font-bold uppercase tracking-widest text-stitch-secondary">
+        <section data-prayer-voice="latim">
+          <p className="mb-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
             Em latim
           </p>
-          <p className="whitespace-pre-line font-stitch-display italic leading-[1.55] text-stitch-on-surface-variant">
+          <p className="whitespace-pre-line font-stitch-display italic text-lg text-stitch-on-surface-variant">
             {current.latin}
           </p>
         </section>
@@ -812,17 +834,19 @@ export const PrayerEngineReader: React.FC<Props> = ({
 
       {current.rubric && (
         <section
-          className="mb-8 rounded-xl border-l-2 border-stitch-secondary/40 bg-stitch-surface-container-lowest/40 px-4 py-3"
+          data-prayer-voice="rubrica"
+          className="rounded-premium border-l border-stitch-secondary/35 bg-stitch-surface-container-lowest/40 px-[var(--sp-m)] py-[var(--sp-s)]"
           aria-label="Rubrica litúrgica"
         >
-          <p className="mb-1 font-stitch-body text-[10px] font-bold uppercase tracking-widest text-stitch-secondary">
+          <p className="mb-1 font-stitch-body text-[10px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
             Rubrica
           </p>
-          <p className="font-stitch-body text-sm italic leading-relaxed text-stitch-on-surface-variant">
+          <p className="font-stitch-body text-sm italic text-stitch-on-surface-variant">
             {current.rubric}
           </p>
         </section>
       )}
+
 
       {/* Encerramento ritual da dezena (Rosário) — Fruto + Pequena Oração + Ação Concreta + Próximo mistério */}
       {mysteryJustCompleted && !focus && currentMystery && isRosary && (
@@ -924,14 +948,23 @@ export const PrayerEngineReader: React.FC<Props> = ({
       )}
 
       {/* Navegação */}
-      <nav className="mt-10 flex items-center justify-between gap-4" aria-label="Navegação da oração">
+      <nav
+        className={cn(
+          'mt-[var(--sp-xxl)] flex items-center justify-between gap-4',
+          // Mobile: ancorado ao alcance do polegar, sem cobrir o texto.
+          'sticky bottom-[calc(var(--bottom-nav-height)+var(--sp-s))] z-20 rounded-full',
+          'border border-stitch-outline-variant/25 bg-stitch-surface/90 px-2 py-2 backdrop-blur',
+          'md:static md:border-0 md:bg-transparent md:px-0 md:py-0 md:backdrop-blur-none',
+        )}
+        aria-label="Navegação da oração"
+      >
         <Button
           type="button"
           variant="pill"
           size="pill"
           onClick={goPrev}
           disabled={cursorIndex === 0}
-          className="px-4 py-2"
+          className="min-h-11"
         >
           <ArrowLeft aria-hidden />
           Anterior
@@ -941,12 +974,13 @@ export const PrayerEngineReader: React.FC<Props> = ({
           variant="pill-active"
           size="pill"
           onClick={goNextRhythmed}
-          className="px-4 py-2"
+          className="min-h-11"
         >
           {isLastOverall ? 'Concluir' : 'Próximo'}
           {isLastOverall ? null : <ArrowRight aria-hidden />}
         </Button>
       </nav>
+
 
       {/* Meus marcadores */}
       {bookmarks.length > 0 && !focus && (
@@ -1066,10 +1100,8 @@ export const PrayerEngineReader: React.FC<Props> = ({
   if (heroContent) {
     return (
       <>
-        <MobileTopBar kicker={chromeKicker} title={prayer.title} showBack />
         {heroContent}
         <div ref={prefetchSentinelRef} aria-hidden className="h-px w-full" />
-        <MobileBottomNav />
         <ResetDialog open={confirmReset} onOpenChange={setConfirmReset} onConfirm={handleReset} />
       </>
     );
@@ -1077,7 +1109,6 @@ export const PrayerEngineReader: React.FC<Props> = ({
 
   return (
     <>
-      <MobileTopBar kicker={chromeKicker} title={prayer.title} showBack />
       <ReaderShell
         hero={
           <EditorialHero
@@ -1123,7 +1154,6 @@ export const PrayerEngineReader: React.FC<Props> = ({
         {content}
       </ReaderShell>
       <div ref={prefetchSentinelRef} aria-hidden className="h-px w-full" />
-      <MobileBottomNav />
 
       <ResetDialog open={confirmReset} onOpenChange={setConfirmReset} onConfirm={handleReset} />
     </>

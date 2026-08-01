@@ -48,10 +48,9 @@ export function NexusSourceBadge({ node, sectionLabel }: Props) {
         >
           <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-stitch-secondary" />
           <span>{node.kind}</span>
-          <span aria-hidden="true" className="text-stitch-outline-variant">·</span>
-          <code className="font-mono text-[10px] normal-case tracking-normal text-stitch-on-surface">
-            {node.id}
-          </code>
+          {/* O id canônico permanece acessível (aria-label + tooltip), mas não
+              é impresso na leitura: dentro do leitor ele soava técnico. */}
+          <span className="sr-only">{node.id}</span>
         </button>
       </TooltipTrigger>
       <TooltipContent side="top" align="start" className="max-w-xs">
