@@ -264,6 +264,9 @@ function toCsv(fields: Array<{ key: string; label: string }>, rows: Row[]): stri
 
 const AuditTable: React.FC<{ source: Source }> = ({ source }) => {
   const cfg = SOURCES[source];
+  // A severidade vira badge dedicado; a coluna crua sai da tabela (segue no CSV).
+  const visibleFields = cfg.fields.filter((f) => f.key !== 'severity');
+  const colCount = visibleFields.length + 2;
   const [days, setDays] = useState(30);
   const [facet, setFacet] = useState('all');
   const [searchInput, setSearchInput] = useState('');
