@@ -40,6 +40,7 @@ import { AppRoute } from '@/types';
 import AudioContentPlayer from './AudioContentPlayer';
 import { getSaintBySubtitle } from '@/services/saintsService';
 import SacredImage from './SacredImage';
+import { EditorialHero, ReaderShell } from '@/components/reader';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import { NexusPanel } from '@/components/reader';
 import { resolveJourneyAutoNexus } from '@/core/knowledge/adapters/journeyAutoNexus';
@@ -615,13 +616,12 @@ const JornadaStepPage: React.FC = () => {
 
       {/* ─── Conteúdo rolável ─────────────────────────── */}
       <div ref={scrollRef} className="custom-scrollbar flex-1 overflow-y-auto overscroll-auto" aria-label={`Etapa ${step.step_order} de ${totalSteps}: ${step.title}`}>
-        <div className="mx-auto w-full max-w-[720px] px-5 pb-32 pt-10 md:px-8 md:pt-14">
-          {/* Hero */}
-          <motion.section
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="border-b border-stitch-secondary/10 pb-8 text-center"
-          >
+        <ReaderShell
+          className="mx-auto w-full max-w-[720px] px-5 pb-32 pt-10 md:px-8 md:pt-14"
+          contentMaxWidth="w-full"
+          ariaLabel={`Etapa ${step.step_order} — ${step.title}`}
+          hero={
+            <EditorialHero align="center" density="balanced" asSection={false}>
             {saintImage && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
