@@ -12,7 +12,7 @@
 import React from 'react';
 import { EditorialHero, NexusPanel, ReaderShell } from '@/components/reader';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
-import { resolveSaintAutoNexus } from '@/services/saintNexusService';
+import { resolveSaintAutoNexus } from '@/core/knowledge/adapters/saintAutoNexus';
 import type { SaintPageDescriptor } from './types';
 import { SaintBioBlock } from './blocks/SaintBioBlock';
 import { SaintTimelineBlock } from './blocks/SaintTimelineBlock';
