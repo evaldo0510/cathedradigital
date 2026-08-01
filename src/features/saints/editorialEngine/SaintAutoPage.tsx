@@ -10,7 +10,9 @@
  * após aprovação do skeleton.
  */
 import React from 'react';
-import { EditorialHero, ReaderShell } from '@/components/reader';
+import { EditorialHero, NexusPanel, ReaderShell } from '@/components/reader';
+import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
+import { resolveSaintAutoNexus } from '@/core/knowledge/adapters/saintAutoNexus';
 import type { SaintPageDescriptor } from './types';
 import { SaintBioBlock } from './blocks/SaintBioBlock';
 import { SaintTimelineBlock } from './blocks/SaintTimelineBlock';
@@ -37,10 +39,38 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
     header.region,
   ].filter(Boolean);
 
+  // Cadeia canônica do Reader Template Master: hero → conteúdo → nexus →
+  // continuation. Sem estes slots o módulo terminava em dead-end e ficava
+  // fora do padrão dos demais leitores.
+  const virtues = (blocks.find((b) => b.id === 'virtues')?.data ?? []) as Array<
+    { name?: string } | string
+  >;
+  const virtueNames = virtues
+    .map((v) => (typeof v === 'string' ? v : v?.name))
+    .filter((v): v is string => Boolean(v));
+
+  const nexus = resolveSaintAutoNexus({
+    slug: descriptor.slug,
+    name: header.name,
+    virtues: virtueNames,
+  });
+
   return (
     <ReaderShell
       contentMaxWidth="max-w-3xl"
       ariaLabel={`Santo — ${header.name}`}
+      nexus={<NexusPanel output={nexus} kicker={`Conexões · ${header.name}`} />}
+      continuation={
+        <ReaderContinuation
+          context={{
+            kind: 'saint',
+            id: descriptor.slug,
+            graphNodeId: nexus.selfId ?? undefined,
+            meta: { theme: virtueNames[0] },
+          }}
+          suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
+        />
+      }
       hero={
         <EditorialHero
           kicker={kickerParts.join(' · ')}
