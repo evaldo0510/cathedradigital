@@ -53,8 +53,11 @@ PROBE = """
   });
   if (nameless.length) out.issues.push({code: 'botao-sem-nome', detail: `${nameless.length} botão(ões) sem nome acessível`, nodes: nameless.slice(0,5).map(b=>({cls:(b.className||'').toString().slice(0,90)}))});
   if (vw <= 480) {
-    const small = [...document.querySelectorAll('button, a, [role=button], input, select')].filter(el => {
+    const small = [...document.querySelectorAll('#root button, #root a, #root [role=button], #root input, #root select')].filter(el => {
       const r = el.getBoundingClientRect();
+      const cs = getComputedStyle(el);
+      // Ignora elementos visualmente ocultos (skip-links sr-only) — isentos da WCAG 2.5.8.
+      if (cs.clip === 'rect(0px, 0px, 0px, 0px)' || cs.visibility === 'hidden') return false;
       return r.width > 0 && r.height > 0 && (r.height < 44 || r.width < 44);
     });
     if (small.length) out.issues.push({code: 'tap-target', detail: `${small.length} alvo(s) de toque < 44px`, nodes: small.slice(0,5).map(el=>({tag:el.tagName.toLowerCase(), txt:(el.textContent||'').trim().slice(0,25), h: Math.round(el.getBoundingClientRect().height), w: Math.round(el.getBoundingClientRect().width)}))});
