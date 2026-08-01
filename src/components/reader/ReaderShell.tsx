@@ -65,7 +65,7 @@ export const ReaderShell: React.FC<ReaderShellProps> = ({
   return (
     <article
       className={cn(
-        'relative w-full bg-background text-foreground',
+        'relative w-full bg-transparent text-foreground',
         'flex flex-col',
         className,
       )}
