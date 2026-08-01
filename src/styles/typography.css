@@ -76,5 +76,5 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: hsl(var(--rule-gold));
+  color: hsl(var(--rule-gold-ink, var(--rule-gold)));
 }
