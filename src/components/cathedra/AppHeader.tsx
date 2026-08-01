@@ -9,6 +9,7 @@ import { LanguageSwitcher } from '@/components/i18n/LanguageSwitcher';
 
 
 import { cn } from '@/lib/utils';
+import { useAvatarUrl } from '@/lib/avatar';
 import { isLegitimateClick } from '@/lib/navigation-utils';
 import { APP_ROUTES, getBreadcrumbs } from '@/config/routes';
 

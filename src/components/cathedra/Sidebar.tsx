@@ -8,6 +8,7 @@ import { User, AppRoute } from '../../types';
 import { isLegitimateClick } from '@/lib/navigation-utils';
 import { getCacheStats } from '@/lib/offlineCache';
 import { useLang } from '@/hooks/useLang';
+import { useAvatarUrl } from '@/lib/avatar';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
