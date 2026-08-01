@@ -49,7 +49,7 @@ const PrayerLibraryPage: React.FC = () => {
     <>
 
 
-      <main className="mx-auto w-full max-w-[880px] px-4 pb-24 pt-8 md:px-8 md:pt-12">
+      <section className="mx-auto w-full max-w-[880px] px-4 pb-24 pt-8 md:px-8 md:pt-12">
         {/* Hero editorial breve */}
         <header className="mb-10 text-center">
           <p className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
@@ -162,7 +162,7 @@ const PrayerLibraryPage: React.FC = () => {
             </ul>
           )
         )}
-      </main>
+      </section>
 
       <MobileBottomNav />
     </>

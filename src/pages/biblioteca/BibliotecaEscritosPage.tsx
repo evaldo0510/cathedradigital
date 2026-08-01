@@ -58,7 +58,7 @@ const BibliotecaEscritosPage: React.FC = () => {
   const categories = Object.keys(byCategory) as SaintWorkCategory[];
 
   return (
-    <main className="min-h-screen bg-background">
+    <section className="min-h-screen bg-background">
       <Helmet>
         <title>Biblioteca Patrística — Obras dos Santos · Cathedra</title>
         <meta
@@ -154,7 +154,7 @@ const BibliotecaEscritosPage: React.FC = () => {
           </section>
         ))}
       </div>
-    </main>
+    </section>
   );
 };
 

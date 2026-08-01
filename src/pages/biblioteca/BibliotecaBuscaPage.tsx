@@ -115,7 +115,7 @@ const BibliotecaBuscaPage: React.FC = () => {
   };
 
   return (
-    <main className="min-h-screen bg-background">
+    <section className="min-h-screen bg-background">
       <Helmet>
         <title>{q ? `“${q}” — Busca · Biblioteca Patrística` : 'Buscar na Biblioteca Patrística · Cathedra'}</title>
         <meta name="robots" content="noindex,follow" />
@@ -319,7 +319,7 @@ const BibliotecaBuscaPage: React.FC = () => {
           </>
         )}
       </div>
-    </main>
+    </section>
   );
 };
 

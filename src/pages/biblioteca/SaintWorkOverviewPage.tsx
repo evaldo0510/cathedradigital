@@ -82,15 +82,15 @@ const SaintWorkOverviewPage: React.FC = () => {
 
   if (loading) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
+      <section className="min-h-screen flex items-center justify-center">
         <p className="text-muted-foreground">Carregando obra...</p>
-      </main>
+      </section>
     );
   }
 
   if (notFound || !work) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center gap-spacing-md p-spacing-lg">
+      <section className="min-h-screen flex flex-col items-center justify-center gap-spacing-md p-spacing-lg">
         <h2 className="text-premium-lg font-serif">Obra não encontrada</h2>
         <p className="text-muted-foreground text-center max-w-md">
           A obra "{obra}" de "{autor}" não está disponível na Biblioteca Patrística.
@@ -98,7 +98,7 @@ const SaintWorkOverviewPage: React.FC = () => {
         <Button asChild variant="outline">
           <Link to="/biblioteca/escritos">Voltar à Biblioteca</Link>
         </Button>
-      </main>
+      </section>
     );
   }
 
@@ -112,7 +112,7 @@ const SaintWorkOverviewPage: React.FC = () => {
     `Leia ${work.title} — obra da tradição ${SAINT_WORK_CATEGORY_LABELS[work.category]} na Biblioteca Patrística Cathedra.`;
 
   return (
-    <main className="min-h-screen bg-background" data-space="biblioteca">
+    <section className="min-h-screen bg-background" data-space="biblioteca">
       <Helmet>
         <title>{`${work.title} — Biblioteca Patrística · Cathedra`}</title>
         <meta name="description" content={metaDescription} />
@@ -321,7 +321,7 @@ const SaintWorkOverviewPage: React.FC = () => {
           sourceUrl={work.source_url ?? work.external_url}
         />
       </div>
-    </main>
+    </section>
   );
 };
 

@@ -186,7 +186,7 @@ const AtriumCommunityPostPage: React.FC = () => {
         />
       </Helmet>
 
-      <main className="min-h-screen bg-background text-foreground">
+      <section className="min-h-screen bg-background text-foreground">
         <div className="max-w-3xl mx-auto px-6 py-8 space-y-6">
           <Link
             to="/community"
@@ -317,7 +317,7 @@ const AtriumCommunityPostPage: React.FC = () => {
             </button>
           )}
         </div>
-      </main>
+      </section>
     </>
   );
 };

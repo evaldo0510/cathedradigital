@@ -154,7 +154,7 @@ const BibleLanding: React.FC = () => {
         }
       />
 
-      <main className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
+      <section className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
         {/* CAT-SP4 · Onda B.1 — Hero universal (Harmony) — irmão do Catecismo */}
         <EditorialHero density="balanced" rule={false}>
           <EditorialHero.Eyebrow>Sacra Scriptura</EditorialHero.Eyebrow>
@@ -294,7 +294,7 @@ const BibleLanding: React.FC = () => {
             "Tua palavra é lâmpada para os meus pés, luz para o meu caminho." — Sl 119, 105
           </p>
         </section>
-      </main>
+      </section>
 
       <MobileBottomNav />
       <BiblePickerSheet open={pickerOpen} onOpenChange={setPickerOpen} />

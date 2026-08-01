@@ -138,7 +138,7 @@ const PublicLanding = () => {
 
       <LandingHeader />
 
-      <main id="main-content" className="flex-1 pt-32 md:pt-40">
+      <section className="flex-1 pt-32 md:pt-40">
         <EditorialShell>
           {/* ---------------- Hero ---------------- */}
           <EditorialHero
@@ -339,7 +339,7 @@ const PublicLanding = () => {
           {/* ---------------- FAQ ---------------- */}
           <LandingFAQ />
         </EditorialShell>
-      </main>
+      </section>
 
       {/* ---------------- Footer institucional ---------------- */}
       <footer className="mt-24 border-t border-border/40 bg-primary text-primary-foreground">

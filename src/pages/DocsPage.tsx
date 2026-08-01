@@ -36,7 +36,7 @@ export default function DocsPage() {
         <meta name="description" content={bundle.ui.portalSubtitle} />
       </Helmet>
 
-      <main className="mx-auto max-w-4xl px-4 py-10">
+      <section className="mx-auto max-w-4xl px-4 py-10">
         <header className="mb-8">
           <p className="text-xs uppercase tracking-widest text-muted-foreground">Cathedra</p>
           <h1 className="mt-1 font-display text-3xl font-black tracking-tight text-foreground">
@@ -115,7 +115,7 @@ export default function DocsPage() {
             ))}
           </div>
         )}
-      </main>
+      </section>
     </>
   );
 }

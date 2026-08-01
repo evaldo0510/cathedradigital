@@ -297,7 +297,7 @@ const JornadaCompletePage: React.FC = () => {
         <title>Jornada concluída — {journey.title} — Cathedra</title>
       </Helmet>
 
-      <main className="mx-auto w-full max-w-[900px] px-5 pb-24 pt-8 md:px-16 md:pt-12 animate-fade-in">
+      <section className="mx-auto w-full max-w-[900px] px-5 pb-24 pt-8 md:px-16 md:pt-12 animate-fade-in">
         {/* Breadcrumb */}
         <Link
           to={AppRoute.JORNADAS}
@@ -629,7 +629,7 @@ const JornadaCompletePage: React.FC = () => {
         <p className="mt-16 border-t border-stitch-secondary/10 pt-6 text-center font-stitch-body text-[13px] italic text-stitch-on-surface-variant">
           "Combati o bom combate, terminei a corrida, guardei a fé." — 2Tm 4,7
         </p>
-      </main>
+      </section>
 
       {/* ─── Preview do Certificado ────────────────────────────── */}
       <Dialog open={showPreview} onOpenChange={setShowPreview}>

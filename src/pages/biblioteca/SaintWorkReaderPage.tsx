@@ -168,27 +168,27 @@ const SaintWorkReaderPage: React.FC = () => {
 
   if (loading) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
+      <section className="min-h-screen flex items-center justify-center">
         <p className="text-muted-foreground">Carregando capítulo...</p>
-      </main>
+      </section>
     );
   }
 
   if (notFound || !work || !chapter) {
     return (
-      <main className="min-h-screen flex flex-col items-center justify-center gap-spacing-md p-spacing-lg">
+      <section className="min-h-screen flex flex-col items-center justify-center gap-spacing-md p-spacing-lg">
         <h2 className="text-premium-lg font-serif">Capítulo não encontrado</h2>
         <Button asChild variant="outline">
           <Link to={`/biblioteca/escritos/${autor}/${obra}`}>Voltar à obra</Link>
         </Button>
-      </main>
+      </section>
     );
   }
 
   const canonicalUrl = `https://cathedradigital.com.br/biblioteca/escritos/${autor}/${obra}/capitulo/${chapter.order}`;
 
   return (
-    <main className="min-h-screen bg-background">
+    <section className="min-h-screen bg-background">
       <Helmet>
         <title>{`${chapter.title} — ${work.title} · Cathedra`}</title>
         <meta
@@ -294,7 +294,7 @@ const SaintWorkReaderPage: React.FC = () => {
           />
         </div>
       </ReaderShell>
-    </main>
+    </section>
   );
 };
 

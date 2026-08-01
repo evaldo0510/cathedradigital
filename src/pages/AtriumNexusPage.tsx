@@ -173,7 +173,7 @@ const AtriumNexusPage: React.FC = () => {
         <link rel="canonical" href="https://cathedradigital.com.br/nexus" />
       </Helmet>
 
-      <main className="mx-auto w-full max-w-[1120px] px-5 pb-16 pt-10 md:px-16 md:pt-14 animate-fade-in">
+      <section className="mx-auto w-full max-w-[1120px] px-5 pb-16 pt-10 md:px-16 md:pt-14 animate-fade-in">
         {/* ─── Hero editorial ─────────────────────────────────────────── */}
         <section className="text-center md:text-left">
           <div className="mb-8 hidden h-px w-full bg-stitch-secondary/30 md:block" />
@@ -418,7 +418,7 @@ const AtriumNexusPage: React.FC = () => {
             2 Timóteo 3,16
           </p>
         </section>
-      </main>
+      </section>
     </div>
   );
 };

@@ -12,9 +12,7 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <main
-      role="main"
-      className="min-h-dvh flex items-center justify-center bg-background px-6 py-12"
+    <section      className="min-h-dvh flex items-center justify-center bg-background px-6 py-12"
     >
       <div className="max-w-md w-full text-center space-y-6">
         <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-secondary/10 border border-secondary/20 mx-auto">
@@ -76,7 +74,7 @@ const NotFound = () => {
           </ul>
         </nav>
       </div>
-    </main>
+    </section>
   );
 };
 

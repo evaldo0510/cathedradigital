@@ -396,7 +396,7 @@ export const RosarySession: React.FC<Props> = ({
       )}
 
       {/* Corpo */}
-      <main
+      <section
         id="rosary-session-main"
         className="relative flex-1 flex items-start justify-center px-spacing-lg pb-spacing-2xl"
       >
@@ -428,7 +428,7 @@ export const RosarySession: React.FC<Props> = ({
             </motion.div>
           </AnimatePresence>
         </div>
-      </main>
+      </section>
 
       {/* Footer / controles */}
       <footer className="sticky bottom-0 z-10 backdrop-blur-sm bg-black/25 border-t border-white/5 px-spacing-lg py-spacing-md">

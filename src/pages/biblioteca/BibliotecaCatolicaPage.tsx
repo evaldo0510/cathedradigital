@@ -61,7 +61,7 @@ const BibliotecaCatolicaPage: React.FC = () => {
   const totalAll = Object.values(counts).reduce((a, b) => a + b, 0);
 
   return (
-    <main className="min-h-screen bg-background" data-space="biblioteca">
+    <section className="min-h-screen bg-background" data-space="biblioteca">
       <Helmet>
         <title>Biblioteca Católica — Cathedra</title>
         <meta
@@ -177,7 +177,7 @@ const BibliotecaCatolicaPage: React.FC = () => {
           </section>
         )}
       </div>
-    </main>
+    </section>
   );
 };
 

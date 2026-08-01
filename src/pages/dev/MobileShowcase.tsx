@@ -34,7 +34,7 @@ const MobileShowcase = () => {
         }
       />
 
-      <main className="mx-auto max-w-[430px] space-y-8 px-5 py-8">
+      <section className="mx-auto max-w-[430px] space-y-8 px-5 py-8">
         <section className="space-y-3">
           <h2 className="font-[var(--font-stitch-display)] text-2xl text-stitch-primary">
             Primitivas M1
@@ -100,7 +100,7 @@ const MobileShowcase = () => {
             <li>• Sheet respeita safe-area do iPhone.</li>
           </ul>
         </section>
-      </main>
+      </section>
 
       <MobileSheet
         open={sheetOpen}

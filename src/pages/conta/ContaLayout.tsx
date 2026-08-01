@@ -24,9 +24,9 @@ export default function ContaLayout() {
             <SidebarTrigger />
             <span className="font-serif text-sm text-muted-foreground">Minha Conta</span>
           </header>
-          <main className="flex-1 min-w-0">
+          <section className="flex-1 min-w-0">
             <Outlet />
-          </main>
+          </section>
         </div>
       </div>
     </SidebarProvider>
