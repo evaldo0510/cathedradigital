@@ -127,7 +127,14 @@ interface Filters {
 
 function buildQuery(source: Source, filters: Filters) {
   const cfg = SOURCES[source];
-  let query = supabase.from(cfg.table).select(cfg.columns, { count: 'exact' });
+  // Tabelas resolvidas dinamicamente: os tipos gerados explodem em união
+  // profunda demais para o TS, então o builder é tratado de forma opaca.
+  const client = supabase as unknown as {
+    from: (table: string) => {
+      select: (cols: string, opts: { count: 'exact' }) => any;
+    };
+  };
+  let query = client.from(cfg.table).select(cfg.columns, { count: 'exact' });
   if (filters.days > 0) query = query.gte(cfg.dateColumn, sinceIso(filters.days));
   if (filters.facet !== 'all' && cfg.facet) query = query.eq(cfg.facet.column, filters.facet);
   const term = filters.search.trim();
@@ -135,8 +142,11 @@ function buildQuery(source: Source, filters: Filters) {
     const safe = term.replace(/[,()*]/g, ' ').trim();
     if (safe) query = query.or(cfg.searchable.map((c) => `${c}.ilike.%${safe}%`).join(','));
   }
-  return query.order(cfg.dateColumn, { ascending: false });
+  return query.order(cfg.dateColumn, { ascending: false }) as {
+    range: (from: number, to: number) => Promise<{ data: Row[] | null; count: number | null; error: { message: string } | null }>;
+  };
 }
+
 
 function formatCell(key: string, value: unknown): string {
   if (value === null || value === undefined || value === '') return '—';
