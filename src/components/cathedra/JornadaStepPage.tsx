@@ -621,43 +621,39 @@ const JornadaStepPage: React.FC = () => {
           contentMaxWidth="w-full"
           ariaLabel={`Etapa ${step.step_order} — ${step.title}`}
           hero={
-            <EditorialHero align="center" density="balanced" asSection={false}>
-            {saintImage && (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="mx-auto mb-6 h-24 w-24 overflow-hidden rounded-full border border-stitch-secondary/30 shadow-sm"
-              >
-                <SacredImage src={saintImage} alt={step.subtitle || ''} className="h-full w-full object-cover" />
-              </motion.div>
-            )}
-            {bibleRef && (
-              <span className="mb-3 inline-flex items-center gap-1.5 font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
-                <BookOpen className="h-3 w-3" /> {bibleRef}
-              </span>
-            )}
-            <h1 className="font-stitch-display text-[30px] italic leading-[38px] text-stitch-primary md:text-[44px] md:leading-[54px] md:tracking-[-0.01em]">
-              {step.title}
-            </h1>
-            {step.subtitle && (
-              <p className="mt-3 font-stitch-body text-[16px] italic text-stitch-on-surface-variant md:text-[17px]">
-                {step.subtitle}
-              </p>
-            )}
-            <div className="mt-6 flex justify-center md:hidden">
-              <span className="inline-flex items-center gap-1.5 font-stitch-body text-[11px] font-bold uppercase tracking-[0.2em] text-stitch-on-surface-variant">
-                <Clock className="h-3 w-3" /> {step.duration_minutes} min
-              </span>
-            </div>
-            <div className="mt-6 flex justify-center">
-              <AudioContentPlayer
-                text={`${step.title}. ${step.subtitle || ''}. ${SECTION_CONFIG.map((s) => getVariantContent(s.key, content))
-                  .filter(Boolean)
-                  .join('. ')}`}
-                title="Ouvir conteúdo"
-              />
-            </div>
-          </motion.section>
+            <EditorialHero align="center" density="balanced">
+              {bibleRef && <EditorialHero.Eyebrow>{bibleRef}</EditorialHero.Eyebrow>}
+              <EditorialHero.Title>{step.title}</EditorialHero.Title>
+              {step.subtitle && (
+                <EditorialHero.Subtitle>{step.subtitle}</EditorialHero.Subtitle>
+              )}
+              <EditorialHero.Meta>
+                <span className="inline-flex items-center gap-1.5">
+                  <Clock className="h-3 w-3" /> {step.duration_minutes} min
+                </span>
+              </EditorialHero.Meta>
+              <EditorialHero.Children>
+                <div className="flex flex-col items-center gap-6">
+                  {saintImage && (
+                    <div className="h-24 w-24 overflow-hidden rounded-full border border-stitch-secondary/30 shadow-sm">
+                      <SacredImage
+                        src={saintImage}
+                        alt={step.subtitle || ''}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                  )}
+                  <AudioContentPlayer
+                    text={`${step.title}. ${step.subtitle || ''}. ${SECTION_CONFIG.map((sec) => getVariantContent(sec.key, content))
+                      .filter(Boolean)
+                      .join('. ')}`}
+                    title="Ouvir conteúdo"
+                  />
+                </div>
+              </EditorialHero.Children>
+            </EditorialHero>
+          }
+        >
 
           {/* Seções */}
           <div className="mt-10 space-y-3">
