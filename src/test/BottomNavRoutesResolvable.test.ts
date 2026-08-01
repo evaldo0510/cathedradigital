@@ -130,6 +130,15 @@ describe("Bottom nav e redirects — sem 404", () => {
         return t === base || t.startsWith(`${base}/`);
       });
       if (coveredByWildcard) return false;
+      // aceita se existe rota parametrizada que cobre o alvo (ex.: /oracao/:slug cobre /oracao/rosario)
+      const coveredByParam = Array.from(routePaths).some((p) => {
+        if (!p.includes(":")) return false;
+        const re = new RegExp(
+          `^${p.replace(/:[^/]+/g, "[^/]+").replace(/\//g, "\\/")}$`
+        );
+        return re.test(t);
+      });
+      if (coveredByParam) return false;
       // aceita se existe alguma rota que comece com esse path
       const hasPrefix = Array.from(routePaths).some(
         (p) => p === t || p.startsWith(`${t}/`)
