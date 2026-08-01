@@ -127,27 +127,34 @@ export const ReaderToolbar: React.FC<ReaderToolbarProps> = ({
   );
 };
 
-const ToolbarButton: React.FC<{
-  label: string;
-  onClick: () => void;
-  icon: React.ReactNode;
-  active?: boolean;
-}> = ({ label, onClick, icon, active }) => (
+const ToolbarButton = React.forwardRef<
+  HTMLButtonElement,
+  {
+    label: string;
+    onClick: () => void;
+    icon: React.ReactNode;
+    active?: boolean;
+  }
+>(({ label, onClick, icon, active, ...rest }, ref) => (
   <button
+    ref={ref}
     type="button"
     onClick={onClick}
     aria-label={label}
     title={label}
     aria-pressed={active}
     className={cn(
-      'inline-flex h-8 w-8 items-center justify-center rounded-full border transition-colors',
+      'inline-flex h-11 w-11 items-center justify-center rounded-full border transition-colors',
+      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background',
       active
         ? 'border-stitch-secondary/60 bg-stitch-secondary/10 text-stitch-secondary'
         : 'border-transparent text-stitch-on-surface-variant hover:border-stitch-outline-variant/40 hover:text-stitch-primary',
     )}
+    {...rest}
   >
     {icon}
   </button>
-);
+));
+ToolbarButton.displayName = 'ToolbarButton';
 
 export default ReaderToolbar;
