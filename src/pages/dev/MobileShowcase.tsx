@@ -52,7 +52,7 @@ const MobileShowcase = () => {
           </p>
           <Button
             onClick={() => setSheetOpen(true)}
-            className="w-full bg-stitch-primary text-stitch-on-primary hover:bg-stitch-primary/90"
+            className="w-full bg-stitch-primary text-stitch-primary-foreground hover:bg-stitch-primary/90"
           >
             Abrir MobileSheet
           </Button>
@@ -118,7 +118,7 @@ const MobileShowcase = () => {
               Cancelar
             </Button>
             <Button
-              className="flex-1 bg-stitch-primary text-stitch-on-primary hover:bg-stitch-primary/90"
+              className="flex-1 bg-stitch-primary text-stitch-primary-foreground hover:bg-stitch-primary/90"
               onClick={() => setSheetOpen(false)}
             >
               Aplicar

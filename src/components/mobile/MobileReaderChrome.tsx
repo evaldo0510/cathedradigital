@@ -127,7 +127,7 @@ function ChromeIconButton({ onClick, label, children, active }: ChromeIconButton
         "inline-flex items-center justify-center rounded-full transition-colors",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary",
         active
-          ? "bg-stitch-secondary-container text-stitch-on-secondary-container"
+          ? "bg-stitch-secondary-container text-stitch-secondary-on-container"
           : "text-stitch-on-surface hover:bg-stitch-surface-container",
       )}
       style={{
