@@ -27,8 +27,11 @@ import { EditorialSurface } from '@/components/editorial';
 import {
   ReaderShell,
   EditorialHero,
+  NexusPanel,
   StudyContext,
 } from '@/components/reader';
+import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
+import { resolveCollectionAutoNexus } from '@/core/knowledge/adapters/collectionAutoNexus';
 import { useCollection } from '@/features/collections/useCollection';
 import { useCollectionProgress } from '@/features/collections/useCollectionProgress';
 import { collectionAutoNexus } from '@/features/collections/collectionAutoNexus';
@@ -367,6 +370,27 @@ export default function CollectionPage() {
             subtitle={collection.subtitle ?? undefined}
             parchment
             {...(collection.cover ? { imageUrl: collection.cover } : {})}
+          />
+        }
+        nexus={
+          <NexusPanel
+            output={resolveCollectionAutoNexus({
+              slug: collection.slug,
+              title: collection.title,
+              themes: [collection.subtitle, collection.description].filter(
+                (t): t is string => Boolean(t),
+              ),
+            })}
+            kicker={`Conexões · ${collection.title}`}
+          />
+        }
+        continuation={
+          <ReaderContinuation
+            context={{
+              kind: 'journey-step',
+              id: collection.slug,
+              meta: { collectionSlug: collection.slug },
+            }}
           />
         }
         headerContext={
