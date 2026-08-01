@@ -25,7 +25,13 @@ export default function DocsArticlePage() {
   const bundle = useMemo(() => getDocsBundle(lang), [lang]);
   const guide = useMemo(() => getDocGuide(lang, slug), [lang, slug]);
 
+  // Popularidade local alimenta o desempate da busca do portal.
+  useEffect(() => {
+    if (guide) recordDocView(guide.slug);
+  }, [guide]);
+
   if (!guide) return <Navigate to="/docs" replace />;
+
 
   return (
     <>
