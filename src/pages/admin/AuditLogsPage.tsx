@@ -13,7 +13,16 @@
 import React, { useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
-import { Download, ChevronLeft, ChevronRight, ShieldAlert, ScrollText, Lock } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import {
+  Download,
+  ChevronLeft,
+  ChevronRight,
+  ShieldAlert,
+  ScrollText,
+  Lock,
+  ExternalLink,
+} from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -40,10 +49,13 @@ interface SourceConfig {
   searchable: string[];
   /** Filtro categórico opcional. */
   facet?: { column: string; label: string; options: string[] };
+  /** Coluna do usuário responsável, quando existir (filtro por autor). */
+  actorColumn?: string;
   icon: React.ElementType;
   label: string;
   hint: string;
 }
+
 
 const SOURCES: Record<Source, SourceConfig> = {
   governance: {
