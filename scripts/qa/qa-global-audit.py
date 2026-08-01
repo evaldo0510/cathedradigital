@@ -55,9 +55,9 @@ PROBE = """
   if (vw <= 480) {
     const small = [...document.querySelectorAll('button, a, [role=button], input, select')].filter(el => {
       const r = el.getBoundingClientRect();
-      return r.width > 0 && r.height > 0 && (r.height < 40 || r.width < 40);
+      return r.width > 0 && r.height > 0 && (r.height < 44 || r.width < 44);
     });
-    if (small.length) out.issues.push({code: 'tap-target', detail: `${small.length} alvo(s) de toque < 40px`, nodes: small.slice(0,5).map(el=>({tag:el.tagName.toLowerCase(), txt:(el.textContent||'').trim().slice(0,25), h: Math.round(el.getBoundingClientRect().height), w: Math.round(el.getBoundingClientRect().width)}))});
+    if (small.length) out.issues.push({code: 'tap-target', detail: `${small.length} alvo(s) de toque < 44px`, nodes: small.slice(0,5).map(el=>({tag:el.tagName.toLowerCase(), txt:(el.textContent||'').trim().slice(0,25), h: Math.round(el.getBoundingClientRect().height), w: Math.round(el.getBoundingClientRect().width)}))});
   }
   const skel = document.querySelectorAll('[class*=skeleton],[class*=Skeleton],[data-skeleton],[class*=animate-pulse]');
   if (skel.length) out.issues.push({code: 'skeleton-preso', detail: `${skel.length} skeleton(s) ainda visíveis após carga`});
