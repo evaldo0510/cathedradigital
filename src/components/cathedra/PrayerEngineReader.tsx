@@ -756,44 +756,50 @@ export const PrayerEngineReader: React.FC<Props> = ({
         </>
       )}
 
-      {/* Corpo */}
+      {/* Corpo — voz principal da oração */}
       {current.body && (
-        <section className="prose-editorial mb-8">
-          <p className="whitespace-pre-line font-stitch-display text-2xl md:text-[26px] leading-[1.55] text-stitch-on-surface">
+        <section data-prayer-voice={PRAYER_VOICE[current.sourceType ?? ''] ?? 'oracao'}>
+          <p className="whitespace-pre-line font-stitch-display text-[1.4rem] md:text-[1.6rem] text-stitch-on-surface">
             {current.body}
           </p>
         </section>
       )}
 
       {current.meditation && (
-        <section className="mb-8 border-l-2 border-stitch-secondary/50 pl-4">
-          <p className="mb-1 font-stitch-body text-[11px] font-bold uppercase tracking-widest text-stitch-secondary">
+        <section
+          data-prayer-voice="meditacao"
+          className="border-l border-stitch-secondary/40 pl-[var(--sp-m)]"
+        >
+          <p className="mb-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
             Meditação
           </p>
-          <p className="font-stitch-body text-base leading-relaxed text-stitch-on-surface">
+          <p className="font-stitch-body text-[0.98rem] text-stitch-on-surface-variant">
             {current.meditation}
           </p>
         </section>
       )}
 
       {current.fruit && (
-        <section className="mb-8 text-center">
-          <p className="font-stitch-body text-[11px] font-bold uppercase tracking-widest text-stitch-secondary">
+        <section data-prayer-voice="fruto" className="text-center">
+          <p className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
             Fruto
           </p>
-          <p className="mt-1 font-stitch-display italic text-lg text-stitch-on-surface">
+          <p className="mt-2 font-stitch-display italic text-xl text-stitch-on-surface">
             {current.fruit}
           </p>
         </section>
       )}
 
       {(current.kind === 'mystery' || current.kind === 'decade') && current.repeat && (
-        <section className="mb-8 rounded-2xl border border-stitch-outline-variant/30 bg-stitch-surface-container/30 p-6">
-          <p className="text-center font-stitch-body text-[11px] font-bold uppercase tracking-widest text-stitch-secondary">
+        <section
+          data-prayer-voice="refrao"
+          className="rounded-premium border border-stitch-outline-variant/25 bg-stitch-surface-container-lowest/50 px-[var(--sp-l)] py-[var(--sp-l)]"
+        >
+          <p className="text-center font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
             {current.repeat.label} · {current.repeat.count}×
           </p>
           {current.repeat.text && (
-            <p className="mt-3 whitespace-pre-line text-center font-stitch-display text-lg italic leading-relaxed text-stitch-on-surface">
+            <p className="mt-3 whitespace-pre-line text-center font-stitch-display text-lg text-stitch-on-surface">
               {current.repeat.text}
             </p>
           )}
@@ -801,11 +807,11 @@ export const PrayerEngineReader: React.FC<Props> = ({
       )}
 
       {current.latin && (
-        <section className="mb-8">
-          <p className="mb-1 font-stitch-body text-[11px] font-bold uppercase tracking-widest text-stitch-secondary">
+        <section data-prayer-voice="latim">
+          <p className="mb-2 font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
             Em latim
           </p>
-          <p className="whitespace-pre-line font-stitch-display italic leading-[1.55] text-stitch-on-surface-variant">
+          <p className="whitespace-pre-line font-stitch-display italic text-lg text-stitch-on-surface-variant">
             {current.latin}
           </p>
         </section>
@@ -813,17 +819,19 @@ export const PrayerEngineReader: React.FC<Props> = ({
 
       {current.rubric && (
         <section
-          className="mb-8 rounded-xl border-l-2 border-stitch-secondary/40 bg-stitch-surface-container-lowest/40 px-4 py-3"
+          data-prayer-voice="rubrica"
+          className="rounded-premium border-l border-stitch-secondary/35 bg-stitch-surface-container-lowest/40 px-[var(--sp-m)] py-[var(--sp-s)]"
           aria-label="Rubrica litúrgica"
         >
-          <p className="mb-1 font-stitch-body text-[10px] font-bold uppercase tracking-widest text-stitch-secondary">
+          <p className="mb-1 font-stitch-body text-[10px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
             Rubrica
           </p>
-          <p className="font-stitch-body text-sm italic leading-relaxed text-stitch-on-surface-variant">
+          <p className="font-stitch-body text-sm italic text-stitch-on-surface-variant">
             {current.rubric}
           </p>
         </section>
       )}
+
 
       {/* Encerramento ritual da dezena (Rosário) — Fruto + Pequena Oração + Ação Concreta + Próximo mistério */}
       {mysteryJustCompleted && !focus && currentMystery && isRosary && (
