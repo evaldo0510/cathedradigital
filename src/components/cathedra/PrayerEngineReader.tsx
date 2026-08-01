@@ -598,9 +598,10 @@ export const PrayerEngineReader: React.FC<Props> = ({
         transition: isTransitioning ? `opacity ${rhythm.fadeMs}ms ease-out` : undefined,
       }}
       className={cn(
-        'cathedra-reader-article mx-auto w-full max-w-[720px] px-4 pb-24 pt-6 md:px-8 md:pt-10 animate-in fade-in motion-reduce:animate-none',
-        contemplative && 'max-w-[760px] [&_h2]:text-4xl md:[&_h2]:text-5xl [&_section]:mb-12 [&_p]:leading-[1.75]',
+        'cathedra-reader-article mx-auto w-full max-w-[60ch] px-[var(--sp-m)] pb-32 pt-[var(--sp-l)] md:px-0 md:pt-[var(--sp-xl)] animate-in fade-in motion-reduce:animate-none',
+        contemplative && 'max-w-[64ch] [&_h2]:text-4xl md:[&_h2]:text-5xl [&_p]:leading-[1.8]',
       )}
+
     >
       {/* Barra de progresso — hierárquica ou simples conforme o tipo de oração */}
       {isSimple ? (
