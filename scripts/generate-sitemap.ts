@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { extractRoutesFromTypesAST, getPublicRoutes, getPrivateRoutes } from './utils';
 import { resolveRouteMeta, ROUTE_META } from '../src/config/routeMeta';
+import { getAllDocSlugs } from '../src/content/docs';
+import { SUPPORTED_LOCALES, withLocalePath, buildHreflangAlternates } from '../src/lib/i18n/locales';
 
 
 /**
@@ -132,7 +134,7 @@ async function generateSitemap() {
   const lastmod = new Date().toISOString().split('T')[0];
 
   let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
-  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+  xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n';
 
   const indexableRoutes = publicRoutes.filter((r) => {
     const meta = resolveRouteMeta(r);
@@ -351,6 +353,22 @@ async function generateSitemap() {
   xml += `    <changefreq>daily</changefreq>\n`;
   xml += `    <priority>0.6</priority>\n`;
   xml += '  </url>\n';
+
+  // Portal de Documentação — /docs e artigos, com alternates hreflang por idioma.
+  const docsPaths = ['/docs', ...getAllDocSlugs().map((slug) => `/docs/${slug}`)];
+  docsPaths.forEach((docPath) => {
+    SUPPORTED_LOCALES.forEach((locale) => {
+      xml += '  <url>\n';
+      xml += `    <loc>${BASE_URL}${withLocalePath(docPath, locale.code)}</loc>\n`;
+      xml += `    <lastmod>${lastmod}</lastmod>\n`;
+      xml += `    <changefreq>monthly</changefreq>\n`;
+      xml += `    <priority>${docPath === '/docs' ? '0.6' : '0.5'}</priority>\n`;
+      buildHreflangAlternates(docPath, BASE_URL).forEach((alt) => {
+        xml += `    <xhtml:link rel="alternate" hreflang="${alt.hreflang}" href="${alt.href}" />\n`;
+      });
+      xml += '  </url>\n';
+    });
+  });
 
   xml += '</urlset>';
 
