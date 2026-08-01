@@ -389,7 +389,7 @@ export default function CollectionPage() {
             context={{
               kind: 'journey-step',
               id: collection.slug,
-              meta: { collectionSlug: collection.slug },
+              meta: { theme: collection.title },
             }}
           />
         }
