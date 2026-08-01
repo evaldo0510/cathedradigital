@@ -175,18 +175,37 @@ export interface CatechesisContextProps {
   moduleTitle: React.ReactNode;
   section?: React.ReactNode;
   level?: React.ReactNode;
+  /** Parte do documento (ex.: "Parte I — A Profissão da Fé"). */
+  part?: React.ReactNode;
+  /** Capítulo (ex.: "Capítulo 2 — Deus vem ao encontro do homem"). */
+  chapter?: React.ReactNode;
+  /** Artigo (ex.: "Artigo 3 — A Sagrada Escritura"). */
+  article?: React.ReactNode;
+  /** Tema principal do trecho, em uma linha. */
+  theme?: React.ReactNode;
   className?: string;
 }
 
-/** CatechesisContext — para módulos de Catequese. */
+/**
+ * CatechesisContext — para módulos de Catequese e para o Catecismo.
+ * Composição pura sobre HeaderContext: nenhum layout novo é introduzido.
+ */
 export const CatechesisContext: React.FC<CatechesisContextProps> = ({
   moduleTitle,
   section,
   level,
+  part,
+  chapter,
+  article,
+  theme,
   className,
 }) => {
   const items: HeaderContextProps['items'] = [];
+  if (part) items.push({ label: 'Parte', value: part });
   if (section) items.push({ label: 'Seção', value: section });
+  if (chapter) items.push({ label: 'Capítulo', value: chapter });
+  if (article) items.push({ label: 'Artigo', value: article });
+  if (theme) items.push({ label: 'Tema', value: theme });
   if (level) items.push({ label: 'Nível', value: level });
   return (
     <HeaderContext
@@ -197,6 +216,7 @@ export const CatechesisContext: React.FC<CatechesisContextProps> = ({
     />
   );
 };
+
 
 export interface StudyContextProps {
   collectionTitle: React.ReactNode;
