@@ -77,6 +77,8 @@ const SOURCES: Record<Source, SourceConfig> = {
       label: 'Papel do executor',
       options: ['authenticated', 'service_role', 'system', 'anon'],
     },
+    actorColumn: 'actor_id',
+
     icon: ScrollText,
     label: 'Governança',
     hint: 'Alterações registradas por gatilhos e funções SECURITY DEFINER (actor_role = system/service_role).',
