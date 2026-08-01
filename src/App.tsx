@@ -250,6 +250,7 @@ const EditorialClosureValidator = lazy(() => import('./pages/admin/EditorialClos
 const EditorialClosureRuns = lazy(() => import('./pages/admin/EditorialClosureRuns'));
 const InstagramGalleryPage = lazy(() => import('./pages/admin/InstagramGallery'));
 const SiteHealthDashboard = lazy(() => import('./pages/admin/SiteHealthDashboard'));
+const AuditLogsPage = lazy(() => import('./pages/admin/AuditLogsPage'));
 const DocsPage = lazy(() => import('./pages/DocsPage'));
 const DocsArticlePage = lazy(() => import('./pages/DocsArticlePage'));
 
