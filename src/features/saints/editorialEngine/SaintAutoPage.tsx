@@ -1,17 +1,24 @@
 /**
  * SaintAutoPage — renderiza um `SaintPageDescriptor` produzido por
- * `buildSaintPage`. Skeleton do Motor Editorial de Santos.
+ * `buildSaintPage` usando exclusivamente o Reader V2 certificado.
  *
- * Uso:
- *   const descriptor = buildSaintPage(data);
- *   <SaintAutoPage descriptor={descriptor} />
+ * Cadeia canônica (congelada — Reader V2 baseline):
+ *   EditorialHero → StudyContext → conteúdo → NexusPanel →
+ *   EditorialClosure → ReaderContinuation
  *
- * Integração com a rota /santos/:id fica para o próximo sprint,
- * após aprovação do skeleton.
+ * Nenhum componente novo. Todos os imports vêm do barrel
+ * `@/components/reader`.
  */
 import React from 'react';
-import { EditorialHero, NexusPanel, ReaderShell } from '@/components/reader';
-import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
+import {
+  EditorialClosure,
+  EditorialHero,
+  NexusPanel,
+  ReaderContinuation,
+  ReaderShell,
+  StudyContext,
+} from '@/components/reader';
+import SacredImage from '@/components/cathedra/SacredImage';
 import { resolveSaintAutoNexus } from '@/core/knowledge/adapters/saintAutoNexus';
 import type { SaintPageDescriptor } from './types';
 import { SaintBioBlock } from './blocks/SaintBioBlock';
@@ -25,28 +32,23 @@ interface Props {
   descriptor: SaintPageDescriptor;
 }
 
-export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
-  const { header, blocks } = descriptor;
-  const kickerParts = [
-    header.category === 'doctor'
-      ? 'Doutor da Igreja'
-      : header.category === 'father'
-        ? 'Padre da Igreja'
-        : header.category === 'martyr'
-          ? 'Mártir'
-          : 'Santo',
-    header.epoch,
-    header.region,
-  ].filter(Boolean);
+const CATEGORY_LABEL: Record<string, string> = {
+  doctor: 'Doutor da Igreja',
+  father: 'Padre da Igreja',
+  martyr: 'Mártir',
+  saint: 'Santo',
+};
 
-  // Cadeia canônica do Reader Template Master: hero → conteúdo → nexus →
-  // continuation. Sem estes slots o módulo terminava em dead-end e ficava
-  // fora do padrão dos demais leitores.
+export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
+  const { header, blocks, closure } = descriptor;
+  const categoryLabel = CATEGORY_LABEL[header.category] ?? 'Santo';
+  const kickerParts = [categoryLabel, header.epoch, header.region].filter(Boolean);
+
   const virtues = (blocks.find((b) => b.id === 'virtues')?.data ?? []) as Array<
-    { name?: string } | string
+    { name?: string; label?: string } | string
   >;
   const virtueNames = virtues
-    .map((v) => (typeof v === 'string' ? v : v?.name))
+    .map((v) => (typeof v === 'string' ? v : (v?.label ?? v?.name)))
     .filter((v): v is string => Boolean(v));
 
   const nexus = resolveSaintAutoNexus({
@@ -55,21 +57,38 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
     virtues: virtueNames,
   });
 
+  const image = header.iconography?.imageUrl;
+  const attributes = header.iconography?.attributes ?? [];
+
   return (
     <ReaderShell
       contentMaxWidth="max-w-3xl"
       ariaLabel={`Santo — ${header.name}`}
+      headerContext={
+        <StudyContext
+          collectionTitle="Sanctorum"
+          position={[header.epoch, header.region].filter(Boolean).join(' · ') || categoryLabel}
+          curator={
+            header.feast
+              ? `Festa: ${header.feast.dateLabel}${header.feast.rank ? ` · ${header.feast.rank}` : ''}`
+              : undefined
+          }
+        />
+      }
       nexus={<NexusPanel output={nexus} kicker={`Conexões · ${header.name}`} />}
       continuation={
-        <ReaderContinuation
-          context={{
-            kind: 'saint',
-            id: descriptor.slug,
-            graphNodeId: nexus.selfId ?? undefined,
-            meta: { theme: virtueNames[0] },
-          }}
-          suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
-        />
+        <div className="space-y-spacing-lg">
+          {closure && <EditorialClosure {...closure} />}
+          <ReaderContinuation
+            context={{
+              kind: 'saint',
+              id: descriptor.slug,
+              graphNodeId: nexus.selfId ?? undefined,
+              meta: { theme: virtueNames[0] },
+            }}
+            suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
+          />
+        </div>
       }
       hero={
         <EditorialHero
@@ -84,6 +103,22 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
       }
     >
       <div className="space-y-spacing-lg">
+        {image && (
+          <figure className="space-y-spacing-2xs">
+            <SacredImage
+              src={image}
+              alt={header.iconography?.imageAlt ?? `Representação de ${header.name}`}
+              category={header.category}
+              className="w-full aspect-[4/3] rounded-premium overflow-hidden"
+            />
+            {attributes.length > 0 && (
+              <figcaption className="text-premium-xs text-muted-foreground">
+                Iconografia: {attributes.join(', ')}
+              </figcaption>
+            )}
+          </figure>
+        )}
+
         {header.shortBio && header.feast && (
           <p className="text-premium-md text-foreground/90 leading-relaxed">
             {header.shortBio}
@@ -94,6 +129,24 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
           switch (b.id) {
             case 'bio':
               return <SaintBioBlock key={b.id} text={b.data as string} />;
+            case 'reflection':
+              return (
+                <SaintBioBlock
+                  key={b.id}
+                  id="saint-reflection"
+                  title="Espiritualidade"
+                  text={b.data as string}
+                />
+              );
+            case 'legacy':
+              return (
+                <SaintBioBlock
+                  key={b.id}
+                  id="saint-legacy"
+                  title="Legado"
+                  text={b.data as string}
+                />
+              );
             case 'timeline':
               return <SaintTimelineBlock key={b.id} events={b.data as never} />;
             case 'virtues':

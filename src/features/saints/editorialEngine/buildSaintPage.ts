@@ -3,8 +3,8 @@
  * em um `SaintPageDescriptor` (lista ordenada de blocos).
  *
  * Regras:
- *  - Ordem canônica: header → bio → timeline → virtudes → escritos →
- *    orações → fontes.
+ *  - Ordem canônica: header → bio → reflexão → legado → timeline →
+ *    virtudes → escritos → orações → fontes → encerramento editorial.
  *  - Blocos vazios/nulos são omitidos (skip-if-empty).
  *  - Função pura: mesma entrada → mesma saída. Sem side-effects, sem
  *    dependência de React. Base para testes unitários.
@@ -25,6 +25,12 @@ export function buildSaintPage(data: SaintEditorialData): SaintPageDescriptor {
   if (data.longBio && data.longBio.trim().length > 0) {
     blocks.push({ id: 'bio', data: data.longBio });
   }
+  if (data.reflection && data.reflection.trim().length > 0) {
+    blocks.push({ id: 'reflection', data: data.reflection });
+  }
+  if (data.legacy && data.legacy.trim().length > 0) {
+    blocks.push({ id: 'legacy', data: data.legacy });
+  }
   if (nonEmpty(data.timeline)) {
     blocks.push({ id: 'timeline', data: data.timeline });
   }
@@ -41,5 +47,5 @@ export function buildSaintPage(data: SaintEditorialData): SaintPageDescriptor {
     blocks.push({ id: 'sources', data: data.sources });
   }
 
-  return { slug: data.slug, header: data.header, blocks };
+  return { slug: data.slug, header: data.header, blocks, closure: data.closure ?? null };
 }

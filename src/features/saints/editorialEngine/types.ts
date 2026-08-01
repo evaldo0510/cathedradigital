@@ -13,6 +13,8 @@
  *  - fontes: Nível 3 (Vatican.va, Aciprensa, referências oficiais)
  */
 
+import type { EditorialClosureProps } from '@/components/reader';
+
 export type FeastRank = 'memoria' | 'festa' | 'solenidade' | 'opcional';
 
 export type SaintCategory = 'saint' | 'doctor' | 'father' | 'martyr';
@@ -78,6 +80,12 @@ export interface SaintEditorialData {
   slug: string;
   header: SaintHeaderData;
   longBio?: string; // biografia longa editorial
+  /** Síntese espiritual editorial (carisma, escola de santidade). */
+  reflection?: string;
+  /** Legado / herança deixada à Igreja. */
+  legacy?: string;
+  /** Encerramento editorial já normalizado (resolveEditorialClosure). */
+  closure?: EditorialClosureProps | null;
   timeline?: SaintTimelineEvent[];
   virtues?: SaintVirtue[];
   writings?: SaintWritingRef[];
@@ -89,6 +97,8 @@ export interface SaintEditorialData {
 export type SaintBlockId =
   | 'header'
   | 'bio'
+  | 'reflection'
+  | 'legacy'
   | 'timeline'
   | 'virtues'
   | 'writings'
@@ -104,4 +114,6 @@ export interface SaintPageDescriptor {
   slug: string;
   header: SaintHeaderData;
   blocks: SaintBlockDescriptor[];
+  /** Encerramento editorial (Reflexão → Aplicação → Oração → Próxima). */
+  closure?: EditorialClosureProps | null;
 }
