@@ -130,6 +130,9 @@
     --sp-xl: 2.5rem;    /* 40px — bloco */
     --sp-xxl: 4rem;     /* 64px — seção */
     --rule-gold: 43 45% 54%;
+    /* Dourado legível como TEXTO (AA sobre fundo claro). O `--rule-gold`
+       permanece reservado a filetes, bordas e halos. */
+    --rule-gold-ink: 43 62% 30%;
     --rule-gold-soft: hsl(var(--rule-gold) / 0.2);
     --rule-gold-hair: hsl(var(--rule-gold) / 0.12);
     --font-display: 'Cormorant Garamond', ui-serif, Georgia, serif;
