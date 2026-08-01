@@ -78,7 +78,7 @@ export default function DocsPage() {
                   {bundle.categories[category]}
                 </h2>
                 <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                  {grouped.get(category)!.map((guide) => (
+                  {grouped.get(category)!.map(({ guide, snippet }) => (
                     <li key={guide.slug}>
                       <Link
                         to={`/docs/${guide.slug}`}
@@ -86,9 +86,22 @@ export default function DocsPage() {
                       >
                         <span className="flex items-center gap-2 font-display text-base font-bold text-foreground">
                           <BookOpen aria-hidden="true" className="h-4 w-4 text-primary" />
-                          {guide.title}
+                          {highlightText(guide.title, query)}
                         </span>
-                        <span className="mt-2 flex-1 text-sm text-muted-foreground">{guide.summary}</span>
+                        <span className="mt-2 flex-1 text-sm text-muted-foreground">
+                          {highlightText(guide.summary, query)}
+                        </span>
+                        {snippet && (
+                          <span className="mt-2 border-l-2 border-border pl-3 text-xs italic text-muted-foreground">
+                            {highlightText(snippet, query)}
+                          </span>
+                        )}
+                        {guide.fallbackFrom && bundle.ui.translationNotice && (
+                          <span className="mt-2 inline-flex items-center gap-1 text-xs text-muted-foreground">
+                            <Languages aria-hidden="true" className="h-3 w-3" />
+                            {bundle.ui.translationNotice}
+                          </span>
+                        )}
                         <ArrowRight
                           aria-hidden="true"
                           className="mt-3 h-4 w-4 text-primary transition-transform group-hover:translate-x-0.5"
@@ -96,6 +109,7 @@ export default function DocsPage() {
                       </Link>
                     </li>
                   ))}
+
                 </ul>
               </section>
             ))}
