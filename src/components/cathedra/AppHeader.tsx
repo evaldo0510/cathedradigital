@@ -9,6 +9,7 @@ import { LanguageSwitcher } from '@/components/i18n/LanguageSwitcher';
 
 
 import { cn } from '@/lib/utils';
+import { useAvatarUrl } from '@/lib/avatar';
 import { isLegitimateClick } from '@/lib/navigation-utils';
 import { APP_ROUTES, getBreadcrumbs } from '@/config/routes';
 
@@ -29,6 +30,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { t } = useLang();
+  const avatarSrc = useAvatarUrl(user?.avatar, 96);
   const [isReady, setIsReady] = useState(false);
   
   useEffect(() => {
@@ -156,8 +158,8 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                       aria-label={user.name ? `Perfil de ${user.name}` : 'Abrir perfil'}
                       title={user.name ? `Perfil de ${user.name}` : 'Abrir perfil'}
                     >
-                      {user.avatar ? (
-                        <img src={user.avatar} alt="" className="w-full h-full object-cover" />
+                      {avatarSrc ? (
+                        <img src={avatarSrc} alt="" className="w-full h-full object-cover" />
                       ) : (
                         <Icons.User className="opacity-70" aria-hidden="true" />
                       )}
