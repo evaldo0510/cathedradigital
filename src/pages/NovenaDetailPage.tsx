@@ -2,6 +2,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useParams, useSearchParams, Link, Navigate } from 'react-router-dom';
 import { Icons } from '@/constants';
 import { EditorialHero } from '@/components/editorial/harmony/EditorialHero';
+import { ReaderShell } from '@/components/reader';
+import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import { EditorialCard } from '@/components/editorial/harmony/EditorialCard';
 import { Button } from '@/components/ui/button';
 import { getNovenaBySlug } from '@/data/novenas';
@@ -113,8 +115,33 @@ const NovenaDetailPage: React.FC = () => {
 
 
 
+  // Reader Template Master: hero no slot `hero`, corpo em children,
+  // continuidade no slot `continuation` — mesmo esqueleto dos demais leitores.
   return (
-    <div className="w-full space-y-[var(--sp-xl)] pb-[var(--sp-xxl)]">
+    <ReaderShell
+      contentMaxWidth="max-w-3xl"
+      ariaLabel={`Novena — ${novena.title}`}
+      hero={
+        <EditorialHero align="center" density="balanced">
+          <EditorialHero.Eyebrow>Dia {currentDay} de {totalDays}</EditorialHero.Eyebrow>
+          <EditorialHero.Title>{novena.title}</EditorialHero.Title>
+          {novena.latin && (
+            <EditorialHero.Subtitle>
+              <span className="font-serif italic">{novena.latin}</span>
+            </EditorialHero.Subtitle>
+          )}
+        </EditorialHero>
+      }
+      continuation={
+        <ReaderContinuation
+          context={{
+            kind: 'prayer',
+            id: novena.slug,
+            meta: { prayerCategory: 'novena' },
+          }}
+        />
+      }
+    >
       <div className="flex items-center gap-[var(--sp-s)]">
         <Link
           to="/novenas"
@@ -123,16 +150,6 @@ const NovenaDetailPage: React.FC = () => {
           <Icons.ArrowLeft className="w-4 h-4" /> Todas as novenas
         </Link>
       </div>
-
-      <EditorialHero align="center" density="balanced">
-        <EditorialHero.Eyebrow>Dia {currentDay} de {totalDays}</EditorialHero.Eyebrow>
-        <EditorialHero.Title>{novena.title}</EditorialHero.Title>
-        {novena.latin && (
-          <EditorialHero.Subtitle>
-            <span className="font-serif italic">{novena.latin}</span>
-          </EditorialHero.Subtitle>
-        )}
-      </EditorialHero>
 
       {/* Progresso */}
       <div className="max-w-3xl mx-auto space-y-[var(--sp-s)]">
@@ -248,8 +265,7 @@ const NovenaDetailPage: React.FC = () => {
           )}
         </Button>
       </div>
-
-    </div>
+    </ReaderShell>
   );
 };
 
