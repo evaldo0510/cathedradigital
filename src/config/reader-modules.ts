@@ -50,7 +50,9 @@ export const READER_MODULES: readonly ReaderModule[] = [
   {
     id: 'catechism',
     label: 'Catecismo',
-    entry: 'src/components/cathedra/Catechism.tsx',
+    // Entry real do leitor (o antigo caminho era apenas um shim de reexport,
+    // o que fazia a auditoria medir um arquivo sem JSX e reportar 15/100).
+    entry: 'src/modules/catequese/reader/Catechism.tsx',
     sampleRoutes: ['/catechism?p=1'],
     targetScore: 90,
     status: 'certified',
@@ -77,7 +79,9 @@ export const READER_MODULES: readonly ReaderModule[] = [
   {
     id: 'saints',
     label: 'Santos',
-    entry: 'src/components/cathedra/SaintDetail.tsx',
+    // `SaintDetail` é um modal legado; a rota /santos/:id renderiza o motor
+    // editorial (SaintAutoPage), que é o Reader real do módulo.
+    entry: 'src/features/saints/editorialEngine/SaintAutoPage.tsx',
     sampleRoutes: ['/santos'],
     targetScore: 80,
     status: 'partial',
