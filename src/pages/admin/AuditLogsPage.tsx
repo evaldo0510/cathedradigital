@@ -420,34 +420,63 @@ const AuditTable: React.FC<{ source: Source }> = ({ source }) => {
             <caption className="sr-only">{cfg.label} — registros de auditoria</caption>
             <thead className="bg-muted/50">
               <tr>
-                {cfg.fields.map((f) => (
+                <th scope="col" className="px-3 py-2 text-left text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Severidade
+                </th>
+                {visibleFields.map((f) => (
                   <th key={f.key} scope="col" className="px-3 py-2 text-left text-xs font-bold uppercase tracking-wider text-muted-foreground">
                     {f.label}
                   </th>
                 ))}
+                <th scope="col" className="px-3 py-2 text-left text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Recurso
+                </th>
               </tr>
             </thead>
             <tbody>
               {isLoading && (
-                <tr><td colSpan={cfg.fields.length} className="px-3 py-6 text-center text-muted-foreground">Carregando…</td></tr>
+                <tr><td colSpan={colCount} className="px-3 py-6 text-center text-muted-foreground">Carregando…</td></tr>
               )}
               {isError && (
-                <tr><td colSpan={cfg.fields.length} className="px-3 py-6 text-center text-destructive">Falha ao carregar registros.</td></tr>
+                <tr><td colSpan={colCount} className="px-3 py-6 text-center text-destructive">Falha ao carregar registros.</td></tr>
               )}
               {!isLoading && !isError && (data?.rows.length ?? 0) === 0 && (
-                <tr><td colSpan={cfg.fields.length} className="px-3 py-6 text-center text-muted-foreground">Nenhum registro no filtro atual.</td></tr>
+                <tr><td colSpan={colCount} className="px-3 py-6 text-center text-muted-foreground">Nenhum registro no filtro atual.</td></tr>
               )}
-              {data?.rows.map((row, i) => (
-                <tr key={String(row.id ?? i)} className="border-t border-border align-top">
-                  {cfg.fields.map((f) => (
-                    <td key={f.key} className="max-w-[280px] truncate px-3 py-2" title={formatCell(f.key, row[f.key])}>
-                      {formatCell(f.key, row[f.key])}
+              {data?.rows.map((row, i) => {
+                const severity = severityOf(source, row);
+                const href = relatedHref(source, row);
+                return (
+                  <tr key={String(row.id ?? i)} className="border-t border-border align-top">
+                    <td className="px-3 py-2">
+                      <span className={`inline-flex rounded-full border px-2 py-0.5 text-xs font-semibold ${SEVERITY_CLASS[severity]}`}>
+                        {SEVERITY_LABEL[severity]}
+                      </span>
                     </td>
-                  ))}
-                </tr>
-              ))}
+                    {visibleFields.map((f) => (
+                      <td key={f.key} className="max-w-[280px] truncate px-3 py-2" title={formatCell(f.key, row[f.key])}>
+                        {formatCell(f.key, row[f.key])}
+                      </td>
+                    ))}
+                    <td className="px-3 py-2">
+                      {href ? (
+                        <Link
+                          to={href}
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+                        >
+                          <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" />
+                          Abrir recurso
+                        </Link>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">—</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
+
         </div>
 
         <div className="flex items-center justify-between text-sm text-muted-foreground">
