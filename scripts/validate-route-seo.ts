@@ -33,6 +33,7 @@ const PRIVATE_PATTERNS: RegExp[] = [
   /^\/(auth|login|reset-password|onboarding|profile|spiritual-profile|diario)(\/|$)/,
   /^\/(favorites|achievements|checkout|transactions)(\/|$)/,
   /-legacy(\/|$)/,
+  /^\/(audit-logs|site-health)(\/|$)/,
   /^\/home-v3$/,
   /^\/legacy-home$/,
 ];

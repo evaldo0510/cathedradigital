@@ -21,7 +21,7 @@ describe("Button Component", () => {
     expect(screen.getByRole("button")).toHaveClass("bg-destructive");
 
     rerender(<Button variant="ghost">Ghost</Button>);
-    expect(screen.getByRole("button")).toHaveClass("hover:bg-accent/10");
+    expect(screen.getByRole("button")).toHaveClass("hover:text-primary");
   });
 
   it("handles loading state with accessibility", () => {

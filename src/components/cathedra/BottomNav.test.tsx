@@ -27,16 +27,16 @@ describe('BottomNav Unit Tests', () => {
 
   it('renders all navigation items', () => {
     renderBottomNav();
-    expect(screen.getByLabelText(/Hoje|Today/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Início|Hoje|Today/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Bíblia|Bible/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Catecismo|Catechism/)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Logos/)).toBeInTheDocument();
-    expect(screen.getByLabelText(/menu/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Atalhos/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Mais/i)).toBeInTheDocument();
   });
 
   it('marks "Hoje" as active for root path', () => {
     renderBottomNav('/');
-    const hojeButton = screen.getByLabelText(/Hoje/);
+    const hojeButton = screen.getByLabelText(/Início|Hoje/);
     expect(hojeButton).toHaveAttribute('aria-current', 'page');
   });
 
@@ -54,18 +54,18 @@ describe('BottomNav Unit Tests', () => {
 
   it('handles hashes in the URL correctly', () => {
     renderBottomNav('/hoje#versiculo');
-    const hojeButton = screen.getByLabelText(/Hoje/);
+    const hojeButton = screen.getByLabelText(/Início|Hoje/);
     expect(hojeButton).toHaveAttribute('aria-current', 'page');
   });
 
   it('maintains correct tab order', () => {
     renderBottomNav();
     const buttons = screen.getAllByRole('button');
-    // We expect the buttons to be in order: Hoje, Bíblia, Catecismo, Logos, Menu
-    expect(buttons[0]).toHaveAttribute('aria-label', 'Hoje');
+    // Ordem atual: Início, Bíblia, Catecismo, Atalhos, Mais
+    expect(buttons[0]).toHaveAttribute('aria-label', 'Início');
     expect(buttons[1]).toHaveAttribute('aria-label', 'Bíblia');
     expect(buttons[2]).toHaveAttribute('aria-label', 'Catecismo');
-    expect(buttons[3]).toHaveAttribute('aria-label', 'Logos');
-    expect(buttons[4]).toHaveAttribute('aria-label', 'menu');
+    expect(buttons[3]).toHaveAttribute('aria-label', 'Atalhos');
+    expect(buttons[4]).toHaveAttribute('aria-label', 'Mais');
   });
 });

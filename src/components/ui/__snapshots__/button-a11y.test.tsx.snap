@@ -3,34 +3,35 @@
 exports[`Button Accessibility & Keyboard Navigation > matches snapshot for premium styling 1`] = `
 <div>
   <div
-    class="space-y-4"
+    class="space-y-spacing-md"
   >
     <button
-      class="inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full font-bold uppercase tracking-[0.2em] transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.97] bg-primary text-primary-foreground hover:bg-primary/95 shadow-premium hover:shadow-premium-hover hover:-translate-y-0.5 h-14 px-8 text-[10.5px] [&_svg]:size-5 md:[&_svg]:size-5 sm:[&_svg]:size-5"
+      class="inline-flex items-center justify-center gap-spacing-xs whitespace-nowrap rounded-premium-full font-ui font-medium uppercase tracking-premium-widest transition-premium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.97] bg-primary hover:bg-primary/95 shadow-premium hover:shadow-premium-hover hover:-translate-y-0.5 min-h-[44px] shrink-0 h-spacing-2xl px-spacing-xl text-premium-xs [&_svg]:size-spacing-md"
     >
       Primary
     </button>
     <button
-      class="inline-flex items-center justify-center gap-2.5 whitespace-nowrap rounded-full font-bold uppercase tracking-[0.2em] transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.97] border border-border/40 bg-transparent text-foreground hover:bg-primary/[0.01] hover:border-primary/20 hover:shadow-soft hover:-translate-y-0.5 h-10 px-6 text-[9.5px] [&_svg]:size-4 md:[&_svg]:size-4 sm:[&_svg]:size-4"
+      class="inline-flex items-center justify-center gap-spacing-xs whitespace-nowrap rounded-premium-full font-ui font-medium uppercase tracking-premium-widest transition-premium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.97] border border-primary/10 bg-transparent text-primary hover:bg-primary/[0.02] hover:border-primary/20 hover:-translate-y-0.5 min-h-[44px] shrink-0 h-[44px] px-spacing-lg text-[10px] [&_svg]:size-spacing-md"
     >
       Small Outline
     </button>
     <button
       aria-busy="true"
       aria-disabled="true"
-      class="gap-2.5 whitespace-nowrap rounded-full font-bold uppercase tracking-[0.2em] transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.97] bg-primary text-primary-foreground hover:bg-primary/95 shadow-premium hover:shadow-premium-hover hover:-translate-y-0.5 h-12 w-12 p-0 flex items-center justify-center [&_svg]:size-5 md:[&_svg]:size-5 sm:[&_svg]:size-5"
+      class="gap-spacing-xs whitespace-nowrap rounded-premium-full font-ui font-medium uppercase tracking-premium-widest transition-premium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 active:scale-[0.97] bg-primary text-primary-foreground hover:bg-primary/95 shadow-premium hover:shadow-premium-hover hover:-translate-y-0.5 min-h-[44px] min-w-[44px] shrink-0 h-spacing-2xl w-spacing-2xl p-spacing-0 flex items-center justify-center [&_svg]:size-spacing-md"
       disabled=""
     >
       <svg
-        class="lucide lucide-loader-circle animate-spin"
+        aria-hidden="true"
+        class="lucide lucide-loader-circle transition-all duration-1000 shrink-0 animate-spin"
         fill="none"
-        height="24"
+        height="20"
         stroke="currentColor"
         stroke-linecap="round"
         stroke-linejoin="round"
-        stroke-width="2"
+        stroke-width="1.2"
         viewBox="0 0 24 24"
-        width="24"
+        width="20"
         xmlns="http://www.w3.org/2000/svg"
       >
         <path

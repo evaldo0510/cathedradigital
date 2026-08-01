@@ -1,5 +1,7 @@
 # Inbox: AGENT-A
 
+Status: Ready
+
 ## Pending Requests
 
-- [ ] Corrigir bug de layout
+- None
