@@ -1,8 +1,8 @@
 {
-  "generated_at": "2026-07-24T16:19:48.998Z",
+  "generated_at": "2026-08-01T15:58:14.690Z",
   "project_domain": "https://www.cathedradigital.com.br",
   "summary": {
-    "pass": 12,
+    "pass": 10,
     "warn": 2,
     "fail": 0
   },
@@ -11,7 +11,7 @@
       "id": "sitemap_exists",
       "label": "sitemap.xml presente",
       "status": "pass",
-      "detail": "102 URLs declaradas."
+      "detail": "623 URLs declaradas."
     },
     {
       "id": "sitemap_host",
@@ -78,18 +78,6 @@
       "label": "Google Search Console: meta verification",
       "status": "pass",
       "detail": "Meta google-site-verification presente."
-    },
-    {
-      "id": "glossary_in_sitemap",
-      "label": "Verbetes do Glossário no sitemap (42 publicados)",
-      "status": "pass",
-      "detail": "Todos presentes."
-    },
-    {
-      "id": "glossary_in_rss",
-      "label": "Verbetes do Glossário no feed RSS",
-      "status": "pass",
-      "detail": "Todos presentes no feed."
     }
   ]
 }

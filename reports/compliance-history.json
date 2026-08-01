@@ -1,71 +1,5 @@
 [
   {
-    "timestamp": "2026-05-30T15:51:00.840Z",
-    "totalIssues": 5,
-    "categories": [
-      {
-        "id": "spacing",
-        "count": 5
-      },
-      {
-        "id": "typography",
-        "count": 0
-      },
-      {
-        "id": "rounding",
-        "count": 0
-      },
-      {
-        "id": "shadows",
-        "count": 0
-      }
-    ]
-  },
-  {
-    "timestamp": "2026-05-30T15:51:16.364Z",
-    "totalIssues": 0,
-    "categories": [
-      {
-        "id": "spacing",
-        "count": 0
-      },
-      {
-        "id": "typography",
-        "count": 0
-      },
-      {
-        "id": "rounding",
-        "count": 0
-      },
-      {
-        "id": "shadows",
-        "count": 0
-      }
-    ]
-  },
-  {
-    "timestamp": "2026-05-30T15:54:29.294Z",
-    "totalIssues": 0,
-    "categories": [
-      {
-        "id": "spacing",
-        "count": 0
-      },
-      {
-        "id": "typography",
-        "count": 0
-      },
-      {
-        "id": "rounding",
-        "count": 0
-      },
-      {
-        "id": "shadows",
-        "count": 0
-      }
-    ]
-  },
-  {
     "timestamp": "2026-05-30T15:54:42.795Z",
     "totalIssues": 8,
     "categories": [
@@ -808,6 +742,72 @@
       {
         "name": "Search",
         "total": 87.5
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-08-01T15:57:38.423Z",
+    "totalIssues": 7712,
+    "categories": [
+      {
+        "id": "spacing",
+        "count": 5031
+      },
+      {
+        "id": "typography",
+        "count": 1879
+      },
+      {
+        "id": "rounding",
+        "count": 697
+      },
+      {
+        "id": "shadows",
+        "count": 105
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-08-01T15:57:42.078Z",
+    "totalIssues": 7712,
+    "categories": [
+      {
+        "id": "spacing",
+        "count": 5031
+      },
+      {
+        "id": "typography",
+        "count": 1879
+      },
+      {
+        "id": "rounding",
+        "count": 697
+      },
+      {
+        "id": "shadows",
+        "count": 105
+      }
+    ]
+  },
+  {
+    "timestamp": "2026-08-01T15:57:46.106Z",
+    "totalIssues": 7712,
+    "categories": [
+      {
+        "id": "spacing",
+        "count": 5031
+      },
+      {
+        "id": "typography",
+        "count": 1879
+      },
+      {
+        "id": "rounding",
+        "count": 697
+      },
+      {
+        "id": "shadows",
+        "count": 105
       }
     ]
   }

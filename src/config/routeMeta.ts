@@ -28,6 +28,16 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     title: 'Guia — Documentação Cathedra',
     description: 'Guia da documentação Cathedra com passo a passo para aproveitar o acervo e as ferramentas de estudo.',
   },
+  '/audit-logs': {
+    title: 'Trilha de Auditoria — Cathedra',
+    description: 'Painel interno de auditoria.',
+    noindex: true,
+  },
+  '/site-health': {
+    title: 'Saúde do Site — Cathedra',
+    description: 'Painel interno de saúde da plataforma.',
+    noindex: true,
+  },
   '/admin/audit-logs': {
     title: 'Trilha de Auditoria — Admin',
     description: 'Painel administrativo de auditoria.',
@@ -549,6 +559,18 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
     },
   },
   {
+    test: /^\/magisterio\/[^/]+$/,
+    meta: {
+      title: 'Magistério — Cathedra',
+      description: 'Redirecionamento para o documento do Magistério no acervo Cathedra.',
+      noindex: true,
+    },
+  },
+  {
+    test: /^\/docs\/[^/]+$/,
+    meta: ROUTE_META['/docs/:slug'],
+  },
+  {
     test: /^\/(admin|dev)(\/|$)/,
     meta: {
       title: 'Admin — Cathedra',
@@ -558,11 +580,22 @@ const DYNAMIC_PATTERNS: Array<{ test: RegExp; meta: RouteMeta }> = [
   },
 ];
 
+/** Locales suportados pelo portal de documentação (prefixo de URL). */
+const LOCALE_PREFIX = /^\/(en|es|it|la)(?=\/|$)/;
+
 export function resolveRouteMeta(pathname: string): RouteMeta | null {
-  const clean = pathname.replace(/\/+$/, '') || '/';
+  let clean = pathname.replace(/\/+$/, '') || '/';
   if (ROUTE_META[clean]) return ROUTE_META[clean];
   for (const { test, meta } of DYNAMIC_PATTERNS) {
     if (test.test(clean)) return meta;
+  }
+  // Rotas localizadas (/en/docs, /es/docs/slug…) herdam a meta da rota base.
+  if (LOCALE_PREFIX.test(clean)) {
+    clean = clean.replace(LOCALE_PREFIX, '') || '/';
+    if (ROUTE_META[clean]) return ROUTE_META[clean];
+    for (const { test, meta } of DYNAMIC_PATTERNS) {
+      if (test.test(clean)) return meta;
+    }
   }
   return null;
 }
