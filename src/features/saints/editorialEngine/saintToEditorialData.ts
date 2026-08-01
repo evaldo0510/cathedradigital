@@ -6,6 +6,8 @@
  * Função pura. Sem side-effects. Base para regressão automática.
  */
 import type { Saint } from '@/data/saints';
+import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
+import type { EditorialClosureProps } from '@/components/reader';
 import type {
   SaintCategory,
   SaintEditorialData,
@@ -34,6 +36,28 @@ function slugifyWork(title: string): string {
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '');
+}
+
+/**
+ * Encerramento editorial do santo.
+ * 1) usa `editorial_closure` curado quando existir;
+ * 2) senão, deriva um encerramento sóbrio a partir dos campos editoriais
+ *    já presentes (espiritualidade → reflexão, missão → aplicação,
+ *    oração própria → oração). Nunca inventa conteúdo.
+ */
+function resolveSaintClosure(saint: Saint): EditorialClosureProps | null {
+  const raw = (saint as unknown as { editorialClosure?: unknown; editorial_closure?: unknown });
+  const curated = resolveEditorialClosure({
+    editorial_closure: raw.editorialClosure ?? raw.editorial_closure,
+  });
+  if (curated) return curated;
+
+  // A espiritualidade já é exibida como bloco de leitura; não repetir aqui.
+  const application = saint.mission?.trim() || undefined;
+  const prayer = saint.prayer?.trim() || undefined;
+  if (!application && !prayer) return null;
+
+  return { application, prayer, source: 'cathedra-editorial' };
 }
 
 export function saintToEditorialData(saint: Saint): SaintEditorialData {
@@ -102,6 +126,12 @@ export function saintToEditorialData(saint: Saint): SaintEditorialData {
     slug: saint.id,
     header,
     longBio: saint.fullBio && saint.fullBio.trim().length > 0 ? saint.fullBio : undefined,
+    reflection:
+      saint.spiritualitySummary && saint.spiritualitySummary.trim().length > 0
+        ? saint.spiritualitySummary
+        : undefined,
+    legacy: saint.legacy && saint.legacy.trim().length > 0 ? saint.legacy : undefined,
+    closure: resolveSaintClosure(saint),
     timeline: timeline.length > 0 ? timeline : undefined,
     virtues: virtues.length > 0 ? virtues : undefined,
     writings: writings.length > 0 ? writings : undefined,
