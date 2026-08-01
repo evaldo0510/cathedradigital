@@ -104,15 +104,15 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
     >
       <div className="space-y-spacing-lg">
         {image && (
-          <figure className="space-y-spacing-2xs">
+          <figure className="mx-auto max-w-sm space-y-spacing-2xs">
             <SacredImage
               src={image}
               alt={header.iconography?.imageAlt ?? `Representação de ${header.name}`}
               category={header.category}
-              className="w-full aspect-[4/3] rounded-premium overflow-hidden"
+              className="w-full aspect-[3/4] rounded-premium overflow-hidden"
             />
             {attributes.length > 0 && (
-              <figcaption className="text-premium-xs text-muted-foreground">
+              <figcaption className="text-premium-xs text-muted-foreground text-center">
                 Iconografia: {attributes.join(', ')}
               </figcaption>
             )}
