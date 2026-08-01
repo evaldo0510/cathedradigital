@@ -1136,6 +1136,26 @@ header:hover {
 .cathedra-reader-article [data-prayer-voice='refrao'] p {
   font-style: italic;
 }
+/* Salmodia: coluna mais estreita e versos respirando um a um. */
+.cathedra-reader-article [data-prayer-voice='salmo'] p {
+  font-family: var(--font-display);
+  max-width: 46ch;
+  line-height: 1.85;
+}
+/* Antífona: voz que abre e fecha o salmo — filete dourado discreto. */
+.cathedra-reader-article [data-prayer-voice='antifona'] {
+  border-inline-start: 1px solid hsl(var(--rule-gold) / 0.45);
+  padding-inline-start: var(--sp-m);
+}
+.cathedra-reader-article [data-prayer-voice='antifona'] p {
+  font-style: italic;
+}
+/* Leitura: prosa proclamada — corpo sans, medida ampla. */
+.cathedra-reader-article [data-prayer-voice='leitura'] p {
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+}
+
 @media (max-width: 767px) {
   .cathedra-reader-article > * + * {
     margin-top: var(--sp-l);
