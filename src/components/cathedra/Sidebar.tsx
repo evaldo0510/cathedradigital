@@ -36,6 +36,7 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
   const location = useLocation();
   const currentPath = location.pathname;
   const { lang, t } = useLang();
+  const avatarSrc = useAvatarUrl(user?.avatar, 96);
   const [cacheCount, setCacheCount] = useState<number | null>(null);
   const { settings } = useReadingSettings();
   const { isAdmin } = useIsAdmin();
@@ -387,8 +388,8 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                     className="flex items-center gap-spacing-sm cursor-pointer group"
                   >
                     <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/90 flex items-center justify-center text-primary-foreground font-bold shadow-premium-none group-hover:scale-105 transition-transform overflow-hidden">
-                      {user.avatar ? (
-                        <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                      {avatarSrc ? (
+                        <img src={avatarSrc} alt={user.name} className="w-full h-full object-cover" />
                       ) : (
                         <span className="text-premium-xs">{user.name.charAt(0).toUpperCase()}</span>
                       )}
