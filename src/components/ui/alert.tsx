@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const alertVariants = cva(
-  "relative w-full rounded-premium-full border p-spacing-md [&>svg~*]:pl-spacing-lg [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-spacing-md [&>svg]:top-spacing-md [&>svg]:text-foreground",
+  "relative w-full rounded-premium border p-spacing-md [&>svg~*]:pl-spacing-lg [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-spacing-md [&>svg]:top-spacing-md [&>svg]:text-foreground",
   {
     variants: {
       variant: {
