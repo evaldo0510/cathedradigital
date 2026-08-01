@@ -335,7 +335,7 @@ const AuditTable: React.FC<{ source: Source }> = ({ source }) => {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex flex-col gap-3 md:flex-row md:items-end">
-          <form onSubmit={applySearch} className="flex flex-1 gap-2">
+          <form onSubmit={applySearch} className="flex flex-1 flex-col gap-2 sm:flex-row">
             <div className="flex-1">
               <label htmlFor={`search-${source}`} className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Buscar
@@ -347,10 +347,24 @@ const AuditTable: React.FC<{ source: Source }> = ({ source }) => {
                 placeholder={cfg.searchable.join(', ')}
               />
             </div>
+            {cfg.actorColumn && (
+              <div className="sm:w-56">
+                <label htmlFor={`actor-${source}`} className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Usuário responsável
+                </label>
+                <Input
+                  id={`actor-${source}`}
+                  value={actorInput}
+                  onChange={(e) => setActorInput(e.target.value)}
+                  placeholder="ID do usuário"
+                />
+              </div>
+            )}
             <Button type="submit" variant="secondary" className="self-end">
               Filtrar
             </Button>
           </form>
+
 
           <div className="w-full md:w-44">
             <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
