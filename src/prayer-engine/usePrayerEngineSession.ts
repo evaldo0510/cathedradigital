@@ -102,15 +102,44 @@ async function fetchOpenSession(userId: string, prayerId: string) {
   return (data ?? null) as unknown as PrayerSessionRow | null;
 }
 
+/**
+ * Cria (ou reabre) a sessão do par user+prayer.
+ *
+ * `prayer_sessions` tem UNIQUE (user_id, prayer_id): um INSERT simples retorna
+ * HTTP 409 sempre que já existe uma sessão concluída para a mesma oração.
+ * Usamos upsert idempotente sobre a chave real, zerando o progresso — que é
+ * exatamente a semântica de "começar uma nova sessão".
+ */
 async function createSession(userId: string, prayerId: string) {
+  const nowIso = new Date().toISOString();
   const { data, error } = await supabase
     .from('prayer_sessions')
-    .insert({ user_id: userId, prayer_id: prayerId })
+    .upsert(
+      {
+        user_id: userId,
+        prayer_id: prayerId,
+        current_section_id: null,
+        current_mystery_id: null,
+        current_block_uuid: null,
+        current_block_id: null,
+        current_block_index: 0,
+        completed_block_ids: [],
+        completed_mystery_ids: [],
+        completed_section_ids: [],
+        bookmarks: [],
+        elapsed_seconds: 0,
+        completed_at: null,
+        updated_at: nowIso,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } as any,
+      { onConflict: 'user_id,prayer_id' },
+    )
     .select('*')
     .single();
   if (error) throw error;
   return data as unknown as PrayerSessionRow;
 }
+
 
 export function usePrayerEngineSession(prayerId: string | undefined): UsePrayerEngineSessionResult {
   const [session, setSession] = useState<PrayerSessionRow | null>(null);
