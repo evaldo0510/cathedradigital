@@ -64,7 +64,7 @@ export const READER_MODULES: readonly ReaderModule[] = [
     entry: 'src/components/cathedra/BibleReader.tsx',
     sampleRoutes: ['/biblia/joao/1'],
     targetScore: 85,
-    status: 'partial',
+    status: 'certified',
     blocking: false,
   },
   {
@@ -73,7 +73,7 @@ export const READER_MODULES: readonly ReaderModule[] = [
     entry: 'src/components/cathedra/MagisteriumViewer.tsx',
     sampleRoutes: ['/magisterio'],
     targetScore: 80,
-    status: 'partial',
+    status: 'certified',
     blocking: false,
   },
   {
@@ -84,7 +84,7 @@ export const READER_MODULES: readonly ReaderModule[] = [
     entry: 'src/features/saints/editorialEngine/SaintAutoPage.tsx',
     sampleRoutes: ['/santos'],
     targetScore: 80,
-    status: 'partial',
+    status: 'certified',
     blocking: false,
   },
   // Nota: entrada canônica do Prayer Engine é `prayer-engine` (sub-onda C0.3).
@@ -94,7 +94,7 @@ export const READER_MODULES: readonly ReaderModule[] = [
     entry: 'src/components/cathedra/JornadaStepPage.tsx',
     sampleRoutes: ['/jornadas'],
     targetScore: 80,
-    status: 'partial',
+    status: 'certified',
     blocking: false,
   },
   {
@@ -103,7 +103,7 @@ export const READER_MODULES: readonly ReaderModule[] = [
     entry: 'src/pages/CollectionPage.tsx',
     sampleRoutes: ['/colecoes'],
     targetScore: 80,
-    status: 'partial',
+    status: 'certified',
     blocking: false,
     optionalSlots: ['popover'],
   },
@@ -113,7 +113,7 @@ export const READER_MODULES: readonly ReaderModule[] = [
     entry: 'src/pages/NovenaDetailPage.tsx',
     sampleRoutes: ['/novenas'],
     targetScore: 80,
-    status: 'partial',
+    status: 'certified',
     blocking: false,
   },
   // ── Sub-onda C0.1 (migrados) ─────────────────────────────────────────
@@ -182,6 +182,13 @@ export const FORBIDDEN_IMPORTS = [
     label: '@radix-ui/react-popover (direto)',
     replacement: 'ReferencePopover ou src/components/ui/popover',
   },
+  {
+    id: 'reader-deep-import',
+    // Reader V2: primitivos só podem ser consumidos pelo barrel canônico.
+    pattern: /from\s+['"]@\/components\/reader\/[A-Za-z]/,
+    label: 'import profundo de primitivo do Reader',
+    replacement: "import { ... } from '@/components/reader'",
+  },
 ] as const;
 
 /**
@@ -204,5 +211,7 @@ export const GUARDRAIL_ALLOWLIST: readonly string[] = [
   'src/components/cathedra/BibleVersePopover.tsx',
   'src/components/cathedra/BibleDictionaryPopover.tsx',
   'src/lib/nexusContent.ts',
+  // Import type-only do contrato de EditorialClosure (evita ciclo com o barrel)
+  'src/lib/editorial/resolveClosure.ts',
 ];
 

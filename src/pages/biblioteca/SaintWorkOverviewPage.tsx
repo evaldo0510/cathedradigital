@@ -34,7 +34,7 @@ import {
 } from '@/types/saintWorks';
 import { EditorialHero } from '@/components/editorial';
 import { EditorialCredits } from '@/components/biblioteca/EditorialCredits';
-import EditorialClosure from '@/components/reader/EditorialClosure';
+import { EditorialClosure } from '@/components/reader';
 import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
 import { Button } from '@/components/ui/button';
 import { Icons } from '../../constants';

@@ -153,7 +153,7 @@ interface FooterSectionProps {
   children: React.ReactNode;
 }
 
-const FooterSection: React.FC<FooterSectionProps> = ({ title, id, isMobile, openId, onToggle, children }) => {
+const FooterSection = React.forwardRef<HTMLElement, FooterSectionProps>(({ title, id, isMobile, openId, onToggle, children }, ref) => {
   const isOpen = !isMobile || openId === id;
 
   if (!isMobile) {
@@ -168,7 +168,7 @@ const FooterSection: React.FC<FooterSectionProps> = ({ title, id, isMobile, open
   }
 
   return (
-    <section aria-labelledby={`footer-h-${id}`} className="border-t" style={{ borderColor: GOLD_HAIR }}>
+    <section ref={ref} aria-labelledby={`footer-h-${id}`} className="border-t" style={{ borderColor: GOLD_HAIR }}>
       <button
         type="button"
         onClick={() => onToggle(id)}
@@ -187,7 +187,8 @@ const FooterSection: React.FC<FooterSectionProps> = ({ title, id, isMobile, open
       </div>
     </section>
   );
-};
+});
+FooterSection.displayName = 'FooterSection';
 
 const Footer: React.FC = React.memo(() => {
   const navigate = useNavigate();

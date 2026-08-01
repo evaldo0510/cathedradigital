@@ -37,7 +37,7 @@ import { PrayerTTSButton } from './PrayerTTSButton';
 import { RitualOptionSelector } from './primitives/liturgy/RitualOptionSelector';
 import { LiturgyRichHeader } from './primitives/liturgy/LiturgyRichHeader';
 import { LiturgyBlockCard } from './primitives/liturgy/LiturgyBlockCard';
-import { EditorialClosure } from '@/components/reader/EditorialClosure';
+import { EditorialClosure } from '@/components/reader';
 import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
 import { MissaClosingActionCard } from './primitives/liturgy/MissaClosingActionCard';
 
