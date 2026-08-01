@@ -168,7 +168,7 @@ const FooterSection = React.forwardRef<HTMLElement, FooterSectionProps>(({ title
   }
 
   return (
-    <section aria-labelledby={`footer-h-${id}`} className="border-t" style={{ borderColor: GOLD_HAIR }}>
+    <section ref={ref} aria-labelledby={`footer-h-${id}`} className="border-t" style={{ borderColor: GOLD_HAIR }}>
       <button
         type="button"
         onClick={() => onToggle(id)}
