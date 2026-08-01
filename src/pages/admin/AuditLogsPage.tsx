@@ -139,6 +139,81 @@ interface Filters {
   days: number;
   facet: string;
   search: string;
+  /** UUID (ou prefixo) do usuário responsável pelo evento. */
+  actor: string;
+}
+
+/** Severidade normalizada para leitura rápida da trilha. */
+type Severity = 'info' | 'warning' | 'critical';
+
+const SEVERITY_LABEL: Record<Severity, string> = {
+  info: 'Info',
+  warning: 'Atenção',
+  critical: 'Crítico',
+};
+
+const SEVERITY_CLASS: Record<Severity, string> = {
+  info: 'border-border bg-muted text-muted-foreground',
+  warning: 'border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300',
+  critical: 'border-destructive/40 bg-destructive/10 text-destructive',
+};
+
+function severityOf(source: Source, row: Row): Severity {
+  if (source === 'security') {
+    const raw = String(row.severity ?? '').toLowerCase();
+    if (raw === 'critical' || raw === 'error') return 'critical';
+    if (raw === 'warning' || raw === 'warn') return 'warning';
+    return 'info';
+  }
+  if (source === 'denials') {
+    const action = String(row.action ?? '').toLowerCase();
+    return action === 'select' ? 'warning' : 'critical';
+  }
+  const op = String(row.operation ?? '').toLowerCase();
+  if (op.includes('delete') || op.includes('revoke')) return 'critical';
+  if (op.includes('update') || op.includes('publish') || op.includes('grant')) return 'warning';
+  return 'info';
+}
+
+/**
+ * Rota administrativa do recurso relacionado ao evento — atalho para
+ * investigar a entidade sem sair da trilha.
+ */
+const ENTITY_ROUTES: Record<string, (id: string) => string> = {
+  nexus_relation: () => '/admin/nexus-audit',
+  translation_source: () => '/admin/bible-sources',
+  editorial_closure_migration: () => '/admin/editorial-closure-validator',
+  glossary: () => '/admin/glossario',
+  glossary_term: () => '/admin/glossario',
+  saint: () => '/admin/saints',
+  saints: () => '/admin/saints',
+  prayer: () => '/admin/oracoes',
+  catechism: () => '/admin/catechism-queue',
+  catechism_official: () => '/admin/catechism-queue',
+  collection: (id) => (id ? `/admin/collections/${id}` : '/admin/collections'),
+  collections: (id) => (id ? `/admin/collections/${id}` : '/admin/collections'),
+  saint_works: () => '/admin/biblioteca-patristica',
+};
+
+const TABLE_ROUTES: Record<string, string> = {
+  glossary: '/admin/glossario',
+  catechism_official: '/admin/catechism-queue',
+  saints: '/admin/saints',
+  collections: '/admin/collections',
+  secret_leaks: '/admin/security-audit',
+  community_likes: '/admin/site-health',
+};
+
+function relatedHref(source: Source, row: Row): string | null {
+  if (source === 'governance') {
+    const type = String(row.entity_type ?? '');
+    const build = ENTITY_ROUTES[type];
+    return build ? build(String(row.entity_id ?? '')) : null;
+  }
+  if (source === 'denials') {
+    return TABLE_ROUTES[String(row.table_name ?? '')] ?? null;
+  }
+  return null;
 }
 
 function buildQuery(source: Source, filters: Filters) {
@@ -153,6 +228,11 @@ function buildQuery(source: Source, filters: Filters) {
   let query = client.from(cfg.table).select(cfg.columns, { count: 'exact' });
   if (filters.days > 0) query = query.gte(cfg.dateColumn, sinceIso(filters.days));
   if (filters.facet !== 'all' && cfg.facet) query = query.eq(cfg.facet.column, filters.facet);
+  const actor = filters.actor.trim();
+  if (actor && cfg.actorColumn) {
+    const safeActor = actor.replace(/[,()*%]/g, '');
+    if (safeActor) query = query.ilike(`${cfg.actorColumn}::text`, `%${safeActor}%`);
+  }
   const term = filters.search.trim();
   if (term) {
     const safe = term.replace(/[,()*]/g, ' ').trim();
@@ -162,6 +242,7 @@ function buildQuery(source: Source, filters: Filters) {
     range: (from: number, to: number) => Promise<{ data: Row[] | null; count: number | null; error: { message: string } | null }>;
   };
 }
+
 
 
 function formatCell(key: string, value: unknown): string {
