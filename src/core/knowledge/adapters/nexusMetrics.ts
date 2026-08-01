@@ -13,6 +13,7 @@
 
 export type NexusAdapter =
   | 'glossary'
+  | 'collection'
   | 'journey'
   | 'prayer'
   | 'bible'
@@ -23,7 +24,7 @@ export type NexusAdapter =
   | 'mystery';
 
 export const NEXUS_ADAPTERS: readonly NexusAdapter[] = [
-  'glossary', 'journey', 'prayer', 'bible', 'catechism', 'magisterium', 'saint', 'liturgy', 'mystery',
+  'glossary', 'collection', 'journey', 'prayer', 'bible', 'catechism', 'magisterium', 'saint', 'liturgy', 'mystery',
 ];
 
 
