@@ -28,14 +28,15 @@ const buttonVariants = cva(
         "pill-toned": "border border-stitch-secondary/60 bg-stitch-secondary/10 text-stitch-secondary font-stitch-body normal-case tracking-widest hover:bg-stitch-secondary/15 shadow-none active:scale-100 hover:-translate-y-0",
       },
       size: {
-        default: "h-spacing-2xl px-spacing-xl text-premium-xs [&_svg]:size-spacing-md",
-        sm: "min-h-[44px] h-[44px] px-spacing-lg text-[10px] [&_svg]:size-spacing-md",
-        xs: "min-h-[44px] h-[44px] px-spacing-md text-[9px] [&_svg]:size-spacing-sm",
-        lg: "h-spacing-3xl px-spacing-2xl text-premium-sm [&_svg]:size-spacing-lg",
-        xl: "h-spacing-3xl px-spacing-3xl text-premium-base [&_svg]:size-spacing-lg",
-        icon: "h-spacing-2xl w-spacing-2xl p-spacing-0 flex items-center justify-center [&_svg]:size-spacing-md",
-        "icon-sm": "min-h-[44px] min-w-[44px] h-[44px] w-[44px] p-spacing-0 flex items-center justify-center [&_svg]:size-spacing-md",
-        "icon-xs": "min-h-[44px] min-w-[44px] h-[44px] w-[44px] p-spacing-0 flex items-center justify-center [&_svg]:size-spacing-sm",
+        default: "min-h-[44px] shrink-0 h-spacing-2xl px-spacing-xl text-premium-xs [&_svg]:size-spacing-md",
+        sm: "min-h-[44px] shrink-0 h-[44px] px-spacing-lg text-[10px] [&_svg]:size-spacing-md",
+        xs: "min-h-[44px] shrink-0 h-[44px] px-spacing-md text-[9px] [&_svg]:size-spacing-sm",
+        lg: "min-h-[44px] shrink-0 h-spacing-3xl px-spacing-2xl text-premium-sm [&_svg]:size-spacing-lg",
+        xl: "min-h-[44px] shrink-0 h-spacing-3xl px-spacing-3xl text-premium-base [&_svg]:size-spacing-lg",
+        icon: "min-h-[44px] min-w-[44px] shrink-0 h-spacing-2xl w-spacing-2xl p-spacing-0 flex items-center justify-center [&_svg]:size-spacing-md",
+        "icon-sm": "min-h-[44px] min-w-[44px] shrink-0 h-[44px] w-[44px] p-spacing-0 flex items-center justify-center [&_svg]:size-spacing-md",
+        "icon-xs": "min-h-[44px] min-w-[44px] shrink-0 h-[44px] w-[44px] p-spacing-0 flex items-center justify-center [&_svg]:size-spacing-sm",
+
         // Pill sizes — chips/toggles editoriais (alvo de toque mínimo 44px).
         pill: "min-h-[44px] px-4 py-1.5 text-[11px] uppercase [&_svg]:size-3.5 rounded-full",
         "pill-sm": "min-h-[44px] min-w-[44px] h-[44px] w-[44px] p-0 rounded-full [&_svg]:size-3.5",
