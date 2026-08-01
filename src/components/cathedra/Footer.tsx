@@ -322,7 +322,7 @@ const Footer: React.FC = React.memo(() => {
                   rel="noopener noreferrer"
                   onClick={() => handleSocialClick(social.platform, social.url)}
                   aria-label={social.platform}
-                  className="inline-flex items-center justify-center w-11 h-11 rounded-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
+                  className="inline-flex items-center justify-center w-12 h-12 rounded-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
                   style={{ border: `1px solid ${GOLD_SOFT}`, color: GOLD_TEXT }}
                   onMouseEnter={(e) => { e.currentTarget.style.background = GOLD; e.currentTarget.style.color = '#0a0a0a'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = GOLD; }}
@@ -647,7 +647,7 @@ const Footer: React.FC = React.memo(() => {
               type="button"
               onClick={scrollToTop}
               aria-label={lang === 'pt' ? 'Voltar ao topo' : 'Back to top'}
-              className="ml-2 inline-flex items-center justify-center w-11 h-11 rounded-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
+              className="ml-2 inline-flex items-center justify-center w-12 h-12 rounded-none transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c]"
               style={{ border: `1px solid ${GOLD_SOFT}`, color: GOLD_TEXT, background: 'transparent' }}
               onMouseEnter={(e) => { e.currentTarget.style.background = GOLD; e.currentTarget.style.color = '#0a0a0a'; }}
               onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = GOLD; }}

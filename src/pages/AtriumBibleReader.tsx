@@ -83,7 +83,7 @@ const AtriumBibleReader: React.FC = () => {
               type="button"
               onClick={() => setPickerOpen(true)}
               aria-label="Escolher livro e capítulo"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+              className="inline-flex h-12 w-12 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
             >
               <LayoutGrid className="h-5 w-5" />
             </button>
@@ -147,7 +147,7 @@ const BibleLanding: React.FC = () => {
             type="button"
             onClick={() => setPickerOpen(true)}
             aria-label="Escolher livro e capítulo"
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+            className="inline-flex h-12 w-12 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
           >
             <LayoutGrid className="h-5 w-5" />
           </button>
@@ -176,7 +176,7 @@ const BibleLanding: React.FC = () => {
             <button
               type="button"
               onClick={() => setPickerOpen(true)}
-              className="inline-flex items-center gap-2 rounded-full border border-stitch-secondary/40 bg-stitch-surface-container-lowest px-4 py-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-primary transition-colors hover:border-stitch-secondary hover:bg-stitch-secondary-container"
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-stitch-secondary/40 bg-stitch-surface-container-lowest px-4 py-2 font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-primary transition-colors hover:border-stitch-secondary hover:bg-stitch-secondary-container"
             >
               <LayoutGrid className="h-4 w-4 text-stitch-secondary" />
               Escolher livro
