@@ -209,7 +209,7 @@ const PrayerPortal: React.FC<Props> = ({
 
 
   return (
-    <main
+    <section
       className="mx-auto w-full max-w-[720px] px-5 pb-24 pt-10 md:px-8 md:pt-16"
       aria-labelledby="portal-title"
       data-testid="prayer-portal"
@@ -420,7 +420,7 @@ const PrayerPortal: React.FC<Props> = ({
       </div>
 
       {thresholdActive && <div data-portal-threshold aria-hidden="true" />}
-    </main>
+    </section>
   );
 };
 

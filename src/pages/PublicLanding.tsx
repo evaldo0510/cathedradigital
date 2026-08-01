@@ -138,7 +138,7 @@ const PublicLanding = () => {
 
       <LandingHeader />
 
-      <main id="main-content" className="flex-1 pt-32 md:pt-40">
+      <section className="flex-1 pt-32 md:pt-40">
         <EditorialShell>
           {/* ---------------- Hero ---------------- */}
           <EditorialHero
@@ -339,7 +339,7 @@ const PublicLanding = () => {
           {/* ---------------- FAQ ---------------- */}
           <LandingFAQ />
         </EditorialShell>
-      </main>
+      </section>
 
       {/* ---------------- Footer institucional ---------------- */}
       <footer className="mt-24 border-t border-border/40 bg-primary text-primary-foreground">
@@ -363,11 +363,11 @@ const PublicLanding = () => {
               Ambientes
             </h3>
             <ul className="space-y-2 text-sm text-primary-foreground/80">
-              <li><Link to="/bible" className="hover:text-secondary">Bíblia</Link></li>
-              <li><Link to="/catechism" className="hover:text-secondary">Catecismo</Link></li>
-              <li><Link to="/liturgia" className="hover:text-secondary">Liturgia</Link></li>
-              <li><Link to="/oracao" className="hover:text-secondary">Orações</Link></li>
-              <li><Link to="/logos" className="hover:text-secondary">Logos AI</Link></li>
+              <li><Link to="/bible" className="inline-flex min-h-[44px] items-center hover:text-secondary">Bíblia</Link></li>
+              <li><Link to="/catechism" className="inline-flex min-h-[44px] items-center hover:text-secondary">Catecismo</Link></li>
+              <li><Link to="/liturgia" className="inline-flex min-h-[44px] items-center hover:text-secondary">Liturgia</Link></li>
+              <li><Link to="/oracao" className="inline-flex min-h-[44px] items-center hover:text-secondary">Orações</Link></li>
+              <li><Link to="/logos" className="inline-flex min-h-[44px] items-center hover:text-secondary">Logos AI</Link></li>
             </ul>
           </div>
 
@@ -376,11 +376,11 @@ const PublicLanding = () => {
               Cathedra
             </h3>
             <ul className="space-y-2 text-sm text-primary-foreground/80">
-              <li><Link to="/atrium" className="hover:text-secondary">Atrium</Link></li>
-              <li><Link to="/jornadas" className="hover:text-secondary">Jornadas</Link></li>
-              <li><Link to="/glossario" className="hover:text-secondary">Glossário</Link></li>
-              <li><Link to="/pricing" className="hover:text-secondary">Planos PRO</Link></li>
-              <li><Link to="/login" className="hover:text-secondary">Entrar</Link></li>
+              <li><Link to="/atrium" className="inline-flex min-h-[44px] items-center hover:text-secondary">Atrium</Link></li>
+              <li><Link to="/jornadas" className="inline-flex min-h-[44px] items-center hover:text-secondary">Jornadas</Link></li>
+              <li><Link to="/glossario" className="inline-flex min-h-[44px] items-center hover:text-secondary">Glossário</Link></li>
+              <li><Link to="/pricing" className="inline-flex min-h-[44px] items-center hover:text-secondary">Planos PRO</Link></li>
+              <li><Link to="/login" className="inline-flex min-h-[44px] items-center hover:text-secondary">Entrar</Link></li>
             </ul>
           </div>
         </div>

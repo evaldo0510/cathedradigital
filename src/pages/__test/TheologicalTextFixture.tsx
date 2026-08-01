@@ -15,12 +15,12 @@ const TheologicalTextFixture: React.FC = () => {
   }
 
   return (
-    <main style={{ padding: 24 }}>
+    <section style={{ padding: 24 }}>
       <h1>TheologicalText Fixture</h1>
       <div data-testid="theological-text-output">
         <TheologicalText text={text} />
       </div>
-    </main>
+    </section>
   );
 };
 

@@ -160,7 +160,7 @@ export default function SiteHealthDashboard() {
         <meta name="robots" content="noindex" />
       </Helmet>
 
-      <main className="mx-auto max-w-6xl px-4 py-8">
+      <section className="mx-auto max-w-6xl px-4 py-8">
         <header className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-xs uppercase tracking-widest text-muted-foreground">Administração</p>
@@ -334,7 +334,7 @@ export default function SiteHealthDashboard() {
             </section>
           </>
         )}
-      </main>
+      </section>
     </>
   );
 }

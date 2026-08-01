@@ -72,9 +72,9 @@ export const PrototypeShell: React.FC<Props> = ({
       </header>
 
       {/* Conteúdo */}
-      <main className="flex-1 max-w-2xl mx-auto w-full px-4 pt-4 pb-24">
+      <section className="flex-1 max-w-2xl mx-auto w-full px-4 pt-4 pb-24">
         {children}
-      </main>
+      </section>
 
       {/* Bottom nav */}
       {!hideNav && (

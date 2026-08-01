@@ -510,7 +510,7 @@ export default function AuditLogsPage() {
         <meta name="robots" content="noindex, nofollow" />
       </Helmet>
 
-      <main className="mx-auto max-w-6xl px-4 py-8">
+      <section className="mx-auto max-w-6xl px-4 py-8">
         <header className="mb-6">
           <p className="text-xs uppercase tracking-widest text-muted-foreground">Administração</p>
           <h1 className="mt-1 font-display text-2xl font-black tracking-tight text-foreground">
@@ -534,7 +534,7 @@ export default function AuditLogsPage() {
             </TabsContent>
           ))}
         </Tabs>
-      </main>
+      </section>
     </>
   );
 }

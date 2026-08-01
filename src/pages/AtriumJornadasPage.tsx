@@ -132,7 +132,7 @@ const AtriumJornadasPage: React.FC = () => {
         <meta property="og:title" content="Cathedra — Formação" />
       </Helmet>
 
-      <main className="mx-auto w-full max-w-[1120px] px-5 pb-16 pt-10 md:px-16 md:pt-14 animate-fade-in">
+      <section className="mx-auto w-full max-w-[1120px] px-5 pb-16 pt-10 md:px-16 md:pt-14 animate-fade-in">
         {/* ─── Hero editorial ─────────────────────────────────────────── */}
         <section className="border-b border-stitch-secondary/10 pb-10">
           <div className="max-w-3xl">
@@ -344,7 +344,7 @@ const AtriumJornadasPage: React.FC = () => {
             "Ensina-me, Senhor, o teu caminho, e guia-me por vereda plana." — Sl 27,11
           </p>
         </section>
-      </main>
+      </section>
     </div>
   );
 };

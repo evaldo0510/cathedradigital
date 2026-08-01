@@ -71,7 +71,7 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
           )}
         </header>
       )}
-      <motion.main 
+      <motion.section 
         data-layout-container="true"
         initial={{ opacity: 0, y: settings.reduceAnimations ? 0 : 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -82,7 +82,7 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
         className={cn("w-full mx-auto", maxW, className)}
       >
         {children}
-      </motion.main>
+      </motion.section>
     </div>
   );
 };

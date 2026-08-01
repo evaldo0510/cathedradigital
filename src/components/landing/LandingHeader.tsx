@@ -136,7 +136,7 @@ const LandingHeader = () => {
             variant="ghost"
             size="icon"
             onClick={() => window.dispatchEvent(new CustomEvent('open-a11y-settings'))}
-            className="w-spacing-xl h-spacing-xl rounded-premium-full text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary"
+            className="min-h-[44px] min-w-[44px] rounded-premium-full text-muted-foreground hover:text-primary transition-colors focus-visible:ring-2 focus-visible:ring-primary"
             aria-label="Configurações de acessibilidade"
           >
             <Icons.ShieldCheck className="w-spacing-md h-spacing-md" />

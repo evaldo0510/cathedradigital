@@ -86,7 +86,7 @@ export default function OAuthConsent() {
   const scopes: string[] = details?.requested_scopes ?? details?.scopes ?? [];
 
   return (
-    <main className="cathedra-noir min-h-screen w-full flex items-center justify-center px-6 py-16">
+    <section className="cathedra-noir min-h-screen w-full flex items-center justify-center px-6 py-16">
       <Helmet>
         <title>Autorizar acesso · Cathedra</title>
         <meta name="robots" content="noindex,nofollow" />
@@ -143,6 +143,6 @@ export default function OAuthConsent() {
           </>
         )}
       </div>
-    </main>
+    </section>
   );
 }

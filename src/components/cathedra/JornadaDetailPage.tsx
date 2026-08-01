@@ -199,7 +199,7 @@ const JornadaDetailPage: React.FC = () => {
         <meta name="twitter:card" content="summary_large_image" />
       </Helmet>
 
-      <main className="mx-auto w-full max-w-[1120px] px-5 pb-24 pt-8 md:px-16 md:pt-12 animate-fade-in">
+      <section className="mx-auto w-full max-w-[1120px] px-5 pb-24 pt-8 md:px-16 md:pt-12 animate-fade-in">
         {/* Breadcrumb */}
         <Link
           to={AppRoute.JORNADAS}
@@ -643,7 +643,7 @@ const JornadaDetailPage: React.FC = () => {
             </Link>
           </section>
         )}
-      </main>
+      </section>
     </div>
   );
 };

@@ -130,7 +130,7 @@ const AtriumHome: React.FC = () => {
 
       <MobileTopBar kicker="Cathedra" title="Átrio" transparent />
 
-      <main className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
+      <section className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
         {authenticated && <AtriumReception />}
         {/* ─── Hero editorial (visitantes) ─────────────────────────────── */}
         {!authenticated && (
@@ -479,7 +479,7 @@ const AtriumHome: React.FC = () => {
           "Uma coisa peço ao Senhor, e a buscarei: habitar na Casa do Senhor
           todos os dias da minha vida." — Sl 27,4
         </p>
-      </main>
+      </section>
 
       <MobileBottomNav />
     </div>

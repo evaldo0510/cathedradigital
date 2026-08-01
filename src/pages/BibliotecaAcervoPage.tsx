@@ -157,7 +157,7 @@ const BibliotecaAcervoPage: React.FC = () => {
 
       <MobileTopBar kicker="Biblioteca" title={acervo.title} transparent />
 
-      <main
+      <section
         id="conteudo"
         className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-6 md:px-16 md:pt-12 md:pb-16 animate-fade-in"
       >
@@ -397,7 +397,7 @@ const BibliotecaAcervoPage: React.FC = () => {
             <ArrowRight className="h-4 w-4" aria-hidden />
           </Link>
         </div>
-      </main>
+      </section>
     </div>
   );
 };

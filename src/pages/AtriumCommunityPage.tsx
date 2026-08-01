@@ -156,7 +156,7 @@ const AtriumCommunityPage: React.FC = () => {
         <link rel="canonical" href="https://cathedradigital.com.br/community" />
       </Helmet>
 
-      <main className="min-h-screen bg-background text-foreground">
+      <section className="min-h-screen bg-background text-foreground">
         {/* Hero editorial */}
         <section className="border-b border-border/40">
           <div className="max-w-4xl mx-auto px-6 py-12 md:py-16 text-center space-y-4">
@@ -350,7 +350,7 @@ const AtriumCommunityPage: React.FC = () => {
             </ul>
           )}
         </section>
-      </main>
+      </section>
     </>
   );
 };

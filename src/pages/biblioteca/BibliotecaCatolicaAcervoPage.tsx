@@ -127,7 +127,7 @@ const BibliotecaCatolicaAcervoPage: React.FC = () => {
   );
 
   return (
-    <main className="min-h-screen bg-background" data-space="biblioteca">
+    <section className="min-h-screen bg-background" data-space="biblioteca">
       <Helmet>
         <title>Acervo — Biblioteca Católica · Cathedra</title>
         <meta
@@ -307,7 +307,7 @@ const BibliotecaCatolicaAcervoPage: React.FC = () => {
           )}
         </section>
       </div>
-    </main>
+    </section>
   );
 };
 

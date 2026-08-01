@@ -537,7 +537,7 @@ const Footer: React.FC = React.memo(() => {
               <button
                 type="button"
                 onClick={() => navigate(AppRoute.ADMIN)}
-                className="cursor-pointer select-none bg-transparent p-0 h-auto focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] transition-colors"
+                className="cursor-pointer select-none bg-transparent px-1 min-h-[44px] items-center inline-flex focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c9a84c] transition-colors"
                 style={{ color: GOLD_TEXT, fontFamily: FONT_DISPLAY, fontStyle: 'italic', fontSize: '0.9375rem' }}
               >
                 Evaldo.os

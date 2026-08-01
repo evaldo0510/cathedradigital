@@ -166,7 +166,7 @@ const ContemplatioPage: React.FC = () => {
       />
       <MobileTopBar title="Contemplatio" showBack onBack={() => navigate(-1)} />
 
-      <main className="min-h-[100dvh] bg-background pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] md:pb-spacing-3xl">
+      <section className="min-h-[100dvh] bg-background pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] md:pb-spacing-3xl">
         <div className="max-w-3xl mx-auto px-spacing-lg pt-spacing-2xl md:pt-spacing-3xl">
           {/* Intro */}
           {!started && !completed && (
@@ -335,7 +335,7 @@ const ContemplatioPage: React.FC = () => {
             </motion.div>
           )}
         </div>
-      </main>
+      </section>
 
       <MobileBottomNav />
     </>
