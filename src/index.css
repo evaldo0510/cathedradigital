@@ -1047,6 +1047,27 @@ header:hover {
   color: var(--space-cloister-ink);
 }
 
+/* O ambiente "Igreja" é sempre escuro. Os tokens Stitch precisam acompanhar,
+   senão textos com `text-stitch-on-surface` ficam escuros sobre fundo escuro. */
+[data-space='church'] {
+  --stitch-background: 220 42% 10%;
+  --stitch-on-background: 40 30% 92%;
+  --stitch-surface: 222 38% 12%;
+  --stitch-on-surface: 40 30% 92%;
+  --stitch-on-surface-variant: 40 18% 78%;
+  --stitch-surface-container-lowest: 222 44% 8%;
+  --stitch-surface-container-low: 222 40% 11%;
+  --stitch-surface-container: 222 38% 14%;
+  --stitch-surface-container-high: 222 34% 17%;
+  --stitch-surface-container-highest: 222 30% 21%;
+  --stitch-surface-dim: 222 44% 8%;
+  --stitch-surface-bright: 222 30% 21%;
+  --stitch-secondary: 42 62% 62%;
+  --stitch-on-secondary: 48 100% 12%;
+  --stitch-outline: 42 20% 55%;
+  --stitch-outline-variant: 42 30% 60%;
+}
+
 /* ─────────────────────────────────────────────────────────────
  * CAT-SP4 · Lote B.2 — Refinamentos do ambiente Igreja
  * Clima litúrgico: mais respiro no Hero, filete dourado presente,
