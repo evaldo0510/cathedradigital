@@ -112,6 +112,8 @@ const SOURCES: Record<Source, SourceConfig> = {
     ],
     searchable: ['table_name', 'action', 'reason'],
     facet: { column: 'action', label: 'Ação', options: ['select', 'insert', 'update', 'delete'] },
+    actorColumn: 'user_id',
+
     icon: Lock,
     label: 'Negações RLS',
     hint: 'Tentativas de leitura/escrita bloqueadas por Row Level Security.',
