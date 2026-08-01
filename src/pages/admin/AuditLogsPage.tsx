@@ -13,7 +13,16 @@
 import React, { useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useQuery } from '@tanstack/react-query';
-import { Download, ChevronLeft, ChevronRight, ShieldAlert, ScrollText, Lock } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import {
+  Download,
+  ChevronLeft,
+  ChevronRight,
+  ShieldAlert,
+  ScrollText,
+  Lock,
+  ExternalLink,
+} from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -40,10 +49,13 @@ interface SourceConfig {
   searchable: string[];
   /** Filtro categórico opcional. */
   facet?: { column: string; label: string; options: string[] };
+  /** Coluna do usuário responsável, quando existir (filtro por autor). */
+  actorColumn?: string;
   icon: React.ElementType;
   label: string;
   hint: string;
 }
+
 
 const SOURCES: Record<Source, SourceConfig> = {
   governance: {
@@ -65,6 +77,8 @@ const SOURCES: Record<Source, SourceConfig> = {
       label: 'Papel do executor',
       options: ['authenticated', 'service_role', 'system', 'anon'],
     },
+    actorColumn: 'actor_id',
+
     icon: ScrollText,
     label: 'Governança',
     hint: 'Alterações registradas por gatilhos e funções SECURITY DEFINER (actor_role = system/service_role).',
@@ -98,6 +112,8 @@ const SOURCES: Record<Source, SourceConfig> = {
     ],
     searchable: ['table_name', 'action', 'reason'],
     facet: { column: 'action', label: 'Ação', options: ['select', 'insert', 'update', 'delete'] },
+    actorColumn: 'user_id',
+
     icon: Lock,
     label: 'Negações RLS',
     hint: 'Tentativas de leitura/escrita bloqueadas por Row Level Security.',
@@ -123,6 +139,81 @@ interface Filters {
   days: number;
   facet: string;
   search: string;
+  /** UUID (ou prefixo) do usuário responsável pelo evento. */
+  actor: string;
+}
+
+/** Severidade normalizada para leitura rápida da trilha. */
+type Severity = 'info' | 'warning' | 'critical';
+
+const SEVERITY_LABEL: Record<Severity, string> = {
+  info: 'Info',
+  warning: 'Atenção',
+  critical: 'Crítico',
+};
+
+const SEVERITY_CLASS: Record<Severity, string> = {
+  info: 'border-border bg-muted text-muted-foreground',
+  warning: 'border-amber-500/40 bg-amber-500/10 text-amber-700 dark:text-amber-300',
+  critical: 'border-destructive/40 bg-destructive/10 text-destructive',
+};
+
+function severityOf(source: Source, row: Row): Severity {
+  if (source === 'security') {
+    const raw = String(row.severity ?? '').toLowerCase();
+    if (raw === 'critical' || raw === 'error') return 'critical';
+    if (raw === 'warning' || raw === 'warn') return 'warning';
+    return 'info';
+  }
+  if (source === 'denials') {
+    const action = String(row.action ?? '').toLowerCase();
+    return action === 'select' ? 'warning' : 'critical';
+  }
+  const op = String(row.operation ?? '').toLowerCase();
+  if (op.includes('delete') || op.includes('revoke')) return 'critical';
+  if (op.includes('update') || op.includes('publish') || op.includes('grant')) return 'warning';
+  return 'info';
+}
+
+/**
+ * Rota administrativa do recurso relacionado ao evento — atalho para
+ * investigar a entidade sem sair da trilha.
+ */
+const ENTITY_ROUTES: Record<string, (id: string) => string> = {
+  nexus_relation: () => '/admin/nexus-audit',
+  translation_source: () => '/admin/bible-sources',
+  editorial_closure_migration: () => '/admin/editorial-closure-validator',
+  glossary: () => '/admin/glossario',
+  glossary_term: () => '/admin/glossario',
+  saint: () => '/admin/saints',
+  saints: () => '/admin/saints',
+  prayer: () => '/admin/oracoes',
+  catechism: () => '/admin/catechism-queue',
+  catechism_official: () => '/admin/catechism-queue',
+  collection: (id) => (id ? `/admin/collections/${id}` : '/admin/collections'),
+  collections: (id) => (id ? `/admin/collections/${id}` : '/admin/collections'),
+  saint_works: () => '/admin/biblioteca-patristica',
+};
+
+const TABLE_ROUTES: Record<string, string> = {
+  glossary: '/admin/glossario',
+  catechism_official: '/admin/catechism-queue',
+  saints: '/admin/saints',
+  collections: '/admin/collections',
+  secret_leaks: '/admin/security-audit',
+  community_likes: '/admin/site-health',
+};
+
+function relatedHref(source: Source, row: Row): string | null {
+  if (source === 'governance') {
+    const type = String(row.entity_type ?? '');
+    const build = ENTITY_ROUTES[type];
+    return build ? build(String(row.entity_id ?? '')) : null;
+  }
+  if (source === 'denials') {
+    return TABLE_ROUTES[String(row.table_name ?? '')] ?? null;
+  }
+  return null;
 }
 
 function buildQuery(source: Source, filters: Filters) {
@@ -137,6 +228,11 @@ function buildQuery(source: Source, filters: Filters) {
   let query = client.from(cfg.table).select(cfg.columns, { count: 'exact' });
   if (filters.days > 0) query = query.gte(cfg.dateColumn, sinceIso(filters.days));
   if (filters.facet !== 'all' && cfg.facet) query = query.eq(cfg.facet.column, filters.facet);
+  const actor = filters.actor.trim();
+  if (actor && cfg.actorColumn) {
+    const safeActor = actor.replace(/[,()*%]/g, '');
+    if (safeActor) query = query.ilike(`${cfg.actorColumn}::text`, `%${safeActor}%`);
+  }
   const term = filters.search.trim();
   if (term) {
     const safe = term.replace(/[,()*]/g, ' ').trim();
@@ -146,6 +242,7 @@ function buildQuery(source: Source, filters: Filters) {
     range: (from: number, to: number) => Promise<{ data: Row[] | null; count: number | null; error: { message: string } | null }>;
   };
 }
+
 
 
 function formatCell(key: string, value: unknown): string {
@@ -167,14 +264,22 @@ function toCsv(fields: Array<{ key: string; label: string }>, rows: Row[]): stri
 
 const AuditTable: React.FC<{ source: Source }> = ({ source }) => {
   const cfg = SOURCES[source];
+  // A severidade vira badge dedicado; a coluna crua sai da tabela (segue no CSV).
+  const visibleFields = cfg.fields.filter((f) => f.key !== 'severity');
+  const colCount = visibleFields.length + 2;
   const [days, setDays] = useState(30);
   const [facet, setFacet] = useState('all');
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
+  const [actorInput, setActorInput] = useState('');
+  const [actor, setActor] = useState('');
   const [page, setPage] = useState(0);
   const [exporting, setExporting] = useState(false);
 
-  const filters: Filters = useMemo(() => ({ days, facet, search }), [days, facet, search]);
+  const filters: Filters = useMemo(
+    () => ({ days, facet, search, actor }),
+    [days, facet, search, actor],
+  );
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['admin-audit-logs', source, filters, page],
@@ -197,7 +302,9 @@ const AuditTable: React.FC<{ source: Source }> = ({ source }) => {
     e.preventDefault();
     setPage(0);
     setSearch(searchInput);
+    setActor(actorInput);
   };
+
 
   const handleExport = async () => {
     setExporting(true);
@@ -231,7 +338,7 @@ const AuditTable: React.FC<{ source: Source }> = ({ source }) => {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex flex-col gap-3 md:flex-row md:items-end">
-          <form onSubmit={applySearch} className="flex flex-1 gap-2">
+          <form onSubmit={applySearch} className="flex flex-1 flex-col gap-2 sm:flex-row">
             <div className="flex-1">
               <label htmlFor={`search-${source}`} className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                 Buscar
@@ -243,10 +350,24 @@ const AuditTable: React.FC<{ source: Source }> = ({ source }) => {
                 placeholder={cfg.searchable.join(', ')}
               />
             </div>
+            {cfg.actorColumn && (
+              <div className="sm:w-56">
+                <label htmlFor={`actor-${source}`} className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  Usuário responsável
+                </label>
+                <Input
+                  id={`actor-${source}`}
+                  value={actorInput}
+                  onChange={(e) => setActorInput(e.target.value)}
+                  placeholder="ID do usuário"
+                />
+              </div>
+            )}
             <Button type="submit" variant="secondary" className="self-end">
               Filtrar
             </Button>
           </form>
+
 
           <div className="w-full md:w-44">
             <span className="mb-1 block text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -302,34 +423,63 @@ const AuditTable: React.FC<{ source: Source }> = ({ source }) => {
             <caption className="sr-only">{cfg.label} — registros de auditoria</caption>
             <thead className="bg-muted/50">
               <tr>
-                {cfg.fields.map((f) => (
+                <th scope="col" className="px-3 py-2 text-left text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Severidade
+                </th>
+                {visibleFields.map((f) => (
                   <th key={f.key} scope="col" className="px-3 py-2 text-left text-xs font-bold uppercase tracking-wider text-muted-foreground">
                     {f.label}
                   </th>
                 ))}
+                <th scope="col" className="px-3 py-2 text-left text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                  Recurso
+                </th>
               </tr>
             </thead>
             <tbody>
               {isLoading && (
-                <tr><td colSpan={cfg.fields.length} className="px-3 py-6 text-center text-muted-foreground">Carregando…</td></tr>
+                <tr><td colSpan={colCount} className="px-3 py-6 text-center text-muted-foreground">Carregando…</td></tr>
               )}
               {isError && (
-                <tr><td colSpan={cfg.fields.length} className="px-3 py-6 text-center text-destructive">Falha ao carregar registros.</td></tr>
+                <tr><td colSpan={colCount} className="px-3 py-6 text-center text-destructive">Falha ao carregar registros.</td></tr>
               )}
               {!isLoading && !isError && (data?.rows.length ?? 0) === 0 && (
-                <tr><td colSpan={cfg.fields.length} className="px-3 py-6 text-center text-muted-foreground">Nenhum registro no filtro atual.</td></tr>
+                <tr><td colSpan={colCount} className="px-3 py-6 text-center text-muted-foreground">Nenhum registro no filtro atual.</td></tr>
               )}
-              {data?.rows.map((row, i) => (
-                <tr key={String(row.id ?? i)} className="border-t border-border align-top">
-                  {cfg.fields.map((f) => (
-                    <td key={f.key} className="max-w-[280px] truncate px-3 py-2" title={formatCell(f.key, row[f.key])}>
-                      {formatCell(f.key, row[f.key])}
+              {data?.rows.map((row, i) => {
+                const severity = severityOf(source, row);
+                const href = relatedHref(source, row);
+                return (
+                  <tr key={String(row.id ?? i)} className="border-t border-border align-top">
+                    <td className="px-3 py-2">
+                      <span className={`inline-flex rounded-full border px-2 py-0.5 text-xs font-semibold ${SEVERITY_CLASS[severity]}`}>
+                        {SEVERITY_LABEL[severity]}
+                      </span>
                     </td>
-                  ))}
-                </tr>
-              ))}
+                    {visibleFields.map((f) => (
+                      <td key={f.key} className="max-w-[280px] truncate px-3 py-2" title={formatCell(f.key, row[f.key])}>
+                        {formatCell(f.key, row[f.key])}
+                      </td>
+                    ))}
+                    <td className="px-3 py-2">
+                      {href ? (
+                        <Link
+                          to={href}
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+                        >
+                          <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" />
+                          Abrir recurso
+                        </Link>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">—</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
+
         </div>
 
         <div className="flex items-center justify-between text-sm text-muted-foreground">

@@ -1,12 +1,14 @@
 /**
  * Portal de Documentação — guia individual (`/docs/:slug`), localizado.
  */
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { useLang } from '@/hooks/useLang';
 import { getDocsBundle, getDocGuide } from '@/content/docs';
+import { recordDocView } from '@/lib/docsPopularity';
+
 
 function slugifyHeading(value: string): string {
   return value
@@ -23,7 +25,13 @@ export default function DocsArticlePage() {
   const bundle = useMemo(() => getDocsBundle(lang), [lang]);
   const guide = useMemo(() => getDocGuide(lang, slug), [lang, slug]);
 
+  // Popularidade local alimenta o desempate da busca do portal.
+  useEffect(() => {
+    if (guide) recordDocView(guide.slug);
+  }, [guide]);
+
   if (!guide) return <Navigate to="/docs" replace />;
+
 
   return (
     <>

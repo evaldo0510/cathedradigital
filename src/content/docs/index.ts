@@ -7,6 +7,7 @@
  */
 import type { Language } from '@/types';
 import { DEFAULT_LOCALE } from '@/lib/i18n/locales';
+import { getDocPopularity, popularityBoost } from '@/lib/docsPopularity';
 import type { DocGuide, DocsBundle } from './types';
 import { docsPt } from './pt';
 import { docsEn } from './en';
@@ -93,15 +94,27 @@ function extractSnippet(guide: DocGuide, term: string): string | undefined {
 
 /**
  * Busca com correspondência parcial: cada termo com 2+ caracteres casa como
- * substring em título, resumo, palavras-chave e corpo. Título e resumo pesam
- * mais; guias traduzidos pesam mais que guias em fallback.
+ * substring em título, resumo, palavras-chave e corpo.
+ * Pesos: título ×5 (×6 no prefixo), resumo ×3, keywords ×2, corpo ×1 e
+ * popularidade ×1,5 (desempate por documentos mais consultados).
+ * Guias em fallback de idioma perdem 1 ponto.
  */
 export function searchDocsDetailed(lang: Language, query: string): DocSearchResult[] {
   const guides = getDocsBundle(lang).guides;
+  const popularity = getDocPopularity();
   const q = normalizeQuery(query);
-  if (!q) return guides.map((guide) => ({ guide, score: 0 }));
+  const rank = (guide: DocGuide, score: number) => score + popularityBoost(guide.slug, popularity);
+  if (!q) {
+    return guides
+      .map((guide) => ({ guide, score: rank(guide, 0) }))
+      .sort((a, b) => b.score - a.score || a.guide.title.localeCompare(b.guide.title));
+  }
   const terms = Array.from(new Set(q.split(/\s+/).filter((t) => t.length >= 2)));
-  if (terms.length === 0) return guides.map((guide) => ({ guide, score: 0 }));
+  if (terms.length === 0) {
+    return guides
+      .map((guide) => ({ guide, score: rank(guide, 0) }))
+      .sort((a, b) => b.score - a.score || a.guide.title.localeCompare(b.guide.title));
+  }
 
   const results: DocSearchResult[] = [];
   for (const guide of guides) {
@@ -118,8 +131,8 @@ export function searchDocsDetailed(lang: Language, query: string): DocSearchResu
 
     for (const term of terms) {
       let termScore = 0;
-      if (title.includes(term)) termScore += title.startsWith(term) ? 6 : 4;
-      if (summary.includes(term)) termScore += 2;
+      if (title.includes(term)) termScore += title.startsWith(term) ? 6 : 5;
+      if (summary.includes(term)) termScore += 3;
       if (keywords.includes(term)) termScore += 2;
       if (body.includes(term)) {
         termScore += 1;
@@ -136,13 +149,14 @@ export function searchDocsDetailed(lang: Language, query: string): DocSearchResu
 
     results.push({
       guide,
-      score,
+      score: rank(guide, score),
       snippet: snippetTerm ? extractSnippet(guide, snippetTerm) : undefined,
     });
   }
 
   return results.sort((a, b) => b.score - a.score || a.guide.title.localeCompare(b.guide.title));
 }
+
 
 /** Compatibilidade: apenas os guias, na ordem de relevância. */
 export function searchDocs(lang: Language, query: string): DocGuide[] {
