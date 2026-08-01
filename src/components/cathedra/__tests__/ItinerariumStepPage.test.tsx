@@ -33,9 +33,14 @@ describe('ItinerariumStepPage Accessibility', () => {
     // For now, we'll just check if the component renders and has the labels we added.
     
     // We mock useAuth and useReadingSettings to avoid actual network/state issues
-    vi.mock('@/hooks/useAuth', () => ({
+    vi.mock('@/hooks/useAuth', async () => {
+  const actual = await vi.importActual<typeof import('@/hooks/useAuth')>('@/hooks/useAuth');
+  return {
+    ...actual,
+
       useAuth: () => ({ user: { id: '123' }, profile: null }),
-    }));
+    };
+});
 
     // Rendering this component might be complex due to portals and routing.
     // This is a placeholder for the logic we want to test.

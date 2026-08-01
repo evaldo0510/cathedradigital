@@ -23,9 +23,14 @@ vi.mock('framer-motion', () => {
 });
 
 // useAuth mock
-vi.mock('@/hooks/useAuth', () => ({
+vi.mock('@/hooks/useAuth', async () => {
+  const actual = await vi.importActual<typeof import('@/hooks/useAuth')>('@/hooks/useAuth');
+  return {
+    ...actual,
+
   useAuth: () => ({ user: null, isPremium: false }),
-}));
+};
+});
 
 // Card usa ReadingSettingsContext (irrelevante para esta suíte). Mock para elementos simples.
 vi.mock('@/components/ui/card', () => {

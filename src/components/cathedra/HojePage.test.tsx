@@ -8,11 +8,17 @@ import * as useDashboardDataHooks from '@/hooks/useDashboardData';
 import * as useAuthHooks from '@/hooks/useAuth';
 
 import { LangContext } from '@/contexts/LangContext';
+import { TestContexts } from '@/test/providers';
 
 // Mock dependencies
-vi.mock('@/hooks/useAuth', () => ({
+vi.mock('@/hooks/useAuth', async () => {
+  const actual = await vi.importActual<typeof import('@/hooks/useAuth')>('@/hooks/useAuth');
+  return {
+    ...actual,
+
   useAuth: vi.fn()
-}));
+};
+});
 
 vi.mock('@/hooks/useSaints', () => ({
   useSaintsToday: vi.fn(),
@@ -80,7 +86,7 @@ const renderWithProviders = (ui: React.ReactElement) => {
     <QueryClientProvider client={queryClient}>
       <LangContext.Provider value={{ t: (k: string) => k, lang: 'pt', setLang: vi.fn() }}>
         <BrowserRouter>
-          {ui}
+          <TestContexts>{ui}</TestContexts>
         </BrowserRouter>
       </LangContext.Provider>
     </QueryClientProvider>

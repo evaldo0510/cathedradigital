@@ -5,9 +5,14 @@ import React from 'react';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 
 // Mock the context and icons
-vi.mock('@/contexts/ReadingSettingsContext', () => ({
+vi.mock('@/contexts/ReadingSettingsContext', async () => {
+  const actual = await vi.importActual<typeof import('@/contexts/ReadingSettingsContext')>('@/contexts/ReadingSettingsContext');
+  return {
+    ...actual,
+
   useReadingSettings: vi.fn(),
-}));
+};
+});
 
 vi.mock('@/constants', () => ({
   Icons: {

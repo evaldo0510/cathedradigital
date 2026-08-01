@@ -19,9 +19,14 @@ vi.mock('sonner', () => ({
   },
 }));
 
-vi.mock('@/contexts/ReadingSettingsContext', () => ({
+vi.mock('@/contexts/ReadingSettingsContext', async () => {
+  const actual = await vi.importActual<typeof import('@/contexts/ReadingSettingsContext')>('@/contexts/ReadingSettingsContext');
+  return {
+    ...actual,
+
   useReadingSettings: () => ({ settings: { fontSize: 16, lineHeight: 1.5, fontFamily: 'sans' } }),
-}));
+};
+});
 
 import BibleAbbrValidatePage from '../BibleAbbrValidatePage';
 

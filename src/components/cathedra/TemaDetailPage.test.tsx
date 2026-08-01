@@ -8,6 +8,7 @@ import { HelmetProvider } from 'react-helmet-async';
 import { supabase } from '@/integrations/supabase/client';
 import { fetchNexusTagContent } from '@/lib/nexusContent';
 import React from 'react';
+import { TestContexts } from '@/test/providers';
 
 let mockStats = { calls: 0, tabs: {} as Record<string, number> };
 
@@ -42,9 +43,9 @@ const renderWithProviders = (ui: React.ReactElement, initialEntry = '/temas/fe')
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <MemoryRouter initialEntries={[initialEntry]}>
-          <Routes>
+          <TestContexts><Routes>
             <Route path="/temas/:slug" element={ui} />
-          </Routes>
+          </Routes></TestContexts>
         </MemoryRouter>
       </QueryClientProvider>
     </HelmetProvider>

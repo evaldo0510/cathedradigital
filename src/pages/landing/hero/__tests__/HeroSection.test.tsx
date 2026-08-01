@@ -5,6 +5,7 @@ import HeroSection from '../../HeroSection';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { axe } from 'vitest-axe';
 import { MotionConfig } from 'framer-motion';
+import { TestContexts } from '@/test/providers';
 
 // Manual mock for toHaveNoViolations since vitest-axe exports are tricky in this environment
 const toHaveNoViolations = (results: any) => {
@@ -19,20 +20,30 @@ const toHaveNoViolations = (results: any) => {
 expect.extend({ toHaveNoViolations });
 
 // Mocks
-vi.mock('@/hooks/useAuth', () => ({
+vi.mock('@/hooks/useAuth', async () => {
+  const actual = await vi.importActual<typeof import('@/hooks/useAuth')>('@/hooks/useAuth');
+  return {
+    ...actual,
+
   useAuth: () => ({ user: null, profile: null, loading: false })
-}));
+};
+});
 
 const mockUpdateSettings = vi.fn();
 let currentSettings = { reduceAnimations: false };
 
-vi.mock('@/contexts/ReadingSettingsContext', () => ({
+vi.mock('@/contexts/ReadingSettingsContext', async () => {
+  const actual = await vi.importActual<typeof import('@/contexts/ReadingSettingsContext')>('@/contexts/ReadingSettingsContext');
+  return {
+    ...actual,
+
   useReadingSettings: () => ({ 
     settings: currentSettings,
     updateSettings: mockUpdateSettings 
   }),
   ReadingSettingsProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>
-}));
+};
+});
 
 // Helper to mock matchMedia for prefers-reduced-motion
 const mockMatchMedia = (matches: boolean) => {
@@ -62,9 +73,9 @@ describe('HeroSection Advanced Validation', () => {
     return render(
       <HelmetProvider>
         <BrowserRouter>
-          <MotionConfig reducedMotion={reducedMotion ? "always" : "never"}>
+          <TestContexts><MotionConfig reducedMotion={reducedMotion ? "always" : "never"}>
             <HeroSection onStart={() => {}} />
-          </MotionConfig>
+          </MotionConfig></TestContexts>
         </BrowserRouter>
       </HelmetProvider>
     );

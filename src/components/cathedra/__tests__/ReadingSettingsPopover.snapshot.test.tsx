@@ -1,9 +1,14 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ReadingSettingsPopover from '../ReadingSettingsPopover';
+import { renderWithProviders } from '@/test/providers';
 
 const updateSettings = vi.fn();
-vi.mock('@/contexts/ReadingSettingsContext', () => ({
+vi.mock('@/contexts/ReadingSettingsContext', async () => {
+  const actual = await vi.importActual<typeof import('@/contexts/ReadingSettingsContext')>('@/contexts/ReadingSettingsContext');
+  return {
+    ...actual,
+
   useReadingSettings: () => ({
     settings: {
       theme: 'paper',
@@ -16,7 +21,8 @@ vi.mock('@/contexts/ReadingSettingsContext', () => ({
     },
     updateSettings,
   }),
-}));
+};
+});
 
 beforeEach(() => {
   updateSettings.mockClear();
@@ -50,7 +56,7 @@ describe.each([
   it(`mantém cabeçalho e ferramentas íntegros em ${width}px`, () => {
     setViewport(width);
     // debounceMs=0 elimina dependência de tempo nos snapshots.
-    render(<ReadingSettingsPopover debounceMs={0} />);
+    renderWithProviders(<ReadingSettingsPopover debounceMs={0} />);
     fireEvent.click(screen.getByRole('button', { name: /Configurações de Leitura/i }));
 
     const popover = screen.getByTestId('reading-settings-popover');

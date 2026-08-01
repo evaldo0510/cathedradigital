@@ -8,11 +8,16 @@ vi.mock('@/lib/nexusContent', () => ({
   fetchNexusTagContent: vi.fn(),
 }));
 
-vi.mock('@/contexts/ReadingSettingsContext', () => ({
+vi.mock('@/contexts/ReadingSettingsContext', async () => {
+  const actual = await vi.importActual<typeof import('@/contexts/ReadingSettingsContext')>('@/contexts/ReadingSettingsContext');
+  return {
+    ...actual,
+
   useReadingSettings: () => ({
     settings: { relatio: { enabled: true } }
   })
-}));
+};
+});
 
 vi.mock('@/hooks/useFavorites', () => ({
   useFavorites: () => ({
@@ -21,9 +26,14 @@ vi.mock('@/hooks/useFavorites', () => ({
   })
 }));
 
-vi.mock('@/hooks/useAuth', () => ({
+vi.mock('@/hooks/useAuth', async () => {
+  const actual = await vi.importActual<typeof import('@/hooks/useAuth')>('@/hooks/useAuth');
+  return {
+    ...actual,
+
   useAuth: () => ({ user: { id: 'test-user' } })
-}));
+};
+});
 
 describe('Relatio Component - Logos Interaction', () => {
   it('opens Logos drawer with correct prompt when clicking sparkles button', async () => {

@@ -9,11 +9,16 @@ import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { DevocionalMobileShell } from "@/components/mobile/DevocionalMobileShell";
+import { TestContexts } from '@/test/providers';
 
 // Mock de useAuth para evitar dependência de Supabase no teste.
-vi.mock("@/hooks/useAuth", () => ({
-  useAuth: () => ({ user: null, profile: null, loading: false }),
-}));
+vi.mock("@/hooks/useAuth", async () => {
+  const actual = await vi.importActual<typeof import("@/hooks/useAuth")>("@/hooks/useAuth");
+  return {
+    ...actual,
+    useAuth: () => ({ user: null, profile: null, loading: false }),
+  };
+});
 
 // Mock do supabase client (bible_favorites query no shell).
 vi.mock("@/integrations/supabase/client", () => ({
@@ -43,9 +48,9 @@ describe("DevocionalMobileShell (M9)", () => {
     ({ path, title, kicker }) => {
       render(
         <MemoryRouter initialEntries={[path]}>
-          <DevocionalMobileShell title={title} kicker={kicker}>
+          <TestContexts><DevocionalMobileShell title={title} kicker={kicker}>
             <div>conteúdo</div>
-          </DevocionalMobileShell>
+          </DevocionalMobileShell></TestContexts>
         </MemoryRouter>,
       );
 
