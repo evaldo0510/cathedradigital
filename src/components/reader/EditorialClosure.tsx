@@ -141,7 +141,7 @@ export const EditorialClosure: React.FC<EditorialClosureProps> = ({
               <li key={`${item.kind}:${item.ref}`}>
                 <Link
                   to={href}
-                  className="text-base leading-relaxed underline underline-offset-4 decoration-secondary/60 hover:decoration-secondary transition-colors"
+                  className="inline-flex min-h-[44px] items-center text-base leading-relaxed underline underline-offset-4 decoration-secondary/60 hover:decoration-secondary transition-colors"
                 >
                   {item.label}
                 </Link>
@@ -163,7 +163,7 @@ export const EditorialClosure: React.FC<EditorialClosureProps> = ({
         >
           <Link
             to={next.href}
-            className="text-base leading-relaxed underline underline-offset-4 decoration-secondary/60 hover:decoration-secondary transition-colors"
+            className="inline-flex min-h-[44px] items-center text-base leading-relaxed underline underline-offset-4 decoration-secondary/60 hover:decoration-secondary transition-colors"
           >
             {next.label}
           </Link>
