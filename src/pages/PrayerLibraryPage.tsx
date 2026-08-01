@@ -180,7 +180,7 @@ const CategoryChip: React.FC<{ active: boolean; label: string; onClick: () => vo
     aria-selected={active}
     onClick={onClick}
     className={cn(
-      'h-9 rounded-full border px-4 font-stitch-body text-xs font-semibold uppercase tracking-widest transition-colors',
+      'min-h-[44px] rounded-full border px-4 font-stitch-body text-xs font-semibold uppercase tracking-widest transition-colors',
       active
         ? 'border-stitch-secondary bg-stitch-secondary text-stitch-on-secondary'
         : 'border-stitch-outline-variant/40 text-stitch-on-surface-variant hover:border-stitch-secondary/50 hover:text-stitch-on-surface',

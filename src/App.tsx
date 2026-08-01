@@ -312,7 +312,7 @@ const LoadingFallback = () => (
          <motion.div 
           animate={{ opacity: [0.1, 0.3, 0.1], scale: [0.95, 1, 0.95] }}
           transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-          className="w-spacing-xl h-spacing-xl rounded-premium-full border border-primary/10"
+          className="min-h-[44px] min-w-[44px] rounded-premium-full border border-primary/10"
         />
       </div>
       <motion.div 
