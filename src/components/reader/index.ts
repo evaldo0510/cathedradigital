@@ -44,6 +44,12 @@ export {
   type PrayerContextProps,
 } from './HeaderContext';
 
+export {
+  EditorialClosure,
+  type EditorialClosureProps,
+  type EditorialClosureNexusItem,
+} from './EditorialClosure';
+
 export { NexusPanel, type NexusPanelProps } from '@/components/nexus/NexusPanel';
 export { default as ReaderContinuation } from '@/components/shared/ReaderContinuation';
 export { EditorialHero } from '@/components/editorial';

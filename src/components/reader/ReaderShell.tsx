@@ -104,7 +104,7 @@ export const ReaderShell: React.FC<ReaderShellProps> = ({
       {continuation && (
         <footer
           data-reader-slot="continuation"
-          className="w-full px-[var(--stitch-margin-mobile)] md:px-0 py-spacing-xl border-t border-border/40"
+          className="w-full px-[var(--stitch-margin-mobile)] md:px-0 py-spacing-xl border-t border-border/40 pb-[calc(var(--spacing-xl,2rem)+var(--stitch-mobile-safe-bottom,0px))] md:pb-spacing-xl"
           aria-label="Continuar leitura"
         >
           {continuation}
