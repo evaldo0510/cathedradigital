@@ -59,7 +59,7 @@ import {
   ReaderContinuation,
   CatechesisContext,
 } from '@/components/reader';
-import { resolveCatechismAutoNexus } from '@/core/knowledge/adapters/catechismAutoNexus';
+import { useCatechismNexus } from '@/hooks/useCatechismNexus';
 import { EditorialDivider } from '@/components/editorial';
 import { EditorialClosure } from '@/components/reader';
 import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
