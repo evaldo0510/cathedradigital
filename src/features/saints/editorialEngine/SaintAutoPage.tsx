@@ -19,7 +19,7 @@ import {
   StudyContext,
 } from '@/components/reader';
 import SacredImage from '@/components/cathedra/SacredImage';
-import { resolveSaintAutoNexus } from '@/core/knowledge/adapters/saintAutoNexus';
+import { useSaintNexus } from '@/hooks/useSaintNexus';
 import type { SaintPageDescriptor } from './types';
 import { SaintBioBlock } from './blocks/SaintBioBlock';
 import { SaintTimelineBlock } from './blocks/SaintTimelineBlock';
@@ -51,11 +51,8 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
     .map((v) => (typeof v === 'string' ? v : (v?.label ?? v?.name)))
     .filter((v): v is string => Boolean(v));
 
-  const nexus = resolveSaintAutoNexus({
-    slug: descriptor.slug,
-    name: header.name,
-    virtues: virtueNames,
-  });
+  const nexus = useSaintNexus(descriptor.slug, header.name, virtueNames);
+
 
   const image = header.iconography?.imageUrl;
   const attributes = header.iconography?.attributes ?? [];
