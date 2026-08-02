@@ -7,7 +7,7 @@
  */
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Sparkles, Users, type LucideIcon } from 'lucide-react';
+import { BookOpen, ScrollText, Sparkles, Users, type LucideIcon } from 'lucide-react';
 
 import type { NexusRelation } from '@/types/nexus';
 import { getSaintRelations, type SaintRelationGroups } from '@/services/saintNexusService';
