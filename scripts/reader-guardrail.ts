@@ -14,7 +14,8 @@
  */
 
 import { readFileSync, readdirSync, statSync } from 'node:fs';
-import { relative, resolve, sep } from 'node:path';
+import { dirname, relative, resolve, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { FORBIDDEN_IMPORTS, GUARDRAIL_ALLOWLIST } from '../src/config/reader-modules';
 
 const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
