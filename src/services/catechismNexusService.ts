@@ -12,6 +12,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 import type { CuratedNexusEdge } from '@/core/knowledge/adapters/nexusGraphMerge';
+import { withCentrality } from './nexusCentrality';
 
 interface RawRow {
   relation_type: string;
@@ -89,5 +90,5 @@ export async function getCatechismCuratedEdges(
     push(row.source_kind, row.source_ref, row.note);
   }
 
-  return edges;
+  return withCentrality(edges);
 }
