@@ -14,10 +14,12 @@
  */
 
 import { readFileSync, readdirSync, statSync } from 'node:fs';
-import { relative, resolve, sep } from 'node:path';
+import { dirname, relative, resolve, sep } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { FORBIDDEN_IMPORTS, GUARDRAIL_ALLOWLIST } from '../src/config/reader-modules';
 
-const ROOT = resolve(__dirname, '..');
+const SCRIPT_DIR = dirname(fileURLToPath(import.meta.url));
+const ROOT = resolve(SCRIPT_DIR, '..');
 const SCAN_DIRS = ['src'];
 const EXTS = new Set(['.ts', '.tsx']);
 // Testes e histórias exercitam os componentes deprecados — não travam CI.

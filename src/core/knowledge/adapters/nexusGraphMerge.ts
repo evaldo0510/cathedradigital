@@ -30,6 +30,8 @@ export interface CuratedNexusEdge {
   /** Rótulo humano para exibição. */
   title?: string | null;
   note?: string | null;
+  /** Grau de centralidade no grafo (nº de conexões). Ordena a curadoria. */
+  weight?: number | null;
 }
 
 /** NexusKind (banco) → bucket do Reader. */
@@ -52,6 +54,7 @@ export const NEXUS_KIND_TO_BUCKET: Record<string, ReaderNexusBucket> = {
 function rebuildSuggestions(
   byBucket: Partial<Record<ReaderNexusBucket, ResolvedNode[]>>,
   order: readonly ReaderNexusBucket[],
+  centrality: ReadonlyMap<string, number> = new Map(),
 ): ContinuationSuggestion[] {
   const out: ContinuationSuggestion[] = [];
   for (const bucket of order) {
@@ -62,10 +65,10 @@ function rebuildSuggestions(
       eyebrow: BUCKET_EYEBROW[bucket],
       label: first.node.label,
       target: first,
-      weight: 1,
+      weight: 1 + (centrality.get(first.node.id) ?? 0) / 100,
     });
   }
-  return out;
+  return out.sort((a, b) => b.weight - a.weight);
 }
 
 /**
@@ -84,7 +87,12 @@ export function mergeCuratedEdges(
     byBucket[k as ReaderNexusBucket] = v ? [...v] : [];
   }
 
-  for (const edge of edges) {
+  const centrality = new Map<string, number>();
+  const curated: Partial<Record<ReaderNexusBucket, ResolvedNode[]>> = {};
+
+  const ranked = [...edges].sort((a, b) => (b.weight ?? 0) - (a.weight ?? 0));
+
+  for (const edge of ranked) {
     const bucket = NEXUS_KIND_TO_BUCKET[edge.kind];
     if (!bucket || !order.includes(bucket)) continue;
     const spec = KIND_SPECS[bucket];
@@ -98,14 +106,22 @@ export function mergeCuratedEdges(
     if (nodeId === base.selfId) continue;
 
     const arr = (byBucket[bucket] ??= []);
-    if (arr.some((r) => r.node.id === nodeId)) continue;
-    arr.unshift(resolved); // curadoria primeiro
+    const existing = arr.findIndex((r) => r.node.id === nodeId);
+    if (existing >= 0) arr.splice(existing, 1);
+    (curated[bucket] ??= []).push(resolved); // ordem já é por centralidade
+    centrality.set(nodeId, edge.weight ?? 0);
+  }
+
+  // Curadoria primeiro, do nó mais central para o menos central.
+  for (const [bucket, list] of Object.entries(curated)) {
+    const key = bucket as ReaderNexusBucket;
+    byBucket[key] = [...(list ?? []), ...(byBucket[key] ?? [])];
   }
 
   return {
     selfId: base.selfId,
     byBucket,
     labels: base.labels,
-    suggestions: rebuildSuggestions(byBucket, order),
+    suggestions: rebuildSuggestions(byBucket, order, centrality),
   };
 }

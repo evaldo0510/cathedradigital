@@ -10,6 +10,7 @@
 import { supabase } from '@/integrations/supabase/client';
 import type { NexusRelation, SaintNexusRelation } from '@/types/nexus';
 import type { CuratedNexusEdge } from '@/core/knowledge/adapters/nexusGraphMerge';
+import { withCentrality } from './nexusCentrality';
 
 export interface SaintRelationGroups {
   works: NexusRelation[];
@@ -96,5 +97,5 @@ export async function getSaintCuratedEdges(saintId: string): Promise<CuratedNexu
   };
   for (const r of ((outgoing.data ?? []) as unknown as Row[])) push(r.target_kind, r.target_ref, r.note);
   for (const r of ((incoming.data ?? []) as unknown as Row[])) push(r.source_kind, r.source_ref, r.note);
-  return edges;
+  return withCentrality(edges);
 }

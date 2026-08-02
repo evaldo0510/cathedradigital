@@ -7675,6 +7675,14 @@ export type Database = {
         }
         Relationships: []
       }
+      nexus_node_degree: {
+        Row: {
+          degree: number | null
+          kind: string | null
+          ref: string | null
+        }
+        Relationships: []
+      }
       public_partners: {
         Row: {
           created_at: string | null
