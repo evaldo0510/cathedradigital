@@ -59,7 +59,7 @@ import {
   ReaderContinuation,
   CatechesisContext,
 } from '@/components/reader';
-import { resolveCatechismAutoNexus } from '@/core/knowledge/adapters/catechismAutoNexus';
+import { useCatechismNexus } from '@/hooks/useCatechismNexus';
 import { EditorialDivider } from '@/components/editorial';
 import { EditorialClosure } from '@/components/reader';
 import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
@@ -589,12 +589,11 @@ const Catechism: React.FC = memo(() => {
 
   const nextUnreadParagraph = 1; // Simplified for template consistency
 
+  // Nexus heurístico + relações curadas do grafo (Catecismo ⇄ Santos, Bíblia, Patrística…).
+  const sectionNexus = useCatechismNexus(currentParagraph, location.articleRange);
 
   if (viewMode === 'reading' && selectedSection && selectedPart) {
-    const sectionNexus = resolveCatechismAutoNexus({
-      paragraph: currentParagraph,
-      excerpt: null,
-    });
+
     return (
       <CatechismPendingProvider>
         <ContemplativeLayout>

@@ -7,7 +7,7 @@
  */
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Sparkles, Users, type LucideIcon } from 'lucide-react';
+import { BookOpen, ScrollText, Sparkles, Users, type LucideIcon } from 'lucide-react';
 
 import type { NexusRelation } from '@/types/nexus';
 import { getSaintRelations, type SaintRelationGroups } from '@/services/saintNexusService';
@@ -105,11 +105,13 @@ export function SaintCuratedConnections({ saintId, saintName }: SaintCuratedConn
             Conexões curadas{saintName ? ` · ${saintName}` : ''}
           </h2>
         </header>
-        <div className="grid gap-5 sm:grid-cols-3">
+        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <Section icon={BookOpen} title="Obras" relations={groups.works} />
           <Section icon={Sparkles} title="Virtudes" relations={groups.virtues} />
           <Section icon={Users} title="Relacionados" relations={groups.relatedSaints} />
+          <Section icon={ScrollText} title="Catecismo" relations={groups.catechism} />
         </div>
+
       </div>
     </div>
   );

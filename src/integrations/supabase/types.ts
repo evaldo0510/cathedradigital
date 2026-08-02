@@ -8764,6 +8764,10 @@ export type Database = {
           unchanged: number
         }[]
       }
+      nexus_normalize_kind: {
+        Args: { _kind: string; _ref: Json }
+        Returns: string
+      }
       normalize_editorial_closure: {
         Args: { _raw: Json }
         Returns: {
