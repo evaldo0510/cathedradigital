@@ -14,6 +14,8 @@ export interface SaintRelationGroups {
   works: NexusRelation[];
   virtues: NexusRelation[];
   relatedSaints: NexusRelation[];
+  /** Parágrafos do Catecismo ligados ao santo (Catecismo ⇄ Santos). */
+  catechism: NexusRelation[];
   inspired: NexusRelation[];
   all: NexusRelation[];
 }
@@ -22,6 +24,7 @@ const EMPTY: SaintRelationGroups = {
   works: [],
   virtues: [],
   relatedSaints: [],
+  catechism: [],
   inspired: [],
   all: [],
 };
@@ -45,7 +48,9 @@ export async function getSaintRelations(saintId: string): Promise<SaintRelationG
     relatedSaints: all.filter(
       (r) => r.relation_type === ('related_to' as SaintNexusRelation) && r.target_kind === 'saint',
     ),
+    catechism: all.filter((r) => r.target_kind === 'catechism_paragraph'),
     inspired: all.filter((r) => r.relation_type === ('inspired_by' as SaintNexusRelation)),
     all,
   };
 }
+
