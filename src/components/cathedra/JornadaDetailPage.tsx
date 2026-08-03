@@ -124,16 +124,29 @@ const JornadaDetailPage: React.FC = () => {
 
   const nextStep = nextStepIndex >= 0 ? steps[nextStepIndex] : null;
 
-  const autoNexus = useMemo(() => {
-    if (!journey) return null;
-    return resolveJourneyAutoNexus({
-      id: journey.id,
-      title: journey.title,
-      subtitle: journey.subtitle,
-      category: journey.category,
-      tags: journey.tags,
-    });
-  }, [journey]);
+  const nexus = useJourneyNexus(
+    journey
+      ? {
+          id: journey.id,
+          slug: journey.slug,
+          title: journey.title,
+          subtitle: journey.subtitle,
+          category: journey.category,
+          tags: journey.tags,
+        }
+      : null,
+  );
+
+  const nexusTotal = useMemo(
+    () =>
+      nexus
+        ? Object.values(nexus.byBucket).reduce((n, arr) => n + (arr?.length ?? 0), 0)
+        : 0,
+    [nexus],
+  );
+
+  const continuationSuggestions = nexus?.suggestions ?? [];
+
 
   const primaryCta = useMemo(() => {
     if (!steps.length) return null;
