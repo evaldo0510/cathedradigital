@@ -39,8 +39,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { EditorialQuote } from '@/components/editorial/primitives';
-import { resolveJourneyAutoNexus } from '@/core/knowledge/adapters/journeyAutoNexus';
-import { NexusSourceBadge } from '@/components/nexus/NexusSourceBadge';
+import { NexusPanel } from '@/components/nexus/NexusPanel';
+import { ReaderContinuation } from '@/components/reader';
+import { useJourneyNexus, JOURNEY_NEXUS_ORDER } from '@/hooks/useJourneyNexus';
+
 
 const STEP_META: Record<string, { label: string; Icon: React.ComponentType<{ className?: string }> }> = {
   reading: { label: 'Leitura', Icon: BookOpen },
@@ -122,16 +124,29 @@ const JornadaDetailPage: React.FC = () => {
 
   const nextStep = nextStepIndex >= 0 ? steps[nextStepIndex] : null;
 
-  const autoNexus = useMemo(() => {
-    if (!journey) return null;
-    return resolveJourneyAutoNexus({
-      id: journey.id,
-      title: journey.title,
-      subtitle: journey.subtitle,
-      category: journey.category,
-      tags: journey.tags,
-    });
-  }, [journey]);
+  const nexus = useJourneyNexus(
+    journey
+      ? {
+          id: journey.id,
+          slug: journey.slug,
+          title: journey.title,
+          subtitle: journey.subtitle,
+          category: journey.category,
+          tags: journey.tags,
+        }
+      : null,
+  );
+
+  const nexusTotal = useMemo(
+    () =>
+      nexus
+        ? Object.values(nexus.byBucket).reduce((n, arr) => n + (arr?.length ?? 0), 0)
+        : 0,
+    [nexus],
+  );
+
+  const continuationSuggestions = nexus?.suggestions ?? [];
+
 
   const primaryCta = useMemo(() => {
     if (!steps.length) return null;
@@ -528,59 +543,27 @@ const JornadaDetailPage: React.FC = () => {
           </section>
         )}
 
-        {/* ─── Nexus Theologicus (100% automático) ───── */}
-        {autoNexus && autoNexus.total > 0 && (
+        {/* ─── Nexus Theologicus (heurístico + curadoria) ───── */}
+        {nexus && nexusTotal > 0 && (
           <section id="nexus" data-testid="jornada-nexus" className="pt-16">
-            <div className="mb-6 flex items-baseline justify-between">
-              <h2 className="font-stitch-display text-[24px] italic leading-[32px] text-stitch-primary md:text-[28px]">
-                Nexus Theologicus
-              </h2>
-              <span className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.2em] text-stitch-on-surface-variant">
-                Conexões vivas
-              </span>
-            </div>
-            <p className="mb-8 max-w-[68ch] font-stitch-body text-[14px] italic leading-relaxed text-stitch-on-surface-variant">
-              Bíblia, Catecismo, Santos, Orações e Glossário derivados automaticamente do KnowledgeGraph — a partir do tema desta jornada.
-            </p>
-            <div className="grid gap-6 md:grid-cols-2">
-              {Object.entries(autoNexus.byKind).map(([kindKey, nodes]) => (
-                <div
-                  key={kindKey}
-                  id={`nexus-${kindKey}`}
-                  className="border border-stitch-outline-variant/25 bg-stitch-surface-container-lowest p-5"
-                >
-                  <h3 className="mb-3 font-stitch-body text-[11px] font-bold uppercase tracking-[0.22em] text-stitch-secondary">
-                    {autoNexus.labels[kindKey] ?? kindKey}
-                  </h3>
-                  <ul className="space-y-3">
-                    {nodes.map((r) => (
-                      <li key={r.node.id} className="flex flex-col">
-                        {r.url ? (
-                          <Link
-                            to={r.url}
-                            className="font-stitch-body text-[15px] leading-snug text-stitch-primary underline decoration-stitch-secondary/40 underline-offset-4 transition-colors hover:text-stitch-secondary hover:decoration-stitch-secondary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stitch-secondary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-stitch-background"
-                          >
-                            {r.node.label}
-                          </Link>
-                        ) : (
-                          <span className="font-stitch-body text-[15px] text-stitch-on-surface-variant">
-                            {r.node.label}
-                          </span>
-                        )}
-                        {r.node.summary && (
-                          <p className="mt-1 font-stitch-body text-[13px] text-stitch-on-surface-variant">
-                            {r.node.summary}
-                          </p>
-                        )}
-                        <NexusSourceBadge node={r.node} />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
+            <NexusPanel
+              output={nexus}
+              order={JOURNEY_NEXUS_ORDER}
+              kicker="Conexões desta jornada"
+              limitPerBucket={4}
+            />
+            {continuationSuggestions.length > 0 && (
+              <div className="mt-10">
+                <ReaderContinuation
+                  context={{ kind: 'journey-step', id: journey.id, meta: { journeyId: journey.id, nextStepId: nextStep?.id } }}
+                  suggestions={continuationSuggestions}
+                />
+
+              </div>
+            )}
           </section>
         )}
+
 
         {/* ─── Continuar depois — jornadas relacionadas ─── */}
         {related.length > 0 && (
