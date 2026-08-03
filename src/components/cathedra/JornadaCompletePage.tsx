@@ -38,6 +38,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { checkNewBadges, getBadgeById, BadgeContext } from '@/lib/badges';
+import { useNextPath } from '@/hooks/useNextPath';
+import NextPathPanel from '@/components/cathedra/NextPathPanel';
 
 const JornadaCompletePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -46,7 +48,7 @@ const JornadaCompletePage: React.FC = () => {
 
   const [journey, setJourney] = useState<any>(null);
   const [reflections, setReflections] = useState<{ title: string; reflection: string; completed_at: string }[]>([]);
-  const [nextJourney, setNextJourney] = useState<any>(null);
+
   const [loading, setLoading] = useState(true);
   const [sharing, setSharing] = useState(false);
   const [xpAwarded, setXpAwarded] = useState(0);
