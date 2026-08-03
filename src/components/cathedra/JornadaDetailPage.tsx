@@ -554,7 +554,11 @@ const JornadaDetailPage: React.FC = () => {
             />
             {continuationSuggestions.length > 0 && (
               <div className="mt-10">
-                <ReaderContinuation suggestions={continuationSuggestions} />
+                <ReaderContinuation
+                  context={{ kind: 'journey-step', id: journey.id, meta: { journeyId: journey.id, nextStepId: nextStep?.id } }}
+                  suggestions={continuationSuggestions}
+                />
+
               </div>
             )}
           </section>
