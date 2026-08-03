@@ -63,6 +63,23 @@ const JornadaCompletePage: React.FC = () => {
   const certificateRef = useRef<HTMLDivElement>(null);
 
   const isJourneyComplete = totalSteps > 0 && completedSteps >= totalSteps;
+
+  // Nexus Intelligence: próximo caminho coerente após esta jornada.
+  const nextPath = useNextPath(
+    journey && isJourneyComplete
+      ? {
+          id: journey.id,
+          slug: journey.slug ?? null,
+          title: journey.title,
+          subtitle: journey.subtitle,
+          category: journey.category,
+          tags: journey.tags,
+          difficulty: journey.difficulty,
+          sort_order: journey.sort_order,
+        }
+      : null,
+    user?.id,
+  );
   const hasCertificateData = !!(journey?.title);
   const canShareCertificate = hasCertificateData && isJourneyComplete;
 
@@ -87,7 +104,7 @@ const JornadaCompletePage: React.FC = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [journeyRes, progressRes, nextRes, totalRes] = await Promise.all([
+      const [journeyRes, progressRes, totalRes] = await Promise.all([
         supabase.from('journeys').select('*').eq('id', id!).single(),
         supabase
           .from('journey_progress')
@@ -95,13 +112,6 @@ const JornadaCompletePage: React.FC = () => {
           .eq('user_id', user!.id)
           .eq('journey_id', id!)
           .order('completed_at', { ascending: true }),
-        supabase
-          .from('journeys')
-          .select('*')
-          .eq('is_active', true)
-          .neq('id', id!)
-          .order('sort_order', { ascending: true })
-          .limit(3),
         supabase
           .from('journey_steps')
           .select('*', { count: 'exact', head: true })
@@ -137,9 +147,6 @@ const JornadaCompletePage: React.FC = () => {
         );
       }
 
-      if (nextRes.data && nextRes.data.length > 0) {
-        setNextJourney(nextRes.data[0]);
-      }
     } catch (err) {
       console.error(err);
     } finally {
