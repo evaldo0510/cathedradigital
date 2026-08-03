@@ -38,6 +38,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { checkNewBadges, getBadgeById, BadgeContext } from '@/lib/badges';
+import { useNextPath } from '@/hooks/useNextPath';
+import NextPathPanel from '@/components/cathedra/NextPathPanel';
 
 const JornadaCompletePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -46,7 +48,7 @@ const JornadaCompletePage: React.FC = () => {
 
   const [journey, setJourney] = useState<any>(null);
   const [reflections, setReflections] = useState<{ title: string; reflection: string; completed_at: string }[]>([]);
-  const [nextJourney, setNextJourney] = useState<any>(null);
+
   const [loading, setLoading] = useState(true);
   const [sharing, setSharing] = useState(false);
   const [xpAwarded, setXpAwarded] = useState(0);
@@ -61,6 +63,23 @@ const JornadaCompletePage: React.FC = () => {
   const certificateRef = useRef<HTMLDivElement>(null);
 
   const isJourneyComplete = totalSteps > 0 && completedSteps >= totalSteps;
+
+  // Nexus Intelligence: próximo caminho coerente após esta jornada.
+  const nextPath = useNextPath(
+    journey && isJourneyComplete
+      ? {
+          id: journey.id,
+          slug: journey.slug ?? null,
+          title: journey.title,
+          subtitle: journey.subtitle,
+          category: journey.category,
+          tags: journey.tags,
+          difficulty: journey.difficulty,
+          sort_order: journey.sort_order,
+        }
+      : null,
+    user?.id,
+  );
   const hasCertificateData = !!(journey?.title);
   const canShareCertificate = hasCertificateData && isJourneyComplete;
 
@@ -85,7 +104,7 @@ const JornadaCompletePage: React.FC = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [journeyRes, progressRes, nextRes, totalRes] = await Promise.all([
+      const [journeyRes, progressRes, totalRes] = await Promise.all([
         supabase.from('journeys').select('*').eq('id', id!).single(),
         supabase
           .from('journey_progress')
@@ -93,13 +112,6 @@ const JornadaCompletePage: React.FC = () => {
           .eq('user_id', user!.id)
           .eq('journey_id', id!)
           .order('completed_at', { ascending: true }),
-        supabase
-          .from('journeys')
-          .select('*')
-          .eq('is_active', true)
-          .neq('id', id!)
-          .order('sort_order', { ascending: true })
-          .limit(3),
         supabase
           .from('journey_steps')
           .select('*', { count: 'exact', head: true })
@@ -135,9 +147,6 @@ const JornadaCompletePage: React.FC = () => {
         );
       }
 
-      if (nextRes.data && nextRes.data.length > 0) {
-        setNextJourney(nextRes.data[0]);
-      }
     } catch (err) {
       console.error(err);
     } finally {
@@ -568,42 +577,17 @@ const JornadaCompletePage: React.FC = () => {
           </motion.section>
         )}
 
-        {/* ─── Próxima jornada ───────────────────────── */}
-        {nextJourney && (
-          <motion.section
+        {/* ─── Nexus Intelligence — próximo caminho coerente ─── */}
+        {nextPath.length > 0 && (
+          <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.65 }}
-            className="mt-14"
           >
-            <h2 className="mb-4 font-stitch-display text-[22px] italic text-stitch-primary md:text-[26px]">
-              Continue sua caminhada
-            </h2>
-            <Link
-              to={`/jornadas/${nextJourney.id}`}
-              className="group relative flex items-center gap-5 border border-stitch-outline-variant/25 bg-stitch-surface-container-lowest p-6 transition-all hover:border-stitch-secondary/50 hover:shadow-sm"
-            >
-              <div className="absolute left-0 top-0 h-full w-1 origin-top scale-y-0 bg-stitch-secondary transition-transform group-hover:scale-y-100" />
-              <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-stitch-secondary/10 text-stitch-secondary">
-                <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.2em] text-stitch-secondary">
-                  Próxima Jornada
-                </p>
-                <h3 className="mt-1 font-stitch-display text-[20px] italic text-stitch-primary md:text-[22px]">
-                  {nextJourney.title}
-                </h3>
-                {nextJourney.subtitle && (
-                  <p className="mt-1 line-clamp-2 font-stitch-body text-[13px] text-stitch-on-surface-variant">
-                    {nextJourney.subtitle}
-                  </p>
-                )}
-              </div>
-              <ChevronRight className="h-5 w-5 flex-shrink-0 text-stitch-on-surface-variant transition-colors group-hover:text-stitch-secondary" />
-            </Link>
-          </motion.section>
+            <NextPathPanel recommendations={nextPath} className="mt-14" />
+          </motion.div>
         )}
+
 
         {/* ─── Ações ─────────────────────────────────── */}
         <motion.section
