@@ -42,20 +42,31 @@ function refLabel(ref: RawRef | null, fallback: string): string {
 
 async function loadNexusByJourney(): Promise<Map<string, JourneyNexusNode[]>> {
   const cols = 'source_kind, source_ref, target_kind, target_ref';
-  const [outgoing, incoming] = await Promise.all([
+  const [outgoing, incoming, graph] = await Promise.all([
     supabase.from('nexus_relations').select(cols).eq('source_kind', 'journey').limit(1000),
     supabase.from('nexus_relations').select(cols).eq('target_kind', 'journey').limit(1000),
+    supabase
+      .from('nexus_relations')
+      .select(cols)
+      .neq('source_kind', 'journey')
+      .neq('target_kind', 'journey')
+      .limit(4000),
   ]);
 
   const map = new Map<string, JourneyNexusNode[]>();
-  const push = (journeyRef: RawRef | null, kind: string, ref: RawRef | null) => {
+  const push = (
+    journeyRef: RawRef | null,
+    kind: string,
+    ref: RawRef | null,
+    degree: 1 | 2 = 1,
+  ) => {
     const jKey = refKey(journeyRef);
     const nodeRef = refKey(ref);
     if (!jKey || !nodeRef || kind === 'journey' || kind === 'other') return;
     const key = `${kind}#${nodeRef}`;
     const list = map.get(jKey) ?? [];
     if (list.some((n) => n.key === key)) return;
-    list.push({ key, kind, label: refLabel(ref, nodeRef) });
+    list.push({ key, kind, label: refLabel(ref, nodeRef), degree });
     map.set(jKey, list);
   };
 
@@ -72,6 +83,31 @@ async function loadNexusByJourney(): Promise<Map<string, JourneyNexusNode[]>> {
   for (const row of ((incoming.data ?? []) as unknown as Row[])) {
     push(row.target_ref, row.source_kind, row.source_ref);
   }
+
+  // Segundo grau: vizinhos (no grafo curado) dos nós citados pela jornada.
+  // É o que permite reconhecer que duas jornadas desembocam na mesma
+  // região doutrinal mesmo sem citarem exatamente o mesmo parágrafo.
+  const neighbors = new Map<string, Array<{ kind: string; ref: RawRef }>>();
+  const link = (aKind: string, aRef: RawRef | null, bKind: string, bRef: RawRef | null) => {
+    const a = refKey(aRef);
+    if (!a || !bRef || bKind === 'journey' || bKind === 'other') return;
+    const list = neighbors.get(`${aKind}#${a}`) ?? [];
+    list.push({ kind: bKind, ref: bRef });
+    neighbors.set(`${aKind}#${a}`, list);
+  };
+  for (const row of ((graph.data ?? []) as unknown as Row[])) {
+    link(row.source_kind, row.source_ref, row.target_kind, row.target_ref);
+    link(row.target_kind, row.target_ref, row.source_kind, row.source_ref);
+  }
+
+  for (const [jKey, nodes] of Array.from(map.entries())) {
+    for (const node of [...nodes]) {
+      for (const nb of neighbors.get(node.key) ?? []) {
+        push({ slug: jKey }, nb.kind, nb.ref, 2);
+      }
+    }
+  }
+
   return map;
 }
 

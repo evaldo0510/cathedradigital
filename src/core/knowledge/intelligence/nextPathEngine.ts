@@ -40,6 +40,12 @@ export interface JourneyNexusNode {
   key: string;
   kind: string;
   label: string;
+  /**
+   * 1 = nó citado diretamente pela jornada.
+   * 2 = nó alcançado em um salto no grafo curado (co-citação indireta:
+   *     duas jornadas que desembocam na mesma região doutrinal).
+   */
+  degree?: 1 | 2;
 }
 
 export interface NextPathInput {
@@ -66,7 +72,8 @@ export interface NextPathRecommendation {
   signal: 'nexus' | 'category' | 'tags' | 'progression' | 'catalog';
 }
 
-const W_SHARED_NODE = 6;
+const W_SHARED_DIRECT = 6;
+const W_SHARED_INDIRECT = 2;
 const W_SAME_CATEGORY = 4;
 const W_TAG = 2;
 const W_PROGRESSION = 3;
@@ -108,6 +115,10 @@ function nodesFor(
   return out;
 }
 
+function isDirect(n: JourneyNexusNode): boolean {
+  return (n.degree ?? 1) === 1;
+}
+
 function buildReason(
   shared: JourneyNexusNode[],
   sameCategory: boolean,
@@ -116,11 +127,16 @@ function buildReason(
   category?: string | null,
 ): { reason: string; signal: NextPathRecommendation['signal'] } {
   if (shared.length > 0) {
-    const labels = shared.slice(0, 3).map((n) => n.label);
-    const rest = shared.length - labels.length;
+    const direct = shared.filter(isDirect);
+    const source = direct.length > 0 ? direct : shared;
+    const labels = source.slice(0, 3).map((n) => n.label);
+    const rest = source.length - labels.length;
     const list = labels.join(', ') + (rest > 0 ? ` e mais ${rest}` : '');
     return {
-      reason: `Compartilha ${list} com a jornada que você concluiu.`,
+      reason:
+        direct.length > 0
+          ? `Compartilha ${list} com a jornada que você concluiu.`
+          : `Desemboca na mesma região do Nexus: ${list}.`,
       signal: 'nexus',
     };
   }
@@ -167,9 +183,14 @@ export function resolveNextPath(input: NextPathInput): NextPathRecommendation[] 
     if (candidate.id === current.id) continue;
     if (completedJourneyIds.has(candidate.id)) continue;
 
-    const shared = nodesFor(candidate, nexusByJourney).filter((n) =>
-      currentNodes.has(n.key),
-    );
+    const shared = nodesFor(candidate, nexusByJourney)
+      .filter((n) => currentNodes.has(n.key))
+      .map((n): JourneyNexusNode => {
+        const mine = currentNodes.get(n.key)!;
+        const degree = Math.max(mine.degree ?? 1, n.degree ?? 1) as 1 | 2;
+        return { ...n, degree };
+      })
+      .sort((a, b) => (a.degree ?? 1) - (b.degree ?? 1));
 
     const sameCategory =
       Boolean(currentCategory) && normalize(candidate.category) === currentCategory;
@@ -182,8 +203,13 @@ export function resolveNextPath(input: NextPathInput): NextPathRecommendation[] 
     const progression =
       currentRank !== null && candidateRank !== null && candidateRank === currentRank + 1;
 
+    const sharedWeight = shared.reduce(
+      (sum, n) => sum + (isDirect(n) ? W_SHARED_DIRECT : W_SHARED_INDIRECT),
+      0,
+    );
+
     let score =
-      shared.length * W_SHARED_NODE +
+      sharedWeight +
       (sameCategory ? W_SAME_CATEGORY : 0) +
       sharedTags.length * W_TAG +
       (progression ? W_PROGRESSION : 0);
