@@ -37,8 +37,8 @@ describe('resolveNexusHref', () => {
     ['catechism_paragraph', '460', '/catechism?p=460'],
     ['bible_verse', 'Jo 6:35', '/bible?ref=Jo%206%3A35'],
     ['magisterium_doc', 'lumen-gentium', '/magisterium/lumen-gentium'],
-    ['patristic', 'confessiones', '/patristica/confessiones'],
-    ['liturgy', '2026-07-24', '/missal/2026-07-24'],
+    ['patristic', 'confessiones', '/biblioteca/padres/confessiones'],
+    ['liturgy', '2026-07-24', '/liturgia/dia/2026-07-24'],
     ['saint_work', 'confissoes', null],
     ['other', 'x', null],
   ];
