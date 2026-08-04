@@ -92,7 +92,7 @@ describe('nexusChannelToListingHref', () => {
     expect(nexusChannelToListingHref('bible')).toBe('/bible');
     expect(nexusChannelToListingHref('catechism')).toBe('/catechism');
     expect(nexusChannelToListingHref('magisterium')).toBe('/magisterium');
-    expect(nexusChannelToListingHref('father')).toBe('/patristica');
+    expect(nexusChannelToListingHref('father')).toBe('/biblioteca/acervo/santos-padres');
     expect(nexusChannelToListingHref('saint')).toBe('/santos');
     expect(nexusChannelToListingHref('journey')).toBe('/jornadas');
     expect(nexusChannelToListingHref('theme')).toBe('/buscar');
