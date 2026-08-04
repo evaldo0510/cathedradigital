@@ -211,14 +211,21 @@ async def visit(page, path, base):
         "h1": probe["h1"], "textLen": probe["textLen"], "sample": probe["sample"],
         "console_errors": errors[:3],
     }
+    # Severidade:
+    #   P0  — o link não entrega o recurso prometido (404, vazio, erro, skeleton).
+    #   INFO — comportamento intencional (alias de rota, AuthGuard).
     if probe["is404"]:
-        result["issue"] = "404"
+        result["issue"], result["severity"] = "404", "P0"
+    elif final == "/auth" and path != "/auth":
+        result["issue"], result["severity"] = "auth-guard", "INFO"
     elif probe["textLen"] < 40:
-        result["issue"] = "tela-vazia"
+        result["issue"], result["severity"] = "tela-vazia", "P0"
+    elif "ALGO DEU ERRADO" in probe["sample"].upper() or "TENTAR NOVAMENTE" in probe["sample"].upper():
+        result["issue"], result["severity"] = "conteudo-nao-carrega", "P0"
     elif probe["hasSkeleton"] and probe["textLen"] < 200:
-        result["issue"] = "skeleton-eterno"
+        result["issue"], result["severity"] = "skeleton-eterno", "P0"
     elif final != path and not final.startswith(path):
-        result["issue"] = "redirect"
+        result["issue"], result["severity"] = "alias-redirect", "INFO"
     return result
 
 
