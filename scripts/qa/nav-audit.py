@@ -34,8 +34,9 @@ SEEDS = [
     "/", "/hoje", "/bible", "/catechism", "/magisterium", "/biblioteca",
     "/santos", "/glossario", "/temas", "/itineraria", "/liturgia", "/missal",
     "/breviary", "/oracao", "/jornadas", "/nexus", "/buscar", "/papas",
-    "/aparicoes", "/dogmas", "/calendar", "/patristica", "/acervo",
-    "/guia-modulos", "/pricing", "/sobre", "/contato",
+    "/aparicoes", "/dogmas", "/calendar", "/acervo",
+    "/biblioteca/acervo/santos-padres", "/guia-modulos", "/pricing", "/sobre",
+    "/contato",
 ]
 
 # Rotas que não devem ser visitadas na fase 3 (side effects, auth, externo).
