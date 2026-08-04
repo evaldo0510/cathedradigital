@@ -1,133 +1,131 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices } from "@playwright/test";
 
-/**
- * Playwright configuration for E2E tests.
- * See https://playwright.dev/docs/test-configuration.
- */
+const PORT = process.env.PORT || 4173;
+const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? process.env.BASE_URL ?? `http://127.0.0.1:${PORT}`;
+
 export default defineConfig({
-  testDir: './tests/e2e',
-  /* Run tests in files in parallel */
-  fullyParallel: true,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
-  forbidOnly: !!process.env.CI,
-  /* Retry on CI only to reduce flakiness without masking local errors */
-  retries: process.env.CI ? 3 : 1, // Increased to 3 on CI to handle mobile flakiness
-  timeout: 60000, // global timeout per test
+  testDir: "./tests/playwright",
 
-  /* Opt out of parallel tests on CI to increase stability. */
-  workers: process.env.CI ? 1 : undefined,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: [
-    ['html', { open: 'never' }],
-    ['json', { outputFile: 'playwright-report/results.json' }],
-    ['junit', { outputFile: 'playwright-report/results.xml' }],
-    ['list'],
-  ],
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
-  use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:8080',
+  timeout: 60000,
 
-    /* Stability filters: Add timeouts to prevent hangs */
-    actionTimeout: 20000,
-    navigationTimeout: 45000,
-
-
-    /* Headless mode control via env */
-    headless: process.env.HEADLESS !== 'false',
-
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'retain-on-failure',
-    screenshot: 'only-on-failure',
-    video: 'retain-on-failure',
-    ignoreHTTPSErrors: true,
-  },
-  /* Configure threshold for visual regression */
   expect: {
-    toHaveScreenshot: {
-      maxDiffPixelRatio: 0.05, // Aumentado para tolerar diferenças de renderização em modo de redução de movimento
-      maxDiffPixels: 100,      // Tolerância absoluta de pixels para pequenos desvios
-      animations: 'disabled',
+    timeout: 10000,
+  },
+
+  fullyParallel: true,
+
+  forbidOnly: !!process.env.CI,
+
+  retries: process.env.CI ? 2 : 0,
+
+  workers: process.env.CI ? 2 : undefined,
+
+  reporter: [
+    [
+      "html",
+      {
+        outputFolder: "playwright-report",
+        open: "never",
+      },
+    ],
+
+    ["list"],
+
+    [
+      "json",
+      {
+        outputFile: "playwright-report/results.json",
+      },
+    ],
+  ],
+
+  use: {
+    baseURL: BASE_URL,
+
+    trace: "retain-on-failure",
+
+    screenshot: "only-on-failure",
+
+    video: "retain-on-failure",
+
+    actionTimeout: 15000,
+
+    navigationTimeout: 30000,
+
+    ignoreHTTPSErrors: true,
+
+    viewport: {
+      width: 1440,
+      height: 900,
     },
   },
 
-  /* Configure projects for major browsers */
+  webServer: process.env.PLAYWRIGHT_BASE_URL
+    ? undefined
+    : {
+        command: "npm run preview",
+
+        port: Number(PORT),
+
+        reuseExistingServer: !process.env.CI,
+
+        timeout: 120000,
+      },
+
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
-    {
-      name: 'mobile-chrome',
-      use: { 
-        ...devices['Pixel 5'],
-        userAgent: 'Mozilla/5.0 (Linux; Android 11; Pixel 5 Build/RD1A.201105.003; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/83.0.4103.106 Mobile Safari/537.36',
-        viewport: { width: 393, height: 851 },
-        deviceScaleFactor: 2.75,
-        hasTouch: true,
+      name: "Desktop Chromium",
+
+      use: {
+        ...devices["Desktop Chrome"],
+
+        viewport: {
+          width: 1440,
+          height: 900,
+        },
       },
     },
+
     {
-      name: 'mobile-safari',
-      use: { 
-        ...devices['iPhone 12'],
-        userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.3 Mobile/15E148 Safari/604.1',
-        viewport: { width: 390, height: 844 },
-        deviceScaleFactor: 3,
-        hasTouch: true,
+      name: "Desktop Firefox",
+
+      use: {
+        ...devices["Desktop Firefox"],
+
+        viewport: {
+          width: 1440,
+          height: 900,
+        },
       },
     },
+
     {
-      name: 'tablet-safari',
-      use: { ...devices['iPad Air'] },
+      name: "Desktop Webkit",
+
+      use: {
+        ...devices["Desktop Safari"],
+
+        viewport: {
+          width: 1440,
+          height: 900,
+        },
+      },
     },
-    /* Extended Mobile Matrix */
+
     {
-      name: 'mobile-320',
-      use: { ...devices['iPhone SE'], viewport: { width: 320, height: 568 } },
+      name: "Mobile Android",
+
+      use: {
+        ...devices["Pixel 7"],
+      },
     },
+
     {
-      name: 'mobile-360',
-      use: { viewport: { width: 360, height: 800 }, deviceScaleFactor: 3 },
-    },
-    {
-      name: 'mobile-375-iphone8',
-      use: { ...devices['iPhone 8'], viewport: { width: 375, height: 667 } },
-    },
-    {
-      name: 'mobile-414-iphone8plus',
-      use: { ...devices['iPhone 8 Plus'], viewport: { width: 414, height: 736 } },
-    },
-    {
-      name: 'mobile-390',
-      use: { ...devices['iPhone 13'], viewport: { width: 390, height: 844 } },
-    },
-    {
-      name: 'mobile-412',
-      use: { ...devices['Pixel 7'], viewport: { width: 412, height: 915 } },
-    },
-    {
-      name: 'mobile-480',
-      use: { viewport: { width: 480, height: 853 }, deviceScaleFactor: 2 },
-    },
-    {
-      name: 'ipad-portrait',
-      use: { ...devices['iPad Pro 11'], viewport: { width: 768, height: 1024 } },
+      name: "Mobile iPhone",
+
+      use: {
+        ...devices["iPhone 14"],
+      },
     },
   ],
-
-  /* Run your local dev server before starting the tests */
-  webServer: {
-    command: 'bun run dev',
-    url: 'http://localhost:8080',
-    reuseExistingServer: true,
-  },
 });
