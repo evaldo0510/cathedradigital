@@ -282,7 +282,8 @@ async def main():
         await ctx.close()
         await browser.close()
 
-    broken = [v for v in visits if v.get("issue")]
+    broken = [v for v in visits if v.get("severity") == "P0"]
+    info = [v for v in visits if v.get("severity") == "INFO"]
     report = {
         "base": base,
         "viewports": [v[0] for v in viewports],
@@ -291,18 +292,24 @@ async def main():
         "destinos_visitados": len(visits),
         "rotas_inexistentes": dead_routes,
         "destinos_com_problema": broken,
+        "comportamento_intencional": info,
         "seed_errors": seed_errors,
     }
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     (OUT_DIR / "NAV_AUDIT.json").write_text(json.dumps(report, indent=2, ensure_ascii=False))
 
+    total_p0 = len(dead_routes) + len(broken)
     lines = [
         "# Auditoria Global de Navegação — Cathedra",
         "",
+        f"- Viewports: {', '.join(v[0] for v in viewports)}",
         f"- Links internos únicos coletados: **{len(links)}**",
         f"- Destinos visitados: **{len(visits)}**",
         f"- Rotas inexistentes: **{len(dead_routes)}**",
         f"- Destinos com problema: **{len(broken)}**",
+        f"- Comportamento intencional (alias / AuthGuard): {len(info)}",
+        "",
+        f"**Resultado: {'CERTIFIED' if total_p0 == 0 else f'BLOQUEADO ({total_p0} P0)'}**",
         "",
     ]
     if dead_routes:
@@ -314,18 +321,22 @@ async def main():
             )
         lines.append("")
     if broken:
-        lines += ["## P0 · Destinos com problema", "",
+        lines += ["## P0 · Destinos que não entregam o recurso", "",
                   "| Rota | Problema | Detalhe |", "|---|---|---|"]
         for b in sorted(broken, key=lambda x: x["path"]):
             detail = b.get("detail") or b.get("sample") or b.get("final") or ""
             lines.append(f"| `{b['path']}` | {b['issue']} | {str(detail)[:90]} |")
         lines.append("")
-    if not dead_routes and not broken:
-        lines.append("## Resultado: CERTIFIED — nenhum link morto encontrado.")
+    if info:
+        lines += ["## INFO · Redirecionamentos intencionais", "",
+                  "| Rota | Destino final | Tipo |", "|---|---|---|"]
+        for b in sorted(info, key=lambda x: x["path"]):
+            lines.append(f"| `{b['path']}` | `{b['final']}` | {b['issue']} |")
+        lines.append("")
     (OUT_DIR / "NAV_AUDIT.md").write_text("\n".join(lines))
 
-    print(f"\nRelatório: docs/qa/NAV_AUDIT.md ({len(dead_routes)} rotas mortas, {len(broken)} destinos problemáticos)")
-    return 1 if (dead_routes or broken) else 0
+    print(f"\nRelatório: docs/qa/NAV_AUDIT.md ({len(dead_routes)} rotas mortas, {len(broken)} destinos P0)")
+    return 1 if total_p0 else 0
 
 
 if __name__ == "__main__":
