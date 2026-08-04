@@ -116,7 +116,7 @@ const CHANNEL_TO_LISTING: Record<NexusChannel, string> = {
   bible: '/bible',
   catechism: '/catechism',
   magisterium: '/magisterium',
-  father: '/patristica',
+  father: '/biblioteca/acervo/santos-padres',
   saint: '/santos',
   journey: '/jornadas',
   theme: '/buscar',
