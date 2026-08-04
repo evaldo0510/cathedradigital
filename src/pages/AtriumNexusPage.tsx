@@ -57,7 +57,7 @@ const KIND_HREF: Record<NexusKind, string> = {
   bible: '/bible',
   catechism: '/catechism',
   magisterium: '/magisterium',
-  father: '/biblioteca/acervo/santos-padres',
+  father: '/patristica',
   saint: '/santos',
   journey: '/jornadas',
   theme: '/buscar',

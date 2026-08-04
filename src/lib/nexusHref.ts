@@ -70,13 +70,10 @@ export function resolveNexusHref(
       return `/bible?ref=${encodeURIComponent(id)}`;
     case 'magisterium_doc':
       return `/magisterium/${id}`;
-    // Padres/Doutores vivem na tabela `saints`; a rota canônica registrada em
-    // App.tsx é /biblioteca/padres/:slug (redireciona para /santos/:slug).
     case 'patristic':
-      return `/biblioteca/padres/${id}`;
-    // Liturgia por data abre o Dia Litúrgico — /missal/:data não é rota real.
+      return `/patristica/${id}`;
     case 'liturgy':
-      return `/liturgia/dia/${id}`;
+      return `/missal/${id}`;
     case 'saint_work':
       // Espera-se `autor/obra` (ex.: "agostinho/confissoes").
       return id.includes('/') ? `/biblioteca/escritos/${id}` : null;
@@ -116,7 +113,7 @@ const CHANNEL_TO_LISTING: Record<NexusChannel, string> = {
   bible: '/bible',
   catechism: '/catechism',
   magisterium: '/magisterium',
-  father: '/biblioteca/acervo/santos-padres',
+  father: '/patristica',
   saint: '/santos',
   journey: '/jornadas',
   theme: '/buscar',
