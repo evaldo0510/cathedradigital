@@ -67,7 +67,7 @@ export const MAGISTERIUM_URLS: Record<string, string> = {
   'Munificentissimus Deus': 'https://www.vatican.va/content/pius-xii/pt/apost_constitutions/documents/hf_p-xii_apc_19501101_munificentissimus-deus.html',
   'Pastor Aeternus': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700718_pastor-aeternus_la.html',
   'Mystici Corporis': 'https://www.vatican.va/content/pius-xii/pt/encyclicals/documents/hf_p-xii_enc_29061943_mystici-corporis-christi.html',
-  'Benedictus Deus': 'https://www.vatican.va/content/benedict-xii/la/documents/constitutio-dogmatica-benedictus-deus-29-ian-1336.html',
+  'Benedictus Deus': 'https://www.vatican.va/content/benedictus-xii/la/documents/constitutio-benedictus-deus-29-ian-1336.html',
   'Credo Niceno': 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19641121_lumen-gentium_po.html',
   'Dei Verbum': 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19651118_dei-verbum_po.html',
   'dv': 'https://www.vatican.va/archive/hist_councils/ii_vatican_council/documents/vat-ii_const_19651118_dei-verbum_po.html',
@@ -97,11 +97,11 @@ export const MAGISTERIUM_URLS: Record<string, string> = {
   'mm': 'https://www.vatican.va/content/francesco/pt/apost_letters/documents/papa-francesco-lettera-ap_20161120_misericordia-et-misera.html',
   'rvm': 'https://www.vatican.va/content/john-paul-ii/pt/apost_letters/2002/documents/hf_jp-ii_apl_20021016_rosarium-virginis-mariae.html',
   'dd': 'https://www.vatican.va/content/john-paul-ii/pt/apost_letters/1998/documents/hf_jp-ii_apl_05071998_dies-domini.html',
-  'md': 'https://www.vatican.va/content/john-paul-ii/pt/apost_letters/1988/documents/hf_jp-ii_apl_15081988_mulieris-dignitatem.html',
+  'md': 'https://www.vatican.va/content/john-paul-ii/pt/apost_letters/1988/documents/hf_jp-ii_apl_19880815_mulieris-dignitatem.html',
   'cdsi': 'https://www.vatican.va/roman_curia/pontifical_councils/justpeace/documents/rc_pc_justpeace_doc_20060526_compendio-dott-soc_po.html',
   'di': 'https://www.vatican.va/roman_curia/congregations/cfaith/documents/rc_con_cfaith_doc_20000806_dominus-iesus_po.html',
   'cdc': 'https://www.vatican.va/archive/cod-iuris-canonici/portuguese/codex-iuris-canonici_po.pdf',
-  'cic': 'https://www.vatican.va/archive/cathechism_po/index_po.htm',
+  'cic': 'https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html',
 
   // Aliases por slug para documentos que só tinham chave por nome — permitem
   // que o Viewer resolva `/magisterium/:slug` sem depender de nomes com espaço.
@@ -109,7 +109,7 @@ export const MAGISTERIUM_URLS: Record<string, string> = {
   'paet': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700718_pastor-aeternus_la.html',
   'ideus': 'https://www.vatican.va/content/pius-ix/pt/documents/18541208-costituzione-apostolica-ineffabilis-deus.html',
   'mdeus': 'https://www.vatican.va/content/pius-xii/pt/apost_constitutions/documents/hf_p-xii_apc_19501101_munificentissimus-deus.html',
-  'bdeus': 'https://www.vatican.va/content/benedict-xii/la/documents/constitutio-dogmatica-benedictus-deus-29-ian-1336.html',
+  'bdeus': 'https://www.vatican.va/content/benedictus-xii/la/documents/constitutio-benedictus-deus-29-ian-1336.html',
   'mcorp': 'https://www.vatican.va/content/pius-xii/pt/encyclicals/documents/hf_p-xii_enc_29061943_mystici-corporis-christi.html',
 
   // ---------------------------------------------------------------------------
@@ -142,16 +142,16 @@ export const MAGISTERIUM_URLS: Record<string, string> = {
   'misericordia-et-misera': 'https://www.vatican.va/content/francesco/pt/apost_letters/documents/papa-francesco-lettera-ap_20161120_misericordia-et-misera.html',
   'rosarium-virginis-mariae': 'https://www.vatican.va/content/john-paul-ii/pt/apost_letters/2002/documents/hf_jp-ii_apl_20021016_rosarium-virginis-mariae.html',
   'dies-domini': 'https://www.vatican.va/content/john-paul-ii/pt/apost_letters/1998/documents/hf_jp-ii_apl_05071998_dies-domini.html',
-  'mulieris-dignitatem': 'https://www.vatican.va/content/john-paul-ii/pt/apost_letters/1988/documents/hf_jp-ii_apl_15081988_mulieris-dignitatem.html',
+  'mulieris-dignitatem': 'https://www.vatican.va/content/john-paul-ii/pt/apost_letters/1988/documents/hf_jp-ii_apl_19880815_mulieris-dignitatem.html',
   'dominus-iesus': 'https://www.vatican.va/roman_curia/congregations/cfaith/documents/rc_con_cfaith_doc_20000806_dominus-iesus_po.html',
   'compendio-doutrina-social': 'https://www.vatican.va/roman_curia/pontifical_councils/justpeace/documents/rc_pc_justpeace_doc_20060526_compendio-dott-soc_po.html',
   'codex-iuris-canonici': 'https://www.vatican.va/archive/cod-iuris-canonici/portuguese/codex-iuris-canonici_po.pdf',
-  'catecismo-igreja-catolica': 'https://www.vatican.va/archive/cathechism_po/index_po.htm',
+  'catecismo-igreja-catolica': 'https://www.vatican.va/archive/cathechism_po/index_new/prima-pagina-cic_po.html',
   'dei-filius': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700424_dei-filius_la.html',
   'pastor-aeternus': 'https://www.vatican.va/archive/hist_councils/i-vatican-council/documents/vat-i_const_18700718_pastor-aeternus_la.html',
   'ineffabilis-deus': 'https://www.vatican.va/content/pius-ix/pt/documents/18541208-costituzione-apostolica-ineffabilis-deus.html',
   'munificentissimus-deus': 'https://www.vatican.va/content/pius-xii/pt/apost_constitutions/documents/hf_p-xii_apc_19501101_munificentissimus-deus.html',
-  'benedictus-deus': 'https://www.vatican.va/content/benedict-xii/la/documents/constitutio-dogmatica-benedictus-deus-29-ian-1336.html',
+  'benedictus-deus': 'https://www.vatican.va/content/benedictus-xii/la/documents/constitutio-benedictus-deus-29-ian-1336.html',
   'mystici-corporis': 'https://www.vatican.va/content/pius-xii/pt/encyclicals/documents/hf_p-xii_enc_29061943_mystici-corporis-christi.html',
 };
 
