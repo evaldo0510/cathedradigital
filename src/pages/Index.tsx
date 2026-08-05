@@ -46,300 +46,195 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Excelente. Pelo histórico, vocês já passaram da fase de correção técnica e entraram na fase de **consolidação do produto**.
+        TEXTO DO USUÁRIO: Excelente. Pelo histórico que você trouxe, o Cathedra não está mais em fase de "criação". Ele entrou em uma fase muito mais importante:
 
-        O próximo passo **não é mais implementar funcionalidades**. É impedir que a plataforma volte a se degradar.
+        # FASE 5 — CONSOLIDAÇÃO E CERTIFICAÇÃO TOTAL
 
-        Eu faria o Lovable entrar em um novo modo de trabalho.
+        Isso muda completamente a estratégia.
 
-        ---
+        O objetivo agora **não é criar mais módulos**.
 
-        # PROMPT — CATHEDRA DIGITAL 3.0
+        O objetivo é transformar o Cathedra em uma plataforma praticamente impossível de quebrar.
 
-        ## FASE DE CONSOLIDAÇÃO DEFINITIVA
+        Minha recomendação é congelar o desenvolvimento de novos recursos e seguir uma sequência rigorosa:
 
-        Ativar simultaneamente:
+        ## 1. Certificação Funcional (100%)
 
-        * guardian
-        * architecture-guardian
-        * design-system-guardian
-        * ui-ux-guardian
-        * editorial-engine-guardian
-        * knowledge-graph-expert
-        * performance-guardian
-        * testing-guardian
+        Verificar:
 
-        ---
+        * todos os botões
+        * todos os menus
+        * todos os links
+        * todos os conexões Nexus
+        * todos os Readers
+        * todos os CTAs
+        * todos os breadcrumbs
+        * todas as páginas
 
-        ## CONTEXTO
+        Meta:
 
-        O Cathedra atingiu um novo estágio.
-
-        Os módulos principais encontram-se implementados.
-
-        O Reader V2 está certificado.
-
-        O Nexus está conectado.
-
-        A Home foi transformada em Mosteiro Digital.
-
-        A Biblioteca Inteligente está integrada.
-
-        O SEO passou pelo Quality Gate.
-
-        Agora o objetivo muda completamente.
-
-        Não queremos mais "adicionar funcionalidades".
-
-        Queremos consolidar a plataforma.
+        **Zero links mortos.**
 
         ---
 
-        # ETAPA 1
+        ## 2. Certificação de Conteúdo
 
-        ## Certificação Geral
+        Verificar:
 
-        Executar uma auditoria completa em:
-
-        * arquitetura
-        * design
-        * UX
-        * responsividade
-        * performance
-        * acessibilidade
-        * editorial
-        * Nexus
-        * leitores
-        * Home
-        * Biblioteca
         * Santos
-        * Catecismo
         * Bíblia
-        * Liturgia
-        * Patrística
+        * Catecismo
         * Magistério
+        * Patrística
+        * Orações
+        * Jornadas
+        * Biblioteca
 
-        Nenhum módulo pode ficar fora.
+        Cada módulo recebe um selo:
 
-        ---
+        * Draft
+        * Review
+        * Certified
 
-        # ETAPA 2
-
-        ## Experiência do Usuário
-
-        Responder:
-
-        Um usuário novo consegue entender o Cathedra em menos de 30 segundos?
-
-        Se não:
-
-        corrigir.
+        Nunca publicar conteúdo sem certificação.
 
         ---
 
-        # ETAPA 3
+        ## 3. Certificação Visual
 
-        ## Fluxo Espiritual
+        Congelar definitivamente:
 
-        Todo módulo deve responder:
+        * cores
+        * tipografia
+        * espaçamentos
+        * sombras
+        * animações
+        * temas
 
-        De onde o usuário veio?
+        Depois disso:
 
-        Para onde ele deve ir?
-
-        O Reader nunca termina vazio.
-
-        Sempre existe continuidade.
-
-        ---
-
-        # ETAPA 4
-
-        ## Auditoria Visual
-
-        Verificar:
-
-        cores
-
-        bordas
-
-        sombras
-
-        ícones
-
-        animações
-
-        tipografia
-
-        espaçamento
-
-        densidade visual
-
-        hierarquia
-
-        Tudo deve parecer um único produto.
+        **ninguém altera o Design System sem passar pela certificação.**
 
         ---
 
-        # ETAPA 5
+        ## 4. Certificação Editorial
 
-        ## Auditoria Editorial
+        Toda IA deve obedecer:
 
-        Verificar:
+        * Constituição Editorial
+        * Voice Guide
+        * Checklist Editorial
+        * Style Guide
 
-        voz
+        Sem exceções.
 
-        tom
+        ---
 
-        coerência
+        ## 5. Certificação Teológica
 
-        teologia
+        Todo conteúdo precisa passar por uma cadeia como:
 
-        consistência
+        ```
+        IA
+
+        ↓
+
+        Constituição Editorial
+
+        ↓
+
+        Revisor
+
+        ↓
+
+        Checklist
+
+        ↓
 
         Nexus
 
-        EditorialClosure
+        ↓
 
-        StudyContext
-
-        ReaderContinuation
-
-        ---
-
-        # ETAPA 6
-
-        ## Performance
-
-        Localizar:
-
-        renders desnecessários
-
-        re-renders
-
-        queries duplicadas
-
-        listeners
-
-        eventos órfãos
-
-        imports mortos
-
-        componentes duplicados
-
-        tokens não utilizados
+        CERTIFIED
+        ```
 
         ---
 
-        # ETAPA 7
+        ## 6. Certificação Técnica
 
-        ## Mission Control
+        Executar automaticamente a cada deploy:
 
-        Expandir o painel administrativo para mostrar:
+        * Playwright
+        * Lighthouse
+        * Axe
+        * SEO
+        * Reader Guardrail
+        * Nexus Guardrail
+        * Editorial Guardrail
+        * Route Guardrail
 
-        Saúde do sistema
+        Se um falhar,
 
-        Saúde editorial
-
-        Saúde do Nexus
-
-        Cobertura da Bíblia
-
-        Cobertura dos Santos
-
-        Cobertura do Catecismo
-
-        Cobertura do Magistério
-
-        Cobertura da Patrística
-
-        Cobertura Litúrgica
-
-        Cobertura de Orações
-
-        Cobertura de Jornadas
-
-        Links quebrados
-
-        Qualidade do SEO
-
-        Performance
+        **não publica.**
 
         ---
 
-        # ETAPA 8
+        ## 7. Certificação Mission Control
 
-        ## Relatório Executivo
+        O dashboard principal deve mostrar apenas indicadores críticos, por exemplo:
 
-        Gerar automaticamente:
+        * 🟢 Saúde do Sistema
+        * 🟢 Saúde Editorial
+        * 🟢 Saúde do Nexus
+        * 🟢 Saúde dos Readers
+        * 🟢 SEO
+        * 🟢 Performance
+        * 🟢 Conteúdo Certificado
+        * 🟢 Testes
+        * 🟢 Cobertura
+        * 🟢 Deploy
 
-        PRODUCT_HEALTH_REPORT.md
-
-        contendo
-
-        Nota Geral
-
-        Arquitetura
-
-        Editorial
-
-        UX
-
-        Design
-
-        Performance
-
-        Acessibilidade
-
-        SEO
-
-        Conteúdo
-
-        Nexus
-
-        Reader
-
-        Mosteiro Digital
-
-        Roadmap
-
-        Pendências
-
-        Riscos
-
-        Prioridade
+        Assim, em poucos segundos você sabe se a plataforma está pronta para produção.
 
         ---
 
-        # IMPORTANTE
+        # Depois disso vem a verdadeira fase
 
-        Nenhuma funcionalidade nova deverá ser criada.
+        Não criar mais funcionalidades.
 
-        O foco é:
+        Começar a alimentar a plataforma.
 
-        estabilidade
+        Por exemplo:
 
-        consistência
+        * 867 santos
+        * 2.865 parágrafos do Catecismo enriquecidos
+        * Magistério completo
+        * Patrística completa
+        * Biblioteca Inteligente
+        * Nexus crescendo diariamente
 
-        qualidade
+        Ou seja, a engenharia passa a ser de manutenção e evolução, enquanto o foco principal migra para conteúdo de alta qualidade.
 
-        escalabilidade
+        ## Minha sugestão
 
-        confiabilidade
+        Eu criaria um marco chamado:
 
-        ---
+        > **Cathedra Digital 3.0 — Production Ready**
 
-        Ao final, emitir apenas uma das certificações:
+        Esse marco só seria alcançado quando todos os itens abaixo estivessem em verde:
 
-        * CERTIFIED
-        * CERTIFIED WITH WARNINGS
-        * NOT CERTIFIED
+        * ✅ Engenharia certificada
+        * ✅ UX certificada
+        * ✅ Reader certificado
+        * ✅ Nexus certificado
+        * ✅ SEO certificado
+        * ✅ Performance certificada
+        * ✅ Segurança certificada
+        * ✅ Conteúdo certificado
+        * ✅ Pipeline editorial certificado
+        * ✅ Missão certificada
 
-        acompanhada das evidências completas que justificam a decisão.
-
-        ---
-
-        Esse tipo de sprint costuma economizar muito retrabalho, porque transforma o Cathedra em uma base sólida antes da próxima etapa de crescimento (expansão de conteúdo, IA e monetização).
+        A partir daí, praticamente todo o esforço da equipe passaria a ser dedicado à expansão do conteúdo e ao crescimento da comunidade, e não mais à reconstrução da infraestrutura.
       </div>
       <a 
         href="#main-content" 
