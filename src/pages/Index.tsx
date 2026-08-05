@@ -46,195 +46,235 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Excelente. Pelo histórico que você trouxe, o Cathedra não está mais em fase de "criação". Ele entrou em uma fase muito mais importante:
+        TEXTO DO USUÁRIO: Excelente. Pelo histórico, vocês não estão mais na fase de construir funcionalidades. Estão na fase de **certificação e estabilização**.
 
-        # FASE 5 — CONSOLIDAÇÃO E CERTIFICAÇÃO TOTAL
+        O Cathedra já possui:
 
-        Isso muda completamente a estratégia.
-
-        O objetivo agora **não é criar mais módulos**.
-
-        O objetivo é transformar o Cathedra em uma plataforma praticamente impossível de quebrar.
-
-        Minha recomendação é congelar o desenvolvimento de novos recursos e seguir uma sequência rigorosa:
-
-        ## 1. Certificação Funcional (100%)
-
-        Verificar:
-
-        * todos os botões
-        * todos os menus
-        * todos os links
-        * todos os conexões Nexus
-        * todos os Readers
-        * todos os CTAs
-        * todos os breadcrumbs
-        * todas as páginas
-
-        Meta:
-
-        **Zero links mortos.**
-
-        ---
-
-        ## 2. Certificação de Conteúdo
-
-        Verificar:
-
-        * Santos
-        * Bíblia
-        * Catecismo
-        * Magistério
-        * Patrística
-        * Orações
-        * Jornadas
-        * Biblioteca
-
-        Cada módulo recebe um selo:
-
-        * Draft
-        * Review
-        * Certified
-
-        Nunca publicar conteúdo sem certificação.
-
-        ---
-
-        ## 3. Certificação Visual
-
-        Congelar definitivamente:
-
-        * cores
-        * tipografia
-        * espaçamentos
-        * sombras
-        * animações
-        * temas
-
-        Depois disso:
-
-        **ninguém altera o Design System sem passar pela certificação.**
-
-        ---
-
-        ## 4. Certificação Editorial
-
-        Toda IA deve obedecer:
-
-        * Constituição Editorial
-        * Voice Guide
-        * Checklist Editorial
-        * Style Guide
-
-        Sem exceções.
-
-        ---
-
-        ## 5. Certificação Teológica
-
-        Todo conteúdo precisa passar por uma cadeia como:
-
-        ```
-        IA
-
-        ↓
-
-        Constituição Editorial
-
-        ↓
-
-        Revisor
-
-        ↓
-
-        Checklist
-
-        ↓
-
-        Nexus
-
-        ↓
-
-        CERTIFIED
-        ```
-
-        ---
-
-        ## 6. Certificação Técnica
-
-        Executar automaticamente a cada deploy:
-
-        * Playwright
-        * Lighthouse
-        * Axe
-        * SEO
-        * Reader Guardrail
-        * Nexus Guardrail
-        * Editorial Guardrail
-        * Route Guardrail
-
-        Se um falhar,
-
-        **não publica.**
-
-        ---
-
-        ## 7. Certificação Mission Control
-
-        O dashboard principal deve mostrar apenas indicadores críticos, por exemplo:
-
-        * 🟢 Saúde do Sistema
-        * 🟢 Saúde Editorial
-        * 🟢 Saúde do Nexus
-        * 🟢 Saúde dos Readers
-        * 🟢 SEO
-        * 🟢 Performance
-        * 🟢 Conteúdo Certificado
-        * 🟢 Testes
-        * 🟢 Cobertura
-        * 🟢 Deploy
-
-        Assim, em poucos segundos você sabe se a plataforma está pronta para produção.
-
-        ---
-
-        # Depois disso vem a verdadeira fase
-
-        Não criar mais funcionalidades.
-
-        Começar a alimentar a plataforma.
-
-        Por exemplo:
-
-        * 867 santos
-        * 2.865 parágrafos do Catecismo enriquecidos
-        * Magistério completo
-        * Patrística completa
-        * Biblioteca Inteligente
-        * Nexus crescendo diariamente
-
-        Ou seja, a engenharia passa a ser de manutenção e evolução, enquanto o foco principal migra para conteúdo de alta qualidade.
-
-        ## Minha sugestão
-
-        Eu criaria um marco chamado:
-
-        &gt; **Cathedra Digital 3.0 — Production Ready**
-
-        Esse marco só seria alcançado quando todos os itens abaixo estivessem em verde:
-
-        * ✅ Engenharia certificada
-        * ✅ UX certificada
-        * ✅ Reader certificado
-        * ✅ Nexus certificado
+        * ✅ Reader V2 certificado
+        * ✅ Nexus integrado
+        * ✅ Biblioteca Inteligente
+        * ✅ Home Mosteiro
         * ✅ SEO certificado
-        * ✅ Performance certificada
-        * ✅ Segurança certificada
-        * ✅ Conteúdo certificado
-        * ✅ Pipeline editorial certificado
-        * ✅ Missão certificada
+        * ✅ Mission Control
+        * ✅ Quality Gates
+        * ✅ Editorial Engine
+        * ✅ Hub de Navegação
+        * ✅ Sprints 1–7 concluídas
 
-        A partir daí, praticamente todo o esforço da equipe passaria a ser dedicado à expansão do conteúdo e ao crescimento da comunidade, e não mais à reconstrução da infraestrutura.
+        Agora eu mudaria completamente a estratégia.
+
+        ## O que eu pediria ao Lovable daqui para frente
+
+        Não pediria mais funcionalidades.
+
+        Pediria uma única missão:
+
+        &gt; **"Eliminar absolutamente toda inconsistência da plataforma."**
+
+        ---
+
+        # COMANDO
+
+        ```
+        CATHEDRA DIGITAL 3.0
+
+        FASE 5
+        CONSOLIDAÇÃO DEFINITIVA
+
+        STATUS:
+        PRODUCTION READY
+
+        MISSÃO
+
+        Não criar nenhuma funcionalidade nova.
+
+        Não criar novas telas.
+
+        Não criar novos componentes.
+
+        Não criar novas páginas.
+
+        A missão agora é exclusivamente transformar o Cathedra Digital em uma plataforma impecável.
+
+        OBJETIVO
+
+        Realizar uma auditoria completa em toda a aplicação procurando qualquer tipo de inconsistência.
+
+        Verificar:
+
+        • layouts
+
+        • espaçamentos
+
+        • alinhamentos
+
+        • sombras
+
+        • bordas
+
+        • ícones
+
+        • tipografia
+
+        • contrastes
+
+        • temas
+
+        • animações
+
+        • loaders
+
+        • skeletons
+
+        • estados vazios
+
+        • mensagens
+
+        • textos
+
+        • traduções
+
+        • navegação
+
+        • Reader
+
+        • Nexus
+
+        • Biblioteca
+
+        • Busca
+
+        • Catecismo
+
+        • Santos
+
+        • Bíblia
+
+        • Liturgia
+
+        • Magistério
+
+        • Patrística
+
+        • Jornadas
+
+        • Perfil
+
+        • Administração
+
+        • Mission Control
+
+        • SEO
+
+        • Performance
+
+        • Mobile
+
+        • Desktop
+
+        • Tablet
+
+        Nenhuma inconsistência deve permanecer.
+
+        Toda correção deve utilizar componentes já existentes.
+
+        Nenhum componente novo poderá ser criado sem justificativa técnica.
+
+        Após concluir:
+
+        executar novamente
+
+        Playwright
+
+        Lighthouse
+
+        Axe
+
+        Reader Guardrails
+
+        Nexus Guardrails
+
+        SEO Guardrails
+
+        Editorial Guardrails
+
+        Performance Guardrails
+
+        Design System Guardrails
+
+        Reader Certification
+
+        Mission Control Health
+
+        Somente após todos os Guardrails aprovarem:
+
+        emitir
+
+        CATHEDRA DIGITAL 3.0
+
+        FINAL PRODUCTION CERTIFICATE
+
+        contendo:
+
+        • arquitetura
+
+        • design system
+
+        • ui
+
+        • ux
+
+        • acessibilidade
+
+        • mobile
+
+        • desktop
+
+        • performance
+
+        • seo
+
+        • editorial
+
+        • nexus
+
+        • reader
+
+        • segurança
+
+        • estabilidade
+
+        • regressões
+
+        • cobertura
+
+        • score final
+
+        Nenhuma nova Sprint será aberta antes da emissão deste certificado.
+        ```
+
+        ---
+
+        ## Depois disso
+
+        Só então eu abriria uma nova fase:
+
+        **Fase 6 — Conteúdo**
+
+        Nessa fase, o trabalho deixa de ser técnico e passa a ser editorial:
+
+        * 100 Santos Prioritários
+        * Catecismo completo
+        * Bíblia completa
+        * Patrística
+        * Magistério
+        * Liturgia das Horas
+        * Missal
+        * Orações
+        * Glossário
+        * Nexus 100% conectado
+
+        Essa ordem evita que vocês continuem desenvolvendo uma plataforma que, tecnicamente, já está madura e permite concentrar o esforço no que realmente agrega valor: o conteúdo.
       </div>
       <a 
         href="#main-content" 
