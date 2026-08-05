@@ -131,7 +131,7 @@ const CATEGORIES: AcervoCategory[] = [
 ];
 
 const AcervoHomePage: React.FC = () => {
-  const { user } = useAuth();
+  const { profile } = useAuth();
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [featured, setFeatured] = useState<LibraryItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -151,7 +151,7 @@ const AcervoHomePage: React.FC = () => {
     };
   }, []);
 
-  const firstName = user?.full_name?.split(' ')[0] || 'Peregrino';
+  const firstName = profile?.name?.split(' ')[0] || 'Peregrino';
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
 
@@ -196,8 +196,8 @@ const AcervoHomePage: React.FC = () => {
             {[
               { label: 'Bíblia', icon: Icons.Bible },
               { label: 'Catecismo', icon: Icons.Catechism },
-              { label: 'Santos', icon: Icons.PersonStanding },
-              { label: 'Maria', icon: Icons.Flower2 },
+              { label: 'Santos', icon: Icons.Saints },
+              { label: 'Maria', icon: Icons.Flower2 || Icons.Sparkles },
               { label: 'Liturgia', icon: Icons.Chalice },
               { label: 'Orações', icon: Icons.Heart },
               { label: 'Patrística', icon: Icons.ScrollText },
