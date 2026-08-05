@@ -119,9 +119,9 @@ const BibliotecaInteligentePage: React.FC = () => {
                         </span>
                       )}
                     </div>
-                    <h3 className="text-premium-md font-serif font-bold group-hover:text-primary transition-colors leading-tight">
+                    <h2 className="text-premium-md font-serif font-bold group-hover:text-primary transition-colors leading-tight">
                       {hit.title}
-                    </h3>
+                    </h2>
                     <p className="text-premium-sm text-muted-foreground line-clamp-2 italic leading-relaxed">
                       {hit.content}
                     </p>
