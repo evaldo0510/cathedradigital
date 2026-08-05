@@ -248,7 +248,7 @@ const HomeUnified: React.FC = () => {
                           <span className="text-[9px] font-black uppercase tracking-[0.2em] text-gold">{step.category}</span>
                           <ArrowUpRight className="h-3 w-3 text-gold/20 group-hover:text-gold transition-colors" />
                         </div>
-                        <h4 className="text-lg font-medium text-noir-text group-hover:text-gold-light transition-colors">{step.label}</h4>
+                        <h3 className="text-lg font-medium text-noir-text group-hover:text-gold-light transition-colors">{step.label}</h3>
                         <p className="mt-1 text-xs text-noir-text-muted leading-relaxed">{step.description}</p>
                       </div>
                     </div>
@@ -281,7 +281,7 @@ const HomeUnified: React.FC = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-[9px] font-bold text-noir-text-faint uppercase tracking-widest">Vovê parou em:</p>
-                      <h4 className="text-base font-medium text-noir-text truncate">{lastRead.label || 'Última leitura'}</h4>
+                      <h3 className="text-base font-medium text-noir-text truncate">{lastRead.label || 'Última leitura'}</h3>
                     </div>
                   </div>
                   <Link 
