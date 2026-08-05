@@ -46,7 +46,154 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Crie um painel de status da Fase 5 que mostre checkpoints, resultados (SEO, acessibilidade, performance, testes) e evidências por build. Adicione testes de regressão visual para garantir que não haja qualquer mudança perceptível na interface após correções como a troca de &lt;h3&gt; para &lt;h2&gt;. Execute a suíte de testes Playwright em Desktop e Mobile e gere um relatório com o status de cada cenário. Implemente um pipeline de CI que bloqueie merges quando Lighthouse e Axe ficarem fora das metas definidas.
+        TEXTO DO USUÁRIO: Concordo com a direção, mas faria isso de forma organizada. Pelo que você mostrou ao longo das últimas auditorias, o Cathedra já possui muitos módulos implementados, e o risco agora não é "faltar funcionalidades", e sim **existirem módulos prontos que ainda não conversam entre si ou não seguem o padrão editorial**.
+
+Minha recomendação é abrir uma **Fase 6 — Consolidação do Conhecimento**, e não criar módulos novos.
+
+## Prioridade 1 — Revisão completa do conteúdo existente
+
+Antes de escrever qualquer conteúdo novo, faça uma auditoria de tudo o que já existe:
+
+* Bíblia
+* Catecismo
+* Santos
+* Orações
+* Liturgia das Horas
+* Missal
+* Magistério
+* Patrística
+* Jornadas
+* Biblioteca Inteligente
+* Glossário
+* **Aparições de Nossa Senhora** (você identificou que esse módulo já existe)
+
+Para cada módulo, verificar:
+
+* Está completo?
+* Usa o Reader V2?
+* Está conectado ao Nexus?
+* Possui abertura editorial?
+* Possui encerramento editorial?
+* Possui continuidade?
+* Possui links funcionando?
+* Possui imagens?
+* Está indexado na Biblioteca?
+* Está preparado para multilíngue?
+
+---
+
+# Prioridade 2 — Revisar o módulo "Aparições de Nossa Senhora"
+
+Se ele já existe, eu não criaria outro.
+
+Primeiro faria uma certificação completa.
+
+Checklist:
+
+### Reader
+
+* Hero
+* Contexto
+* História
+* Cronologia
+* Mensagem principal
+* Aprovação eclesial
+* Fontes
+* Encerramento
+* Continuação
+
+---
+
+### Nexus
+
+Cada aparição deveria conectar automaticamente com:
+
+* Santos relacionados
+* Papas
+* Concílios
+* Catecismo
+* Bíblia
+* Orações
+* Rosário
+* Liturgia
+* Jornadas
+
+Exemplo:
+
+**Fátima**
+
+↓
+
+* Lc 1
+* Rosário
+* Imaculado Coração
+* São João Paulo II
+* Irmã Lúcia
+* Pastorinhos
+* CIC
+* Magistério
+
+---
+
+# Prioridade 3 — Biblioteca Inteligente
+
+Hoje ela deveria conseguir encontrar:
+
+"Maria"
+
+↓
+
+Nossa Senhora
+
+↓
+
+Apareições
+
+↓
+
+Santos
+
+↓
+
+Rosário
+
+↓
+
+Magistério
+
+↓
+
+Patrística
+
+↓
+
+Catecismo
+
+Tudo conectado.
+
+---
+
+# Prioridade 4 — Home
+
+Na Home Viva deveriam aparecer blocos como:
+
+* Aparição do dia
+* Santo do dia
+* Leitura do dia
+* Jornada recomendada
+* Oração recomendada
+* Documento recomendado
+* Conexão do Nexus
+
+---
+
+# O próximo comando para o Lovable
+
+Eu passaria exatamente esta missão:
+
+> **Executar uma Auditoria Global de Conteúdo do Cathedra Digital 3.0. Não criar novos módulos. Mapear todos os módulos já existentes (incluindo Aparições de Nossa Senhora), identificar o nível de implementação de cada um, verificar integração com Reader V2, Nexus, Biblioteca Inteligente e Editorial Engine, listar inconsistências, conteúdos incompletos, links quebrados e oportunidades de conexão. Ao final, gerar um relatório de certificação com percentual de conclusão por módulo e um roadmap priorizado para alcançar 100% de consolidação da plataforma.**
+
+Essa abordagem evita retrabalho e garante que vocês aproveitem ao máximo tudo o que já foi desenvolvido antes de expandir o sistema.
       </div>
       <a 
         href="#main-content" 
