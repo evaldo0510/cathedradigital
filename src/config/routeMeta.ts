@@ -46,9 +46,9 @@ export const ROUTE_META: Record<string, RouteMeta> = {
 
   // ─── Home / Átrio ─────────────────────────────────────────────
   '/': {
-    title: 'Cathedra Digital — Bíblia, Catecismo e Vida Espiritual',
+    title: 'Cathedra Digital — Mosteiro Digital',
     description:
-      'Bíblia Sagrada, Catecismo, liturgia diária, santos, orações e IA teológica. A biblioteca viva da Tradição em um só lugar.',
+      'Bem-vindo ao Mosteiro Digital. Bíblia Sagrada, Catecismo, liturgia diária, santos, orações e IA teológica em uma experiência contemplativa.',
   },
 
   // ─── Escritura & Doutrina (Biblioteca) ────────────────────────
@@ -83,9 +83,9 @@ export const ROUTE_META: Record<string, RouteMeta> = {
       'Leitura estruturada da Suma Teológica de São Tomás de Aquino com navegação por partes, questões e artigos.',
   },
   '/biblioteca': {
-    title: 'Biblioteca Católica — Textos, Padres e Doutores',
+    title: 'Biblioteca Inteligente — O Google Católico',
     description:
-      'Acervo editorial da Cathedra: Padres da Igreja, Doutores, mística, apologética e teologia acessíveis em um só espaço.',
+      'Busque por perguntas, assuntos, santos ou documentos. O cérebro teológico da Cathedra conectando toda a Tradição em um só lugar.',
   },
   '/dogmas': {
     title: 'Dogmas Católicos — Verdades Definidas da Fé',
@@ -138,9 +138,9 @@ export const ROUTE_META: Record<string, RouteMeta> = {
 
   // ─── Liturgia ─────────────────────────────────────────────────
   '/liturgia': {
-    title: 'Liturgia Diária — Missa, Ofício e Calendário',
+    title: 'Igreja — Liturgia, Missa e Ofício Divino',
     description:
-      'Missal, Liturgia das Horas e calendário litúrgico do dia com leituras, salmos e antífonas próprias.',
+      'A vida litúrgica da Igreja: Missal, Liturgia das Horas e calendário. Reze o próprio do dia em união com toda a Igreja.',
   },
   '/liturgia/dia': {
     title: 'Dia Litúrgico — Missa, Horas e Santo do Dia',
@@ -306,7 +306,7 @@ export const ROUTE_META: Record<string, RouteMeta> = {
   // ─── Aliases (Navigate replace) — noindex + canonical ao destino
   '/home': { title: 'Cathedra Digital', description: 'Alias para a página inicial.', noindex: true, canonicalPath: '/' },
   '/sobre': { title: 'Sobre — Cathedra', description: 'Alias para /about.', noindex: true, canonicalPath: '/about' },
-  '/biblia': { title: 'Bíblia — Cathedra', description: 'Alias para /bible.', noindex: true, canonicalPath: '/bible' },
+  '/biblia': { title: 'Ler — Sagrada Escritura', description: 'Alias para /bible.', noindex: true, canonicalPath: '/bible' },
   '/catecismo': { title: 'Catecismo — Cathedra', description: 'Alias para /catechism.', noindex: true, canonicalPath: '/catechism' },
   '/magisterio': { title: 'Magistério — Cathedra', description: 'Alias para /magisterium.', noindex: true, canonicalPath: '/magisterium' },
   '/search': { title: 'Buscar — Cathedra', description: 'Alias para /buscar.', noindex: true, canonicalPath: '/buscar' },
