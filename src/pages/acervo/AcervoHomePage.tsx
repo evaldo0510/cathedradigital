@@ -157,9 +157,9 @@ const AcervoHomePage: React.FC = () => {
 
         {/* Estantes do Conhecimento (Etapa 6) */}
         <section className="space-y-spacing-xl">
-           <h2 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary text-center">
-              Estantes do Mosteiro
-           </h2>
+            <h2 className="text-premium-small font-black uppercase tracking-[0.2em] text-gold text-center">
+               Estantes Monásticas 2.0
+            </h2>
            
            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
               {/* Formação — O Alicerce */}
