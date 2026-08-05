@@ -47,7 +47,18 @@ jobs:
               summary += `✅ Rotas Mapeadas: ${data.total}\n`;
               summary += `❌ Erros: ${data.errors}\n`;
               summary += `⚠️ Avisos: ${data.warnings}\n\n`;
-              summary += "[Baixe o relatório completo nos artefatos do build]";
+              
+              if (data.issueDetails && data.issueDetails.length > 0) {
+                summary += "| Rota | Problemas |\n| :--- | :--- |\n";
+                data.issueDetails.slice(0, 15).forEach(issue => {
+                  const p = issue.errors.concat(issue.warnings).join(", ");
+                  summary += `| ${issue.path} | ${p} |\n`;
+                });
+                if (data.issueDetails.length > 15) summary += `\n*...e mais ${data.issueDetails.length - 15} rotas.*`;
+              }
+              
+              summary += "\n\n[Baixe o relatório completo nos artefatos do build]";
+
             } else {
               summary += "⚠️ Relatório de SEO não encontrado no workspace.";
             }
