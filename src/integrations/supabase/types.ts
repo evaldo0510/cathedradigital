@@ -8595,6 +8595,18 @@ export type Database = {
           status: Database["public"]["Enums"]["bible_phase_status"]
         }[]
       }
+      global_search_v2: {
+        Args: { p_limit?: number; p_query: string }
+        Returns: {
+          content: string
+          id: string
+          item_type: Database["public"]["Enums"]["search_result_type"]
+          rank: number
+          slug: string
+          subtitle: string
+          title: string
+        }[]
+      }
       glossary_correction_priority: {
         Args: never
         Returns: {
@@ -9307,6 +9319,15 @@ export type Database = {
       saint_work_ficha_completeness: "stub" | "minimal" | "complete"
       saint_work_reading_level: "beginner" | "intermediate" | "advanced"
       saint_work_status: "draft" | "in_review" | "published" | "archived"
+      search_result_type:
+        | "bible"
+        | "catechism"
+        | "saint"
+        | "patristic"
+        | "magisterium"
+        | "prayer"
+        | "journey"
+        | "glossary"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -9511,6 +9532,16 @@ export const Constants = {
       saint_work_ficha_completeness: ["stub", "minimal", "complete"],
       saint_work_reading_level: ["beginner", "intermediate", "advanced"],
       saint_work_status: ["draft", "in_review", "published", "archived"],
+      search_result_type: [
+        "bible",
+        "catechism",
+        "saint",
+        "patristic",
+        "magisterium",
+        "prayer",
+        "journey",
+        "glossary",
+      ],
     },
   },
 } as const
