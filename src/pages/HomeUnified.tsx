@@ -40,6 +40,7 @@ import {
   useFeaturedThemes,
   useSearchSuggestions,
 } from '@/modules/atrium/hooks';
+import { useSpiritualJourney } from '@/hooks/useSpiritualJourney';
 import type { ResumeItem } from '@/modules/atrium/types';
 
 // ─── Ícones dos 5 ambientes ──────────────────────────────────────────────────
