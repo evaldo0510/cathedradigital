@@ -134,7 +134,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
             { label: 'Bíblia', route: AppRoute.BIBLE, icon: Icons.Bible },
             { label: 'Catecismo', route: AppRoute.CATECHISM, icon: Icons.Catechism },
             { label: 'Santos', route: AppRoute.SAINTS, icon: Icons.Flame },
-            { label: 'Jornadas', route: AppRoute.JOURNEYS, icon: Icons.Route },
+            { label: 'Jornadas', route: AppRoute.JORNADAS, icon: Icons.Route },
           ].map((item) => (
             <button
               key={item.label}
