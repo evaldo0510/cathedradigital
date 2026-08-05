@@ -28,6 +28,9 @@ export function buildSaintPage(data: SaintEditorialData): SaintPageDescriptor {
   if (data.reflection && data.reflection.trim().length > 0) {
     blocks.push({ id: 'reflection', data: data.reflection });
   }
+  if (data.meditation && data.meditation.trim().length > 0) {
+    blocks.push({ id: 'meditation', data: data.meditation });
+  }
   if (data.legacy && data.legacy.trim().length > 0) {
     blocks.push({ id: 'legacy', data: data.legacy });
   }
