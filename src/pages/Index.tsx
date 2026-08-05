@@ -191,7 +191,7 @@ Na Home Viva deveriam aparecer blocos como:
 
 Eu passaria exatamente esta missão:
 
-> **Executar uma Auditoria Global de Conteúdo do Cathedra Digital 3.0. Não criar novos módulos. Mapear todos os módulos já existentes (incluindo Aparições de Nossa Senhora), identificar o nível de implementação de cada um, verificar integração com Reader V2, Nexus, Biblioteca Inteligente e Editorial Engine, listar inconsistências, conteúdos incompletos, links quebrados e oportunidades de conexão. Ao final, gerar um relatório de certificação com percentual de conclusão por módulo e um roadmap priorizado para alcançar 100% de consolidação da plataforma.**
+{`> `}**Executar uma Auditoria Global de Conteúdo do Cathedra Digital 3.0. Não criar novos módulos. Mapear todos os módulos já existentes (incluindo Aparições de Nossa Senhora), identificar o nível de implementação de cada um, verificar integração com Reader V2, Nexus, Biblioteca Inteligente e Editorial Engine, listar inconsistências, conteúdos incompletos, links quebrados e oportunidades de conexão. Ao final, gerar um relatório de certificação com percentual de conclusão por módulo e um roadmap priorizado para alcançar 100% de consolidação da plataforma.**
 
 Essa abordagem evita retrabalho e garante que vocês aproveitem ao máximo tudo o que já foi desenvolvido antes de expandir o sistema.
       </div>
