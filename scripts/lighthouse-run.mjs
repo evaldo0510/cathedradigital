@@ -45,35 +45,43 @@ const summary = {
 };
 for (const { name, config } of CONFIGS) {
   console.log(`\n═══ Lighthouse ${name} (${ENV_LABEL}) ═══`);
-  const outDir = `.lighthouseci/${name}`;
+  const outDir = path.join(OUTPUT_DIR, name);
   fs.rmSync(outDir, { recursive: true, force: true });
   fs.mkdirSync(outDir, { recursive: true });
 
   run('bunx', ['@lhci/cli', 'collect', `--config=${config}`], {});
   const defaultDir = '.lighthouseci';
-  const files = fs.readdirSync(defaultDir).filter((f) => f.endsWith('.json') && !f.includes('/'));
-  for (const f of files) fs.renameSync(path.join(defaultDir, f), path.join(outDir, f));
+  // Move arquivos se o LHCI gerou no default
+  if (fs.existsSync(defaultDir) && defaultDir !== OUTPUT_DIR) {
+    const files = fs.readdirSync(defaultDir).filter((f) => f.endsWith('.json') && !f.includes('/'));
+    for (const f of files) fs.renameSync(path.join(defaultDir, f), path.join(outDir, f));
+  }
 
-  const manifest = JSON.parse(fs.readFileSync(path.join(outDir, 'manifest.json'), 'utf8'));
-  const median = manifest.find((m) => m.isRepresentativeRun) || manifest[0];
-  const report = JSON.parse(fs.readFileSync(median.jsonPath.replace(defaultDir, outDir), 'utf8'));
-  const audits = report.audits;
-  summary.runs.push({
-    device: name,
-    url: report.finalUrl || report.requestedUrl,
-    performance: report.categories.performance.score,
-    lcp: audits['largest-contentful-paint'].numericValue,
-    cls: audits['cumulative-layout-shift'].numericValue,
-    tbt: audits['total-blocking-time'].numericValue,
-    inp: audits['interaction-to-next-paint']?.numericValue ?? null,
-    fcp: audits['first-contentful-paint'].numericValue,
-    si: audits['speed-index'].numericValue,
-    tti: audits['interactive'].numericValue,
-  });
+  const manifestPath = path.join(outDir, 'manifest.json');
+  if (fs.existsSync(manifestPath)) {
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    const median = manifest.find((m) => m.isRepresentativeRun) || manifest[0];
+    const reportPath = median.jsonPath.includes(defaultDir) ? median.jsonPath.replace(defaultDir, outDir) : median.jsonPath;
+    const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+    const audits = report.audits;
+    summary.runs.push({
+      device: name,
+      url: report.finalUrl || report.requestedUrl,
+      performance: report.categories.performance.score,
+      seo: report.categories.seo.score,
+      lcp: audits['largest-contentful-paint'].numericValue,
+      cls: audits['cumulative-layout-shift'].numericValue,
+      tbt: audits['total-blocking-time'].numericValue,
+      inp: audits['interaction-to-next-paint']?.numericValue ?? null,
+      fcp: audits['first-contentful-paint'].numericValue,
+      si: audits['speed-index'].numericValue,
+      tti: audits['interactive'].numericValue,
+    });
+  }
 
   run('bunx', ['@lhci/cli', 'assert', `--config=${config}`]);
 }
 
-fs.writeFileSync('.lighthouseci/summary.json', JSON.stringify(summary, null, 2));
+fs.writeFileSync(path.join(OUTPUT_DIR, 'summary.json'), JSON.stringify(summary, null, 2));
 console.log(`\n✅ Lighthouse concluído (${ENV_LABEL}). Resumo:`);
 console.table(summary.runs);
