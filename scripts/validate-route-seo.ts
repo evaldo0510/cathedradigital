@@ -131,20 +131,31 @@ function validateEntry(path: string, meta: RouteMeta) {
 function checkRobotsAllowed(path: string, robotsContent: string): boolean {
   const lines = robotsContent.split('\n');
   let isAllowed = true;
+  let currentUserAgentAll = false;
+
   for (const line of lines) {
-    if (line.startsWith('Disallow:')) {
-      const pattern = line.slice('Disallow:'.length).trim();
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith('#')) continue;
+
+    if (trimmed.toLowerCase().startsWith('user-agent:')) {
+      const ua = trimmed.slice(11).trim();
+      currentUserAgentAll = (ua === '*');
+      continue;
+    }
+
+    if (currentUserAgentAll && trimmed.toLowerCase().startsWith('disallow:')) {
+      const pattern = trimmed.slice(9).trim();
       if (!pattern) continue;
-      // Regra robots: se o padrão for "/", bloqueia tudo.
-      // Se for "/admin", bloqueia "/admin", "/admin/settings", etc.
-      // Mas não deve bloquear "/" se o padrão for "/admin".
+
+      // Se Disallow: / -> bloqueia tudo
       if (pattern === '/') {
         isAllowed = false;
         break;
       }
-      if (path === pattern || path.startsWith(pattern + '/') || (pattern !== '/' && path.startsWith(pattern))) {
-        // Exceção: não queremos que "/bible" bloqueie "/"
-        // No robots.txt, "Disallow: /admin" bloqueia qualquer caminho que comece com "/admin"
+
+      // Se path coincide exatamente ou começa com o padrão seguido de "/"
+      // Ex: pattern=/admin bloqueia /admin, /admin/, /admin/dashboard
+      if (path === pattern || path.startsWith(pattern.endsWith('/') ? pattern : pattern + '/')) {
         isAllowed = false;
         break;
       }
@@ -152,6 +163,7 @@ function checkRobotsAllowed(path: string, robotsContent: string): boolean {
   }
   return isAllowed;
 }
+
 
 
 
