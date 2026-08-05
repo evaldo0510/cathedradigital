@@ -124,8 +124,8 @@ const HomeUnified: React.FC = () => {
         <link rel="canonical" href="/" />
       </Helmet>
 
-      {/* ══════ HERO (100vh) — Mosteiro Digital Central ══════ */}
-      <section className="relative flex min-h-[95vh] w-full flex-col items-center justify-center px-6 py-16 md:px-12">
+      {/* ══════ HERO (100vh) — O Companheiro Espiritual ══════ */}
+      <section className="relative flex min-h-[90vh] w-full flex-col items-center justify-center px-6 py-16 md:px-12">
         {/* Halo dourado sutil */}
         <div
           aria-hidden
@@ -158,8 +158,7 @@ const HomeUnified: React.FC = () => {
             className="mx-auto max-w-2xl px-4 text-lg italic leading-relaxed md:text-2xl"
             style={{ fontFamily: "var(--font-display)", color: 'var(--noir-text-muted)' }}
           >
-            Habite a profundidade do silêncio,<br className="hidden md:inline" />
-            {' '}contemple a clareza da Verdade.
+            Seu companheiro espiritual para a vida interior.
           </p>
 
           {/* Busca Spotlight-like */}
