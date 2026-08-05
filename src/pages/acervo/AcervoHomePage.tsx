@@ -154,22 +154,25 @@ const AcervoHomePage: React.FC = () => {
 
         <EditorialDivider variant="gold-fade" className="max-w-2xl mx-auto opacity-30" />
 
-        {/* Linha de Base — Pilares do Conhecimento */}
+        {/* Linha de Base — Pilares do Conhecimento (Expansão da Descoberta) */}
         <section className="space-y-spacing-xl">
            <h2 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary text-center">
-              Pilares da Fé
+              Pilares do Acervo
            </h2>
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-lg">
+           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-spacing-sm">
              {[
-               { label: 'Bíblia', to: '/bible', desc: 'A Palavra de Deus revelada.', icon: Icons.Bible },
-               { label: 'Catecismo', to: '/catechism', desc: 'A síntese da doutrina cristã.', icon: Icons.BookOpen },
-               { label: 'Santos', to: '/santos', desc: 'A história viva da santidade.', icon: Icons.User },
+               { label: 'Bíblia', to: '/bible', desc: 'Sagradas Escrituras', icon: Icons.Bible },
+               { label: 'Catecismo', to: '/catechism', desc: 'Doutrina da Igreja', icon: Icons.BookOpen },
+               { label: 'Santos', to: '/saints', desc: 'Vidas exemplares', icon: Icons.User },
+               { label: 'Aparições', to: '/aparicoes', desc: 'Visitas Celestes', icon: Icons.Star },
+               { label: 'Patrística', to: '/biblioteca', desc: 'Padres da Igreja', icon: Icons.Church },
+               { label: 'Glossário', to: '/glossario', desc: 'Termos Teológicos', icon: Icons.Sparkles },
              ].map(pilar => (
                <Link key={pilar.label} to={pilar.to} className="group">
-                 <div className="p-spacing-xl rounded-premium border border-primary/5 bg-card/40 hover:bg-primary/[0.02] hover:border-primary/20 transition-all text-center space-y-spacing-sm">
-                    <pilar.icon className="w-10 h-10 mx-auto text-primary/20 group-hover:text-primary transition-colors" />
-                    <h3 className="type-h3 text-foreground">{pilar.label}</h3>
-                    <p className="type-body text-muted-foreground/70">{pilar.desc}</p>
+                 <div className="p-spacing-md rounded-premium border border-primary/5 bg-card/40 hover:bg-primary/[0.02] hover:border-primary/20 transition-all text-center space-y-2">
+                    <pilar.icon className="w-6 h-6 mx-auto text-primary/20 group-hover:text-primary transition-colors" />
+                    <h3 className="text-[10px] font-black uppercase tracking-widest text-foreground">{pilar.label}</h3>
+                    <p className="text-[8px] text-muted-foreground/70 uppercase tracking-tight">{pilar.desc}</p>
                  </div>
                </Link>
              ))}
