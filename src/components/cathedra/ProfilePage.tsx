@@ -481,6 +481,19 @@ const ProfilePage: React.FC = () => {
 
           {/* === VISÃO GERAL === */}
           <TabsContent value="overview" className="space-y-spacing-lg mt-0">
+            {/* Tema mais estudado (Simulado via Nexus/Histórico) */}
+            <CathedraCard className="p-spacing-xl bg-primary/[0.02] border-primary/10">
+              <div className="flex items-center gap-spacing-md">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                  <Icons.Flame className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-primary/60">Tema mais estudado</p>
+                  <h3 className="text-premium-xl font-serif text-foreground">Esperança Cristã</h3>
+                </div>
+              </div>
+            </CathedraCard>
+
             <button
               type="button"
               onClick={() => navigate('/profile/favorites')}
