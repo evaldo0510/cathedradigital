@@ -82,6 +82,8 @@ export interface SaintEditorialData {
   longBio?: string; // biografia longa editorial
   /** Síntese espiritual editorial (carisma, escola de santidade). */
   reflection?: string;
+  /** Meditação guiada ou retiro breve. */
+  meditation?: string;
   /** Legado / herança deixada à Igreja. */
   legacy?: string;
   /** Encerramento editorial já normalizado (resolveEditorialClosure). */
