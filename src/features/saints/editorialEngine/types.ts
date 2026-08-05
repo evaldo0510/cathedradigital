@@ -100,6 +100,7 @@ export type SaintBlockId =
   | 'header'
   | 'bio'
   | 'reflection'
+  | 'meditation'
   | 'legacy'
   | 'timeline'
   | 'virtues'
