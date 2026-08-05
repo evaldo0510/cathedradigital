@@ -1712,6 +1712,10 @@ async function loadModuleStats(): Promise<ModuleStat[]> {
     supabase.from("prayers").select("is_published", { count: "exact", head: false }),
     supabase.from("collections").select("status", { count: "exact", head: false }),
     supabase.from("journeys").select("status", { count: "exact", head: false }),
+    supabase.from("bible_verses").select("id", { count: "exact", head: true }),
+    supabase.from("liturgy_meditations").select("id", { count: "exact", head: true }),
+    supabase.from("library_items_v1").select("status", { count: "exact", head: false }),
+    supabase.from("library_items_v1").select("status", { count: "exact", head: false }),
   ]);
 
   const stat = (label: string, key: string, res: any, isPub: (r: any) => boolean, note?: string): ModuleStat => {
@@ -1726,17 +1730,37 @@ async function loadModuleStats(): Promise<ModuleStat[]> {
 
   return [
     stat("Glossário", "glossary", results[0], (r) => r.status === "published"),
-    // Santos: sem coluna status → tratamos "todos publicados" (import massivo)
+    // Santos: tratamos "todos publicados" (import massivo)
     (() => {
-      if (results[1].status !== "fulfilled" || results[1].value.error) {
+      const res = results[1];
+      if (res.status !== "fulfilled" || res.value.error) {
         return { key: "saints", label: "Santos", published: 0, total: 0, note: "sem acesso" };
       }
-      const t = results[1].value.count ?? 0;
+      const t = res.value.count ?? 0;
       return { key: "saints", label: "Santos", published: t, total: t, note: "sem status" };
     })(),
     stat("Orações", "prayers", results[2], (r) => r.is_published === true),
     stat("Coleções", "collections", results[3], (r) => r.status === "published"),
     stat("Jornadas", "journeys", results[4], (r) => r.status === "published"),
+    // Bíblia: tratamos "todos publicados"
+    (() => {
+      const res = results[5];
+      if (res.status !== "fulfilled" || res.value.error) {
+        return { key: "bible", label: "Bíblia", published: 0, total: 0, note: "sem acesso" };
+      }
+      const t = res.value.count ?? 0;
+      return { key: "bible", label: "Bíblia", published: t, total: t };
+    })(),
+    (() => {
+      const res = results[6];
+      if (res.status !== "fulfilled" || res.value.error) {
+        return { key: "liturgy", label: "Liturgia", published: 0, total: 0, note: "sem acesso" };
+      }
+      const t = res.value.count ?? 0;
+      return { key: "liturgy", label: "Liturgia", published: t, total: t };
+    })(),
+    stat("Patrística", "patristic", results[7], (r) => r.status === "published"),
+    stat("Magistério", "magisterium", results[8], (r) => r.status === "published"),
   ];
 }
 

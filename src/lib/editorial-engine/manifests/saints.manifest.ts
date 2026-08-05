@@ -27,7 +27,14 @@ export const saintsManifest: EntityManifest = {
     version: "0.1",
     status: "developing",
     certification: false,
-    migration: 0.30,
+    migration: 0.35,
+  },
+  // Bloqueio de Gate Sprint 7 — Santos Refinados
+  gate: {
+    minIce: 95,
+    minEditorial: 95,
+    minNexus: 90,
+    requiredFields: ["bio", "full_bio", "spiritual_practice", "prayer", "bible_refs", "catechism_refs"],
   },
   fields: [
     // — Identidade canônica —
