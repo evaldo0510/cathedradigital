@@ -34,6 +34,7 @@ const PerfGovernanceDashboard = lazy(() => import('./PerfGovernanceDashboard'));
 const VisualRegressionDashboard = lazy(() => import('./VisualRegressionDashboard'));
 const RealTimeTelemetryPanel = lazy(() => import('./admin/RealTimeTelemetryPanel'));
 
+const ProductionReadyDashboard = lazy(() => import('@/pages/admin/ProductionReadyDashboard'));
 
 interface UserProfile extends AdminUser {}
 
