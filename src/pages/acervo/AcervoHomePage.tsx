@@ -130,15 +130,15 @@ const AcervoHomePage: React.FC = () => {
               <Link to="/santos" className="group">
                 <EditorialCard density="dense" className="h-full bg-primary/[0.01] hover:bg-primary/[0.03]">
                   <EditorialCard.Eyebrow>👤 Santo do Dia</EditorialCard.Eyebrow>
-                  <EditorialCard.Title>Santo do Dia</EditorialCard.Title>
+                  <EditorialCard.Title>Vidas exemplares</EditorialCard.Title>
                   <EditorialCard.Description>Conheça o modelo de santidade que a Igreja celebra nesta data.</EditorialCard.Description>
                 </EditorialCard>
               </Link>
-              <Link to="/rezar" className="group">
+              <Link to="/aparicoes" className="group">
                 <EditorialCard density="dense" className="h-full bg-primary/[0.01] hover:bg-primary/[0.03]">
-                  <EditorialCard.Eyebrow>🙏 Oração Recomendada</EditorialCard.Eyebrow>
-                  <EditorialCard.Title>Santo Rosário</EditorialCard.Title>
-                  <EditorialCard.Description>Contemple os mistérios da Salvação com Maria.</EditorialCard.Description>
+                  <EditorialCard.Eyebrow>🌟 Visita Celeste</EditorialCard.Eyebrow>
+                  <EditorialCard.Title>Aparições Marianas</EditorialCard.Title>
+                  <EditorialCard.Description>Mensagens de Nossa Senhora reconhecidas pela Igreja.</EditorialCard.Description>
                 </EditorialCard>
               </Link>
               <Link to="/catechism" className="group">
