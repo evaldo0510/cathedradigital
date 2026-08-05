@@ -225,6 +225,10 @@ const AdminDashboard: React.FC = () => {
             </TabsTrigger>
           </TabsList>
         </div>
+        
+        <TabsContent value="knowledge" className="mt-spacing-lg focus-visible:outline-none focus-visible:ring-0">
+          <GlobalKnowledgeAudit />
+        </TabsContent>
 
         <TabsContent value="production" className="space-y-spacing-lg">
           <Suspense fallback={<Skeleton className="h-[800px] w-full" />}>

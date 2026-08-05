@@ -256,7 +256,7 @@ const SiteHealthDashboard = lazy(() => import('./pages/admin/SiteHealthDashboard
 const AuditLogsPage = lazy(() => import('./pages/admin/AuditLogsPage'));
 const DocsPage = lazy(() => import('./pages/DocsPage'));
 const DocsArticlePage = lazy(() => import('./pages/DocsArticlePage'));
-const ProductionReadyDashboard = lazy(() => import('./pages/admin/ProductionReadyDashboard'));
+// ProductionReadyDashboard movido para o topo para evitar duplicidade
 
 const PrayerAdmin = lazy(() => import('./pages/admin/PrayerAdmin'));
 const LiturgyMeditationFallbackPanel = lazy(() => import('./pages/admin/LiturgyMeditationFallbackPanel'));
