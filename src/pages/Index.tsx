@@ -46,60 +46,141 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Concordo com a direção, mas faria isso de forma organizada. Pelo que você mostrou ao longo das últimas auditorias, o Cathedra já possui muitos módulos implementados, e o risco agora não é "faltar funcionalidades", e sim **existirem módulos prontos que ainda não conversam entre si ou não seguem o padrão editorial**.
-
-        TEXTO DO USUÁRIO: Esse é um bom momento para mudar completamente o foco do projeto.
-
-        Até agora vocês estavam certificando **infraestrutura** (Reader, Nexus, SEO, navegação, QA). Agora a certificação deve ser **teológica e editorial**.
-
-        Eu ampliaria a Auditoria Global de Conteúdo para um inventário completo do Cathedra.
+        TEXTO DO USUÁRIO: O projeto está entrando na fase mais importante. Até aqui vocês construíram uma plataforma robusta; agora o diferencial passa a ser a **qualidade do conhecimento**. Eu faria apenas um ajuste estratégico: a auditoria não deve medir apenas "módulos", mas também **densidade e conectividade do conhecimento**.
+        
+        Eu acrescentaria cinco certificações que ainda não aparecem no escopo.
 
         ---
 
-        # FASE 6 — AUDITORIA GLOBAL DO CONHECIMENTO
+        # FASE 6.1 — Certificação do Conhecimento
 
-        Em vez de apenas verificar integração, o Lovable deve responder:
+        Cada módulo deve receber uma nota em cinco dimensões:
 
-        ## 1. Quais módulos realmente existem?
-        Gerar uma lista completa.
-        Exemplo: Bíblia, Catecismo, Santos, Aparições Marianas, Magistério, Patrística, Liturgia das Horas, Missal, Orações, Rosário, Exame de Consciência, Novenas, Jornadas, Biblioteca Inteligente, Glossário, Nexus, Coleções, Calendário Litúrgico, Vida dos Papas, Concílios, Doutores da Igreja, Mártires, Virtudes, Sacramentos, Temas.
+        | Critério                 | Peso |
+        | ------------------------ | ---: |
+        | Fidelidade ao Magistério |  30% |
+        | Qualidade editorial      |  20% |
+        | Conectividade Nexus      |  20% |
+        | Experiência Reader       |  15% |
+        | Cobertura do conteúdo    |  15% |
 
-        ---
+        Resultado:
 
-        ## 2. O que cada módulo possui?
-        Para cada um: Reader V2, Editorial Engine, Nexus, Biblioteca, Pesquisa, Imagens, Timeline, Mapa, Coleções, Continuidade, Leitura guiada, Favoritos, Histórico, Multilíngue, Offline, Compartilhamento.
+        ```
+        Santos
 
-        ---
+        Magistério ............. 100
 
-        ## 3. Percentual real
-        Não "implementado". Percentual verdadeiro.
-        Exemplo: Bíblia (Reader 100%, Editorial 95%, Nexus 82%, Biblioteca 100%, Conteúdo 21%, Multilíngue 8%, TOTAL 67%).
+        Editorial .............. 96
 
-        ---
+        Nexus .................. 83
 
-        ## 4. Aparições Marianas
-        Listar todas as aparições presentes: Lourdes, Fátima, Guadalupe, La Salette, Medalha Milagrosa, Akita, Knock, Pilar, Pompeia, Aparecida, etc.
-        Verificar: Status, Conteúdo, Imagem, Cronologia, Aprovação da Igreja, Mensagem, Fontes, Nexus, Reader, Biblioteca.
+        Reader ................. 100
 
-        ---
+        Cobertura .............. 71
 
-        ## 5. Conexões do Nexus
-        Exemplo: Nossa Senhora de Fátima → Pastorinhos → Rosário → Imaculado Coração → São João Paulo II → Lc 1 → CIC → Magistério → Jornada Mariana → Oração → Patrística.
-
-        ---
-
-        ## 6. Biblioteca Inteligente
-        Pesquisar "Eucaristia" deveria retornar: Bíblia, Catecismo, Padres da Igreja, Encíclicas, Santos, Orações, Missal, Liturgia, Jornadas, Glossário.
+        Score Final ............ 90,1
+        ```
 
         ---
 
-        ## 7. Dashboard da Fase 6
-        CATHEDRA KNOWLEDGE CERTIFICATION: Módulos (84%), Conteúdo (68%), Nexus (81%), Reader (100%), Editorial (92%), Biblioteca (83%), Multilíngue (19%).
+        # FASE 6.2 — Mapa do Conhecimento
+
+        Criaria um painel que mostrasse a "rede" do Cathedra.
+
+        Por exemplo:
+
+        ```
+        Jesus Cristo
+        ↓
+        Evangelhos
+        ↓
+        Catecismo
+        ↓
+        Concílio Vaticano II
+        ↓
+        Santos
+        ↓
+        Patrística
+        ↓
+        Orações
+        ↓
+        Jornadas
+        ↓
+        Biblioteca
+        ```
+
+        Isso permite descobrir "ilhas" ainda desconectadas.
 
         ---
 
-        ## Próxima grande certificação
-        Fase 7 — Certificação Teológica: conformidade com o Catecismo, fidelidade ao Magistério, qualidade das fontes, consistência editorial, integração entre módulos e experiência de estudo espiritual.
+        # FASE 6.3 — Auditoria das Aparições Marianas
+
+        Como esse módulo já existe, ele deve ganhar um relatório próprio.
+
+        Para cada aparição:
+        * estado de implementação;
+        * aprovação eclesial;
+        * cronologia;
+        * mensagem principal;
+        * imagens;
+        * fontes;
+        * conexões Nexus;
+        * cobertura editorial.
+
+        No fim, uma tabela de conclusão.
+
+        ---
+
+        # FASE 6.4 — Inteligência da Biblioteca
+
+        A Biblioteca Inteligente não deve apenas localizar conteúdos.
+        Ela deve responder perguntas como:
+        > "O que devo estudar depois deste documento?"
+        ou
+        > "Quais santos viveram esta doutrina?"
+        ou
+        > "Quais documentos aprofundam este tema?"
+
+        Essa é a evolução natural do Nexus.
+
+        ---
+
+        # FASE 6.5 — Mission Control
+
+        O painel administrativo poderia mostrar algo como:
+
+        ```
+        ═══════════════════════════════
+        CATHEDRA KNOWLEDGE CENTER
+        Módulos .............. 100%
+        Reader ............... 100%
+        Editorial ............ 94%
+        Nexus ................ 88%
+        Conteúdo ............. 73%
+        Biblioteca ........... 90%
+        SEO .................. 100%
+        QA ................... 100%
+        Magistério ........... 96%
+        ═══════════════════════════════
+        Meta final
+        100% Conteúdo
+        100% Nexus
+        100% Editorial
+        100% Teologia
+        ```
+
+        ---
+
+        ## O que eu faria antes de adicionar novos módulos
+
+        A partir de agora, eu **congelaria a criação de funcionalidades** e concentraria o trabalho em três objetivos:
+
+        1. **Completar o conteúdo** dos módulos existentes (Santos, Bíblia, Catecismo, Magistério, Patrística, Aparições Marianas etc.).
+        2. **Conectar todo o conhecimento** pelo Nexus, eliminando qualquer conteúdo isolado.
+        3. **Transformar a Biblioteca Inteligente** no principal ponto de entrada da plataforma, permitindo que o usuário encontre qualquer tema e seja conduzido automaticamente para uma trilha completa de estudo.
+
+        Quando esses três pilares estiverem maduros, o Cathedra deixa de ser apenas um aplicativo com vários módulos e passa a funcionar como um **ecossistema integrado de formação católica**, em que cada leitura naturalmente conduz à próxima etapa do aprendizado.
       </div>
       <a 
         href="#main-content" 
