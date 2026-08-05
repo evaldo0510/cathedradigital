@@ -46,136 +46,300 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Excelente. Esse resultado indica que o **Quality Gate de SEO foi aprovado**.
+        TEXTO DO USUÁRIO: Excelente. Pelo histórico, vocês já passaram da fase de correção técnica e entraram na fase de **consolidação do produto**.
 
-        O resumo do estado atual fica assim:
+        O próximo passo **não é mais implementar funcionalidades**. É impedir que a plataforma volte a se degradar.
 
-        ✅ Sitemap regenerado
-        ✅ `robots.txt` válido
-        ✅ JSON-LD validado
-        ✅ 91 rotas mapeadas
-        ✅ 667 URLs no sitemap
-        ✅ 0 erros
-        ✅ 0 avisos
-
-        Isso significa que a etapa de SEO estrutural está consistente e não deve mais bloquear o build por cobertura de rotas.
+        Eu faria o Lovable entrar em um novo modo de trabalho.
 
         ---
 
-        ## Agora eu iria para o próximo Quality Gate
+        # PROMPT — CATHEDRA DIGITAL 3.0
 
-        Não continuaria mexendo em SEO.
+        ## FASE DE CONSOLIDAÇÃO DEFINITIVA
 
-        A prioridade agora seria validar a plataforma inteira antes de começar a produzir os milhares de conteúdos.
+        Ativar simultaneamente:
 
-        A sequência seria:
+        * guardian
+        * architecture-guardian
+        * design-system-guardian
+        * ui-ux-guardian
+        * editorial-engine-guardian
+        * knowledge-graph-expert
+        * performance-guardian
+        * testing-guardian
 
-        ### 1. Navegação (P0)
+        ---
 
-        Verificar automaticamente:
+        ## CONTEXTO
 
-        * Hub
-        * Bottom Navigation
+        O Cathedra atingiu um novo estágio.
+
+        Os módulos principais encontram-se implementados.
+
+        O Reader V2 está certificado.
+
+        O Nexus está conectado.
+
+        A Home foi transformada em Mosteiro Digital.
+
+        A Biblioteca Inteligente está integrada.
+
+        O SEO passou pelo Quality Gate.
+
+        Agora o objetivo muda completamente.
+
+        Não queremos mais "adicionar funcionalidades".
+
+        Queremos consolidar a plataforma.
+
+        ---
+
+        # ETAPA 1
+
+        ## Certificação Geral
+
+        Executar uma auditoria completa em:
+
+        * arquitetura
+        * design
+        * UX
+        * responsividade
+        * performance
+        * acessibilidade
+        * editorial
         * Nexus
-        * Breadcrumb
-        * ReaderContinuation
+        * leitores
+        * Home
         * Biblioteca
-        * Pesquisa
-        * CTAs
-        * Cards
-        * Links internos
-
-        Objetivo:
-
-        {'>'} zero link morto.
-
-        ---
-
-        ### 2. Conteúdo
-
-        Verificar:
-
         * Santos
         * Catecismo
         * Bíblia
+        * Liturgia
         * Patrística
         * Magistério
-        * Jornadas
 
-        Objetivo:
-
-        {'>'} nenhuma página sem fechamento editorial.
+        Nenhum módulo pode ficar fora.
 
         ---
 
-        ### 3. Nexus
+        # ETAPA 2
 
-        Validar:
+        ## Experiência do Usuário
 
-        * conexões
-        * centralidade
-        * continuidade
+        Responder:
 
-        Objetivo:
+        Um usuário novo consegue entender o Cathedra em menos de 30 segundos?
 
-        {'>'} nenhuma leitura terminar sem um próximo caminho.
+        Se não:
 
-        ---
-
-        ### 4. Biblioteca Inteligente
-
-        Certificar:
-
-        * pesquisa
-        * ranking
-        * filtros
-        * relevância
+        corrigir.
 
         ---
 
-        ### 5. Internacionalização
+        # ETAPA 3
 
-        Você perguntou anteriormente sobre isso.
+        ## Fluxo Espiritual
 
-        Esse é um dos próximos grandes blocos.
+        Todo módulo deve responder:
 
-        Precisamos auditar:
+        De onde o usuário veio?
 
-        * PT
-        * EN
-        * ES
-        * IT
-        * LA
+        Para onde ele deve ir?
 
-        e verificar:
+        O Reader nunca termina vazio.
 
-        * menus
-        * Reader
-        * títulos
-        * metadata
-        * sitemap
-        * canonical
-        * hreflang
-
-        Hoje essa parte **ainda não está completamente certificada**.
+        Sempre existe continuidade.
 
         ---
 
-        ## Minha avaliação
+        # ETAPA 4
 
-        Pelas entregas que você mostrou nas últimas horas, o Cathedra saiu de um conjunto de telas para uma **plataforma organizada**.
+        ## Auditoria Visual
 
-        Os pilares principais (Reader, Nexus, Home, Biblioteca, Santos, Catecismo, SEO e Navigation Hub) já estão estruturados.
+        Verificar:
 
-        Daqui em diante, o trabalho deixa de ser "construir telas" e passa a ser:
+        cores
 
-        * enriquecer conteúdo;
-        * aumentar inteligência das conexões;
-        * estabilizar internacionalização;
-        * preparar monetização;
-        * lançar.
+        bordas
 
-        Na prática, você já entrou na fase de consolidação do produto.
+        sombras
+
+        ícones
+
+        animações
+
+        tipografia
+
+        espaçamento
+
+        densidade visual
+
+        hierarquia
+
+        Tudo deve parecer um único produto.
+
+        ---
+
+        # ETAPA 5
+
+        ## Auditoria Editorial
+
+        Verificar:
+
+        voz
+
+        tom
+
+        coerência
+
+        teologia
+
+        consistência
+
+        Nexus
+
+        EditorialClosure
+
+        StudyContext
+
+        ReaderContinuation
+
+        ---
+
+        # ETAPA 6
+
+        ## Performance
+
+        Localizar:
+
+        renders desnecessários
+
+        re-renders
+
+        queries duplicadas
+
+        listeners
+
+        eventos órfãos
+
+        imports mortos
+
+        componentes duplicados
+
+        tokens não utilizados
+
+        ---
+
+        # ETAPA 7
+
+        ## Mission Control
+
+        Expandir o painel administrativo para mostrar:
+
+        Saúde do sistema
+
+        Saúde editorial
+
+        Saúde do Nexus
+
+        Cobertura da Bíblia
+
+        Cobertura dos Santos
+
+        Cobertura do Catecismo
+
+        Cobertura do Magistério
+
+        Cobertura da Patrística
+
+        Cobertura Litúrgica
+
+        Cobertura de Orações
+
+        Cobertura de Jornadas
+
+        Links quebrados
+
+        Qualidade do SEO
+
+        Performance
+
+        ---
+
+        # ETAPA 8
+
+        ## Relatório Executivo
+
+        Gerar automaticamente:
+
+        PRODUCT_HEALTH_REPORT.md
+
+        contendo
+
+        Nota Geral
+
+        Arquitetura
+
+        Editorial
+
+        UX
+
+        Design
+
+        Performance
+
+        Acessibilidade
+
+        SEO
+
+        Conteúdo
+
+        Nexus
+
+        Reader
+
+        Mosteiro Digital
+
+        Roadmap
+
+        Pendências
+
+        Riscos
+
+        Prioridade
+
+        ---
+
+        # IMPORTANTE
+
+        Nenhuma funcionalidade nova deverá ser criada.
+
+        O foco é:
+
+        estabilidade
+
+        consistência
+
+        qualidade
+
+        escalabilidade
+
+        confiabilidade
+
+        ---
+
+        Ao final, emitir apenas uma das certificações:
+
+        * CERTIFIED
+        * CERTIFIED WITH WARNINGS
+        * NOT CERTIFIED
+
+        acompanhada das evidências completas que justificam a decisão.
+
+        ---
+
+        Esse tipo de sprint costuma economizar muito retrabalho, porque transforma o Cathedra em uma base sólida antes da próxima etapa de crescimento (expansão de conteúdo, IA e monetização).
       </div>
       <a 
         href="#main-content" 
