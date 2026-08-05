@@ -138,9 +138,9 @@ const Index = () => {
         Ela deve responder perguntas como:
         > "O que devo estudar depois deste documento?"
         ou
-        > "Quais santos viveram esta doutrina?"
+        &quot;Quais santos viveram esta doutrina?&quot;
         ou
-        > "Quais documentos aprofundam este tema?"
+        &quot;Quais documentos aprofundam este tema?&quot;
 
         Essa é a evolução natural do Nexus.
 
