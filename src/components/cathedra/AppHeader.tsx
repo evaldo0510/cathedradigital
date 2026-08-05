@@ -68,29 +68,25 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
               window.scrollTo({ top: 0, behavior: 'instant' });
             }}
           >
-            <span
-              aria-hidden="true"
-              className="inline-block h-[6px] w-[6px] rounded-full transition-all group-hover:h-[8px] group-hover:w-[8px]"
-              style={{ background: '#c9a84c' }}
-            />
-            <span
-              className="leading-none text-primary/90 group-hover:text-primary transition-colors"
-              style={{
-                fontFamily: "'Playfair Display', serif",
-                fontWeight: 500,
-                fontSize: 'clamp(1.05rem, 2vw, 1.35rem)',
-                letterSpacing: '0.18em',
-              }}
-            >
-              {pathname === '/' ? (
-                <span className="hidden md:inline">CATHEDRA</span>
-              ) : (
-                'CATHEDRA'
-              )}
-              {pathname === '/' && (
-                <Icons.Logo className="md:hidden w-6 h-6" />
-              )}
-            </span>
+            <div className="flex items-center gap-2">
+              <Icons.Logo className="w-8 h-8 md:w-10 md:h-10 text-primary transition-all group-hover:scale-110" />
+              <div className="flex flex-col leading-none">
+                <span
+                  className="text-primary/90 group-hover:text-primary transition-colors"
+                  style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontWeight: 600,
+                    fontSize: 'clamp(1rem, 2vw, 1.25rem)',
+                    letterSpacing: '0.1em',
+                  }}
+                >
+                  CATHEDRA
+                </span>
+                <span className="hidden md:block text-[7px] text-gold uppercase tracking-[0.3em] font-bold">
+                  Mosteiro Digital
+                </span>
+              </div>
+            </div>
           </div>
 
 

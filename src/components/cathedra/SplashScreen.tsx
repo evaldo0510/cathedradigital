@@ -77,17 +77,17 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
             initial={{ opacity: 0, letterSpacing: '0.5em' }}
             animate={{ opacity: 1, letterSpacing: '0.3em' }}
             transition={{ duration: 1, delay: 0.9 }}
-            className="text-premium-2xl md:text-premium-3xl font-display font-light text-primary uppercase tracking-[0.4em]"
+            className="text-premium-2xl md:text-premium-3xl font-display font-semibold text-primary uppercase tracking-[0.2em]"
           >
             Cathedra
           </motion.h2>
           <motion.p aria-hidden="true"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.5 }}
+            animate={{ opacity: 0.8 }}
             transition={{ duration: 0.8, delay: 1.3 }}
-            className="text-[8px] md:text-[10px] font-bold uppercase tracking-[0.4em] text-primary/30 mt-spacing-sm"
+            className="text-[9px] md:text-[11px] font-bold uppercase tracking-[0.4em] text-gold mt-spacing-sm"
           >
-            Digital Sanctuarium
+            Mosteiro Digital
           </motion.p>
         </motion.div>
 

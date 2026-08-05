@@ -261,35 +261,55 @@ const HomeUnified: React.FC = () => {
               </article>
             )}
 
-            {/* Sidebar — Jornada em curso + CIC */}
+            {/* Sidebar — Jornada em curso + Hoje no Cathedra (Fase 7: Experiência do Peregrino) */}
             <aside className="flex flex-col gap-10 md:col-span-4">
               {resume[0] && (
-                <div className="border-l pl-6 py-1" style={{ borderColor: 'var(--noir-line-strong)' }}>
-                  <Eyebrow className="mb-3">Jornada em curso</Eyebrow>
+                <div className="border border-primary/5 rounded-premium bg-card/40 p-6 shadow-premium-sm">
+                  <Eyebrow className="mb-3">Sua Caminhada</Eyebrow>
                   <h3
-                    className="mb-3 text-2xl"
+                    className="mb-3 text-xl"
                     style={{ fontFamily: 'var(--font-display)', fontWeight: 500, color: 'var(--noir-text)' }}
                   >
                     {resume[0].label}
                   </h3>
                   {typeof resume[0].progressPct === 'number' && (
-                    <>
-                      <div className="h-px w-full" style={{ background: 'rgba(201,168,76,0.15)' }}>
-                        <div className="h-full" style={{ background: 'var(--gold)', width: `${resume[0].progressPct}%` }} />
+                    <div className="space-y-2">
+                      <div className="h-1 w-full bg-primary/5 rounded-full overflow-hidden">
+                        <div className="h-full bg-gold transition-all duration-1000" style={{ width: `${resume[0].progressPct}%` }} />
                       </div>
-                      <p
-                        className="mt-2 text-right text-[10px] uppercase tracking-[0.28em]"
-                        style={{ color: 'var(--noir-text-faint)', fontFamily: 'var(--font-body)' }}
+                      <div className="flex justify-between items-center">
+                        <span className="text-[10px] text-noir-text-faint font-medium">PROGRESSO</span>
+                        <span className="text-[10px] text-gold font-bold">{resume[0].progressPct}%</span>
+                      </div>
+                      <Link 
+                        to={(resume[0] as any).href || '#'} 
+                        className="mt-4 flex items-center justify-center w-full py-2 bg-primary/5 hover:bg-primary/10 rounded-premium-full text-[10px] font-bold uppercase tracking-widest text-primary transition-all"
                       >
-                        {resume[0].progressPct}% concluído
-                      </p>
-                    </>
+                        Retomar agora
+                      </Link>
+                    </div>
                   )}
                 </div>
               )}
 
               <div
-                className="border p-6 text-center"
+                className="border border-primary/5 rounded-premium bg-card/60 p-6 shadow-premium-sm flex flex-col items-center text-center group hover:border-gold/20 transition-colors"
+              >
+                <Eyebrow className="mb-4">Hoje no Cathedra</Eyebrow>
+                <div className="space-y-4 w-full">
+                  <Link to="/liturgia" className="block p-3 rounded-premium hover:bg-primary/5 transition-all">
+                    <span className="text-[10px] text-gold font-bold block mb-1">EVANGELHO</span>
+                    <span className="text-sm font-medium">A Palavra Viva</span>
+                  </Link>
+                  <Link to="/santos" className="block p-3 rounded-premium hover:bg-primary/5 transition-all">
+                    <span className="text-[10px] text-gold font-bold block mb-1">SANTO DO DIA</span>
+                    <span className="text-sm font-medium">Modelo de Fé</span>
+                  </Link>
+                </div>
+              </div>
+
+              <div
+                className="border p-6 text-center rounded-premium"
                 style={{ borderColor: 'var(--noir-line)', background: 'var(--noir-surface)' }}
               >
                 <Eyebrow className="mb-4">Catecismo</Eyebrow>
@@ -307,7 +327,7 @@ const HomeUnified: React.FC = () => {
                 </p>
                 <Link
                   to="/catechism?p=142"
-                  className="mt-5 inline-block text-[10px] uppercase tracking-[0.3em] transition-colors"
+                  className="mt-5 inline-block text-[10px] uppercase tracking-[0.3em] transition-colors hover:text-gold-light"
                   style={{ color: 'var(--gold)', fontFamily: 'var(--font-body)' }}
                 >
                   Abrir § 142 →
