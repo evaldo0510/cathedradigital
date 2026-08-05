@@ -134,7 +134,17 @@ function checkRobotsAllowed(path: string, robotsContent: string): boolean {
   for (const line of lines) {
     if (line.startsWith('Disallow:')) {
       const pattern = line.slice('Disallow:'.length).trim();
-      if (pattern && path.startsWith(pattern)) {
+      if (!pattern) continue;
+      // Regra robots: se o padrão for "/", bloqueia tudo.
+      // Se for "/admin", bloqueia "/admin", "/admin/settings", etc.
+      // Mas não deve bloquear "/" se o padrão for "/admin".
+      if (pattern === '/') {
+        isAllowed = false;
+        break;
+      }
+      if (path === pattern || path.startsWith(pattern + '/') || (pattern !== '/' && path.startsWith(pattern))) {
+        // Exceção: não queremos que "/bible" bloqueie "/"
+        // No robots.txt, "Disallow: /admin" bloqueia qualquer caminho que comece com "/admin"
         isAllowed = false;
         break;
       }
@@ -142,6 +152,7 @@ function checkRobotsAllowed(path: string, robotsContent: string): boolean {
   }
   return isAllowed;
 }
+
 
 
 // 1) ROUTE_META
