@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
 import { ROUTE_META } from '../../src/config/routeMeta';
 import { validateJsonLdList } from '../../src/lib/seo/jsonLdValidator';
+import { writeFileSync, mkdirSync, existsSync } from 'fs';
+import { resolve, join } from 'path';
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:8080';
 const CRITICAL_ROUTES = [
