@@ -131,31 +131,25 @@ function validateEntry(path: string, meta: RouteMeta) {
 function checkRobotsAllowed(path: string, robotsContent: string): boolean {
   const lines = robotsContent.split('\n');
   let isAllowed = true;
-  let currentUserAgentAll = false;
+  let inRelevantUserAgent = false;
 
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith('#')) continue;
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line || line.startsWith('#')) continue;
 
-    if (trimmed.toLowerCase().startsWith('user-agent:')) {
-      const ua = trimmed.slice(11).trim();
-      currentUserAgentAll = (ua === '*');
+    const lower = line.toLowerCase();
+    if (lower.startsWith('user-agent:')) {
+      const ua = lower.slice(11).trim();
+      inRelevantUserAgent = (ua === '*');
       continue;
     }
 
-    if (currentUserAgentAll && trimmed.toLowerCase().startsWith('disallow:')) {
-      const pattern = trimmed.slice(9).trim();
+    if (inRelevantUserAgent && lower.startsWith('disallow:')) {
+      const pattern = line.slice(9).trim();
       if (!pattern) continue;
 
-      // Se Disallow: / -> bloqueia tudo
-      if (pattern === '/') {
-        isAllowed = false;
-        break;
-      }
-
-      // Se path coincide exatamente ou começa com o padrão seguido de "/"
-      // Ex: pattern=/admin bloqueia /admin, /admin/, /admin/dashboard
-      if (path === pattern || path.startsWith(pattern.endsWith('/') ? pattern : pattern + '/')) {
+      // robots.txt: pattern deve bater com o início da string
+      if (path.startsWith(pattern)) {
         isAllowed = false;
         break;
       }
@@ -163,6 +157,7 @@ function checkRobotsAllowed(path: string, robotsContent: string): boolean {
   }
   return isAllowed;
 }
+
 
 
 
