@@ -25,5 +25,5 @@ export const KIND_GRAPH_TITLE: Record<string, string> = {
   catechism: 'Aprofunde este ensinamento',
   magisterium: 'Continue este estudo',
   saint: 'Inspirado por este santo?',
-  'journey-step': 'Seguir na formação',
+  'journey-step': 'Se você está lendo isto, provavelmente deveria continuar por aqui...',
 };
