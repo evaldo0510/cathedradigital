@@ -48,152 +48,58 @@ const Index = () => {
 
         TEXTO DO USUÁRIO: Concordo com a direção, mas faria isso de forma organizada. Pelo que você mostrou ao longo das últimas auditorias, o Cathedra já possui muitos módulos implementados, e o risco agora não é "faltar funcionalidades", e sim **existirem módulos prontos que ainda não conversam entre si ou não seguem o padrão editorial**.
 
-Minha recomendação é abrir uma **Fase 6 — Consolidação do Conhecimento**, e não criar módulos novos.
+        TEXTO DO USUÁRIO: Esse é um bom momento para mudar completamente o foco do projeto.
 
-## Prioridade 1 — Revisão completa do conteúdo existente
+        Até agora vocês estavam certificando **infraestrutura** (Reader, Nexus, SEO, navegação, QA). Agora a certificação deve ser **teológica e editorial**.
 
-Antes de escrever qualquer conteúdo novo, faça uma auditoria de tudo o que já existe:
+        Eu ampliaria a Auditoria Global de Conteúdo para um inventário completo do Cathedra.
 
-* Bíblia
-* Catecismo
-* Santos
-* Orações
-* Liturgia das Horas
-* Missal
-* Magistério
-* Patrística
-* Jornadas
-* Biblioteca Inteligente
-* Glossário
-* **Aparições de Nossa Senhora** (você identificou que esse módulo já existe)
+        ---
 
-Para cada módulo, verificar:
+        # FASE 6 — AUDITORIA GLOBAL DO CONHECIMENTO
 
-* Está completo?
-* Usa o Reader V2?
-* Está conectado ao Nexus?
-* Possui abertura editorial?
-* Possui encerramento editorial?
-* Possui continuidade?
-* Possui links funcionando?
-* Possui imagens?
-* Está indexado na Biblioteca?
-* Está preparado para multilíngue?
+        Em vez de apenas verificar integração, o Lovable deve responder:
 
----
+        ## 1. Quais módulos realmente existem?
+        Gerar uma lista completa.
+        Exemplo: Bíblia, Catecismo, Santos, Aparições Marianas, Magistério, Patrística, Liturgia das Horas, Missal, Orações, Rosário, Exame de Consciência, Novenas, Jornadas, Biblioteca Inteligente, Glossário, Nexus, Coleções, Calendário Litúrgico, Vida dos Papas, Concílios, Doutores da Igreja, Mártires, Virtudes, Sacramentos, Temas.
 
-# Prioridade 2 — Revisar o módulo "Aparições de Nossa Senhora"
+        ---
 
-Se ele já existe, eu não criaria outro.
+        ## 2. O que cada módulo possui?
+        Para cada um: Reader V2, Editorial Engine, Nexus, Biblioteca, Pesquisa, Imagens, Timeline, Mapa, Coleções, Continuidade, Leitura guiada, Favoritos, Histórico, Multilíngue, Offline, Compartilhamento.
 
-Primeiro faria uma certificação completa.
+        ---
 
-Checklist:
+        ## 3. Percentual real
+        Não "implementado". Percentual verdadeiro.
+        Exemplo: Bíblia (Reader 100%, Editorial 95%, Nexus 82%, Biblioteca 100%, Conteúdo 21%, Multilíngue 8%, TOTAL 67%).
 
-### Reader
+        ---
 
-* Hero
-* Contexto
-* História
-* Cronologia
-* Mensagem principal
-* Aprovação eclesial
-* Fontes
-* Encerramento
-* Continuação
+        ## 4. Aparições Marianas
+        Listar todas as aparições presentes: Lourdes, Fátima, Guadalupe, La Salette, Medalha Milagrosa, Akita, Knock, Pilar, Pompeia, Aparecida, etc.
+        Verificar: Status, Conteúdo, Imagem, Cronologia, Aprovação da Igreja, Mensagem, Fontes, Nexus, Reader, Biblioteca.
 
----
+        ---
 
-### Nexus
+        ## 5. Conexões do Nexus
+        Exemplo: Nossa Senhora de Fátima → Pastorinhos → Rosário → Imaculado Coração → São João Paulo II → Lc 1 → CIC → Magistério → Jornada Mariana → Oração → Patrística.
 
-Cada aparição deveria conectar automaticamente com:
+        ---
 
-* Santos relacionados
-* Papas
-* Concílios
-* Catecismo
-* Bíblia
-* Orações
-* Rosário
-* Liturgia
-* Jornadas
+        ## 6. Biblioteca Inteligente
+        Pesquisar "Eucaristia" deveria retornar: Bíblia, Catecismo, Padres da Igreja, Encíclicas, Santos, Orações, Missal, Liturgia, Jornadas, Glossário.
 
-Exemplo:
+        ---
 
-**Fátima**
+        ## 7. Dashboard da Fase 6
+        CATHEDRA KNOWLEDGE CERTIFICATION: Módulos (84%), Conteúdo (68%), Nexus (81%), Reader (100%), Editorial (92%), Biblioteca (83%), Multilíngue (19%).
 
-↓
+        ---
 
-* Lc 1
-* Rosário
-* Imaculado Coração
-* São João Paulo II
-* Irmã Lúcia
-* Pastorinhos
-* CIC
-* Magistério
-
----
-
-# Prioridade 3 — Biblioteca Inteligente
-
-Hoje ela deveria conseguir encontrar:
-
-"Maria"
-
-↓
-
-Nossa Senhora
-
-↓
-
-Apareições
-
-↓
-
-Santos
-
-↓
-
-Rosário
-
-↓
-
-Magistério
-
-↓
-
-Patrística
-
-↓
-
-Catecismo
-
-Tudo conectado.
-
----
-
-# Prioridade 4 — Home
-
-Na Home Viva deveriam aparecer blocos como:
-
-* Aparição do dia
-* Santo do dia
-* Leitura do dia
-* Jornada recomendada
-* Oração recomendada
-* Documento recomendado
-* Conexão do Nexus
-
----
-
-# O próximo comando para o Lovable
-
-Eu passaria exatamente esta missão:
-
-{`> `}**Executar uma Auditoria Global de Conteúdo do Cathedra Digital 3.0. Não criar novos módulos. Mapear todos os módulos já existentes (incluindo Aparições de Nossa Senhora), identificar o nível de implementação de cada um, verificar integração com Reader V2, Nexus, Biblioteca Inteligente e Editorial Engine, listar inconsistências, conteúdos incompletos, links quebrados e oportunidades de conexão. Ao final, gerar um relatório de certificação com percentual de conclusão por módulo e um roadmap priorizado para alcançar 100% de consolidação da plataforma.**
-
-Essa abordagem evita retrabalho e garante que vocês aproveitem ao máximo tudo o que já foi desenvolvido antes de expandir o sistema.
+        ## Próxima grande certificação
+        Fase 7 — Certificação Teológica: conformidade com o Catecismo, fidelidade ao Magistério, qualidade das fontes, consistência editorial, integração entre módulos e experiência de estudo espiritual.
       </div>
       <a 
         href="#main-content" 
