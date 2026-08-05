@@ -1713,9 +1713,9 @@ async function loadModuleStats(): Promise<ModuleStat[]> {
     supabase.from("collections").select("status", { count: "exact", head: false }),
     supabase.from("journeys").select("status", { count: "exact", head: false }),
     supabase.from("bible_verses").select("id", { count: "exact", head: true }),
-    supabase.from("liturgy_texts").select("status", { count: "exact", head: false }),
-    supabase.from("patristic_works").select("status", { count: "exact", head: false }),
-    supabase.from("magisterium_docs").select("status", { count: "exact", head: false }),
+    supabase.from("liturgy_meditations").select("id", { count: "exact", head: true }),
+    supabase.from("library_items_v1").select("status", { count: "exact", head: false }),
+    supabase.from("library_items_v1").select("status", { count: "exact", head: false }),
   ]);
 
   const stat = (label: string, key: string, res: any, isPub: (r: any) => boolean, note?: string): ModuleStat => {
@@ -1751,7 +1751,14 @@ async function loadModuleStats(): Promise<ModuleStat[]> {
       const t = res.value.count ?? 0;
       return { key: "bible", label: "Bíblia", published: t, total: t };
     })(),
-    stat("Liturgia", "liturgy", results[6], (r) => r.status === "published"),
+    (() => {
+      const res = results[6];
+      if (res.status !== "fulfilled" || res.value.error) {
+        return { key: "liturgy", label: "Liturgia", published: 0, total: 0, note: "sem acesso" };
+      }
+      const t = res.value.count ?? 0;
+      return { key: "liturgy", label: "Liturgia", published: t, total: t };
+    })(),
     stat("Patrística", "patristic", results[7], (r) => r.status === "published"),
     stat("Magistério", "magisterium", results[8], (r) => r.status === "published"),
   ];

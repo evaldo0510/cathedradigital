@@ -1,5 +1,5 @@
 /**
- * Manifesto oficial da Biblioteca Patrística (Escritos dos Santos Padres).
+ * Manifesto oficial da Biblioteca Patrística.
  */
 
 import type { EntityManifest } from "../types";
@@ -8,8 +8,8 @@ export const patristicManifest: EntityManifest = {
   id: "patristic",
   label: "Biblioteca Patrística",
   shortLabel: "Patrística",
-  table: "patristic_works",
-  slugField: "slug",
+  table: "library_items_v1", // Usando view unificada
+  slugField: "id",
   titleField: "title",
   statusField: "status",
   auditRoute: "/admin/editorial-audit?entity=patristic",
@@ -24,17 +24,7 @@ export const patristicManifest: EntityManifest = {
     migration: 0.15,
   },
   fields: [
-    // — Identidade —
-    { key: "author_id", label: "Autor (Santo)", group: "meta", required: true, weight: 1 },
-    { key: "era", label: "Época", group: "meta", required: true, weight: 1 },
-
-    // — Núcleo editorial —
-    { key: "introduction", label: "Introdução Crítica", group: "editorial", required: true, weight: 2 },
-    { key: "theological_nodes", label: "Nós Teológicos", group: "editorial", required: true, weight: 2 },
-    { key: "spiritual_legacy", label: "Legado Espiritual", group: "editorial", required: true, weight: 2 },
-
-    // — Núcleo Nexus —
-    { key: "bible_citations", label: "Citações Bíblicas", group: "nexus", required: true, weight: 2 },
-    { key: "catechism_refs", label: "Conexões CIC", group: "nexus", required: false, weight: 1 },
+    { key: "title", label: "Título", group: "meta", required: true, weight: 1 },
+    { key: "author", label: "Autor", group: "meta", required: true, weight: 1 },
   ],
 };

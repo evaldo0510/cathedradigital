@@ -80,6 +80,13 @@ export interface EntityManifest {
     /** Progresso de migração para o motor genérico (0–1). */
     migration: number;
   };
+  /** Regras de bloqueio para o Quality Gate. */
+  gate?: {
+    minIce: number;
+    minEditorial: number;
+    minNexus: number;
+    requiredFields: string[];
+  };
 }
 
 export interface EntitySnapshot {
