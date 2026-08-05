@@ -185,7 +185,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
       { path: '/santos', label: 'Santos', icon: Icons.Flame },
       { path: '/jornadas', label: 'Jornadas', icon: Icons.Route },
       { path: '/nexus', label: 'Nexus', icon: Icons.Orbit },
-      { path: '/biblioteca', label: 'Biblioteca', icon: Icons.Search },
+      { path: '/biblioteca/inteligente', label: 'Biblioteca', icon: Icons.Search },
       { path: '/profile', label: 'Perfil', icon: Icons.User },
     ];
 
