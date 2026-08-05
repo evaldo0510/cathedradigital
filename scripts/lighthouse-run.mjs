@@ -5,18 +5,20 @@
  * Variáveis:
  *   LH_BASE_URL   — URL base (default http://localhost:8080).
  *                   Aceita staging/prod (ex.: https://cathedradigital.com.br).
- *   LH_ROUTES     — CSV de rotas relativas (default "/profile").
+ *   LH_ROUTES     — CSV de rotas relativas (default "/").
  *                   Ex.: "/profile,/atrium,/pricing"
  *   LH_ALLOW_UNAUTH=1 — não falha se credenciais ausentes.
  *   LH_ENV        — rótulo do ambiente (local|staging|production) para o summary.
+ *   LH_OUTPUT_DIR — diretório para o relatório final (default .lighthouseci)
  */
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
 const BASE_URL = process.env.LH_BASE_URL || 'http://localhost:8080';
-const ROUTES = (process.env.LH_ROUTES || '/profile').split(',').map((r) => r.trim()).filter(Boolean);
+const ROUTES = (process.env.LH_ROUTES || '/').split(',').map((r) => r.trim()).filter(Boolean);
 const ENV_LABEL = process.env.LH_ENV || (BASE_URL.includes('localhost') ? 'local' : 'remote');
+const OUTPUT_DIR = process.env.LH_OUTPUT_DIR || '.lighthouseci';
 const CONFIGS = [
   { name: 'mobile', config: 'lighthouserc.mobile.cjs' },
   { name: 'tablet', config: 'lighthouserc.tablet.cjs' },
