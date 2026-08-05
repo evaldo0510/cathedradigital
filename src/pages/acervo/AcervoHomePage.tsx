@@ -190,7 +190,7 @@ const AcervoHomePage: React.FC = () => {
               <div className="bg-card/40 border border-primary/5 p-spacing-lg rounded-premium space-y-spacing-md shadow-premium-sm flex flex-col">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gold">II. Espiritualidade</h3>
-                  <Icons.Heart className="w-4 h-4 text-gold/40" />
+                  <Heart className="w-4 h-4 text-gold/40" />
                 </div>
                 <div className="grid grid-cols-2 gap-spacing-sm flex-1">
                   {[
@@ -214,13 +214,13 @@ const AcervoHomePage: React.FC = () => {
               <div className="bg-card/40 border border-primary/5 p-spacing-lg rounded-premium space-y-spacing-md shadow-premium-sm flex flex-col">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gold">III. Patrimônio</h3>
-                  <Icons.Star className="w-4 h-4 text-gold/40" />
+                  <Star className="w-4 h-4 text-gold/40" />
                 </div>
                 <div className="grid grid-cols-2 gap-spacing-sm flex-1">
                   {[
                     { label: 'Santos', to: '/saints', icon: Icons.User, count: 'Hagiografia', desc: 'Vida' },
                     { label: 'Maria', to: '/aparicoes', icon: Icons.Star, count: 'Aparições', desc: 'Mensagens' },
-                    { label: 'Dogmas', to: '/dogmas', icon: Icons.Shield, count: 'Verdades', desc: 'Fé' },
+                    { label: 'Dogmas', to: '/dogmas', icon: Shield, count: 'Verdades', desc: 'Fé' },
                     { label: 'Glossário', to: '/glossario', icon: Icons.Search, count: 'Léxico', desc: 'Termos' },
                   ].map(pilar => (
                     <Link key={pilar.label} to={pilar.to} className="group flex flex-col">
