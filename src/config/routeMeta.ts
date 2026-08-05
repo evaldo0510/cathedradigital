@@ -43,6 +43,16 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     description: 'Painel administrativo de auditoria.',
     noindex: true,
   },
+  '/knowledge-audit': {
+    title: 'Auditoria de Conhecimento — Admin',
+    description: 'Painel administrativo de auditoria de densidade e conectividade teológica.',
+    noindex: true,
+  },
+  '/production-ready': {
+    title: 'Certificação de Produção — Admin',
+    description: 'Painel de verificação dos checkpoints para lançamento final.',
+    noindex: true,
+  },
 
   // ─── Home / Átrio ─────────────────────────────────────────────
   '/': {

@@ -81,7 +81,9 @@ export enum AppRoute {
   OFFLINE = '/offline',
   CACHE_MANAGER = '/cache-manager',
   IGREJA = '/igreja',
-  BIBLIOTECA_INTELIGENTE = '/biblioteca/inteligente'
+  BIBLIOTECA_INTELIGENTE = '/biblioteca/inteligente',
+  KNOWLEDGE_AUDIT = '/knowledge-audit',
+  PRODUCTION_READY = '/production-ready'
 }
 
 export interface TrackStep {
