@@ -54,9 +54,9 @@ const AdminAuditPage: React.FC = () => {
     
     if (filters.type !== 'all') {
       if (activeTab === 'admin') {
-        query = query.eq('action', filters.type);
+        query = query.filter('action', 'eq', filters.type);
       } else {
-        query = query.eq('event_type', filters.type);
+        query = query.filter('event_type', 'eq', filters.type);
       }
     }
     
