@@ -10,7 +10,7 @@ import fs from 'fs';
 import path from 'path';
 
 const BASE_URL = process.env.BASE_URL || 'http://localhost:8080';
-test.use({ baseURL: BASE_URL });
+test.use({ baseURL: BASE_URL, viewport: { width: 1280, height: 1800 } });
 const CRITICAL_ROUTES = ['/', '/bible', '/catechism', '/oracao', '/santos', '/pricing'];
 
 test.describe('Fase 6.1 — Certificação SEO & JSON-LD', () => {
@@ -61,7 +61,7 @@ test.describe('Fase 6.1 — Certificação SEO & JSON-LD', () => {
 
   for (const routePath of CRITICAL_ROUTES) {
     test(`Validar SEO e JSON-LD em ${routePath}`, async ({ page }) => {
-      await page.goto(routePath);
+      await page.goto(routePath, { waitUntil: 'networkidle' });
       await page.waitForLoadState('networkidle');
 
       const routeErrors: string[] = [];
