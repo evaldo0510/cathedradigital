@@ -1,19 +1,15 @@
 /**
- * AcervoHomePage — Hub unificado do conhecimento católico do Cathedra.
+ * AcervoHomePage — O Mosteiro do Conhecimento (Hub Cathedra).
  *
- * Sprint Acervo Cathedra · Onda 3.
- * Antiga "Biblioteca Católica" evolui para hub central que agrupa
- * Escritos, Padres, Doutores, Magistério, Patrística, Espiritualidade,
- * História, Liturgia, Homilias, Clássicos e Favoritos — todos
- * convergindo para o mesmo ReaderShell, EditorialClosure e Nexus.
- *
- * Não altera banco. Só composição visual de primitivos existentes.
+ * Fase 6.1 — Biblioteca viva e exploradora.
+ * Transforma o hub em uma experiência dinâmica com saudações,
+ * progresso contextual, filtros de exploração e busca Logos onipresente.
  */
 
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { EditorialHero, EditorialCard } from '@/components/editorial';
+import { EditorialHero, EditorialCard, EditorialDivider, EditorialKicker } from '@/components/editorial';
 import { Button } from '@/components/ui/button';
 import { Icons } from '../../constants';
 import {
@@ -23,6 +19,7 @@ import {
 import type { LibraryItem, LibraryKind } from '@/types/library';
 import AcervoContinueReadingPanel from './AcervoContinueReadingPanel';
 import { LIBRARY_KIND_LABELS } from '@/types/library';
+import { useAuth } from '@/hooks/useAuth';
 
 type CategoryStatus = 'live' | 'soon';
 
@@ -134,6 +131,7 @@ const CATEGORIES: AcervoCategory[] = [
 ];
 
 const AcervoHomePage: React.FC = () => {
+  const { user } = useAuth();
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [featured, setFeatured] = useState<LibraryItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -153,7 +151,9 @@ const AcervoHomePage: React.FC = () => {
     };
   }, []);
 
-  const totalAll = Object.values(counts).reduce((a, b) => a + b, 0);
+  const firstName = user?.full_name?.split(' ')[0] || 'Peregrino';
+  const hour = new Date().getHours();
+  const greeting = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
 
   return (
     <section className="min-h-screen bg-background" data-space="biblioteca">
@@ -167,21 +167,22 @@ const AcervoHomePage: React.FC = () => {
       </Helmet>
 
       <EditorialHero
-        kicker="Cathedra · Hub"
-        title="Biblioteca"
-        subtitle="A sua porta de entrada para a sabedoria da Igreja. Bíblia, Santos, Doutrina e Magistério em uma experiência contemplativa unificada."
+        kicker={`${greeting}, ${firstName}`}
+        title="Biblioteca do Cathedra"
+        subtitle="Toda a riqueza da fé, organizada para a sua caminhada."
+        meta="Mosteiro Digital · Acervo Vivo"
         parchment
         size="lg"
       />
 
       <div className="max-w-6xl mx-auto px-spacing-md py-spacing-xl space-y-spacing-3xl">
         {/* Logos Search — Central Hub Entry */}
-        <section className="w-full max-w-2xl mx-auto">
-          <div className="rounded-premium-full p-spacing-xs border border-primary/15 bg-card/40 backdrop-blur-md shadow-premium-sm flex items-center group/search">
+        <section className="w-full max-w-2xl mx-auto space-y-spacing-md">
+          <div className="rounded-premium-full p-spacing-xs border border-primary/15 bg-card/40 backdrop-blur-md shadow-premium-sm flex items-center group/search focus-within:ring-2 focus-within:ring-primary/20 transition-all">
             <Icons.Search className="ml-spacing-md w-5 h-5 text-primary/30 group-focus-within/search:text-primary transition-colors" />
             <input 
               type="text"
-              placeholder="Pesquisar na Biblioteca (Bíblia, Santos, Doutrina...)"
+              placeholder="Pesquisar qualquer tema (Bíblia, Santos, Doutrina...)"
               className="flex-1 bg-transparent border-none focus:ring-0 text-premium-md font-serif italic px-spacing-md py-spacing-sm placeholder:text-muted-foreground/40"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') {
@@ -191,10 +192,74 @@ const AcervoHomePage: React.FC = () => {
               }}
             />
           </div>
+          <div className="flex flex-wrap justify-center gap-2">
+            {[
+              { label: 'Bíblia', icon: Icons.Bible },
+              { label: 'Catecismo', icon: Icons.Catechism },
+              { label: 'Santos', icon: Icons.PersonStanding },
+              { label: 'Maria', icon: Icons.Flower2 },
+              { label: 'Liturgia', icon: Icons.Chalice },
+              { label: 'Orações', icon: Icons.Heart },
+              { label: 'Patrística', icon: Icons.ScrollText },
+              { label: 'Magistério', icon: Icons.Building2 },
+            ].map(filter => (
+              <Button 
+                key={filter.label} 
+                variant="ghost" 
+                size="sm" 
+                className="rounded-full text-[10px] font-black uppercase tracking-[0.1em] text-primary/60 hover:text-primary hover:bg-primary/5 border border-transparent hover:border-primary/10"
+                onClick={() => window.location.href = `/biblioteca/inteligente?q=${encodeURIComponent(filter.label)}`}
+              >
+                <filter.icon className="w-3 h-3 mr-1.5 opacity-40" />
+                {filter.label}
+              </Button>
+            ))}
+          </div>
         </section>
 
+        {/* Hoje no Cathedra — "Mosteiro Vivo" */}
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-spacing-md">
+          <Link to="/liturgia" className="group">
+            <EditorialCard 
+              kicker="Hoje"
+              title="Evangelho do Dia"
+              description="A Palavra viva para iluminar seu caminho hoje."
+              className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
+            />
+          </Link>
+          <Link to="/santos" className="group">
+            <EditorialCard 
+              kicker="Santo do Dia"
+              title="São João Maria Vianney"
+              description="O Padroeiro dos Párocos e modelo de humildade."
+              className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
+            />
+          </Link>
+          <Link to="/rezar" className="group">
+            <EditorialCard 
+              kicker="Recomendado"
+              title="Rosário"
+              description="Medite os mistérios da vida de Cristo com Maria."
+              className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
+            />
+          </Link>
+          <Link to="/jornadas" className="group">
+            <EditorialCard 
+              kicker="Caminhada"
+              title="Trilha da Virtude"
+              description="Inicie hoje sua jornada rumo à santidade."
+              className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
+            />
+          </Link>
+        </section>
+
+        <EditorialDivider variant="gold-fade" className="max-w-md mx-auto opacity-40" />
+
         {/* Continue lendo — "Onde parei?" (Onda 3) */}
-        <AcervoContinueReadingPanel />
+        <div className="space-y-spacing-md">
+           <EditorialKicker className="text-center opacity-60">Continue sua caminhada</EditorialKicker>
+           <AcervoContinueReadingPanel />
+        </div>
 
         {/* CTA principal — Removido para dar lugar à busca centralizada e categorias Hub */}
 
