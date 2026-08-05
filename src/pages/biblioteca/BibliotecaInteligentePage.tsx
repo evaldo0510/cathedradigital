@@ -25,7 +25,7 @@ const TYPE_ICON: Record<SearchResultType, React.ElementType> = {
   saint: Icons.User,
   patristic: Icons.Scroll,
   magisterium: Icons.Church,
-  prayer: Icons.HandsPraying,
+  prayer: Icons.PrayingHands,
   journey: Icons.Compass,
   glossary: Icons.BookOpen
 };
