@@ -9,7 +9,7 @@ import { validateJsonLdList } from '../../src/lib/seo/jsonLdValidator';
 import fs from 'fs';
 import path from 'path';
 
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = process.env.BASE_URL || 'http://localhost:8080';
 const CRITICAL_ROUTES = ['/', '/bible', '/catechism', '/oracao', '/santos', '/pricing'];
 
 test.describe('Fase 6.1 — Certificação SEO & JSON-LD', () => {
