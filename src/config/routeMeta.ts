@@ -195,9 +195,13 @@ export const ROUTE_META: Record<string, RouteMeta> = {
 
   // ─── Devocional & Santos ──────────────────────────────────────
   '/santos': {
-    title: 'Vidas dos Santos Católicos — Enciclopédia',
+    title: 'Vidas dos Santos Católicos — Enciclopédia Hagiográfica',
     description:
-      'Vidas dos santos com biografia, virtudes, escritos, milagres e devoções para inspirar sua caminhada.',
+      'Vidas dos santos com biografia, virtudes, escritos, milagres e devoções para inspirar sua caminhada rumo à santidade.',
+  },
+  '/santos/:id': {
+    title: 'Vida de Santo — Cathedra Digital',
+    description: 'Conheça a história, milagres e o legado espiritual deste santo da Igreja Católica.',
   },
   '/papas': {
     title: 'Papas da Igreja Católica — Cronologia',
