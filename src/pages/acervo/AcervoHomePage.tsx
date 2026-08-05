@@ -1,134 +1,17 @@
-/**
- * AcervoHomePage — O Mosteiro do Conhecimento (Hub Cathedra).
- *
- * Fase 6.1 — Biblioteca viva e exploradora.
- * Transforma o hub em uma experiência dinâmica com saudações,
- * progresso contextual, filtros de exploração e busca Logos onipresente.
- */
-
 import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { EditorialHero, EditorialCard, EditorialDivider, EditorialKicker } from '@/components/editorial';
+import { EditorialHero, EditorialCard, EditorialDivider, EditorialKicker } from '@/components/editorial/harmony';
 import { Button } from '@/components/ui/button';
-import { Icons } from '../../constants';
+import { Icons } from '@/constants';
 import {
   countLibraryByKind,
   fetchLibraryFeatured,
 } from '@/services/libraryService';
 import type { LibraryItem, LibraryKind } from '@/types/library';
 import AcervoContinueReadingPanel from './AcervoContinueReadingPanel';
-import { LIBRARY_KIND_LABELS } from '@/types/library';
 import { useAuth } from '@/hooks/useAuth';
-
-type CategoryStatus = 'live' | 'soon';
-
-interface AcervoCategory {
-  key: string;
-  label: string;
-  description: string;
-  icon: React.ComponentType<{ className?: string }>;
-  to?: string;
-  countKey?: LibraryKind;
-  status: CategoryStatus;
-}
-
-/**
- * 11 frentes do Acervo. As "live" já resolvem para superfícies existentes;
- * as "soon" ficam declaradas para não perder o mapa mental do usuário.
- */
-const CATEGORIES: AcervoCategory[] = [
-  {
-    key: 'saint_work',
-    label: 'Escritos dos Santos',
-    description: 'Confissões, cartas, tratados e diários espirituais na voz de quem viveu.',
-    icon: Icons.BookOpen,
-    to: '/acervo/lista?kind=saint_work',
-    countKey: 'saint_work',
-    status: 'live',
-  },
-  {
-    key: 'patristic',
-    label: 'Padres da Igreja',
-    description: 'A geração apostólica e patrística — Inácio, Ireneu, Cipriano, Basílio.',
-    icon: Icons.ScrollText,
-    to: '/acervo/lista?kind=patristic',
-    countKey: 'patristic',
-    status: 'live',
-  },
-  {
-    key: 'doctor',
-    label: 'Doutores da Igreja',
-    description: '36 mestres reconhecidos pela Igreja — Agostinho, Tomás, Teresa, Teresinha.',
-    icon: Icons.BookMarked,
-    to: '/acervo/lista?kind=doctor',
-    countKey: 'doctor',
-    status: 'live',
-  },
-  {
-    key: 'magisterium',
-    label: 'Magistério',
-    description: 'Concílios, encíclicas, exortações, constituições e cartas apostólicas.',
-    icon: Icons.Building2,
-    to: '/acervo/lista?kind=magisterium',
-    countKey: 'magisterium',
-    status: 'live',
-  },
-  {
-    key: 'patristica-tag',
-    label: 'Patrística',
-    description: 'Os primeiros séculos: sacramentos, martírio, exegese e defesa da fé.',
-    icon: Icons.History,
-    to: '/acervo/lista?kind=patristic&era=antiga',
-    status: 'live',
-  },
-  {
-    key: 'espiritualidade',
-    label: 'Espiritualidade',
-    description: 'Oração, ascese, mística e caminhos interiores da tradição católica.',
-    icon: Icons.Heart,
-    status: 'soon',
-  },
-  {
-    key: 'historia',
-    label: 'História da Igreja',
-    description: 'Concílios, cismas, ordens religiosas, missões — a Igreja no tempo.',
-    icon: Icons.Church,
-    status: 'soon',
-  },
-  {
-    key: 'liturgia',
-    label: 'Liturgia',
-    description: 'Missal e Liturgia das Horas do dia, com leituras e comentários.',
-    icon: Icons.Chalice,
-    to: '/liturgia',
-    status: 'live',
-  },
-  {
-    key: 'homilias',
-    label: 'Homilias',
-    description: 'Homilias patrísticas, dominicais e do Magistério vivo.',
-    icon: Icons.Message,
-    status: 'soon',
-  },
-  {
-    key: 'classic',
-    label: 'Clássicos Católicos',
-    description: 'Imitação de Cristo, Filotéia, Combate Espiritual e outros clássicos.',
-    icon: Icons.Feather,
-    to: '/acervo/lista?kind=classic',
-    countKey: 'classic',
-    status: 'live',
-  },
-  {
-    key: 'favoritos',
-    label: 'Favoritos',
-    description: 'Suas obras, versículos, parágrafos e santos marcados.',
-    icon: Icons.Star,
-    to: '/conta/favoritos',
-    status: 'live',
-  },
-];
+import { cn } from '@/lib/utils';
 
 const AcervoHomePage: React.FC = () => {
   const { profile } = useAuth();
@@ -156,296 +39,174 @@ const AcervoHomePage: React.FC = () => {
   const greeting = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
 
   return (
-    <section className="min-h-screen bg-background" data-space="biblioteca">
+    <div className="min-h-screen bg-background" data-space="atrium">
       <Helmet>
-        <title>Acervo Cathedra — Biblioteca Católica</title>
+        <title>Acervo Cathedra — Mosteiro do Conhecimento</title>
         <meta
           name="description"
-          content="O centro do conhecimento católico: Escritos dos Santos, Padres, Doutores, Magistério, Patrística, Liturgia e Clássicos em um só átrio, com ficha editorial e Nexus Theologicus."
+          content="O Mosteiro do Conhecimento: Bíblia, Catecismo, Magistério e vida dos santos organizados para sua caminhada espiritual."
         />
         <link rel="canonical" href="https://cathedradigital.com.br/acervo" />
       </Helmet>
 
-      <EditorialHero
-        kicker={`${greeting}, ${firstName}`}
-        title="Biblioteca do Cathedra"
-        subtitle="Toda a riqueza da fé, organizada para a sua caminhada."
-        meta="Mosteiro Digital · Acervo Vivo"
-        parchment
-        size="lg"
-      />
-
-      <div className="max-w-6xl mx-auto px-spacing-md py-spacing-xl space-y-spacing-3xl">
-        {/* Logos Search — Central Hub Entry */}
-        <section className="w-full max-w-2xl mx-auto space-y-spacing-md">
-          <div className="rounded-premium-full p-spacing-xs border border-primary/15 bg-card/40 backdrop-blur-md shadow-premium-sm flex items-center group/search focus-within:ring-2 focus-within:ring-primary/20 transition-all">
-            <Icons.Search className="ml-spacing-md w-5 h-5 text-primary/30 group-focus-within/search:text-primary transition-colors" />
-            <input 
-              type="text"
-              placeholder="Pesquisar qualquer tema (Bíblia, Santos, Doutrina...)"
-              className="flex-1 bg-transparent border-none focus:ring-0 text-premium-md font-serif italic px-spacing-md py-spacing-sm placeholder:text-muted-foreground/40"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  const query = (e.target as HTMLInputElement).value.trim();
-                  if (query) window.location.href = `/biblioteca/inteligente?q=${encodeURIComponent(query)}`;
-                }
-              }}
-            />
+      {/* HERO — Estilo Mosteiro Digital */}
+      <EditorialHero align="center" density="expanded" className="bg-primary/[0.02] border-b border-primary/5">
+        <EditorialHero.Meta>Mosteiro Digital · Átrio do Conhecimento</EditorialHero.Meta>
+        <EditorialHero.Eyebrow>{greeting}, {firstName}</EditorialHero.Eyebrow>
+        <EditorialHero.Title>Biblioteca do Cathedra</EditorialHero.Title>
+        <EditorialHero.Subtitle>Toda a riqueza da fé católica organizada para a sua caminhada espiritual.</EditorialHero.Subtitle>
+        <EditorialHero.Actions>
+           <div className="w-full max-w-2xl mx-auto mt-spacing-md">
+            <div className="rounded-premium-full p-spacing-xs border border-primary/15 bg-card/60 backdrop-blur-md shadow-premium-sm flex items-center group/search focus-within:ring-2 focus-within:ring-primary/20 transition-all">
+              <Icons.Search className="ml-spacing-md w-5 h-5 text-primary/30 group-focus-within/search:text-primary transition-colors" />
+              <input 
+                type="text"
+                placeholder="Pesquisar qualquer tema (Bíblia, Santos, Doutrina...)"
+                className="flex-1 bg-transparent border-none focus:ring-0 text-premium-md font-serif italic px-spacing-md py-spacing-sm placeholder:text-muted-foreground/40"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const query = (e.target as HTMLInputElement).value.trim();
+                    if (query) window.location.href = `/biblioteca/inteligente?q=${encodeURIComponent(query)}`;
+                  }
+                }}
+              />
+            </div>
           </div>
-          <div className="flex flex-wrap justify-center gap-2">
-            {[
-              { label: 'Bíblia', icon: Icons.Bible },
-              { label: 'Catecismo', icon: Icons.Catechism },
-              { label: 'Santos', icon: Icons.Saints },
-              { label: 'Maria', icon: Icons.Sparkles },
-              { label: 'Liturgia', icon: Icons.Chalice },
-              { label: 'Orações', icon: Icons.Heart },
-              { label: 'Patrística', icon: Icons.ScrollText },
-              { label: 'Magistério', icon: Icons.Building2 },
-            ].map(filter => (
-              <Button 
-                key={filter.label} 
-                variant="ghost" 
-                size="sm" 
-                className="rounded-full text-[10px] font-black uppercase tracking-[0.1em] text-primary/60 hover:text-primary hover:bg-primary/5 border border-transparent hover:border-primary/10"
-                onClick={() => window.location.href = `/biblioteca/inteligente?q=${encodeURIComponent(filter.label)}`}
-              >
-                <filter.icon className="w-3 h-3 mr-1.5 opacity-40" />
-                {filter.label}
-              </Button>
-            ))}
-          </div>
-        </section>
+        </EditorialHero.Actions>
+      </EditorialHero>
 
-        {/* Hoje no Cathedra — "Mosteiro Vivo" */}
-        <section className="space-y-spacing-md">
-          <div className="flex items-baseline justify-between">
-            <h2 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary">
-              Sua caminhada de hoje
-            </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
-            <Link to="/liturgia" className="group">
-              <EditorialCard 
-                kicker="☀ Evangelho do Dia"
-                title="A Palavra Viva"
-                description="Reflexão e leitura litúrgica para alimentar sua alma agora."
-                className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
-              />
-            </Link>
-            <Link to="/santos" className="group">
-              <EditorialCard 
-                kicker="👤 Santo do Dia"
-                title="São João Maria Vianney"
-                description="O Padroeiro dos Párocos e modelo de humildade."
-                className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
-              />
-            </Link>
-            <Link to="/rezar" className="group">
-              <EditorialCard 
-                kicker="🙏 Oração recomendada"
-                title="Santo Rosário"
-                description="Contemple os mistérios da Salvação com Maria."
-                className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
-              />
-            </Link>
-            <Link to="/catechism" className="group">
-              <EditorialCard 
-                kicker="🏛 Catecismo da Igreja"
-                title="Um parágrafo do CIC"
-                description="Aprofunde seu conhecimento na doutrina de forma guiada."
-                className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
-              />
-            </Link>
-            <Link to="/acervo/lista?kind=magisterium" className="group">
-              <EditorialCard 
-                kicker="📜 Magistério da Igreja"
-                title="Documento do Dia"
-                description="A voz de Pedro e dos Concílios orientando a sua fé."
-                className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
-              />
-            </Link>
-            <Link to="/biblioteca/inteligente" className="group">
-              <EditorialCard 
-                kicker="🧭 Nexus Intelligence"
-                title="Próximo passo sugerido"
-                description="Descobertas personalizadas para o seu momento espiritual."
-                className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
-              />
-            </Link>
-          </div>
-        </section>
-
-        <EditorialDivider variant="gold-fade" className="max-w-md mx-auto opacity-40" />
-
-        {/* Continue lendo — "Onde parei?" (Onda 3) */}
-        <div className="space-y-spacing-md">
-           <EditorialKicker className="text-center opacity-60">Continue sua caminhada</EditorialKicker>
-           <AcervoContinueReadingPanel />
-        </div>
-
-        {/* CTA principal — Removido para dar lugar à busca centralizada e categorias Hub */}
-
-        {/* Trilhas inteligentes — "Quero crescer em..." */}
-        <section className="space-y-spacing-md">
-          <h2 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary text-center">
-            Quero crescer em...
-          </h2>
-          <div className="flex flex-wrap justify-center gap-2">
-            {[
-              { label: 'Fé', emoji: '❤️', slug: 'fe' },
-              { label: 'Oração', emoji: '🙏', slug: 'oracao' },
-              { label: 'Família', emoji: '👨‍👩‍👧', slug: 'familia' },
-              { label: 'Casamento', emoji: '💍', slug: 'casamento' },
-              { label: 'Perdão', emoji: '🕊', slug: 'perdao' },
-              { label: 'Bíblia', emoji: '📖', slug: 'biblia' },
-              { label: 'Maria', emoji: '🌹', slug: 'maria' },
-              { label: 'Vida dos Santos', emoji: '✝', slug: 'santos' },
-            ].map((trilha) => (
-              <Button 
-                key={trilha.label} 
-                variant="outline" 
-                size="sm" 
-                className="rounded-full bg-card/40 border-primary/10 hover:border-primary/30 transition-all px-spacing-lg"
-                onClick={() => window.location.href = `/biblioteca/inteligente?q=${encodeURIComponent(trilha.label)}`}
-              >
-                <span className="mr-2" aria-hidden="true">{trilha.emoji}</span>
-                {trilha.label}
-              </Button>
-            ))}
-          </div>
-        </section>
-
-        <EditorialDivider variant="gold-fade" className="max-w-md mx-auto opacity-40" />
-
-        {/* Biblioteca Viva — Descobertas */}
-        <section className="space-y-spacing-md">
-          <h2 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary">
-            Você pode gostar
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
-            <Link to="/acervo/lista?author=Santo+Agostinho" className="group">
-              <EditorialCard 
-                kicker="Porque você leu Santo Agostinho"
-                title="Confissões"
-                description="O clássico da conversão e o diálogo da alma com Deus."
-                className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
-              />
-            </Link>
-            <Link to="/catechism?p=27" className="group">
-              <EditorialCard 
-                kicker="Relacionado"
-                title="Catecismo §27"
-                description="O desejo de Deus está inscrito no coração do homem."
-                className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
-              />
-            </Link>
-            <Link to="/bible?book=Rm&ch=13" className="group">
-              <EditorialCard 
-                kicker="Referência Nexus"
-                title="Romanos 13"
-                description="O texto bíblico que selou a conversão de Agostinho."
-                className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
-              />
-            </Link>
-          </div>
-        </section>
-
-        <EditorialDivider variant="gold-fade" className="max-w-md mx-auto opacity-40" />
-
-        {/* Categorias */}
-        <section aria-labelledby="categorias-heading" className="space-y-spacing-md">
-          <h2
-            id="categorias-heading"
-            className="text-premium-small font-black uppercase tracking-[0.2em] text-primary text-center"
-          >
-            Navegar pela Tradição
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
-            {CATEGORIES.map((cat) => {
-              const Icon = cat.icon;
-              const count = cat.countKey ? counts[cat.countKey] ?? 0 : null;
-              const isLive = cat.status === 'live' && cat.to;
-
-              const kicker = (
-                <span className="inline-flex items-center gap-1">
-                  <Icon className="w-3.5 h-3.5" aria-hidden />
-                  {isLive
-                    ? count !== null
-                      ? `${count} ${count === 1 ? 'obra' : 'obras'}`
-                      : 'Explorar'
-                    : 'Em breve'}
-                </span>
-              );
-
-              const card = (
-                <EditorialCard
-                  kicker={kicker}
-                  title={cat.label}
-                  description={cat.description}
-                  className={`h-full transition-transform ${
-                    isLive ? 'hover:-translate-y-0.5' : 'opacity-60'
-                  }`}
-                />
-              );
-
-              return isLive ? (
-                <Link
-                  key={cat.key}
-                  to={cat.to!}
-                  aria-label={`Abrir ${cat.label}`}
-                  className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
-                >
-                  {card}
-                </Link>
-              ) : (
-                <div key={cat.key} aria-disabled="true" className="cursor-not-allowed">
-                  {card}
+      <main className="max-w-[1400px] mx-auto px-spacing-md py-spacing-xl space-y-spacing-3xl">
+        {/* Seção Principal — Grid de Duas Colunas no Desktop */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-spacing-xl">
+          
+          {/* Coluna Esquerda: Sua Caminhada (Progressiva) */}
+          <aside className="lg:col-span-4 space-y-spacing-xl order-2 lg:order-1">
+             <div className="space-y-spacing-md">
+                <EditorialKicker>Sua caminhada</EditorialKicker>
+                <div className="bg-card/40 rounded-premium border border-primary/5 p-spacing-md">
+                   <AcervoContinueReadingPanel />
                 </div>
-              );
-            })}
-          </div>
-        </section>
+             </div>
 
-        {/* Destaques */}
-        {!loading && featured.length > 0 && (
-          <section aria-labelledby="destaques-heading" className="space-y-spacing-md">
-            <div className="flex items-baseline justify-between">
-              <h2
-                id="destaques-heading"
-                className="text-premium-small font-black uppercase tracking-[0.2em] text-primary"
-              >
-                Destaques editoriais
-              </h2>
-              <Link
-                to="/acervo/lista"
-                className="text-premium-xs text-muted-foreground hover:text-primary underline underline-offset-4"
-              >
-                Ver todos →
+             <div className="space-y-spacing-md">
+                <EditorialKicker>Quero crescer em...</EditorialKicker>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { label: 'Fé', emoji: '❤️' },
+                    { label: 'Oração', emoji: '🙏' },
+                    { label: 'Família', emoji: '👨‍👩‍👧' },
+                    { label: 'Vida dos Santos', emoji: '✝' },
+                    { label: 'Bíblia', emoji: '📖' },
+                    { label: 'Maria', emoji: '🌹' },
+                  ].map((trilha) => (
+                    <Button 
+                      key={trilha.label} 
+                      variant="outline" 
+                      size="sm" 
+                      className="rounded-full bg-card/40 border-primary/10 hover:border-primary/30 transition-all px-spacing-lg h-auto py-2 text-xs"
+                      onClick={() => window.location.href = `/biblioteca/inteligente?q=${encodeURIComponent(trilha.label)}`}
+                    >
+                      <span className="mr-2" aria-hidden="true">{trilha.emoji}</span>
+                      {trilha.label}
+                    </Button>
+                  ))}
+                </div>
+             </div>
+          </aside>
+
+          {/* Coluna Direita: Hoje no Cathedra (Biblioteca Viva) */}
+          <section className="lg:col-span-8 space-y-spacing-md order-1 lg:order-2">
+            <h2 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary">
+              Hoje no Cathedra
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
+              <Link to="/liturgia" className="group">
+                <EditorialCard density="dense" className="h-full bg-primary/[0.01] hover:bg-primary/[0.03]">
+                  <EditorialCard.Eyebrow>☀ Evangelho do Dia</EditorialCard.Eyebrow>
+                  <EditorialCard.Title>A Palavra Viva</EditorialCard.Title>
+                  <EditorialCard.Description>Reflexão e leitura litúrgica para alimentar sua alma hoje.</EditorialCard.Description>
+                </EditorialCard>
+              </Link>
+              <Link to="/santos" className="group">
+                <EditorialCard density="dense" className="h-full bg-primary/[0.01] hover:bg-primary/[0.03]">
+                  <EditorialCard.Eyebrow>👤 Santo do Dia</EditorialCard.Eyebrow>
+                  <EditorialCard.Title>Santo do Dia</EditorialCard.Title>
+                  <EditorialCard.Description>Conheça o modelo de santidade que a Igreja celebra nesta data.</EditorialCard.Description>
+                </EditorialCard>
+              </Link>
+              <Link to="/rezar" className="group">
+                <EditorialCard density="dense" className="h-full bg-primary/[0.01] hover:bg-primary/[0.03]">
+                  <EditorialCard.Eyebrow>🙏 Oração Recomendada</EditorialCard.Eyebrow>
+                  <EditorialCard.Title>Santo Rosário</EditorialCard.Title>
+                  <EditorialCard.Description>Contemple os mistérios da Salvação com Maria.</EditorialCard.Description>
+                </EditorialCard>
+              </Link>
+              <Link to="/catechism" className="group">
+                <EditorialCard density="dense" className="h-full bg-primary/[0.01] hover:bg-primary/[0.03]">
+                  <EditorialCard.Eyebrow>🏛 Catecismo da Igreja</EditorialCard.Eyebrow>
+                  <EditorialCard.Title>Doutrina Viva</EditorialCard.Title>
+                  <EditorialCard.Description>Aprofunde-se no depósito da fé de forma estruturada.</EditorialCard.Description>
+                </EditorialCard>
               </Link>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
-              {featured.map((item) => (
-                <Link
-                  key={item.id}
-                  to={item.href}
-                  aria-label={`Abrir ${item.title}`}
-                  className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg"
-                >
-                  <EditorialCard
-                    kicker={`${LIBRARY_KIND_LABELS[item.library_kind]}${item.year ? ` · c. ${item.year}` : ''}`}
-                    title={item.title}
-                    meta={item.author_label}
-                    description={item.synopsis ?? undefined}
-                    className="h-full transition-transform hover:-translate-y-0.5"
-                  />
-                </Link>
-              ))}
-            </div>
           </section>
-        )}
-      </div>
-    </section>
+        </div>
+
+        <EditorialDivider variant="gold-fade" className="max-w-2xl mx-auto opacity-30" />
+
+        {/* Linha de Base — Pilares do Conhecimento */}
+        <section className="space-y-spacing-xl">
+           <h2 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary text-center">
+              Pilares da Fé
+           </h2>
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-lg">
+             {[
+               { label: 'Bíblia', to: '/bible', desc: 'A Palavra de Deus revelada.', icon: Icons.Bible },
+               { label: 'Catecismo', to: '/catechism', desc: 'A síntese da doutrina cristã.', icon: Icons.BookOpen },
+               { label: 'Santos', to: '/santos', desc: 'A história viva da santidade.', icon: Icons.User },
+             ].map(pilar => (
+               <Link key={pilar.label} to={pilar.to} className="group">
+                 <div className="p-spacing-xl rounded-premium border border-primary/5 bg-card/40 hover:bg-primary/[0.02] hover:border-primary/20 transition-all text-center space-y-spacing-sm">
+                    <pilar.icon className="w-10 h-10 mx-auto text-primary/20 group-hover:text-primary transition-colors" />
+                    <h3 className="type-h3 text-foreground">{pilar.label}</h3>
+                    <p className="type-body text-muted-foreground/70">{pilar.desc}</p>
+                 </div>
+               </Link>
+             ))}
+           </div>
+        </section>
+
+        {/* Biblioteca Inteligente (Logos) — Amplo Desktop */}
+        <section className="bg-primary/5 rounded-premium p-spacing-xl md:p-spacing-2xl border border-primary/10">
+           <div className="max-w-3xl mx-auto text-center space-y-spacing-lg">
+              <Icons.Sparkles className="w-12 h-12 mx-auto text-primary/40" />
+              <h2 className="type-h2">Biblioteca Inteligente</h2>
+              <p className="type-lead opacity-80">Encontre conexões profundas entre a Bíblia, o Catecismo e a Tradição usando Logos, o motor de inteligência teológica da Cathedra.</p>
+              <Button size="lg" className="rounded-premium-full px-spacing-xl" onClick={() => window.location.href = '/biblioteca/inteligente'}>
+                Explorar Conexões Nexus
+              </Button>
+           </div>
+        </section>
+
+        {/* Recomendações do Nexus */}
+        <section className="space-y-spacing-md">
+          <h2 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary">
+            Sugerido pelo Nexus
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-md">
+            {!loading && featured.slice(0, 3).map(item => (
+              <Link key={item.id} to={item.href} className="group">
+                <EditorialCard density="dense" className="h-full">
+                  <EditorialCard.Eyebrow>Destaque Editorial</EditorialCard.Eyebrow>
+                  <EditorialCard.Title>{item.title}</EditorialCard.Title>
+                  <EditorialCard.Description>{item.author_label || 'Obra fundamental'}</EditorialCard.Description>
+                </EditorialCard>
+              </Link>
+            ))}
+          </div>
+        </section>
+      </main>
+    </div>
   );
 };
 
