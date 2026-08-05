@@ -121,20 +121,21 @@ const HomeUnified: React.FC = () => {
         <link rel="canonical" href="/" />
       </Helmet>
 
-      {/* ══════ HERO (100vh) ══════ */}
-      <section className="relative flex min-h-[92vh] w-full flex-col items-center justify-center px-6 py-16 md:px-12">
+      {/* ══════ HERO (100vh) — Mosteiro Digital Central ══════ */}
+      <section className="relative flex min-h-[95vh] w-full flex-col items-center justify-center px-6 py-16 md:px-12">
         {/* Halo dourado sutil */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse 80% 55% at 50% 45%, rgba(201,168,76,0.08) 0%, transparent 65%)',
+              'radial-gradient(ellipse 80% 55% at 50% 45%, rgba(201,168,76,0.12) 0%, transparent 65%)',
           }}
         />
 
         <div className="relative z-10 flex w-full max-w-6xl flex-col items-center text-center">
-          <div data-rise><Eyebrow className="mb-6 md:mb-8">Sanctuarium Spiritus</Eyebrow></div>
+          <div data-rise><Icons.Logo className="w-16 h-16 mb-8 opacity-40 text-primary" /></div>
+          <div data-rise><Eyebrow className="mb-4 md:mb-6">Mosteiro Digital</Eyebrow></div>
 
           <h1
             data-rise="1"

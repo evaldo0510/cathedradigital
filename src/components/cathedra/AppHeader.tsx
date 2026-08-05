@@ -82,7 +82,14 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
                 letterSpacing: '0.18em',
               }}
             >
-              CATHEDRA
+              {pathname === '/' ? (
+                <span className="hidden md:inline">CATHEDRA</span>
+              ) : (
+                'CATHEDRA'
+              )}
+              {pathname === '/' && (
+                <Icons.Logo className="md:hidden w-6 h-6" />
+              )}
             </span>
           </div>
 
