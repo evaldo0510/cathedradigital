@@ -638,8 +638,8 @@ export const TagBubble: React.FC<TagBubbleProps> = ({ tag, index, isSuggested, t
           'flex flex-col',
           'transition-none',
           'data-[state=open]:duration-700 data-[state=closed]:duration-500',
-          'data-[state=open]:ease-[cubic-bezier(0.22,1,0.36,1)]',
-          'data-[state=closed]:ease-[cubic-bezier(0.4,0,0.2,1)]',
+          'data-[state=open]:[transition-timing-function:cubic-bezier(0.22,1,0.36,1)]',
+          'data-[state=closed]:[transition-timing-function:cubic-bezier(0.4,0,0.2,1)]',
           'motion-reduce:transition-none motion-reduce:animate-none',
           isMobile
             ? 'h-[90vh] max-h-[90vh] rounded-t-[24px] border-t border-l-0'
