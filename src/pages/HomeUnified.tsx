@@ -31,6 +31,7 @@ import {
   ArrowRight,
   ArrowUpRight,
 } from 'lucide-react';
+import { Icons } from '@/constants';
 import { EnvironmentRegistry, RouteRegistry } from '@/core/navigation';
 import {
   useResume,
