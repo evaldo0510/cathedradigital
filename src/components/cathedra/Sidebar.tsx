@@ -224,28 +224,23 @@ const Sidebar = memo(({ isOpen, onClose, user, isDark, onToggleDark, isHighContr
                 tabIndex={0}
                 onKeyDown={(e) => e.key === 'Enter' && handleNav('/', e)}
               >
-                <span style={{ color: 'var(--gold-text)', fontSize: '10px' }} aria-hidden="true">●</span>
+                <Icons.Logo className="w-10 h-10 text-primary" />
                 <div className="flex flex-col leading-none gap-1">
-                  <div className="md:block hidden">
-                    <span
-                      role="text"
-                      aria-label="Cathedra Digital"
-                      style={{
-                        fontFamily: "'Playfair Display', serif",
-                        fontWeight: 500,
-                        fontSize: '1rem',
-                        letterSpacing: '0.18em',
-                        color: 'hsl(var(--foreground))',
-                      }}
-                    >
-                      CATHEDRA
-                    </span>
-                  </div>
-                  <div className="md:hidden flex items-center">
-                    <Icons.Logo className="w-8 h-8" />
-                  </div>
-                  <span className="hidden md:block" style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '8px', letterSpacing: '0.4em', textTransform: 'uppercase' }}>
-                    Sacrum Archivum
+                  <span
+                    role="text"
+                    aria-label="Cathedra Digital"
+                    style={{
+                      fontFamily: "'Playfair Display', serif",
+                      fontWeight: 600,
+                      fontSize: '1.1rem',
+                      letterSpacing: '0.1em',
+                      color: 'hsl(var(--foreground))',
+                    }}
+                  >
+                    CATHEDRA
+                  </span>
+                  <span style={{ color: 'var(--gold-text)', fontFamily: 'Inter, sans-serif', fontSize: '8px', letterSpacing: '0.3em', textTransform: 'uppercase', fontWeight: 'bold' }}>
+                    Mosteiro Digital
                   </span>
                 </div>
               </div>

@@ -282,7 +282,7 @@ const HomeUnified: React.FC = () => {
                         <span className="text-[10px] text-gold font-bold">{resume[0].progressPct}%</span>
                       </div>
                       <Link 
-                        to={resume[0].href || '#'} 
+                        to={(resume[0] as any).href || '#'} 
                         className="mt-4 flex items-center justify-center w-full py-2 bg-primary/5 hover:bg-primary/10 rounded-premium-full text-[10px] font-bold uppercase tracking-widest text-primary transition-all"
                       >
                         Retomar agora
