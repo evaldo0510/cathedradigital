@@ -26,8 +26,8 @@ export default function RouteSeo() {
   // Canonical self-referente: inclui o prefixo do idioma ativo.
   const url = `${SEO_CONFIG.BASE_URL}${withLocalePath(canonicalPath, lang)}`;
 
-  const title = meta?.title;
-  const description = meta?.description;
+  const title = meta?.title ?? 'Cathedra Digital — Mosteiro Digital';
+  const description = meta?.description ?? 'Explore o acervo da Cathedra Digital: Bíblia, Catecismo, Magistério e vida de oração em uma experiência contemplativa.';
   const noindex = meta?.noindex === true;
   const localeDef = getLocaleDefinition(lang);
   const alternates = noindex ? [] : buildHreflangAlternates(canonicalPath, SEO_CONFIG.BASE_URL);
