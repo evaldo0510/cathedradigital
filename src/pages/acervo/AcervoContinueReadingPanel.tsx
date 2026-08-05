@@ -83,7 +83,7 @@ const AcervoContinueReadingPanel: React.FC = () => {
             id="continue-reading-heading"
             className="text-premium-small font-black uppercase tracking-[0.2em] text-primary"
           >
-            Continue lendo
+            Continue de onde você parou
           </h2>
           <Link
             to="/conta/leituras"
