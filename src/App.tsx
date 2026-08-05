@@ -99,6 +99,8 @@ const OAuthConsent = lazy(() => import('./pages/OAuthConsent'));
 const ProfilePage = lazy(() => import('./components/cathedra/ProfilePage'));
 const ProfileFavoritesPage = lazy(() => import('./pages/ProfileFavoritesPage'));
 // Sprint UX · Área do Usuário (Comandos) — shell unificado /conta/*
+const GlobalKnowledgeAudit = lazy(() => import('./pages/admin/GlobalKnowledgeAudit'));
+const ProductionReadyDashboard = lazy(() => import('./pages/admin/ProductionReadyDashboard'));
 const ContaLayout = lazy(() => import('./pages/conta/ContaLayout'));
 const ContaPerfil = lazy(() => import('./pages/conta/sections/PerfilSection'));
 const ContaJornada = lazy(() => import('./pages/conta/sections/JornadaSection'));
@@ -254,7 +256,7 @@ const SiteHealthDashboard = lazy(() => import('./pages/admin/SiteHealthDashboard
 const AuditLogsPage = lazy(() => import('./pages/admin/AuditLogsPage'));
 const DocsPage = lazy(() => import('./pages/DocsPage'));
 const DocsArticlePage = lazy(() => import('./pages/DocsArticlePage'));
-const ProductionReadyDashboard = lazy(() => import('./pages/admin/ProductionReadyDashboard'));
+// ProductionReadyDashboard movido para o topo para evitar duplicidade
 
 const PrayerAdmin = lazy(() => import('./pages/admin/PrayerAdmin'));
 const LiturgyMeditationFallbackPanel = lazy(() => import('./pages/admin/LiturgyMeditationFallbackPanel'));
@@ -831,6 +833,7 @@ const AppLayout: React.FC = () => {
                   <AdminGuard>
                     <Routes>
                       <Route path="/" element={<AdminDashboard />} />
+                      <Route path="/knowledge-audit" element={<GlobalKnowledgeAudit />} />
                       <Route path="/production-ready" element={<ProductionReadyDashboard />} />
                       <Route path="/security" element={<SecurityDashboard />} />
                       <Route path="/cid-compliance" element={<CidComplianceDashboardPage />} />

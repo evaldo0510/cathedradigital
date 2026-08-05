@@ -35,6 +35,7 @@ const VisualRegressionDashboard = lazy(() => import('./VisualRegressionDashboard
 const RealTimeTelemetryPanel = lazy(() => import('./admin/RealTimeTelemetryPanel'));
 
 const ProductionReadyDashboard = lazy(() => import('@/pages/admin/ProductionReadyDashboard'));
+const GlobalKnowledgeAudit = lazy(() => import('@/pages/admin/GlobalKnowledgeAudit'));
 
 interface UserProfile extends AdminUser {}
 
@@ -190,6 +191,10 @@ const AdminDashboard: React.FC = () => {
       <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-spacing-lg">
         <div className="px-spacing-md sm:px-spacing-0 -mx-spacing-md sm:mx-spacing-0">
           <TabsList ref={tabsListRef} className="flex w-full overflow-x-auto justify-start h-auto p-spacing-2xs bg-muted/30 border border-border/10 rounded-premium-full no-scrollbar scroll-smooth snap-x">
+            <TabsTrigger value="knowledge" data-test="tab-knowledge" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start text-primary">
+              <Icons.Target className="w-3.5 h-3.5" />
+              Conhecimento
+            </TabsTrigger>
             <TabsTrigger value="production" data-test="tab-production" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start text-emerald-600">
               <Icons.ShieldCheck className="w-spacing-sm h-spacing-sm" /> Certificação
             </TabsTrigger>
@@ -220,6 +225,10 @@ const AdminDashboard: React.FC = () => {
             </TabsTrigger>
           </TabsList>
         </div>
+        
+        <TabsContent value="knowledge" className="mt-spacing-lg focus-visible:outline-none focus-visible:ring-0">
+          <GlobalKnowledgeAudit />
+        </TabsContent>
 
         <TabsContent value="production" className="space-y-spacing-lg">
           <Suspense fallback={<Skeleton className="h-[800px] w-full" />}>
