@@ -177,15 +177,12 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const [atalhosOpen, setAtalhosOpen] = useState(false);
 
   const items = useMemo(() => {
-    // Nova arquitetura de Hub Espiritual: 8 itens principais
+    // Arquitetura Hub Cathedra: 5 itens essenciais
     const hubItems = [
       { path: '/bible', label: 'Ler', icon: Icons.BookOpen },
       { path: '/rezar', label: 'Orar', icon: Icons.Hand },
       { path: '/igreja', label: 'Igreja', icon: Icons.Church },
-      { path: '/santos', label: 'Santos', icon: Icons.Flame },
-      { path: '/jornadas', label: 'Jornadas', icon: Icons.Route },
-      { path: '/nexus', label: 'Nexus', icon: Icons.Orbit },
-      { path: '/biblioteca/inteligente', label: 'Biblioteca', icon: Icons.Search },
+      { path: '/acervo', label: 'Biblioteca', icon: Icons.Library },
       { path: '/profile', label: 'Perfil', icon: Icons.User },
     ];
 

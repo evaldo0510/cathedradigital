@@ -167,39 +167,36 @@ const AcervoHomePage: React.FC = () => {
       </Helmet>
 
       <EditorialHero
-        kicker="Cathedra · Acervo"
-        title="Acervo Cathedra"
-        subtitle="A tradição viva da Igreja em um só átrio — Escritura, Catecismo, Santos, Magistério e Clássicos com leitura, estudo e oração integrados."
+        kicker="Cathedra · Hub"
+        title="Biblioteca"
+        subtitle="A sua porta de entrada para a sabedoria da Igreja. Bíblia, Santos, Doutrina e Magistério em uma experiência contemplativa unificada."
         parchment
         size="lg"
       />
 
-      <div className="max-w-6xl mx-auto px-spacing-md py-spacing-xl space-y-spacing-2xl">
+      <div className="max-w-6xl mx-auto px-spacing-md py-spacing-xl space-y-spacing-3xl">
+        {/* Logos Search — Central Hub Entry */}
+        <section className="w-full max-w-2xl mx-auto">
+          <div className="rounded-premium-full p-spacing-xs border border-primary/15 bg-card/40 backdrop-blur-md shadow-premium-sm flex items-center group/search">
+            <Icons.Search className="ml-spacing-md w-5 h-5 text-primary/30 group-focus-within/search:text-primary transition-colors" />
+            <input 
+              type="text"
+              placeholder="Pesquisar na Biblioteca (Bíblia, Santos, Doutrina...)"
+              className="flex-1 bg-transparent border-none focus:ring-0 text-premium-md font-serif italic px-spacing-md py-spacing-sm placeholder:text-muted-foreground/40"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  const query = (e.target as HTMLInputElement).value.trim();
+                  if (query) window.location.href = `/biblioteca/inteligente?q=${encodeURIComponent(query)}`;
+                }
+              }}
+            />
+          </div>
+        </section>
+
         {/* Continue lendo — "Onde parei?" (Onda 3) */}
         <AcervoContinueReadingPanel />
 
-        {/* CTA principal */}
-        <section className="flex flex-col items-center gap-spacing-sm text-center">
-          <p className="text-premium-md text-muted-foreground max-w-2xl leading-relaxed">
-            {totalAll > 0
-              ? `${totalAll} obras publicadas hoje — todas com ficha editorial, referências e fecho contemplativo.`
-              : 'Acervo em contínua ampliação, com curadoria editorial e Nexus Theologicus.'}
-          </p>
-          <div className="flex flex-wrap justify-center gap-spacing-sm pt-spacing-xs">
-            <Button asChild size="lg">
-              <Link to="/acervo/lista" className="gap-spacing-2xs">
-                <Icons.Search className="w-4 h-4" aria-hidden />
-                Explorar todo o acervo
-              </Link>
-            </Button>
-            <Button asChild size="lg" variant="outline">
-              <Link to="/biblioteca/escritos" className="gap-spacing-2xs">
-                <Icons.BookOpen className="w-4 h-4" aria-hidden />
-                Ir aos Escritos
-              </Link>
-            </Button>
-          </div>
-        </section>
+        {/* CTA principal — Removido para dar lugar à busca centralizada e categorias Hub */}
 
         {/* Categorias */}
         <section aria-labelledby="categorias-heading" className="space-y-spacing-md">
