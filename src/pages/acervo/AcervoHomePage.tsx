@@ -41,20 +41,20 @@ const AcervoHomePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-background" data-space="atrium">
       <Helmet>
-        <title>Acervo Cathedra — Mosteiro do Conhecimento</title>
+        <title>Acervo Cathedra — Ecossistema Espiritual Vivo</title>
         <meta
           name="description"
-          content="O Mosteiro do Conhecimento: Bíblia, Catecismo, Magistério e vida dos santos organizados para sua caminhada espiritual."
+          content="O Ecossistema Espiritual Vivo: Bíblia, Catecismo, Magistério e vida dos santos organizados para sua caminhada."
         />
         <link rel="canonical" href="https://cathedradigital.com.br/acervo" />
       </Helmet>
 
       {/* HERO — Estilo Mosteiro Digital */}
       <EditorialHero align="center" density="expanded" className="bg-primary/[0.02] border-b border-primary/5">
-        <EditorialHero.Meta>Mosteiro Digital · Átrio do Conhecimento</EditorialHero.Meta>
+        <EditorialHero.Meta>Ecossistema Vivo · Átrio do Conhecimento</EditorialHero.Meta>
         <EditorialHero.Eyebrow>{greeting}, {firstName}</EditorialHero.Eyebrow>
         <EditorialHero.Title>Biblioteca do Cathedra</EditorialHero.Title>
-        <EditorialHero.Subtitle>Toda a riqueza da fé católica organizada para a sua caminhada espiritual.</EditorialHero.Subtitle>
+        <EditorialHero.Subtitle>Toda a riqueza da fé católica em um ambiente onde tudo se conecta.</EditorialHero.Subtitle>
         <EditorialHero.Actions>
            <div className="w-full max-w-2xl mx-auto mt-spacing-md">
             <div className="rounded-premium-full p-spacing-xs border border-primary/15 bg-card/60 backdrop-blur-md shadow-premium-sm flex items-center group/search focus-within:ring-2 focus-within:ring-primary/20 transition-all">
@@ -230,10 +230,10 @@ const AcervoHomePage: React.FC = () => {
         <section className="bg-primary/5 rounded-premium p-spacing-xl md:p-spacing-2xl border border-primary/10">
            <div className="max-w-3xl mx-auto text-center space-y-spacing-lg">
               <Icons.Sparkles className="w-12 h-12 mx-auto text-primary/40" />
-              <h2 className="type-h2">Biblioteca Inteligente</h2>
-              <p className="type-lead opacity-80">Encontre conexões profundas entre a Bíblia, o Catecismo e a Tradição usando Logos, o motor de inteligência teológica da Cathedra.</p>
+              <h2 className="type-h2">O Logos</h2>
+              <p className="type-lead opacity-80">Converse com o Logos e encontre conexões profundas entre a Bíblia, o Catecismo e a Tradição.</p>
               <Button size="lg" className="rounded-premium-full px-spacing-xl" onClick={() => window.location.href = '/biblioteca/inteligente'}>
-                Explorar Conexões Nexus
+                Iniciar Conversa com o Logos
               </Button>
            </div>
         </section>
