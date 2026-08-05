@@ -24,11 +24,16 @@ jobs:
         env:
           CI: true
           
-      - name: Upload SEO Reports
+      - name: Run Lighthouse CI
+        run: bun run scripts/lighthouse-run.mjs --view=dist/seo/lighthouse/report.html
+        env:
+          LH_OUTPUT_DIR: dist/seo/lighthouse
+
+      - name: Upload SEO and Performance Reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: seo-reports
+          name: seo-and-perf-reports
           path: |
             dist/seo/
             test-results/
