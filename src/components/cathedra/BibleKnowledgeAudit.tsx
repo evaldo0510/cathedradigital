@@ -235,7 +235,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
       
       let verification_details: any = null;
 
-      if (notification.secret_key) {
+      if (notification.has_secret) {
         const expectedHmac = 'hmac_sha256_placeholder';
         headers['X-Cathedra-Signature'] = expectedHmac; 
         
@@ -444,7 +444,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
 
     const { data, error } = await supabase
       .from('bible_audit_notifications')
-      .select('*')
+      .select('id, type, target, is_active, priority_threshold, created_at, updated_at, channel, priority, rules, retry_config, headers, version, is_latest, has_secret')
       .order('created_at', { ascending: false });
     
     if (!error && data) {
@@ -551,7 +551,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
     const { data, error } = await supabase
       .from('bible_audit_notifications')
       .insert([newNotification])
-      .select();
+      .select('id, type, target, is_active, priority_threshold, created_at, updated_at, channel, priority, rules, retry_config, headers, version, is_latest, has_secret');
     
     if (!error && data) {
       setNotificationSettings(prev => [data[0], ...prev]);
@@ -1340,7 +1340,7 @@ export const BibleKnowledgeAudit: React.FC<BibleKnowledgeAuditProps> = ({ onClos
                           <span className="text-xs font-bold text-primary/60 truncate max-w-[200px]">{n.target}</span>
                           <span className="text-[9px] uppercase tracking-widest text-primary/30 flex items-center gap-2">
                             {n.type} • v{n.version || 1}
-                            {n.secret_key && <span> • HMAC: {n.secret_key.slice(0, 4)}***</span>}
+                            {n.has_secret && <span> • HMAC: configurado</span>}
                           </span>
                         </div>
                         <div className="flex items-center gap-2">
