@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { EditorialHero, EditorialCard, EditorialDivider, EditorialKicker } from '@/components/editorial/harmony';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
+import { GraduationCap, Heart, Star, Shield } from 'lucide-react';
 import {
   countLibraryByKind,
   fetchLibraryFeatured,
