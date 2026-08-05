@@ -142,6 +142,11 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     description:
       'A vida litúrgica da Igreja: Missal, Liturgia das Horas e calendário. Reze o próprio do dia em união com toda a Igreja.',
   },
+  '/igreja': {
+    title: 'Igreja — Vida Litúrgica e Espiritual',
+    description:
+      'Explore a vida litúrgica da Igreja: liturgia diária, missal, breviário e as ricas tradições da oração comunitária.',
+  },
   '/liturgia/dia': {
     title: 'Dia Litúrgico — Missa, Horas e Santo do Dia',
     description:
