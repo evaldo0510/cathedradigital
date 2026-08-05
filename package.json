@@ -224,6 +224,7 @@
     "jsdom-screenshot": "^4.0.0",
     "lighthouse": "^13.3.0",
     "lovable-tagger": "^1.1.13",
+    "madge": "^8.0.0",
     "playwright-lighthouse": "^4.0.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
