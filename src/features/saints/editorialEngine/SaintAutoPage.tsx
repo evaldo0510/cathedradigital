@@ -27,6 +27,7 @@ import { SaintVirtuesBlock } from './blocks/SaintVirtuesBlock';
 import { SaintWritingsBlock } from './blocks/SaintWritingsBlock';
 import { SaintPrayersBlock } from './blocks/SaintPrayersBlock';
 import { SaintSourcesBlock } from './blocks/SaintSourcesBlock';
+import { SaintMeditationBlock } from './blocks/SaintMeditationBlock';
 
 interface Props {
   descriptor: SaintPageDescriptor;
@@ -135,6 +136,8 @@ export const SaintAutoPage: React.FC<Props> = ({ descriptor }) => {
                   text={b.data as string}
                 />
               );
+            case 'meditation':
+              return <SaintMeditationBlock key={b.id} text={b.data as string} />;
             case 'legacy':
               return (
                 <SaintBioBlock
