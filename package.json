@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "prebuild": "bun run scripts/generate-sitemap.ts && bun run scripts/validate-jsonld.ts && bun run scripts/validate-route-seo.ts --html=dist/seo/routes-report.html --allow-warnings && bun run scripts/validate-planos-alias.ts && bun run scripts/seo-checklist.ts && bun run scripts/headings-audit.ts && npm run test:seo-ci",
-    "test:seo-ci": "vitest run src/test/seo-integrity.test.ts && bun run scripts/validate-route-seo.ts --html=dist/seo/routes-report.html --allow-warnings && npx playwright test tests/e2e/seo-certification-ci.spec.ts",
+    "prebuild": "bun run scripts/check-circular.ts && bun run scripts/generate-sitemap.ts && bun run scripts/validate-jsonld.ts && bun run scripts/validate-route-seo.ts --html=dist/seo/routes-report.html --allow-warnings && bun run scripts/validate-planos-alias.ts && bun run scripts/seo-checklist.ts && bun run scripts/headings-audit.ts && npm run test:seo-ci",
+    "test:seo-ci": "vitest run src/test/seo-integrity.test.ts && bun run scripts/validate-route-seo.ts --html=dist/seo/routes-report.html --allow-warnings && bun run scripts/healthcheck.ts && npx playwright test tests/e2e/seo-certification-ci.spec.ts",
+
     "seo:validate-routes": "bun run scripts/validate-route-seo.ts --html=dist/seo/routes-report.html",
     "seo:validate-routes:report": "mkdir -p /mnt/documents && bun run scripts/validate-route-seo.ts --warn --html=/mnt/documents/seo-routes-report.html",
     "build": "vite build",
@@ -224,6 +225,7 @@
     "jsdom-screenshot": "^4.0.0",
     "lighthouse": "^13.3.0",
     "lovable-tagger": "^1.1.13",
+    "madge": "^8.0.0",
     "playwright-lighthouse": "^4.0.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17",
