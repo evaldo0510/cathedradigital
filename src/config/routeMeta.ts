@@ -87,6 +87,11 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     description:
       'Busque por perguntas, assuntos, santos ou documentos. O cérebro teológico da Cathedra conectando toda a Tradição em um só lugar.',
   },
+  '/biblioteca/inteligente': {
+    title: 'Biblioteca Inteligente — Pesquisa Teológica Avançada',
+    description:
+      'Utilize o motor de busca avançado da Cathedra para encontrar conexões profundas entre a Bíblia, o Catecismo e a Patrística.',
+  },
   '/dogmas': {
     title: 'Dogmas Católicos — Verdades Definidas da Fé',
     description:
@@ -141,6 +146,11 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     title: 'Igreja — Liturgia, Missa e Ofício Divino',
     description:
       'A vida litúrgica da Igreja: Missal, Liturgia das Horas e calendário. Reze o próprio do dia em união com toda a Igreja.',
+  },
+  '/igreja': {
+    title: 'Igreja — Vida Litúrgica e Espiritual',
+    description:
+      'Explore a vida litúrgica da Igreja: liturgia diária, missal, breviário e as ricas tradições da oração comunitária.',
   },
   '/liturgia/dia': {
     title: 'Dia Litúrgico — Missa, Horas e Santo do Dia',

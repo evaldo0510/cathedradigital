@@ -79,7 +79,9 @@ export enum AppRoute {
 
   JORNADA_GUIADA = '/jornada-guiada',
   OFFLINE = '/offline',
-  CACHE_MANAGER = '/cache-manager'
+  CACHE_MANAGER = '/cache-manager',
+  IGREJA = '/igreja',
+  BIBLIOTECA_INTELIGENTE = '/biblioteca/inteligente'
 }
 
 export interface TrackStep {
