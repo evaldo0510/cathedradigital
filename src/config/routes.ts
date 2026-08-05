@@ -17,19 +17,21 @@ export interface RouteConfig {
 // funcionando como aliases via <Navigate> no App.tsx (compatibilidade / SEO).
 // Registro dos aliases: docs/CATHEDRA-ROUTE-CANONICAL.md
 export const APP_ROUTES: RouteConfig[] = [
-  // Core Routes
-  { path: '/', label: 'Início', icon: Icons.Home, showInMenu: true, category: 'core' },
-  { path: '/bible', label: 'Bíblia', icon: Icons.Book, showInMenu: true, category: 'core' },
-  { path: '/catechism', label: 'Catecismo', icon: Icons.Church, showInMenu: true, category: 'core' },
-  { path: '/magisterium', label: 'Magistério', icon: Icons.Scroll, showInMenu: true, category: 'core' },
-  { path: '/buscar', label: 'Busca Global', icon: Icons.Search, showInMenu: true, category: 'core' },
+  // Core Routes (Hub Spiritual)
+  { path: '/bible', label: 'Bíblia', icon: Icons.BookOpen, showInMenu: true, category: 'core' },
+  { path: '/rezar', label: 'Orar', icon: Icons.Hand, showInMenu: true, category: 'core' },
+  { path: '/igreja', label: 'Igreja', icon: Icons.Church, showInMenu: true, category: 'core' },
+  { path: '/santos', label: 'Santos', icon: Icons.Flame, showInMenu: true, category: 'core' },
+  { path: '/jornadas', label: 'Jornadas', icon: Icons.Route, showInMenu: true, category: 'core' },
+  { path: '/nexus', label: 'Nexus', icon: Icons.Orbit, showInMenu: true, category: 'core' },
+  { path: '/biblioteca', label: 'Biblioteca', icon: Icons.Search, showInMenu: true, category: 'core' },
+  { path: '/profile', label: 'Perfil', icon: Icons.User, showInMenu: true, category: 'core' },
 
-  // Spiritual Journey
-  { path: '/hoje', label: 'Hoje', icon: Icons.Calendar, showInMenu: true, category: 'spiritual' },
-  { path: '/jornadas', label: 'Jornadas', icon: Icons.Map, showInMenu: true, category: 'spiritual' },
-  { path: '/itineraria', label: 'Itinerários', icon: Icons.Compass, showInMenu: true, category: 'spiritual' },
-  { path: '/santos', label: 'Santos do Dia', icon: Icons.User, showInMenu: true, category: 'spiritual' },
-  { path: '/liturgia', label: 'Liturgia', icon: Icons.Sun, showInMenu: true, category: 'spiritual' },
+  // Secondary/Specific Routes
+  { path: '/', label: 'Início', icon: Icons.Home, showInMenu: false, category: 'core' },
+  { path: '/catechism', label: 'Catecismo', icon: Icons.Book, showInMenu: false, category: 'content' },
+  { path: '/magisterium', label: 'Magistério', icon: Icons.ScrollText, showInMenu: false, category: 'content' },
+
 
   // Content & Resources
   { path: '/biblioteca', label: 'Biblioteca', icon: Icons.Library, showInMenu: true, category: 'content' },
