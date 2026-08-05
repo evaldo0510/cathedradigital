@@ -116,6 +116,45 @@ export type Database = {
         }
         Relationships: []
       }
+      admin_audit_logs: {
+        Row: {
+          action: string
+          created_at: string
+          entity_id: string | null
+          entity_type: string
+          id: string
+          ip_address: string | null
+          new_data: Json | null
+          old_data: Json | null
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type: string
+          id?: string
+          ip_address?: string | null
+          new_data?: Json | null
+          old_data?: Json | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          entity_id?: string | null
+          entity_type?: string
+          id?: string
+          ip_address?: string | null
+          new_data?: Json | null
+          old_data?: Json | null
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       analytics_events: {
         Row: {
           created_at: string
@@ -5416,6 +5455,30 @@ export type Database = {
         }
         Relationships: []
       }
+      realtime_events_audit: {
+        Row: {
+          created_at: string
+          event_type: string
+          id: string
+          initiated_by: string | null
+          payload: Json | null
+        }
+        Insert: {
+          created_at?: string
+          event_type: string
+          id?: string
+          initiated_by?: string | null
+          payload?: Json | null
+        }
+        Update: {
+          created_at?: string
+          event_type?: string
+          id?: string
+          initiated_by?: string | null
+          payload?: Json | null
+        }
+        Relationships: []
+      }
       ritual_progress: {
         Row: {
           completed: boolean
@@ -8741,6 +8804,10 @@ export type Database = {
           p_metadata?: Json
         }
         Returns: string
+      }
+      log_notification_event: {
+        Args: { _event_type: string; _payload: Json }
+        Returns: undefined
       }
       log_rls_denial: {
         Args: {
