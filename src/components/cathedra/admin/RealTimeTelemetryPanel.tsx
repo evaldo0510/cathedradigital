@@ -12,7 +12,7 @@ import {
   AreaChart, Area, BarChart, Bar, Cell, ComposedChart 
 } from 'recharts';
 import { CathedraButton } from '../CathedraButton';
-import AdminAuditPage from './AdminAuditPage';
+import TelemetryAuditTab from './TelemetryAuditTab';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
@@ -305,7 +305,7 @@ const RealTimeTelemetryPanel: React.FC = () => {
       )}
 
       {showAudit ? (
-        <AdminAuditPage />
+        <TelemetryAuditTab />
       ) : (
         <>
           <div className="flex flex-wrap gap-spacing-md bg-muted/10 p-spacing-sm rounded-premium-full border border-border/20">
