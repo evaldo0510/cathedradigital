@@ -286,6 +286,73 @@ const AcervoHomePage: React.FC = () => {
 
         {/* CTA principal — Removido para dar lugar à busca centralizada e categorias Hub */}
 
+        {/* Trilhas inteligentes — "Quero crescer em..." */}
+        <section className="space-y-spacing-md">
+          <h2 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary text-center">
+            Quero crescer em...
+          </h2>
+          <div className="flex flex-wrap justify-center gap-2">
+            {[
+              { label: 'Fé', emoji: '❤️', slug: 'fe' },
+              { label: 'Oração', emoji: '🙏', slug: 'oracao' },
+              { label: 'Família', emoji: '👨‍👩‍👧', slug: 'familia' },
+              { label: 'Casamento', emoji: '💍', slug: 'casamento' },
+              { label: 'Perdão', emoji: '🕊', slug: 'perdao' },
+              { label: 'Bíblia', emoji: '📖', slug: 'biblia' },
+              { label: 'Maria', emoji: '🌹', slug: 'maria' },
+              { label: 'Vida dos Santos', emoji: '✝', slug: 'santos' },
+            ].map((trilha) => (
+              <Button 
+                key={trilha.label} 
+                variant="outline" 
+                size="sm" 
+                className="rounded-full bg-card/40 border-primary/10 hover:border-primary/30 transition-all px-spacing-lg"
+                onClick={() => window.location.href = `/biblioteca/inteligente?q=${encodeURIComponent(trilha.label)}`}
+              >
+                <span className="mr-2" aria-hidden="true">{trilha.emoji}</span>
+                {trilha.label}
+              </Button>
+            ))}
+          </div>
+        </section>
+
+        <EditorialDivider variant="gold-fade" className="max-w-md mx-auto opacity-40" />
+
+        {/* Biblioteca Viva — Descobertas */}
+        <section className="space-y-spacing-md">
+          <h2 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary">
+            Você pode gostar
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
+            <Link to="/acervo/lista?author=Santo+Agostinho" className="group">
+              <EditorialCard 
+                kicker="Porque você leu Santo Agostinho"
+                title="Confissões"
+                description="O clássico da conversão e o diálogo da alma com Deus."
+                className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
+              />
+            </Link>
+            <Link to="/catechism?p=27" className="group">
+              <EditorialCard 
+                kicker="Relacionado"
+                title="Catecismo §27"
+                description="O desejo de Deus está inscrito no coração do homem."
+                className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
+              />
+            </Link>
+            <Link to="/bible?book=Rm&ch=13" className="group">
+              <EditorialCard 
+                kicker="Referência Nexus"
+                title="Romanos 13"
+                description="O texto bíblico que selou a conversão de Agostinho."
+                className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
+              />
+            </Link>
+          </div>
+        </section>
+
+        <EditorialDivider variant="gold-fade" className="max-w-md mx-auto opacity-40" />
+
         {/* Categorias */}
         <section aria-labelledby="categorias-heading" className="space-y-spacing-md">
           <h2

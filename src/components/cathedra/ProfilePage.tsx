@@ -339,8 +339,11 @@ const ProfilePage: React.FC = () => {
   const statCards = [
     { label: 'Discussões', value: stats.posts, icon: <Icons.Message className="w-spacing-md h-spacing-md" /> },
     { label: 'Curtidas', value: stats.likes, icon: <Icons.Heart className="w-spacing-md h-spacing-md" /> },
-    { label: 'Anotações', value: stats.notes, icon: <Icons.Feather className="w-spacing-md h-spacing-md" /> },
     { label: 'Dias Ativos', value: stats.daysActive, icon: <Icons.History className="w-spacing-md h-spacing-md" /> },
+    { label: 'Bíblia (Cap.)', value: 34, icon: <Icons.Bible className="w-spacing-md h-spacing-md" /> },
+    { label: 'Catecismo (§)', value: 81, icon: <Icons.Catechism className="w-spacing-md h-spacing-md" /> },
+    { label: 'Santos', value: 17, icon: <Icons.Saints className="w-spacing-md h-spacing-md" /> },
+    { label: 'Jornadas', value: 4, icon: <Icons.Compass className="w-spacing-md h-spacing-md" /> },
   ];
 
   const fmtDateShort = (iso: string) =>
