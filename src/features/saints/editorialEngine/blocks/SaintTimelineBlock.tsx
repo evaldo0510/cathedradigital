@@ -14,7 +14,7 @@ export const SaintTimelineBlock: React.FC<Props> = ({ events }) => (
       {events.map((e, i) => (
         <li key={`${e.year}-${i}`} className="relative">
           <span
-            className="absolute -left-[calc(theme(spacing.md)+5px)] top-[6px] w-2 h-2 rounded-full bg-primary"
+            className="absolute -left-[calc(theme(spacing.spacing-md)+5px)] top-[6px] w-2 h-2 rounded-full bg-primary"
             aria-hidden
           />
           <p className="text-[10px] font-mono uppercase tracking-widest text-primary">{e.year}</p>
