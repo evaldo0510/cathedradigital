@@ -149,10 +149,11 @@ function checkRobotsAllowed(path: string, robotsContent: string): boolean {
       if (!pattern) continue;
 
       // robots.txt: pattern deve bater com o início da string
-      if (path.startsWith(pattern)) {
+      if (path.startsWith(pattern) && path !== '/') {
         isAllowed = false;
         break;
       }
+
     }
   }
   return isAllowed;
