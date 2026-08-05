@@ -113,6 +113,10 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     description:
       'Portal interno da Cathedra: acesse Bíblia, Catecismo, Liturgia, Orações e Logos AI em um único ambiente contemplativo.',
   },
+  '/acervo': {
+    title: 'Acervo Cathedra — Mosteiro do Conhecimento',
+    description: 'Biblioteca Católica unificada: Bíblia, Catecismo, Patrística, Magistério e Aparições Marianas em um hub inteligente.',
+  },
 
   // ─── Vida de Oração (Igreja) ──────────────────────────────────
   '/oracao': {
