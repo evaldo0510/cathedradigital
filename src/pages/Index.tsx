@@ -219,7 +219,7 @@ const Index = () => {
 
         Eu criaria um marco chamado:
 
-        > **Cathedra Digital 3.0 — Production Ready**
+        &gt; **Cathedra Digital 3.0 — Production Ready**
 
         Esse marco só seria alcançado quando todos os itens abaixo estivessem em verde:
 
