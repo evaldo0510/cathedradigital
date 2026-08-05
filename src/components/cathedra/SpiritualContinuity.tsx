@@ -115,12 +115,14 @@ const SpiritualContinuity: React.FC<SpiritualContinuityProps> = ({
             </div>
             <div className="space-y-spacing-2xs text-center md:text-left">
               <p className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/40">
-                {propProfile?.name ? `Paz e Bem, ${propProfile.name.split(' ')[0]}` : 'Bem-vindo de volta'}
+                {propProfile?.name ? `Você parou aqui, ${propProfile.name.split(' ')[0]}` : 'Retome sua caminhada'}
               </p>
               <h3 className="text-premium-lg md:text-premium-2xl font-serif font-bold text-primary/80">
                 {title}
               </h3>
-              <p className="text-premium-xs text-primary/60 italic font-serif">{subtitle}</p>
+              <p className="text-premium-xs text-primary/60 italic font-serif leading-relaxed max-w-[40ch]">
+                {subtitle === 'Onde você parou' ? 'Continue sua imersão espiritual exatamente de onde interrompeu.' : subtitle}
+              </p>
             </div>
           </div>
           

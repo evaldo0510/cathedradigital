@@ -2,19 +2,13 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute } from '@/types';
 import { motion, AnimatePresence } from 'framer-motion';
-
-
-
 import { Input } from '@/components/ui/input';
-
-import { SectionHeader } from './SectionHeader';
-import { SpiritualContinuity } from './SpiritualContinuity';
-import { CathedraButton } from './CathedraButton';
-import { CathedraCard } from './CathedraCard';
 import { Icons } from '@/constants';
-
-
 import { useAuth } from '@/hooks/useAuth';
+import { SpiritualContinuity } from './SpiritualContinuity';
+import { CathedraCard } from './CathedraCard';
+import { CathedraButton } from './CathedraButton';
+import { useSaintsToday } from '@/hooks/useSaints';
 
 interface HomeMainContentProps {
   user: any;
@@ -28,194 +22,132 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
   const [logosQuery, setLogosQuery] = useState('');
   const logosInputRef = useRef<HTMLInputElement>(null);
   const logosCardRef = useRef<HTMLDivElement>(null);
+  const { data: saintsToday } = useSaintsToday();
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.altKey && e.key.toLowerCase() === 'l') {
-        e.preventDefault();
-        if (logosCardRef.current) {
-          logosCardRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          logosCardRef.current.classList.add('ring-4', 'ring-primary/20', 'scale-[1.01]');
-          setTimeout(() => {
-            logosCardRef.current?.classList.remove('ring-4', 'ring-primary/20', 'scale-[1.01]');
-            logosInputRef.current?.focus();
-          }, 400);
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+  const greeting = useMemo(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Bom dia';
+    if (hour < 18) return 'Boa tarde';
+    return 'Boa noite';
   }, []);
-
-  const isParagraphQuery = useMemo(() => {
-    const q = logosQuery.trim().toLowerCase();
-    // Match patterns like "cic 123", "p123", "paragrafo 123"
-    const cicMatch = q.match(/^(?:cic|p|par[áa]grafo)\s*(\d+)$/i);
-    // Match patterns like "jo 3,16", "gn 1,1", "1cor 13"
-    const bibleMatch = q.match(/^([1-3]?[a-z]+)\s*(\d+)(?:[,\s](\d+))?$/i);
-    return { cicMatch, bibleMatch };
-  }, [logosQuery]);
 
   const handleLogosSearch = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     const query = logosQuery.trim();
     if (!query) return;
-
-    // Direct Jump Logic
-    if (isParagraphQuery.cicMatch) {
-      navigate(`/catechism?p=${isParagraphQuery.cicMatch[1]}`);
-      return;
-    }
-    if (isParagraphQuery.bibleMatch) {
-      const [_, book, ch, v] = isParagraphQuery.bibleMatch;
-      navigate(`/bible?book=${book}&ch=${ch}${v ? `&v=${v}` : ''}`);
-      return;
-    }
-    
-    const savedMessages = localStorage.getItem('cathedra_logos_messages');
-    const messages = savedMessages ? JSON.parse(savedMessages) : [];
-    const newMessage = {
-      id: Date.now().toString(),
-      role: 'user',
-      content: query,
-      timestamp: new Date().toISOString()
-    };
-    localStorage.setItem('cathedra_logos_messages', JSON.stringify([...messages, newMessage]));
-    navigate(`${AppRoute.BUSCAR}?q=${encodeURIComponent(query)}`);
+    navigate(`/biblioteca/inteligente?q=${encodeURIComponent(query)}`);
   };
-
 
   return (
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 1 }}
-      className="w-full space-y-spacing-xl md:space-y-spacing-4xl outline-none flex flex-col items-center" 
-      tabIndex={-1}
+      transition={{ duration: 1.5 }}
+      className="w-full space-y-spacing-2xl md:space-y-spacing-4xl flex flex-col items-center" 
     >
-      {/* 1. CONTINUAR LEITURA - PRIMARY JOURNEY */}
-      <section className="w-full">
-        <SpiritualContinuity />
-      </section>
+      {/* 1. SAUDAÇÃO PERSONALIZADA (Monastery Style) */}
+      <header className="w-full text-center space-y-spacing-xs py-spacing-md">
+        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary/40">
+          Mosteiro Digital
+        </p>
+        <h1 className="text-3xl md:text-5xl font-serif font-bold text-primary">
+          {greeting}, {profile?.name?.split(' ')[0] || 'Peregrino'}.
+        </h1>
+        {saintsToday && saintsToday.length > 0 && (
+          <p className="text-premium-sm text-muted-foreground italic font-serif">
+            Hoje a Igreja celebra: <span className="text-primary/70">{saintsToday[0].name}</span>
+          </p>
+        )}
+      </header>
 
-      {/* 2. NÚCLEO SAGRADO - CORE FOCUS */}
-      <section className="w-full">
-        <h2 className="sr-only">Núcleo Sagrado</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-lg md:gap-spacing-xl w-full mx-auto">
-          <CathedraCard 
-            variant="interactive"
-            className="group flex flex-col items-center gap-spacing-xl py-spacing-2xl will-change-transform"
-            onClick={() => onNavigate(AppRoute.BIBLE)}
-          >
-            <div className="w-spacing-3xl h-spacing-3xl md:w-spacing-3xl md:h-spacing-3xl rounded-premium-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.02] group-hover:scale-105">
-              <Icons.Bible className="w-spacing-xl h-spacing-xl md:w-spacing-xl md:h-spacing-xl" strokeWidth={0.3} />
-            </div>
-            <div className="space-y-spacing-sm text-center">
-              <span className="block text-[11px] font-black uppercase tracking-[0.5em] text-primary/30 group-hover:text-primary transition-all duration-700">Bíblia</span>
-              <span className="block text-[11px] text-muted-foreground/30 font-serif italic tracking-widest">A Palavra de Deus</span>
-            </div>
-          </CathedraCard>
-
-          <CathedraCard 
-            variant="interactive"
-            className="group flex flex-col items-center gap-spacing-xl py-spacing-2xl will-change-transform"
-            onClick={() => onNavigate(AppRoute.CATECHISM)}
-          >
-            <div className="w-spacing-3xl h-spacing-3xl md:w-spacing-3xl md:h-spacing-3xl rounded-premium-full flex items-center justify-center text-primary/20 group-hover:text-primary transition-all duration-1000 border border-primary/[0.05] bg-primary/[0.01] group-hover:bg-primary/[0.02] group-hover:scale-105">
-              <Icons.Catechism className="w-spacing-xl h-spacing-xl md:w-spacing-xl md:h-spacing-xl" strokeWidth={0.3} />
-            </div>
-            <div className="space-y-spacing-sm text-center">
-              <span className="block text-[11px] font-black uppercase tracking-[0.5em] text-primary/30 group-hover:text-primary transition-all duration-700">Catecismo</span>
-              <span className="block text-[11px] text-muted-foreground/30 font-serif italic tracking-widest">Doutrina e Fé</span>
-            </div>
-          </CathedraCard>
-        </div>
-
-        <div className="flex justify-center mt-spacing-2xl">
-          <CathedraButton 
-            variant="ghost" 
-            className="text-[9px] font-black uppercase tracking-[0.4em] text-primary/20 hover:text-primary transition-all"
-            onClick={() => onNavigate(AppRoute.MAGISTERIUM)}
-          >
-            Acessar Magistério →
-          </CathedraButton>
-        </div>
-      </section>
-
-      {/* 3. LOGOS IA - SMART SEARCH */}
-      <section className="w-full mx-auto">
+      {/* 2. BUSCA INTELIGENTE (Cérebro do Cathedra) */}
+      <section className="w-full max-w-2xl">
         <CathedraCard
           ref={logosCardRef}
           variant="glass"
           padding="none"
-          className="rounded-premium-full p-spacing-xs border-primary/5 shadow-premium-sm relative overflow-visible"
+          className="rounded-premium-full p-spacing-xs border-primary/5 shadow-premium-sm"
         >
-          {/* Quick Jump Preview */}
-          <AnimatePresence>
-            {(isParagraphQuery.cicMatch || isParagraphQuery.bibleMatch) && (
-              <motion.div 
-                initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                className="absolute -top-16 left-1/2 -translate-x-1/2 bg-card border border-primary/10 rounded-premium px-4 py-2 shadow-premium z-50 whitespace-nowrap"
-              >
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Icons.Zap className="w-3 h-3 text-primary" />
-                  </div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-primary">
-                    Ir para {isParagraphQuery.cicMatch ? `CIC §${isParagraphQuery.cicMatch[1]}` : `${isParagraphQuery.bibleMatch?.[1]} ${isParagraphQuery.bibleMatch?.[2]}${isParagraphQuery.bibleMatch?.[3] ? `,${isParagraphQuery.bibleMatch[3]}` : ''}`}
-                  </span>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <form onSubmit={handleLogosSearch} className="relative z-10 w-full">
+          <form onSubmit={handleLogosSearch} className="w-full">
             <div className="relative group/input">
               <Input
                 ref={logosInputRef}
                 value={logosQuery}
                 onChange={(e) => setLogosQuery(e.target.value)}
-                placeholder="Logos IA: Pergunte sobre a Fé..."
-                className="h-spacing-3xl md:h-spacing-3xl pl-spacing-3xl pr-spacing-3xl rounded-premium-full border-none bg-transparent transition-all duration-500 text-premium-sm md:text-premium-lg placeholder:text-muted-foreground/20 font-serif italic focus:ring-0 shadow-premium-none"
-                aria-label="Logos IA: Pergunte sobre a fé"
+                placeholder="Logos: Bíblia, Santos, Doutrina..."
+                className="h-spacing-3xl pl-spacing-3xl pr-spacing-3xl rounded-premium-full border-none bg-transparent text-premium-md placeholder:text-muted-foreground/30 font-serif italic focus:ring-0 shadow-none"
               />
-              <Icons.Search className="absolute left-spacing-lg top-spacing-2xs/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/10 group-focus-within/input:text-primary/30 transition-all duration-500" />
-              <button 
-                type="submit"
-                className="absolute right-spacing-xs top-spacing-2xs/2 -translate-y-1/2 w-spacing-2xl h-spacing-2xl md:w-spacing-3xl md:h-spacing-3xl rounded-premium-full bg-primary/[0.01] text-primary/20 hover:bg-primary hover:text-primary-foreground transition-all duration-300 flex items-center justify-center group/btn outline-none"
-              >
-                <Icons.ArrowRight className="w-spacing-md h-spacing-md md:w-spacing-lg md:h-spacing-lg group-hover/btn:translate-x-1 transition-transform" />
-              </button>
+              <Icons.Search className="absolute left-spacing-lg top-1/2 -translate-y-1/2 w-spacing-md h-spacing-md text-primary/20 group-focus-within/input:text-primary/40 transition-colors" />
             </div>
           </form>
         </CathedraCard>
-
       </section>
 
-      {/* 4. RITUAL RÁPIDO - COMPACT ACCESS */}
-      <section className="w-full flex justify-center">
-        <CathedraCard
+      {/* 3. CONTINUIDADE ESPIRITUAL */}
+      <section className="w-full">
+        <SpiritualContinuity profile={profile} />
+      </section>
+
+      {/* 4. AÇÕES MONÁSTICAS (Rituais Rápidos) */}
+      <section className="w-full grid grid-cols-1 md:grid-cols-3 gap-spacing-md">
+        <CathedraCard 
           variant="interactive"
-          padding="none"
-          className="rounded-premium-full border-primary/[0.02] shadow-premium-none hover:shadow-premium-sm"
-          onClick={() => onNavigate(AppRoute.HOJE)}
+          className="flex flex-col items-center text-center p-spacing-xl group"
+          onClick={() => onNavigate('/rezar')}
         >
-          <div className="flex items-center gap-spacing-lg px-spacing-xl py-spacing-md group">
-            <div className="w-spacing-xl h-spacing-xl rounded-premium-full bg-primary/5 flex items-center justify-center text-primary/40 group-hover:text-primary transition-colors">
-              <Icons.Sun className="w-spacing-md h-spacing-md" strokeWidth={1} />
-            </div>
-            <div className="text-left">
-              <span className="block text-[8px] font-black uppercase tracking-[0.4em] text-primary/30 group-hover:text-primary transition-colors">Ritual do Dia</span>
-              <span className="block text-[9px] text-muted-foreground/30 font-serif italic">Sanctificatio temporis</span>
-            </div>
+          <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary/40 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 mb-spacing-md">
+            <Icons.PrayingHands className="w-6 h-6" />
           </div>
+          <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 mb-1">Reze Agora</span>
+          <span className="text-premium-xs text-muted-foreground italic font-serif">Sanctificatio</span>
+        </CathedraCard>
+
+        <CathedraCard 
+          variant="interactive"
+          className="flex flex-col items-center text-center p-spacing-xl group"
+          onClick={() => onNavigate('/biblia')}
+        >
+          <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary/40 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 mb-spacing-md">
+            <Icons.Clock className="w-6 h-6" />
+          </div>
+          <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 mb-1">5 Minutos</span>
+          <span className="text-premium-xs text-muted-foreground italic font-serif">Lectio Brevis</span>
+        </CathedraCard>
+
+        <CathedraCard 
+          variant="interactive"
+          className="flex flex-col items-center text-center p-spacing-xl group"
+          onClick={() => onNavigate('/contemplatio')}
+        >
+          <div className="w-12 h-12 rounded-full bg-primary/5 flex items-center justify-center text-primary/40 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-500 mb-spacing-md">
+            <Icons.Mountain className="w-6 h-6" />
+          </div>
+          <span className="text-[9px] font-black uppercase tracking-[0.3em] text-primary/40 mb-1">Silêncio</span>
+          <span className="text-premium-xs text-muted-foreground italic font-serif">Silentium</span>
         </CathedraCard>
       </section>
-    </motion.div>
 
+      {/* 5. NÚCLEO SAGRADO (Acesso Direto) */}
+      <section className="w-full pt-spacing-xl border-t border-primary/5">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-spacing-sm">
+          {[
+            { label: 'Bíblia', route: AppRoute.BIBLE, icon: Icons.Bible },
+            { label: 'Catecismo', route: AppRoute.CATECHISM, icon: Icons.Catechism },
+            { label: 'Santos', route: AppRoute.SAINTS, icon: Icons.Flame },
+            { label: 'Jornadas', route: AppRoute.JORNADAS, icon: Icons.Route },
+          ].map((item) => (
+            <button
+              key={item.label}
+              onClick={() => onNavigate(item.route)}
+              className="flex flex-col items-center gap-2 p-4 rounded-premium hover:bg-primary/5 transition-colors group"
+            >
+              <item.icon className="w-5 h-5 text-primary/20 group-hover:text-primary transition-colors" />
+              <span className="text-[8px] font-black uppercase tracking-[0.2em] text-primary/30 group-hover:text-primary/60">{item.label}</span>
+            </button>
+          ))}
+        </div>
+      </section>
+    </motion.div>
   );
 });
 

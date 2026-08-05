@@ -380,6 +380,14 @@ export const ReaderContinuation: React.FC<ReaderContinuationProps> = ({
         <p className="mt-spacing-xs text-premium-xs italic text-muted-foreground font-serif">
           {epigraph}
         </p>
+        
+        {/* Sprint 5 — Guided Walk Text */}
+        {context.id && (
+          <p className="mt-spacing-md text-premium-sm text-foreground/80 leading-relaxed max-w-[50ch] mx-auto animate-fade-in">
+            A sua leitura de agora não é um fim, mas um convite. 
+            O que você encontrou aqui se conecta com estes próximos passos:
+          </p>
+        )}
       </header>
 
       <ul className="flex flex-col gap-spacing-sm" role="list">
