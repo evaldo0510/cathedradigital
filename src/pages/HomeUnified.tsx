@@ -115,10 +115,10 @@ const HomeUnified: React.FC = () => {
   return (
     <div className="cathedra-noir min-h-screen w-full">
       <Helmet>
-        <title>Cathedra — Habite a profundidade do silêncio</title>
-        <meta name="description" content="Cathedra: um espaço editorial e silencioso para estudar, rezar, formar-se, pesquisar e caminhar na tradição católica." />
-        <meta property="og:title" content="Cathedra — Habite a profundidade do silêncio" />
-        <meta property="og:description" content="Estudo, oração, formação e pesquisa em um só lugar. Uma catedral digital para a vida interior." />
+        <title>Cathedra — Ecossistema Espiritual Vivo</title>
+        <meta name="description" content="Cathedra: um ecossistema vivo para a vida interior onde tudo se conecta — Bíblia, Catecismo, Santos e Oração." />
+        <meta property="og:title" content="Cathedra — Ecossistema Espiritual Vivo" />
+        <meta property="og:description" content="Mais que um aplicativo, um mosteiro digital onde cada leitura conduz a uma nova descoberta espiritual." />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />
         <link rel="canonical" href="/" />
@@ -138,7 +138,7 @@ const HomeUnified: React.FC = () => {
 
         <div className="relative z-10 flex w-full max-w-6xl flex-col items-center text-center">
           <div data-rise><Icons.Logo className="w-16 h-16 mb-8 opacity-40 text-primary" /></div>
-          <div data-rise><Eyebrow className="mb-4 md:mb-6">Mosteiro Digital</Eyebrow></div>
+          <div data-rise><Eyebrow className="mb-4 md:mb-6">Ecossistema Vivo</Eyebrow></div>
 
           <h1
             data-rise="1"
@@ -158,7 +158,7 @@ const HomeUnified: React.FC = () => {
             className="mx-auto max-w-2xl px-4 text-lg italic leading-relaxed md:text-2xl"
             style={{ fontFamily: "var(--font-display)", color: 'var(--noir-text-muted)' }}
           >
-            Seu companheiro espiritual para a vida interior.
+            Um ecossistema espiritual vivo para sua caminhada.
           </p>
 
           {/* Busca Spotlight-like */}
@@ -227,7 +227,7 @@ const HomeUnified: React.FC = () => {
         <div className="mx-auto max-w-6xl">
           <div className="mb-12 flex flex-col items-center text-center">
             <Eyebrow className="mb-4">Sua caminhada</Eyebrow>
-            <h2 className="text-3xl md:text-5xl font-display text-noir-text">Plano Espiritual</h2>
+            <h2 className="text-3xl md:text-5xl font-display text-noir-text">Sua Caminhada Espiritual</h2>
             <p className="mt-4 text-noir-text-muted font-serif italic">"In te, Domine, speravi; non confundar in aeternum."</p>
           </div>
 
@@ -264,7 +264,7 @@ const HomeUnified: React.FC = () => {
                 <div>
                   <p className="text-xs font-bold uppercase tracking-widest text-gold mb-1">Nexus Intelligence</p>
                   <p className="text-sm italic font-serif leading-relaxed text-noir-text-muted">
-                    "Você tem estudado muito a Patrística ultimamente. Sabia que Santo Agostinho, que celebramos hoje, foi a maior influência para o parágrafo do Catecismo que você leu ontem?"
+                    "Este trecho aparece porque São João Paulo II cita diretamente Santo Agostinho em sua encíclica sobre a fé. A ligação entre eles explica a profundidade do parágrafo do Catecismo que você leu ontem."
                   </p>
                 </div>
               </div>
