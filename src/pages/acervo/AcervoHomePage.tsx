@@ -166,7 +166,7 @@ const AcervoHomePage: React.FC = () => {
               <div className="bg-card/40 border border-primary/5 p-spacing-lg rounded-premium space-y-spacing-md shadow-premium-sm flex flex-col">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gold">I. Formação</h3>
-                  <Icons.GraduationCap className="w-4 h-4 text-gold/40" />
+                  <GraduationCap className="w-4 h-4 text-gold/40" />
                 </div>
                 <div className="grid grid-cols-2 gap-spacing-sm flex-1">
                   {[
