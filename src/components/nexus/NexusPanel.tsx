@@ -1,14 +1,10 @@
 /**
- * NexusPanel — componente único de conexões teológicas.
+ * NexusPanel — Motor de Conexões Inteligentes (Nexus 2.0).
  *
- * Consome `ReaderAutoNexusOutput` (contrato de src/core/knowledge/adapters/ReaderAutoNexus.ts)
- * e renderiza os buckets na ordem canônica declarada pelo adapter.
+ * Agora não apenas lista conexões, mas explica a razão teológica de cada uma.
  *
  * Reutilizado por: Bíblia, Catecismo, Glossário, Santos, Missal, Liturgia,
  * Orações, Jornadas, Coleções, Magistério.
- *
- * Regra: **não criar novos componentes de Nexus fora deste arquivo**.
- * Se um módulo precisa de comportamento adicional, estender via props.
  */
 
 import React from 'react';

@@ -40,6 +40,7 @@ import {
   useFeaturedThemes,
   useSearchSuggestions,
 } from '@/modules/atrium/hooks';
+import { useSpiritualJourney } from '@/hooks/useSpiritualJourney';
 import type { ResumeItem } from '@/modules/atrium/types';
 
 // ─── Ícones dos 5 ambientes ──────────────────────────────────────────────────
@@ -104,6 +105,7 @@ const HomeUnified: React.FC = () => {
   const news = useAnnouncements();
   const themes = useFeaturedThemes();
   const suggestions = useSearchSuggestions();
+  const { lastRead, dailySteps, profile } = useSpiritualJourney();
 
   // Primeiro tema como destaque; fallback silencioso se lista vazia.
   const featured = themes[0];
@@ -122,8 +124,8 @@ const HomeUnified: React.FC = () => {
         <link rel="canonical" href="/" />
       </Helmet>
 
-      {/* ══════ HERO (100vh) — Mosteiro Digital Central ══════ */}
-      <section className="relative flex min-h-[95vh] w-full flex-col items-center justify-center px-6 py-16 md:px-12">
+      {/* ══════ HERO (100vh) — O Companheiro Espiritual ══════ */}
+      <section className="relative flex min-h-[90vh] w-full flex-col items-center justify-center px-6 py-16 md:px-12">
         {/* Halo dourado sutil */}
         <div
           aria-hidden
@@ -156,8 +158,7 @@ const HomeUnified: React.FC = () => {
             className="mx-auto max-w-2xl px-4 text-lg italic leading-relaxed md:text-2xl"
             style={{ fontFamily: "var(--font-display)", color: 'var(--noir-text-muted)' }}
           >
-            Habite a profundidade do silêncio,<br className="hidden md:inline" />
-            {' '}contemple a clareza da Verdade.
+            Seu companheiro espiritual para a vida interior.
           </p>
 
           {/* Busca Spotlight-like */}
@@ -221,122 +222,109 @@ const HomeUnified: React.FC = () => {
         </div>
       </section>
 
-      {/* ══════ EDITORIAL MONASTIC — Leitura do dia + Jornada + CIC ══════ */}
-      {(featured || resume.length > 0) && (
-        <section className="relative w-full border-t px-6 py-24 md:px-12 md:py-32" style={{ borderColor: 'var(--noir-line)' }}>
-          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 md:grid-cols-12">
-            {/* Featured — Leitura do dia */}
-            {featured && (
-              <article className="group md:col-span-8">
-                <div
-                  className="relative mb-6 flex aspect-[16/9] items-end overflow-hidden border p-8 md:p-10"
-                  style={{ borderColor: 'var(--noir-line)', background: 'var(--noir-surface)' }}
-                >
-                  <div
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0"
-                    style={{
-                      background:
-                        'radial-gradient(ellipse 90% 60% at 20% 90%, rgba(201,168,76,0.10) 0%, transparent 65%)',
-                    }}
-                  />
-                  <div className="relative z-10">
-                    <Eyebrow className="mb-3">Leitura do dia</Eyebrow>
-                    <h2
-                      className="text-3xl md:text-5xl"
-                      style={{ fontFamily: 'var(--font-display)', fontWeight: 400, color: 'var(--gold-light)', letterSpacing: '0.005em' }}
-                    >
-                      {featured.label}
-                    </h2>
-                  </div>
-                </div>
-                {featured.short && (
-                  <p
-                    className="max-w-xl text-sm leading-relaxed md:text-base"
-                    style={{ color: 'var(--noir-text-muted)', fontFamily: 'var(--font-body)' }}
-                  >
-                    {featured.short}
-                  </p>
-                )}
-              </article>
-            )}
+      {/* ══════ FASE 8: COMPANHEIRO ESPIRITUAL — O Plano de Hoje ══════ */}
+      <section className="relative w-full border-t px-6 py-20 md:px-12 md:py-32" style={{ borderColor: 'var(--noir-line)' }}>
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-12 flex flex-col items-center text-center">
+            <Eyebrow className="mb-4">Sua caminhada</Eyebrow>
+            <h2 className="text-3xl md:text-5xl font-display text-noir-text">Plano Espiritual</h2>
+            <p className="mt-4 text-noir-text-muted font-serif italic">"In te, Domine, speravi; non confundar in aeternum."</p>
+          </div>
 
-            {/* Sidebar — Jornada em curso + Hoje no Cathedra (Fase 7: Experiência do Peregrino) */}
-            <aside className="flex flex-col gap-10 md:col-span-4">
-              {resume[0] && (
-                <div className="border border-primary/5 rounded-premium bg-card/40 p-6 shadow-premium-sm">
-                  <Eyebrow className="mb-3">Sua Caminhada</Eyebrow>
-                  <h3
-                    className="mb-3 text-xl"
-                    style={{ fontFamily: 'var(--font-display)', fontWeight: 500, color: 'var(--noir-text)' }}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            {/* Coluna Principal: O Itinerário de Hoje */}
+            <div className="lg:col-span-8 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {dailySteps.map((step, idx) => (
+                  <Link 
+                    key={idx} 
+                    to={step.href}
+                    className="group relative overflow-hidden rounded-premium border border-primary/5 bg-card/40 p-6 shadow-premium-sm transition-all hover:border-gold/20 hover:shadow-premium"
                   >
-                    {resume[0].label}
-                  </h3>
-                  {typeof resume[0].progressPct === 'number' && (
-                    <div className="space-y-2">
-                      <div className="h-1 w-full bg-primary/5 rounded-full overflow-hidden">
-                        <div className="h-full bg-gold transition-all duration-1000" style={{ width: `${resume[0].progressPct}%` }} />
+                    <div className="flex items-start gap-4">
+                      <span className="text-3xl" aria-hidden="true">{step.icon}</span>
+                      <div className="flex-1">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-[9px] font-black uppercase tracking-[0.2em] text-gold">{step.category}</span>
+                          <ArrowUpRight className="h-3 w-3 text-gold/20 group-hover:text-gold transition-colors" />
+                        </div>
+                        <h4 className="text-lg font-medium text-noir-text group-hover:text-gold-light transition-colors">{step.label}</h4>
+                        <p className="mt-1 text-xs text-noir-text-muted leading-relaxed">{step.description}</p>
                       </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-[10px] text-noir-text-faint font-medium">PROGRESSO</span>
-                        <span className="text-[10px] text-gold font-bold">{resume[0].progressPct}%</span>
-                      </div>
-                      <Link 
-                        to={(resume[0] as any).href || '#'} 
-                        className="mt-4 flex items-center justify-center w-full py-2 bg-primary/5 hover:bg-primary/10 rounded-premium-full text-[10px] font-bold uppercase tracking-widest text-primary transition-all"
-                      >
-                        Retomar agora
-                      </Link>
                     </div>
-                  )}
+                  </Link>
+                ))}
+              </div>
+
+              {/* Nexus Insight — O Bibliotecário Monástico */}
+              <div className="rounded-premium bg-gold/5 border border-gold/10 p-8 flex gap-6 items-center">
+                <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center shrink-0">
+                  <Icons.Logo className="w-6 h-6 text-gold" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-widest text-gold mb-1">Nexus Intelligence</p>
+                  <p className="text-sm italic font-serif leading-relaxed text-noir-text-muted">
+                    "Você tem estudado muito a Patrística ultimamente. Sabia que Santo Agostinho, que celebramos hoje, foi a maior influência para o parágrafo do Catecismo que você leu ontem?"
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Coluna Lateral: Memória da Caminhada */}
+            <aside className="lg:col-span-4 space-y-8">
+              {lastRead ? (
+                <div className="border border-gold/10 rounded-premium bg-noir-surface p-6 shadow-premium">
+                  <Eyebrow className="mb-4">Retomar Leitura</Eyebrow>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-10 h-10 rounded-full bg-gold/10 flex items-center justify-center text-gold">
+                      <BookOpen size={20} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[9px] font-bold text-noir-text-faint uppercase tracking-widest">Vovê parou em:</p>
+                      <h4 className="text-base font-medium text-noir-text truncate">{lastRead.label || 'Última leitura'}</h4>
+                    </div>
+                  </div>
+                  <Link 
+                    to={lastRead.url || '#'} 
+                    className="flex items-center justify-center w-full py-3 bg-gold text-noir-bg rounded-premium-full text-[10px] font-bold uppercase tracking-[0.2em] transition-all hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    Abrir agora
+                  </Link>
+                </div>
+              ) : (
+                <div className="border border-primary/5 rounded-premium bg-card/40 p-6 text-center">
+                  <Icons.History className="w-8 h-8 text-gold/20 mx-auto mb-3" />
+                  <p className="text-xs text-noir-text-muted">Inicie uma nova leitura para que possamos guardar seu progresso.</p>
                 </div>
               )}
 
-              <div
-                className="border border-primary/5 rounded-premium bg-card/60 p-6 shadow-premium-sm flex flex-col items-center text-center group hover:border-gold/20 transition-colors"
-              >
-                <Eyebrow className="mb-4">Hoje no Cathedra</Eyebrow>
-                <div className="space-y-4 w-full">
-                  <Link to="/liturgia" className="block p-3 rounded-premium hover:bg-primary/5 transition-all">
-                    <span className="text-[10px] text-gold font-bold block mb-1">EVANGELHO</span>
-                    <span className="text-sm font-medium">A Palavra Viva</span>
-                  </Link>
-                  <Link to="/santos" className="block p-3 rounded-premium hover:bg-primary/5 transition-all">
-                    <span className="text-[10px] text-gold font-bold block mb-1">SANTO DO DIA</span>
-                    <span className="text-sm font-medium">Modelo de Fé</span>
-                  </Link>
+              <div className="p-6 border border-primary/5 rounded-premium bg-card/40">
+                <div className="flex items-center justify-between mb-6">
+                  <Eyebrow>Sua Ofensiva</Eyebrow>
+                  <span className="text-lg">🔥</span>
+                </div>
+                <div className="text-center">
+                  <p className="text-5xl font-display font-medium text-noir-text">{profile?.streak || 0}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-gold mt-2">Dias consecutivos</p>
                 </div>
               </div>
 
-              <div
-                className="border p-6 text-center rounded-premium"
-                style={{ borderColor: 'var(--noir-line)', background: 'var(--noir-surface)' }}
-              >
-                <Eyebrow className="mb-4">Catecismo</Eyebrow>
-                <span
-                  className="mb-3 block text-4xl italic"
-                  style={{ fontFamily: 'var(--font-display)', color: 'var(--gold-light)' }}
-                >
-                  § 142
-                </span>
-                <p
-                  className="text-sm leading-relaxed italic"
-                  style={{ color: 'var(--noir-text-muted)', fontFamily: 'var(--font-display)' }}
-                >
-                  "Pela sua revelação, Deus invisível apela aos homens como a amigos…"
+              <div className="p-6 border border-gold/10 rounded-premium bg-noir-surface">
+                <div className="flex items-center gap-3 mb-4">
+                  <Icons.Star className="w-4 h-4 text-gold" />
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-noir-text">Destaque Monástico</span>
+                </div>
+                <p className="text-sm italic font-serif text-gold-light leading-relaxed">
+                  "O hábito de orar é o hábito de estar na presença de Deus."
                 </p>
-                <Link
-                  to="/catechism?p=142"
-                  className="mt-5 inline-block text-[10px] uppercase tracking-[0.3em] transition-colors hover:text-gold-light"
-                  style={{ color: 'var(--gold)', fontFamily: 'var(--font-body)' }}
-                >
-                  Abrir § 142 →
+                <Link to="/itineraria" className="mt-4 block text-[10px] uppercase tracking-widest text-noir-text-faint hover:text-gold transition-colors">
+                  Iniciar novo Itinerário →
                 </Link>
               </div>
             </aside>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
 
       {/* ══════ 5 AMBIENTES CANÔNICOS ══════ */}
       <section className="relative w-full border-t px-0 py-24 md:py-32" style={{ borderColor: 'var(--noir-line)' }}>

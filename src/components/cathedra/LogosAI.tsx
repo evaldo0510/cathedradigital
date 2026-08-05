@@ -376,7 +376,7 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     type="text"
                     value={query}
                     onChange={(e) => setQuery(e.target.value)}
-                    placeholder={settings.totalSilence ? "Silêncio Total Ativo..." : "Reflexão..."}
+                    placeholder={settings.totalSilence ? "Silêncio Total Ativo..." : "Bíblia, Catecismo ou perguntar sobre a fé..."}
                     aria-label={settings.totalSilence ? "Logos IA desativada no Modo Silêncio" : "Digite sua dúvida teológica para a Logos IA"}
                     disabled={settings.totalSilence}
                     className="w-full bg-transparent border-none text-premium-sm md:text-premium-lg focus:ring-0 outline-none text-center font-serif italic placeholder:text-muted-foreground/30 py-spacing-sm md:py-spacing-md transition-all text-primary"
