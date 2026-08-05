@@ -3,7 +3,7 @@ import { chromium } from 'playwright';
 async function runHealthcheck() {
   console.log('🚀 Iniciando Healthcheck de rotas críticas...');
   const browser = await chromium.launch({
-    executablePath: '/opt/ms-playwright/chromium-1194/chrome-linux/chrome',
+    // executablePath removido para usar o padrão do ambiente
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
 
