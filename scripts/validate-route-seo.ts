@@ -410,12 +410,26 @@ const warnOnly = process.argv.includes('--warn');
 const allowWarnings = process.argv.includes('--allow-warnings');
 
 if (warnOnly) process.exit(0);
+
+// Em caso de falha, salvar o estado atual para depuração no CI
+if (errors.length > 0 || (warnings.length > 0 && !allowWarnings)) {
+  const debugDir = resolve('dist/seo/debug');
+  if (!existsSync(debugDir)) mkdirSync(debugDir, { recursive: true });
+  
+  // Salva um dump do que causou a falha para o artefato do CI
+  writeFileSync(join(debugDir, 'failure-report.json'), JSON.stringify({
+    timestamp: new Date().toISOString(),
+    errors: errors.map(e => ({ path: e.path, message: e.message })),
+    warnings: warnings.map(w => ({ path: w.path, message: w.message }))
+  }, null, 2));
+  
+  console.error(`\n💥 SEO Validation Failed. Debug info saved to dist/seo/debug/failure-report.json`);
+}
+
 if (errors.length > 0) {
-  console.error(`\n💥 ${errors.length} erro(s) de SEO.\n`);
   process.exit(1);
 }
 if (warnings.length > 0 && !allowWarnings) {
-  console.error(`\n💥 ${warnings.length} aviso(s) de SEO (modo estrito). Use --allow-warnings para tolerar.\n`);
   process.exit(1);
 }
 
