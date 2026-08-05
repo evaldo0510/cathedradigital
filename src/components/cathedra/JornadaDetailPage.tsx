@@ -40,7 +40,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { EditorialQuote } from '@/components/editorial/primitives';
 import { NexusPanel } from '@/components/nexus/NexusPanel';
-import { ReaderContinuation } from '@/components/reader';
+import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import { useJourneyNexus, JOURNEY_NEXUS_ORDER } from '@/hooks/useJourneyNexus';
 
 
