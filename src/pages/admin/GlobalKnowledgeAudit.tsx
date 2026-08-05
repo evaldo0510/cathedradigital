@@ -48,9 +48,9 @@ export default function GlobalKnowledgeAudit() {
 
       <header className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div className="space-y-1">
-          <Badge variant="outline" className="text-primary font-mono mb-2 border-primary/20">FASE 6 — CONSOLIDAÇÃO DO CONHECIMENTO</Badge>
-          <h1 className="text-3xl font-black tracking-tight font-display text-primary">Global Knowledge Audit</h1>
-          <p className="text-muted-foreground text-sm uppercase tracking-widest font-bold">Certificação de Densidade e Conectividade</p>
+          <Badge variant="outline" className="text-primary font-mono mb-2 border-primary/20">FASE 6.2 — AUDITORIA GLOBAL DO ACERVO</Badge>
+          <h1 className="text-3xl font-black tracking-tight font-display text-primary">Discovery Audit Portal</h1>
+          <p className="text-muted-foreground text-sm uppercase tracking-widest font-bold">Mapeamento de Módulos e Visibilidade do Peregrino</p>
         </div>
         <div className="flex items-center gap-4 bg-primary/5 border border-primary/10 p-4 rounded-premium">
           <div className="text-right">
@@ -67,16 +67,16 @@ export default function GlobalKnowledgeAudit() {
       <Tabs defaultValue="mission-control" className="space-y-6">
         <TabsList className="bg-muted/50 p-1 rounded-premium-full border border-border/10">
           <TabsTrigger value="mission-control" className="rounded-premium-full gap-2 px-6">
-            <LayoutDashboard className="w-4 h-4" /> Mission Control
+            <LayoutDashboard className="w-4 h-4" /> Inventário
           </TabsTrigger>
           <TabsTrigger value="certificacao" className="rounded-premium-full gap-2 px-6">
-            <ShieldCheck className="w-4 h-4" /> Certificação
+            <ShieldCheck className="w-4 h-4" /> Matriz de Integração
           </TabsTrigger>
           <TabsTrigger value="mapa" className="rounded-premium-full gap-2 px-6">
-            <Map className="w-4 h-4" /> Mapa da Rede
+            <Search className="w-4 h-4" /> Logos & Descoberta
           </TabsTrigger>
           <TabsTrigger value="aparicoes" className="rounded-premium-full gap-2 px-6">
-            <Activity className="w-4 h-4" /> Aparições
+            <Activity className="w-4 h-4" /> Módulos Ocultos
           </TabsTrigger>
         </TabsList>
 
@@ -87,8 +87,8 @@ export default function GlobalKnowledgeAudit() {
                 <Target className="w-48 h-48" />
               </div>
               <CardHeader>
-                <CardTitle className="font-mono text-xs uppercase tracking-[0.3em] text-primary">CATHEDRA KNOWLEDGE CENTER</CardTitle>
-                <CardDescription>Métricas em tempo real de prontidão doutrinária</CardDescription>
+                <CardTitle className="font-mono text-xs uppercase tracking-[0.3em] text-primary">CATHEDRA DISCOVERY CENTER</CardTitle>
+                <CardDescription>Métricas de integração e acessibilidade ao usuário</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-y-6 gap-x-12">
@@ -196,28 +196,28 @@ export default function GlobalKnowledgeAudit() {
         <TabsContent value="aparicoes">
           <Card>
             <CardHeader>
-              <CardTitle className="text-xl font-black uppercase">Auditoria de Aparições Marianas</CardTitle>
-              <CardDescription>Status de implementação e aprovação eclesial</CardDescription>
+              <CardTitle className="text-xl font-black uppercase">Módulos Desconectados ou Ocultos</CardTitle>
+              <CardDescription>Recursos que existem no código mas são de difícil acesso</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse">
                   <thead>
                     <tr className="border-b border-border/50">
-                      <th className="py-4 font-bold uppercase tracking-widest text-[10px] opacity-60">Aparição</th>
-                      <th className="py-4 font-bold uppercase tracking-widest text-[10px] opacity-60">Status</th>
-                      <th className="py-4 font-bold uppercase tracking-widest text-[10px] opacity-60">Aprovação</th>
+                      <th className="py-4 font-bold uppercase tracking-widest text-[10px] opacity-60">Módulo</th>
+                      <th className="py-4 font-bold uppercase tracking-widest text-[10px] opacity-60">Visível na Home</th>
+                      <th className="py-4 font-bold uppercase tracking-widest text-[10px] opacity-60">Visível na Biblioteca</th>
                       <th className="py-4 font-bold uppercase tracking-widest text-[10px] opacity-60 text-center">Nexus</th>
-                      <th className="py-4 font-bold uppercase tracking-widest text-[10px] opacity-60 text-right">Cobertura</th>
+                      <th className="py-4 font-bold uppercase tracking-widest text-[10px] opacity-60 text-right">Integração Logos</th>
                     </tr>
                   </thead>
                   <tbody>
                     {[
-                      { name: 'Guadalupe', status: 'Certificado', approval: 'Aprovada', nexus: 12, coverage: 100 },
-                      { name: 'Fátima', status: 'Certificado', approval: 'Aprovada', nexus: 18, coverage: 100 },
-                      { name: 'Lourdes', status: 'Parcial', approval: 'Aprovada', nexus: 8, coverage: 75 },
-                      { name: 'Aparecida', status: 'Draft', approval: 'Aprovada', nexus: 4, coverage: 20 },
-                      { name: 'La Salette', status: 'Rascunho', approval: 'Aprovada', nexus: 0, coverage: 10 },
+                      { name: 'Aparições Marianas', status: 'Não', approval: 'Sim', nexus: 0, coverage: 10 },
+                      { name: 'Patrística', status: 'Não', approval: 'Sim', nexus: 12, coverage: 40 },
+                      { name: 'Glossário', status: 'Não', approval: 'Sim', nexus: 5, coverage: 30 },
+                      { name: 'Bíblia', status: 'Sim', approval: 'Sim', nexus: 85, coverage: 90 },
+                      { name: 'Catecismo', status: 'Sim', approval: 'Sim', nexus: 70, coverage: 85 },
                     ].map(app => (
                       <tr key={app.name} className="border-b border-border/20 last:border-0 hover:bg-muted/30 transition-colors">
                         <td className="py-4 font-black uppercase text-xs tracking-tight">{app.name}</td>
