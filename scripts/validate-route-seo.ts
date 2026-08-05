@@ -287,8 +287,8 @@ if (issues.length === 0) console.log('✅ Sem problemas.');
 
 // ── HTML report ────────────────────────────────────────────────
 const htmlArg = process.argv.find((a) => a.startsWith('--html='));
-if (htmlArg) {
-  const outPath = htmlArg.slice('--html='.length);
+if (htmlArg || process.env.GITHUB_ACTIONS) {
+  const outPath = htmlArg ? htmlArg.slice('--html='.length) : 'dist/seo/routes-report.html';
   mkdirSync(dirname(resolve(outPath)), { recursive: true });
   const now = new Date().toISOString();
   

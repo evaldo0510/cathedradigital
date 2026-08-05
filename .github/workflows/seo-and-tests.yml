@@ -35,3 +35,13 @@ jobs:
             test-results/
             reports/
           retention-days: 7
+
+      - name: PR Summary Table
+        if: github.event_name == 'pull_request' && always()
+        run: |
+          if [ -f dist/seo/routes-report.json ]; then
+            echo "### 📊 Resumo de SEO & Certificação" >> $GITHUB_STEP_SUMMARY
+            echo "| Métrica | Valor |" >> $GITHUB_STEP_SUMMARY
+            echo "| --- | --- |" >> $GITHUB_STEP_SUMMARY
+            cat dist/seo/routes-report.json | jq -r '"| Erros | \(.errors) |", "| Avisos | \(.warnings) |", "| Total Rotas | \(.total) |"' >> $GITHUB_STEP_SUMMARY
+          fi
