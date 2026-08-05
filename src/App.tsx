@@ -254,6 +254,7 @@ const SiteHealthDashboard = lazy(() => import('./pages/admin/SiteHealthDashboard
 const AuditLogsPage = lazy(() => import('./pages/admin/AuditLogsPage'));
 const DocsPage = lazy(() => import('./pages/DocsPage'));
 const DocsArticlePage = lazy(() => import('./pages/DocsArticlePage'));
+const ProductionReadyDashboard = lazy(() => import('./pages/admin/ProductionReadyDashboard'));
 
 const PrayerAdmin = lazy(() => import('./pages/admin/PrayerAdmin'));
 const LiturgyMeditationFallbackPanel = lazy(() => import('./pages/admin/LiturgyMeditationFallbackPanel'));
@@ -830,6 +831,7 @@ const AppLayout: React.FC = () => {
                   <AdminGuard>
                     <Routes>
                       <Route path="/" element={<AdminDashboard />} />
+                      <Route path="/production-ready" element={<ProductionReadyDashboard />} />
                       <Route path="/security" element={<SecurityDashboard />} />
                       <Route path="/cid-compliance" element={<CidComplianceDashboardPage />} />
                       <Route path="/language" element={<LanguageAdmin />} />
