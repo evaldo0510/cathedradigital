@@ -434,6 +434,7 @@ export type Database = {
         Row: {
           channel: string | null
           created_at: string | null
+          has_secret: boolean | null
           headers: Json | null
           id: string
           is_active: boolean | null
@@ -451,6 +452,7 @@ export type Database = {
         Insert: {
           channel?: string | null
           created_at?: string | null
+          has_secret?: boolean | null
           headers?: Json | null
           id?: string
           is_active?: boolean | null
@@ -468,6 +470,7 @@ export type Database = {
         Update: {
           channel?: string | null
           created_at?: string | null
+          has_secret?: boolean | null
           headers?: Json | null
           id?: string
           is_active?: boolean | null
