@@ -197,7 +197,7 @@ const AcervoHomePage: React.FC = () => {
               { label: 'Bíblia', icon: Icons.Bible },
               { label: 'Catecismo', icon: Icons.Catechism },
               { label: 'Santos', icon: Icons.Saints },
-              { label: 'Maria', icon: Icons.Flower2 || Icons.Sparkles },
+              { label: 'Maria', icon: Icons.Sparkles },
               { label: 'Liturgia', icon: Icons.Chalice },
               { label: 'Orações', icon: Icons.Heart },
               { label: 'Patrística', icon: Icons.ScrollText },
