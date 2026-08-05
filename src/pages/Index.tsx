@@ -75,7 +75,7 @@ const Index = () => {
 
         Quando terminar, me responda apenas:
 
-        > **feito**
+        {'>'} **feito**
 
         Então eu vou te entregar o primeiro teste completo (`navigation.spec.ts`) e vou dizer exatamente em qual arquivo colar.
 
