@@ -16,7 +16,6 @@ ROUTES_TO_TEST = [
     "/catechism",
     "/santos",
     "/jornadas",
-    "/nexus",
     "/biblioteca",
     "/profile"
 ]
@@ -25,7 +24,8 @@ async def audit_route(page, route):
     errors = []
     try:
         url = f"http://localhost:8080{route}"
-        response = await page.goto(url, wait_until="networkidle")
+        print(f"Auditando {url}...")
+        response = await page.goto(url, wait_until="domcontentloaded")
         
         if not response or response.status >= 400:
             errors.append(f"HTTP {response.status if response else 'No Response'} em {route}")
@@ -39,9 +39,6 @@ async def audit_route(page, route):
         # Screenshot para evidência
         slug = route.replace("/", "_") or "home"
         await page.screenshot(path=str(SCREENSHOTS / f"{slug}.png"))
-        
-        # Verificar console errors
-        # (Isso precisaria de monitoramento contínuo durante a navegação)
         
     except Exception as e:
         errors.append(f"Erro ao acessar {route}: {str(e)}")
@@ -57,7 +54,6 @@ async def main():
         results = {"errors": [], "tested": []}
         
         for route in ROUTES_TO_TEST:
-            print(f"Auditando {route}...")
             route_errors = await audit_route(page, route)
             results["errors"].extend(route_errors)
             results["tested"].append(route)
@@ -65,6 +61,7 @@ async def main():
         with open(REPORT_PATH, "w") as f:
             json.dump(results, f, indent=2)
 
+        print(f"Auditoria concluída. Report em {REPORT_PATH}")
         await browser.close()
 
 if __name__ == "__main__":

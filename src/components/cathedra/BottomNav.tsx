@@ -95,8 +95,9 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
     aria-current={isActive ? 'page' : undefined}
     data-testid={dataTestId}
     className={cn(
-      "flex flex-col items-center justify-center gap-spacing-3xs flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-300 shadow-premium-none border-none hover:bg-transparent px-spacing-0 rounded-premium-none tap-premium group focus-visible:bg-[#c9a84c]/[0.08] focus-visible:ring-1 focus-visible:ring-[#c9a84c]/30 outline-none",
-      "min-w-[48px] min-h-[48px]", 
+      "flex flex-col items-center justify-center gap-spacing-3xs flex-1 h-full relative overflow-hidden tap-highlight-transparent touch-manipulation transition-all duration-300 shadow-premium-none border-none hover:bg-transparent px-1 rounded-premium-none tap-premium group focus-visible:bg-[#c9a84c]/[0.08] focus-visible:ring-1 focus-visible:ring-[#c9a84c]/30 outline-none",
+      "min-w-[44px] min-h-[44px]", 
+
       isActive 
         ? 'text-[color:var(--gold-text)]' 
         : 'text-foreground/80 hover:text-[color:var(--gold-text)]'
@@ -141,7 +142,7 @@ const BottomNavItem: React.FC<BottomNavItemProps> = React.memo(({
       }}
       transition={shouldReduceMotion ? { duration: 0 } : undefined}
       className={cn(
-        "text-[8px] md:text-[9.5px] font-medium uppercase tracking-[0.28em] leading-none transition-all truncate w-full px-spacing-2xs text-center relative z-10",
+        "text-[7px] md:text-[8.5px] font-medium uppercase tracking-[0.15em] leading-none transition-all truncate w-full px-spacing-3xs text-center relative z-10",
         shouldReduceMotion ? "duration-0" : "duration-300",
         isActive ? 'text-[color:var(--gold-text)] font-semibold' : 'text-foreground/80'
       )}
@@ -176,48 +177,37 @@ const BottomNav: React.FC<BottomNavProps> = ({ user, onOpenSidebar }) => {
   const [atalhosOpen, setAtalhosOpen] = useState(false);
 
   const items = useMemo(() => {
-    // 3 rotas principais para dar espaço ao Atalhos + Mais.
-    const mainItems = APP_ROUTES
-      .filter(r => r.showInMenu && ['core', 'spiritual'].includes(r.category || ''))
-      .slice(0, 3)
-      .map(r => ({
-        label: r.label,
-        route: r.path,
-        icon: r.icon,
-        isMenu: false,
-        isAtalhos: false,
-      }));
+    // Nova arquitetura de Hub Espiritual: 8 itens principais
+    const hubItems = [
+      { path: '/bible', label: 'Ler', icon: Icons.BookOpen },
+      { path: '/rezar', label: 'Orar', icon: Icons.Hand },
+      { path: '/igreja', label: 'Igreja', icon: Icons.Church },
+      { path: '/santos', label: 'Santos', icon: Icons.Flame },
+      { path: '/jornadas', label: 'Jornadas', icon: Icons.Route },
+      { path: '/nexus', label: 'Nexus', icon: Icons.Orbit },
+      { path: '/biblioteca', label: 'Biblioteca', icon: Icons.Search },
+      { path: '/profile', label: 'Perfil', icon: Icons.User },
+    ];
 
-    // Atalhos rápidos (posição central, substitui o antigo FAB flutuante).
-    mainItems.push({
-      label: 'Atalhos',
-      route: '',
-      icon: AtalhosIcon,
+    return hubItems.map(item => ({
+      label: item.label,
+      route: item.path,
+      icon: item.icon,
       isMenu: false,
-      isAtalhos: true,
-    });
-
-    mainItems.push({
-      label: 'Mais',
-      route: '',
-      icon: Icons.Menu,
-      isMenu: true,
       isAtalhos: false,
-    });
-
-    return mainItems;
+    }));
   }, []);
 
   return (
     <nav 
       className={cn(
-        "fixed bottom-0 left-0 right-0 z-[160] lg:hidden h-[calc(var(--bottom-nav-height)+env(safe-area-inset-bottom,20px))] bg-background/85 backdrop-blur-xl border-t border-[#c9a84c]/25 bottom-nav bottom-nav-reading-auto-hide px-spacing-md pt-spacing-xs pb-[env(safe-area-inset-bottom,20px)] transition-all will-change-transform flex items-center shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.05)]",
+        "fixed bottom-0 left-0 right-0 z-[160] lg:hidden h-auto bg-background/85 backdrop-blur-xl border-t border-[#c9a84c]/25 bottom-nav bottom-nav-reading-auto-hide px-spacing-xs pt-spacing-xs pb-[env(safe-area-inset-bottom,12px)] transition-all will-change-transform flex items-center shadow-[0_-4px_20px_-10px_rgba(0,0,0,0.05)]",
         "min-h-[64px]", 
         shouldReduceMotion ? "duration-0" : "duration-500"
       )} 
       aria-label={t('mobile_navigation') || 'Navegação móvel'}
     >
-      <div className="flex items-center justify-between h-full w-full relative">
+      <div className="flex items-center justify-around h-full w-full relative gap-1 overflow-x-auto no-scrollbar">
         {items.map((item, i) => {
           const isActive = item.isMenu || item.isAtalhos
             ? false
