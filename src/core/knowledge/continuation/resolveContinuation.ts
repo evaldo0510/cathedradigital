@@ -56,7 +56,7 @@ const EYEBROW: Record<ContinuationIntent, string> = {
   deepen: 'Aprofundar',
   pray: 'Transformar em oração',
   apply: 'Colocar em prática',
-  meet: 'Conheça',
+  meet: 'Conhecer',
 };
 
 interface Candidate {
