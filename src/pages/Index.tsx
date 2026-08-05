@@ -46,44 +46,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Excelente. Essa mudança de foco é a mais importante do projeto até agora.
-
-        Pela evolução que você compartilhou nas últimas semanas, o Cathedra saiu da fase de construção e entrou na fase de **produto**. A partir daqui, toda decisão deve responder a uma única pergunta:
-
-        &gt; **Isso aumenta a confiabilidade e a qualidade da experiência do usuário?**
-
-        Eu faria apenas um ajuste no manifesto da Fase 5. Em vez de enfatizar apenas "eliminação de inconsistências", deixaria explícito que nenhum novo desenvolvimento pode degradar a plataforma.
-
-        Sugestão de princípios da Fase 5:
-
-        * **Estabilidade acima de velocidade** — nenhuma nova funcionalidade sem necessidade comprovada.
-        * **Consistência acima de criatividade** — todo módulo deve reutilizar os componentes certificados.
-        * **Qualidade acima de quantidade** — cada melhoria deve ser validada por testes e guardrails.
-        * **Conteúdo acima de código** — o diferencial do Cathedra passa a ser a excelência editorial e não a quantidade de recursos.
-        * **Zero regressões** — toda alteração deve preservar a certificação já conquistada.
-
-        ## Critério para considerar o Cathedra 3.0 realmente "Production Ready"
-
-        Eu só encerraria a Fase 5 quando estes itens estiverem simultaneamente verdes:
-
-        * ✅ Build sem avisos ou erros bloqueantes.
-        * ✅ Testes automatizados passando.
-        * ✅ Playwright Desktop e Mobile aprovados.
-        * ✅ Lighthouse dentro das metas definidas.
-        * ✅ Axe sem violações críticas.
-        * ✅ Reader, Nexus e Editorial Guardrails aprovados.
-        * ✅ Navegação sem links quebrados.
-        * ✅ SEO certificado.
-        * ✅ Performance estável.
-        * ✅ Todos os módulos reutilizando o Reader V2 certificado.
-
-        Depois disso, eu congelaria a arquitetura da plataforma e abriria oficialmente a próxima etapa:
-
-        **Fase 6 — Consolidação do Conteúdo**, concentrando o esforço em Bíblia, Catecismo, Santos, Patrística, Magistério, Liturgia e conexões do Nexus, em vez de continuar expandindo a infraestrutura. Essa mudança tende a gerar muito mais valor para o usuário final do que adicionar novas funcionalidades.
-
-        Rodar novamente Lighthouse e Axe no build atual para garantir que SEO e acessibilidade continuam aprovados após a correção dos headings.
-        Verificar se não houve qualquer alteração visual na interface após a troca de &lt;h3&gt; para &lt;h2&gt; em BibliotecaInteligentePage.tsx.
-        Executar novamente bun run scripts/headings-audit.ts para confirmar que a hierarquia H1→H2→H3 não tem skips em Pages audited: 96.
+        TEXTO DO USUÁRIO: Crie um painel de status da Fase 5 que mostre checkpoints, resultados (SEO, acessibilidade, performance, testes) e evidências por build. Adicione testes de regressão visual para garantir que não haja qualquer mudança perceptível na interface após correções como a troca de &lt;h3&gt; para &lt;h2&gt;. Execute a suíte de testes Playwright em Desktop e Mobile e gere um relatório com o status de cada cenário. Implemente um pipeline de CI que bloqueie merges quando Lighthouse e Axe ficarem fora das metas definidas.
       </div>
       <a 
         href="#main-content" 
