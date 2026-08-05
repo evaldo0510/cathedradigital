@@ -28,8 +28,11 @@ async function runHealthcheck() {
     });
 
     page.on('requestfailed', (req) => {
+      // Ignorar erros de texturas externas/anúncios que não quebram o core do site
+      if (req.url().includes('transparenttextures.com')) return;
       errors.push(`Request Failed: ${req.url()} (${req.failure()?.errorText})`);
     });
+
 
     try {
       await page.goto(`${baseUrl}${route.path}`, { waitUntil: 'networkidle' });
