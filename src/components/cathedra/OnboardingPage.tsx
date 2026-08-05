@@ -397,7 +397,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
             onClick={handleSlideNext}
             className="flex items-center gap-spacing-xs px-spacing-lg py-spacing-sm bg-foreground text-background rounded-premium-full font-black uppercase text-premium-xs tracking-widest hover:bg-primary hover:text-primary-foreground transition-all"
           >
-            {isLastSlide ? 'Diagnóstico' : 'Próximo'}
+            {isLastSlide ? 'Iniciar Caminhada' : 'Próximo'}
             <Icons.ChevronRight className="w-spacing-md h-spacing-md" />
           </Button>
         </div>
