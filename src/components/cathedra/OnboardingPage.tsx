@@ -58,9 +58,9 @@ const SLIDES = [
   },
   {
     icon: <Icons.Heart className="w-spacing-xl h-spacing-xl" />,
-    title: 'Como Usar?',
-    subtitle: 'Simples e Profundo',
-    description: 'Navegue pelo menu inferior para alternar entre as áreas. Marque leituras como concluídas para ganhar XP e acompanhar sua evolução.',
+    title: 'Uma Caminhada Espiritual',
+    subtitle: 'Navegação Simples',
+    description: 'Use a barra inferior para navegar entre Ler, Orar, Igreja e sua Biblioteca. Cada toque é um passo na sua formação.',
     image: onboardingPrayer,
   },
   {

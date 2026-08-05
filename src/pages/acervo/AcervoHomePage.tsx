@@ -167,9 +167,9 @@ const AcervoHomePage: React.FC = () => {
       </Helmet>
 
       <EditorialHero
-        kicker="Cathedra · Acervo"
-        title="Acervo Cathedra"
-        subtitle="A tradição viva da Igreja em um só átrio — Escritura, Catecismo, Santos, Magistério e Clássicos com leitura, estudo e oração integrados."
+        kicker="Cathedra · Hub"
+        title="Biblioteca"
+        subtitle="A sua porta de entrada para a sabedoria da Igreja. Bíblia, Santos, Doutrina e Magistério em uma experiência contemplativa unificada."
         parchment
         size="lg"
       />
