@@ -1,0 +1,71 @@
+import asyncio
+import json
+import os
+from pathlib import Path
+from playwright.async_api import async_playwright
+
+SCREENSHOTS = Path("/tmp/browser/navigation-audit/screenshots")
+SCREENSHOTS.mkdir(parents=True, exist_ok=True)
+REPORT_PATH = Path("/tmp/browser/navigation-audit/report.json")
+
+# Rotas críticas baseadas na nova arquitetura de Hub
+ROUTES_TO_TEST = [
+    "/",
+    "/bible",
+    "/liturgia",
+    "/catechism",
+    "/santos",
+    "/jornadas",
+    "/nexus",
+    "/biblioteca",
+    "/profile"
+]
+
+async def audit_route(page, route):
+    errors = []
+    try:
+        url = f"http://localhost:8080{route}"
+        response = await page.goto(url, wait_until="networkidle")
+        
+        if not response or response.status >= 400:
+            errors.append(f"HTTP {response.status if response else 'No Response'} em {route}")
+            return errors
+
+        # Verificar se a página está vazia (heurística básica)
+        content = await page.content()
+        if len(content) < 500:
+             errors.append(f"Página possivelmente vazia em {route}")
+
+        # Screenshot para evidência
+        slug = route.replace("/", "_") or "home"
+        await page.screenshot(path=str(SCREENSHOTS / f"{slug}.png"))
+        
+        # Verificar console errors
+        # (Isso precisaria de monitoramento contínuo durante a navegação)
+        
+    except Exception as e:
+        errors.append(f"Erro ao acessar {route}: {str(e)}")
+    
+    return errors
+
+async def main():
+    async with async_playwright() as playwright:
+        browser = await playwright.chromium.launch(headless=True)
+        context = await browser.new_context(viewport={"width": 1280, "height": 1800})
+        page = await context.new_page()
+
+        results = {"errors": [], "tested": []}
+        
+        for route in ROUTES_TO_TEST:
+            print(f"Auditando {route}...")
+            route_errors = await audit_route(page, route)
+            results["errors"].extend(route_errors)
+            results["tested"].append(route)
+
+        with open(REPORT_PATH, "w") as f:
+            json.dump(results, f, indent=2)
+
+        await browser.close()
+
+if __name__ == "__main__":
+    asyncio.run(main())
