@@ -103,14 +103,22 @@ const NexusItem: React.FC<NexusItemProps> = ({ node, bucket }) => {
   const href = node.url;
   const label = node.node.label;
   const summary = node.node.summary;
+  const nexusExplanation = (node.node as any).nexusExplanation;
 
   const body = (
     <>
-      <span className="font-medium text-foreground group-hover:text-primary transition-colors">
-        {label}
-      </span>
+      <div className="flex flex-col gap-spacing-2xs">
+        <span className="font-medium text-foreground group-hover:text-primary transition-colors">
+          {label}
+        </span>
+        {nexusExplanation && (
+          <p className="text-[9px] font-serif italic text-gold leading-relaxed border-l border-gold/20 pl-spacing-sm py-spacing-xs bg-gold/5 rounded-r-sm">
+            {nexusExplanation}
+          </p>
+        )}
+      </div>
       {summary && (
-        <p className="mt-spacing-2xs text-premium-xs text-muted-foreground leading-relaxed">
+        <p className="mt-spacing-xs text-premium-xs text-muted-foreground leading-relaxed">
           {summary}
         </p>
       )}

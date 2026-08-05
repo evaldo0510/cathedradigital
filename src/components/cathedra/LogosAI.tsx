@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
@@ -343,6 +344,34 @@ const LogosAI: React.FC<LogosAIProps> = ({
                     </div>
                   </motion.div>
                 ))}
+
+                {history.length > 0 && !isLoading && !isTyping && (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-spacing-xl grid grid-cols-1 md:grid-cols-2 gap-spacing-sm pt-spacing-xl border-t border-primary/5"
+                  >
+                    <div className="md:col-span-2">
+                      <p className="text-[9px] font-black uppercase tracking-[0.2em] text-gold/40 mb-spacing-md">Conexões Orientadas</p>
+                    </div>
+                    {[
+                      { label: 'Bíblia Relacionada', icon: Icons.Bible, href: '/bible' },
+                      { label: 'Catecismo Fundante', icon: Icons.BookOpen, href: '/catechism' },
+                      { label: 'Vida de Santo', icon: Icons.User, href: '/santos' },
+                      { label: 'Oração e Piedade', icon: Icons.Heart, href: '/oracao' }
+                    ].map((conn, idx) => (
+                      <Link 
+                        key={idx} 
+                        to={conn.href}
+                        className="flex items-center gap-spacing-md p-spacing-md rounded-premium bg-primary/[0.02] border border-primary/5 hover:border-gold/30 hover:bg-primary/[0.04] transition-all group"
+                      >
+                        <conn.icon className="w-5 h-5 text-primary/20 group-hover:text-gold transition-colors" />
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-primary/60 group-hover:text-gold-light">{conn.label}</span>
+                      </Link>
+                    ))}
+                  </motion.div>
+                )}
+
 
                 {(isLoading || isTyping) && (
                   <div className="flex justify-start w-full">
