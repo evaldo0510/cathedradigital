@@ -199,7 +199,7 @@ const AcervoHomePage: React.FC = () => {
                 <EditorialCard density="dense" className="h-full">
                   <EditorialCard.Eyebrow>Destaque Editorial</EditorialCard.Eyebrow>
                   <EditorialCard.Title>{item.title}</EditorialCard.Title>
-                  <EditorialCard.Description>{item.author || 'Obra fundamental'}</EditorialCard.Description>
+                  <EditorialCard.Description>{item.author_label || 'Obra fundamental'}</EditorialCard.Description>
                 </EditorialCard>
               </Link>
             ))}

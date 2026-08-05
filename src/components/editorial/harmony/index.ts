@@ -14,3 +14,7 @@ export type { EditorialHeroProps } from './EditorialHero';
 
 export { EditorialCard } from './EditorialCard';
 export type { EditorialCardProps, EditorialCardDensity } from './EditorialCard';
+
+// Primitivas re-exportadas para manter a coesão do barrel harmonizado
+export { EditorialDivider } from '../index';
+export { EditorialKicker } from '../primitives';
