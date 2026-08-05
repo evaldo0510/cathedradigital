@@ -218,39 +218,62 @@ const AcervoHomePage: React.FC = () => {
         </section>
 
         {/* Hoje no Cathedra — "Mosteiro Vivo" */}
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-spacing-md">
-          <Link to="/liturgia" className="group">
-            <EditorialCard 
-              kicker="Hoje"
-              title="Evangelho do Dia"
-              description="A Palavra viva para iluminar seu caminho hoje."
-              className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
-            />
-          </Link>
-          <Link to="/santos" className="group">
-            <EditorialCard 
-              kicker="Santo do Dia"
-              title="São João Maria Vianney"
-              description="O Padroeiro dos Párocos e modelo de humildade."
-              className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
-            />
-          </Link>
-          <Link to="/rezar" className="group">
-            <EditorialCard 
-              kicker="Recomendado"
-              title="Rosário"
-              description="Medite os mistérios da vida de Cristo com Maria."
-              className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
-            />
-          </Link>
-          <Link to="/jornadas" className="group">
-            <EditorialCard 
-              kicker="Caminhada"
-              title="Trilha da Virtude"
-              description="Inicie hoje sua jornada rumo à santidade."
-              className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
-            />
-          </Link>
+        <section className="space-y-spacing-md">
+          <div className="flex items-baseline justify-between">
+            <h2 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary">
+              Sua caminhada de hoje
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
+            <Link to="/liturgia" className="group">
+              <EditorialCard 
+                kicker="☀ Evangelho do Dia"
+                title="A Palavra Viva"
+                description="Reflexão e leitura litúrgica para alimentar sua alma agora."
+                className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
+              />
+            </Link>
+            <Link to="/santos" className="group">
+              <EditorialCard 
+                kicker="👤 Santo do Dia"
+                title="São João Maria Vianney"
+                description="O Padroeiro dos Párocos e modelo de humildade."
+                className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
+              />
+            </Link>
+            <Link to="/rezar" className="group">
+              <EditorialCard 
+                kicker="🙏 Oração recomendada"
+                title="Santo Rosário"
+                description="Contemple os mistérios da Salvação com Maria."
+                className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
+              />
+            </Link>
+            <Link to="/catechism" className="group">
+              <EditorialCard 
+                kicker="🏛 Catecismo da Igreja"
+                title="Um parágrafo do CIC"
+                description="Aprofunde seu conhecimento na doutrina de forma guiada."
+                className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
+              />
+            </Link>
+            <Link to="/acervo/lista?kind=magisterium" className="group">
+              <EditorialCard 
+                kicker="📜 Magistério da Igreja"
+                title="Documento do Dia"
+                description="A voz de Pedro e dos Concílios orientando a sua fé."
+                className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
+              />
+            </Link>
+            <Link to="/biblioteca/inteligente" className="group">
+              <EditorialCard 
+                kicker="🧭 Nexus Intelligence"
+                title="Próximo passo sugerido"
+                description="Descobertas personalizadas para o seu momento espiritual."
+                className="h-full hover:-translate-y-1 transition-transform border-primary/5 bg-primary/[0.02]"
+              />
+            </Link>
+          </div>
         </section>
 
         <EditorialDivider variant="gold-fade" className="max-w-md mx-auto opacity-40" />
