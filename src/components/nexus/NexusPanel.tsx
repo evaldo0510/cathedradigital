@@ -6,8 +6,6 @@
  * Reutilizado por: Bíblia, Catecismo, Glossário, Santos, Missal, Liturgia,
  * Orações, Jornadas, Coleções, Magistério.
  */
- * Se um módulo precisa de comportamento adicional, estender via props.
- */
 
 import React from 'react';
 import { Link } from 'react-router-dom';
