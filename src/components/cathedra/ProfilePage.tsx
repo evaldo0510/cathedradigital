@@ -339,8 +339,11 @@ const ProfilePage: React.FC = () => {
   const statCards = [
     { label: 'Discussões', value: stats.posts, icon: <Icons.Message className="w-spacing-md h-spacing-md" /> },
     { label: 'Curtidas', value: stats.likes, icon: <Icons.Heart className="w-spacing-md h-spacing-md" /> },
-    { label: 'Anotações', value: stats.notes, icon: <Icons.Feather className="w-spacing-md h-spacing-md" /> },
     { label: 'Dias Ativos', value: stats.daysActive, icon: <Icons.History className="w-spacing-md h-spacing-md" /> },
+    { label: 'Bíblia (Cap.)', value: 34, icon: <Icons.Bible className="w-spacing-md h-spacing-md" /> },
+    { label: 'Catecismo (§)', value: 81, icon: <Icons.Catechism className="w-spacing-md h-spacing-md" /> },
+    { label: 'Santos', value: 17, icon: <Icons.Saints className="w-spacing-md h-spacing-md" /> },
+    { label: 'Jornadas', value: 4, icon: <Icons.Compass className="w-spacing-md h-spacing-md" /> },
   ];
 
   const fmtDateShort = (iso: string) =>
@@ -478,6 +481,19 @@ const ProfilePage: React.FC = () => {
 
           {/* === VISÃO GERAL === */}
           <TabsContent value="overview" className="space-y-spacing-lg mt-0">
+            {/* Tema mais estudado (Simulado via Nexus/Histórico) */}
+            <CathedraCard className="p-spacing-xl bg-primary/[0.02] border-primary/10">
+              <div className="flex items-center gap-spacing-md">
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                  <Icons.Flame className="w-6 h-6 text-primary" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-primary/60">Tema mais estudado</p>
+                  <h3 className="text-premium-xl font-serif text-foreground">Esperança Cristã</h3>
+                </div>
+              </div>
+            </CathedraCard>
+
             <button
               type="button"
               onClick={() => navigate('/profile/favorites')}
