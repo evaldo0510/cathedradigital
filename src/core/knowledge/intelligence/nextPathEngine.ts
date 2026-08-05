@@ -158,7 +158,7 @@ function buildReason(
       signal: 'progression',
     };
   }
-  return { reason: 'Próximo passo sugerido no catálogo de formação.', signal: 'catalog' };
+  return { reason: 'Se você está lendo isto, provavelmente deveria continuar por aqui...', signal: 'catalog' };
 }
 
 export function resolveNextPath(input: NextPathInput): NextPathRecommendation[] {

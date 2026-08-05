@@ -262,7 +262,7 @@ const KIND_TITLE: Record<ReaderContinuationKind, string> = {
   catechism: 'Próximo passo',
   magisterium: 'Aprofundar a contemplação',
   saint: 'Continuar pela comunhão dos santos',
-  'journey-step': 'Seguir na formação',
+  'journey-step': 'Se você está lendo isto, provavelmente deveria continuar por aqui...',
   prayer: 'Continuar na oração',
   'glossary-term': 'Aprofundar no Léxico',
 };

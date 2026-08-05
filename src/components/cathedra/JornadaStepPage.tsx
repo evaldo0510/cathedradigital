@@ -446,7 +446,8 @@ const JornadaStepPage: React.FC = () => {
       } else if (e.key === 'ArrowLeft' && prevStep) {
         e.preventDefault();
         navigate(`/jornadas/${journeyId}/step?step=${prevStep.id}`);
-      } else if (e.key === 'Escape') {
+      } else if (e.key === 'Escape' || (e.key === 'ArrowLeft' && !prevStep)) {
+        e.preventDefault();
         navigate(`/jornadas/${journeyId}`);
       } else if (e.altKey && e.key === 'Enter' && !completed && !completing) {
         e.preventDefault();
