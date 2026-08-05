@@ -307,7 +307,9 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     title: 'Upgrade para Cathedra PRO — Torne-se Assinante',
     description:
       'Ative o Cathedra PRO e desbloqueie leitura sem limites, IA teológica ampliada, orações premium e apoio ao apostolado.',
+    noindex: true,
   },
+
 
   // ─── Rotas privadas / não indexáveis ──────────────────────────
   '/auth': { title: 'Entrar — Cathedra', description: 'Acesse sua conta na Cathedra Digital.', noindex: true },

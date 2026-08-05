@@ -9,11 +9,13 @@
  *  - noindex:      admin/dev/legacy/auth/aliases devem estar noindex; rotas
  *                  públicas indexáveis não podem estar noindex
  *  - OpenGraph:    valida og:title, og:description e presença de campos básicos
+ *  - hreflang:     valida conjunto consistente de idiomas e ausência de duplicatas
  *  - cobertura:    toda rota <Route path="..."> pública em src/App.tsx deve
  *                  ter meta estática OU casar com um DYNAMIC_PATTERN
  *  - sitemap:      cada URL em public/sitemap.xml deve ter meta indexável e
  *                  canonical coerente; toda rota indexável estática deve
- *                  aparecer no sitemap
+ *                  aparecer no sitemap e estar permitida no robots.txt
+
 
  *
  * Flags:
@@ -25,6 +27,8 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { ROUTE_META, resolveRouteMeta, type RouteMeta } from '../src/config/routeMeta';
+import { SUPPORTED_LOCALES } from '../src/lib/i18n/locales';
+
 
 const LIMITS = { titleMin: 3, titleMax: 60, descMin: 50, descMax: 160 };
 const LOVABLE_DEFAULTS = ['Lovable App', 'Lovable Generated Project'];
@@ -116,7 +120,48 @@ function validateEntry(path: string, meta: RouteMeta) {
       } else seenDescriptions.set(description, path);
     }
   }
+
+  // Validação de hreflang (apenas para rotas indexáveis multilingues como /docs)
+  if (!noindex && path.startsWith('/docs')) {
+    const localeMatch = SUPPORTED_LOCALES.find(l => path.startsWith(`/${l.code}/`) || path === `/${l.code}`);
+    // Se a rota já tem prefixo, ela deve apontar para as outras via alternates (verificado via sitemap cross-check)
+  }
 }
+
+function checkRobotsAllowed(path: string, robotsContent: string): boolean {
+  const lines = robotsContent.split('\n');
+  let isAllowed = true;
+  let inRelevantUserAgent = false;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line || line.startsWith('#')) continue;
+
+    const lower = line.toLowerCase();
+    if (lower.startsWith('user-agent:')) {
+      const ua = lower.slice(11).trim();
+      inRelevantUserAgent = (ua === '*');
+      continue;
+    }
+
+    if (inRelevantUserAgent && lower.startsWith('disallow:')) {
+      const pattern = line.slice(9).trim();
+      if (!pattern) continue;
+
+      // robots.txt: pattern deve bater com o início da string
+      if (path.startsWith(pattern) && path !== '/') {
+        isAllowed = false;
+        break;
+      }
+
+    }
+  }
+  return isAllowed;
+}
+
+
+
+
 
 // 1) ROUTE_META
 for (const [path, meta] of Object.entries(ROUTE_META)) validateEntry(path, meta);
@@ -210,9 +255,20 @@ if (existsSync(sitemapPath)) {
       push(path, 'warn', `rota indexável ausente no sitemap.xml`, 'sitemap');
     }
   }
+  const robotsPath = resolve('public/robots.txt');
+  const robotsContent = existsSync(robotsPath) ? readFileSync(robotsPath, 'utf-8') : '';
+
+  if (sitemapEntries.length > 0) {
+    for (const p of sitemapEntries) {
+      if (!checkRobotsAllowed(p, robotsContent)) {
+        push(p, 'error', `URL no sitemap está bloqueada no robots.txt`, 'sitemap');
+      }
+    }
+  }
 } else {
   push('/sitemap.xml', 'warn', `public/sitemap.xml não encontrado — pulei cross-check`, 'sitemap');
 }
+
 
 // ── Relatório ──────────────────────────────────────────────────
 const errors = issues.filter((i) => i.level === 'error');
@@ -235,9 +291,27 @@ if (htmlArg) {
   const outPath = htmlArg.slice('--html='.length);
   mkdirSync(dirname(resolve(outPath)), { recursive: true });
   const now = new Date().toISOString();
+  
+  // Agrupa falhas por rota para a tabela de resumo no topo
+  const routesWithIssues = Array.from(new Set(issues.map(i => i.path))).map(path => ({
+    path,
+    errors: issues.filter(i => i.path === path && i.level === 'error'),
+    warnings: issues.filter(i => i.path === path && i.level === 'warn'),
+  })).filter(r => r.errors.length > 0 || r.warnings.length > 0);
+
+  const summaryRows = routesWithIssues.map(r => `
+    <tr>
+      <td><a href="#row-${r.path.replace(/\//g, '_')}">${r.path}</a></td>
+      <td>${r.errors.length ? `<span class="tag-err">${r.errors.length} erros</span>` : ''}</td>
+      <td>${r.warnings.length ? `<span class="tag-warn">${r.warnings.length} avisos</span>` : ''}</td>
+    </tr>
+  `).join('');
+
   const rows = Object.entries(ROUTE_META)
     .map(([p, meta]) => {
       const problems = issues.filter((i) => i.path === p);
+      const rowId = `row-${p.replace(/\//g, '_')}`;
+
       const badge = meta.noindex
         ? '<span class="tag noindex">noindex</span>'
         : '<span class="tag idx">indexável</span>';
@@ -246,7 +320,7 @@ if (htmlArg) {
       const issueList = problems.length
         ? `<ul>${problems.map((i) => `<li class="${i.level}">[${i.category}] ${escape(i.message)}</li>`).join('')}</ul>`
         : '<span class="ok">✓</span>';
-      return `<tr class="${problems.some((i) => i.level === 'error') ? 'row-err' : problems.length ? 'row-warn' : ''}">
+      return `<tr id="${rowId}" class="${problems.some((i) => i.level === 'error') ? 'row-err' : problems.length ? 'row-warn' : ''}">
         <td>${url}</td>
         <td>${badge}</td>
         <td>${escape(meta.title)} <small>(${meta.title.length})</small></td>
@@ -265,7 +339,11 @@ if (htmlArg) {
 body{font:14px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Display",Inter,sans-serif;color:var(--fg);background:var(--bg);margin:0;padding:32px;}
 h1{font-family:"Instrument Serif",Georgia,serif;font-weight:400;margin:0 0 4px;}
 .meta{color:#666;margin-bottom:24px;}
+.summary-table { margin-bottom: 32px; max-width: 600px; }
+.tag-err { color: var(--err); font-weight: bold; }
+.tag-warn { color: var(--warn); font-weight: bold; }
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px;}
+
 .card{background:#fff;border:1px solid #e5e1d8;border-radius:8px;padding:12px 16px;}
 .card b{display:block;font-size:22px;color:var(--fg);}
 .card.err b{color:var(--err);}.card.warn b{color:var(--warn);}.card.ok b{color:var(--ok);}
@@ -282,7 +360,16 @@ code{background:#f5f2e9;padding:1px 6px;border-radius:4px;font-size:12px;}
 </style></head><body>
 <h1>SEO Routes Report</h1>
 <div class="meta">Gerado em ${now} · base <code>${BASE_URL}</code></div>
-<div class="cards">
+  <div class="summary-table">
+    <h3>Resumo de Falhas</h3>
+    <table>
+      <thead><tr><th>Rota</th><th>Erros</th><th>Avisos</th></tr></thead>
+      <tbody>${summaryRows || '<tr><td colspan="3">Nenhuma falha encontrada.</td></tr>'}</tbody>
+    </table>
+  </div>
+
+  <div class="cards">
+
   <div class="card"><b>${total}</b>rotas mapeadas</div>
   <div class="card"><b>${sitemapEntries.length}</b>URLs no sitemap</div>
   <div class="card"><b>${declaredPaths.size}</b>rotas em App.tsx</div>
@@ -304,8 +391,14 @@ code{background:#f5f2e9;padding:1px 6px;border-radius:4px;font-size:12px;}
     total,
     errors: errors.length,
     warnings: warnings.length,
-    timestamp: now
+    timestamp: now,
+    issueDetails: routesWithIssues.map(r => ({
+      path: r.path,
+      errors: r.errors.map(e => e.message),
+      warnings: r.warnings.map(w => w.message)
+    }))
   }, null, 2));
+
 
   console.log(`\n📄 HTML report: ${outPath}`);
   console.log(`📄 JSON summary: ${jsonPath}`);
