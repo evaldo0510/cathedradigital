@@ -104,6 +104,7 @@ const HomeUnified: React.FC = () => {
   const news = useAnnouncements();
   const themes = useFeaturedThemes();
   const suggestions = useSearchSuggestions();
+  const { lastRead, dailySteps } = useSpiritualJourney();
 
   // Primeiro tema como destaque; fallback silencioso se lista vazia.
   const featured = themes[0];
