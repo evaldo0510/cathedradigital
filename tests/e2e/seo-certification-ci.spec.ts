@@ -86,6 +86,36 @@ test.describe('SEO & Schema Certification E2E', () => {
         });
         console.log(`RECEBIDO:`, actual);
         console.log(`--------------------------------------------------\n`);
+
+        // Gerar artefato de diff HTML em caso de falha
+        const debugDir = resolve('dist/seo/debug');
+        if (!existsSync(debugDir)) mkdirSync(debugDir, { recursive: true });
+        
+        const safeRoute = route.replace(/\//g, '_') || 'home';
+        const diffPath = join(debugDir, `seo-fail-${safeRoute}.html`);
+        const diffHtml = `
+          <!DOCTYPE html>
+          <html>
+          <head><title>SEO Diff: ${route}</title><style>body{font-family:sans-serif;padding:20px} table{width:100%;border-collapse:collapse} th,td{border:1px solid #ddd;padding:8px;text-align:left} tr.fail{background:#fff0f0} .label{font-weight:bold}</style></head>
+          <body>
+            <h1>Falha de SEO: ${route}</h1>
+            <table>
+              <thead><tr><th>Campo</th><th>Esperado</th><th>Recebido</th></tr></thead>
+              <tbody>
+                <tr class="${actual.title !== meta.title ? 'fail' : ''}"><td>Title</td><td>${meta.title}</td><td>${actual.title}</td></tr>
+                <tr class="${actual.description !== meta.description ? 'fail' : ''}"><td>Description</td><td>${meta.description}</td><td>${actual.description}</td></tr>
+                <tr class="${actual.canonical !== expectedCanonical ? 'fail' : ''}"><td>Canonical</td><td>${expectedCanonical}</td><td>${actual.canonical}</td></tr>
+                <tr class="${actual.ogTitle !== (meta.ogTitle || meta.title) ? 'fail' : ''}"><td>OG Title</td><td>${meta.ogTitle || meta.title}</td><td>${actual.ogTitle}</td></tr>
+              </tbody>
+            </table>
+            <h3>JSON-LD Detectado (${actual.jsonLd.length})</h3>
+            <pre>${JSON.stringify(actual.jsonLd, null, 2)}</pre>
+          </body>
+          </html>
+        `;
+        writeFileSync(diffPath, diffHtml);
+        console.log(`📄 SEO Diff artefato gerado em: ${diffPath}`);
+
         throw e;
       }
     });
