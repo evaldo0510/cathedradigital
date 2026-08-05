@@ -9,6 +9,7 @@ export interface KnowledgeNode {
   type: 'bible' | 'catechism' | 'document' | 'theme';
   summary?: string;
   connections: string[]; // IDs of connected nodes
+  nexusExplanation?: string;
 }
 
 interface KnowledgeGraphProps {
