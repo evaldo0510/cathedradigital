@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-01T20:23:34.553Z",
+  "generated_at": "2026-08-05T03:56:36.380Z",
   "project_domain": "https://www.cathedradigital.com.br",
   "summary": {
     "pass": 12,
@@ -11,7 +11,7 @@
       "id": "sitemap_exists",
       "label": "sitemap.xml presente",
       "status": "pass",
-      "detail": "665 URLs declaradas."
+      "detail": "667 URLs declaradas."
     },
     {
       "id": "sitemap_host",
