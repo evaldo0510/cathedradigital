@@ -6,15 +6,15 @@
 export type JsonLd = Record<string, any>;
 
 const REQUIRED_BY_TYPE: Record<string, string[]> = {
-  Article: ['headline', 'author', 'publisher'],
-  NewsArticle: ['headline', 'author', 'publisher'],
-  BlogPosting: ['headline', 'author', 'publisher'],
-  Event: ['name', 'startDate'],
+  Article: ['headline', 'author', 'publisher', 'datePublished'],
+  NewsArticle: ['headline', 'author', 'publisher', 'datePublished'],
+  BlogPosting: ['headline', 'author', 'publisher', 'datePublished'],
+  Event: ['name', 'startDate', 'location'],
   LiturgicalService: ['name'],
   FAQPage: ['mainEntity'],
-  DefinedTerm: ['name'],
+  DefinedTerm: ['name', 'description'],
   BreadcrumbList: ['itemListElement'],
-  Organization: ['name'],
+  Organization: ['name', 'url'],
   WebSite: ['name', 'url'],
   Product: ['name'],
 };
