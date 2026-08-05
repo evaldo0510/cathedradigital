@@ -43,9 +43,8 @@ import SacredImage from './SacredImage';
 import { ReaderShell } from '@/components/reader';
 import { EditorialHero } from '@/components/editorial/harmony/EditorialHero';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
-import { NexusPanel } from '@/components/reader';
-import { resolveJourneyAutoNexus } from '@/core/knowledge/adapters/journeyAutoNexus';
-import { BUCKET_LABEL, type ReaderAutoNexusOutput } from '@/core/knowledge/adapters/ReaderAutoNexus';
+import { NexusPanel } from '@/components/nexus/NexusPanel';
+import { useJourneyNexus } from '@/hooks/useJourneyNexus';
 
 /**
  * Cache em memória para prefetch de etapas vizinhas (prev/next).
@@ -121,6 +120,18 @@ const JornadaStepPage: React.FC = () => {
   const stepProgress = useMemo(
     () => (totalSteps > 0 && step ? (step.step_order / totalSteps) * 100 : 0),
     [step, totalSteps],
+  );
+
+  const nexus = useJourneyNexus(
+    step
+      ? {
+          id: step.id,
+          slug: step.id, // steps use ID as unique slug
+          title: step.title,
+          subtitle: step.subtitle,
+          category: journeyTitle || 'Jornada',
+        }
+      : null,
   );
 
   useEffect(() => {
@@ -830,20 +841,12 @@ const JornadaStepPage: React.FC = () => {
           {/* Nexus + continuação após conclusão */}
           {completed && (
             <div className="mt-12 space-y-8 border-t border-stitch-secondary/10 pt-8">
-              {(() => {
-                const j = resolveJourneyAutoNexus({
-                  id: journeyId ?? stepId ?? 'journey',
-                  title: step?.title ?? journeyTitle ?? '',
-                  subtitle: step?.subtitle ?? null,
-                });
-                const output: ReaderAutoNexusOutput = {
-                  selfId: null,
-                  suggestions: [],
-                  byBucket: j.byKind as ReaderAutoNexusOutput['byBucket'],
-                  labels: { ...BUCKET_LABEL, ...j.labels },
-                };
-                return <NexusPanel output={output} kicker={`Conexões · ${step?.title ?? journeyTitle ?? 'Jornada'}`} />;
-              })()}
+              {nexus && (
+                <NexusPanel
+                  output={nexus}
+                  kicker={`Conexões · ${step?.title ?? journeyTitle ?? 'Jornada'}`}
+                />
+              )}
               <ReaderContinuation
                 context={{
                   kind: 'journey-step',
@@ -853,6 +856,7 @@ const JornadaStepPage: React.FC = () => {
                     nextStepId: nextStep?.id,
                   },
                 }}
+                suggestions={nexus?.suggestions}
               />
             </div>
           )}
