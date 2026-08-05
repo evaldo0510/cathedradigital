@@ -136,7 +136,7 @@ const Index = () => {
 
         A Biblioteca Inteligente não deve apenas localizar conteúdos.
         Ela deve responder perguntas como:
-        > "O que devo estudar depois deste documento?"
+        &quot;O que devo estudar depois deste documento?&quot;
         ou
         &quot;Quais santos viveram esta doutrina?&quot;
         ou
