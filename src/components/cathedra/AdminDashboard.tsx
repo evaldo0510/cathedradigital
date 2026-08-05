@@ -189,6 +189,9 @@ const AdminDashboard: React.FC = () => {
       <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-spacing-lg">
         <div className="px-spacing-md sm:px-spacing-0 -mx-spacing-md sm:mx-spacing-0">
           <TabsList ref={tabsListRef} className="flex w-full overflow-x-auto justify-start h-auto p-spacing-2xs bg-muted/30 border border-border/10 rounded-premium-full no-scrollbar scroll-smooth snap-x">
+            <TabsTrigger value="production" data-test="tab-production" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start text-emerald-600">
+              <Icons.ShieldCheck className="w-spacing-sm h-spacing-sm" /> Certificação
+            </TabsTrigger>
             <TabsTrigger value="overview" data-test="tab-overview" className="gap-spacing-xs text-premium-xs font-black uppercase tracking-widest min-w-fit px-spacing-md py-spacing-xs snap-start">
               <Icons.LayoutGrid className="w-spacing-sm h-spacing-sm" /> Visão Geral
             </TabsTrigger>
@@ -216,6 +219,12 @@ const AdminDashboard: React.FC = () => {
             </TabsTrigger>
           </TabsList>
         </div>
+
+        <TabsContent value="production" className="space-y-spacing-lg">
+          <Suspense fallback={<Skeleton className="h-[800px] w-full" />}>
+            <ProductionReadyDashboard />
+          </Suspense>
+        </TabsContent>
 
         <TabsContent value="overview" className="space-y-spacing-lg">
           {stats && <AdminStatsCards stats={stats} />}
