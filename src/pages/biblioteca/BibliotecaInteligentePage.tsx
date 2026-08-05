@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
 import { globalSearchV2, type GlobalSearchHit, type SearchResultType } from '@/services/globalSearchService';
 import { Link } from 'react-router-dom';
-import { cn } from '@/lib/utils';
 
 const TYPE_LABEL: Record<SearchResultType, string> = {
   bible: 'Bíblia',
@@ -19,15 +18,15 @@ const TYPE_LABEL: Record<SearchResultType, string> = {
   glossary: 'Glossário'
 };
 
-const TYPE_ICON: Record<SearchResultType, React.ElementType> = {
-  bible: Icons.Book,
-  catechism: Icons.Cross,
+const TYPE_ICON: Record<SearchResultType, any> = {
+  bible: Icons.BookOpen,
+  catechism: Icons.Book,
   saint: Icons.User,
-  patristic: Icons.Scroll,
-  magisterium: Icons.Church,
-  prayer: Icons.PrayingHands,
-  journey: Icons.Compass,
-  glossary: Icons.BookOpen
+  patristic: Icons.ScrollText,
+  magisterium: Icons.Globe,
+  prayer: Icons.Hand,
+  journey: Icons.Route,
+  glossary: Icons.BookMarked
 };
 
 const TYPE_ROUTE: Record<SearchResultType, (hit: GlobalSearchHit) => string> = {
@@ -88,7 +87,7 @@ const BibliotecaInteligentePage: React.FC = () => {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ex.: ansiedade, eucaristia, esperança..."
-              className="w-full pl-10 pr-4 py-3 bg-card border border-border rounded-premium focus:ring-2 focus:ring-primary/50 outline-none"
+              className="w-full pl-10 pr-4 py-3 bg-card border border-border rounded-premium focus:ring-2 focus:ring-primary/50 outline-none text-premium-base"
             />
           </div>
           <Button type="submit" disabled={input.trim().length < 2}>Buscar</Button>
@@ -120,10 +119,10 @@ const BibliotecaInteligentePage: React.FC = () => {
                         </span>
                       )}
                     </div>
-                    <h3 className="text-premium-md font-serif font-bold group-hover:text-primary transition-colors">
+                    <h3 className="text-premium-md font-serif font-bold group-hover:text-primary transition-colors leading-tight">
                       {hit.title}
                     </h3>
-                    <p className="text-premium-sm text-muted-foreground line-clamp-2 italic">
+                    <p className="text-premium-sm text-muted-foreground line-clamp-2 italic leading-relaxed">
                       {hit.content}
                     </p>
                   </div>
