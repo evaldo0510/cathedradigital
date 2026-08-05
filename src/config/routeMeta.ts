@@ -87,6 +87,11 @@ export const ROUTE_META: Record<string, RouteMeta> = {
     description:
       'Busque por perguntas, assuntos, santos ou documentos. O cérebro teológico da Cathedra conectando toda a Tradição em um só lugar.',
   },
+  '/biblioteca/inteligente': {
+    title: 'Biblioteca Inteligente — Pesquisa Teológica Avançada',
+    description:
+      'Utilize o motor de busca avançado da Cathedra para encontrar conexões profundas entre a Bíblia, o Catecismo e a Patrística.',
+  },
   '/dogmas': {
     title: 'Dogmas Católicos — Verdades Definidas da Fé',
     description:
