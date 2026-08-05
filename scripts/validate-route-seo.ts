@@ -8,11 +8,13 @@
  *  - canonicalPath (quando presente): começa com "/", sem query/hash
  *  - noindex:      admin/dev/legacy/auth/aliases devem estar noindex; rotas
  *                  públicas indexáveis não podem estar noindex
+ *  - OpenGraph:    valida og:title, og:description e presença de campos básicos
  *  - cobertura:    toda rota <Route path="..."> pública em src/App.tsx deve
  *                  ter meta estática OU casar com um DYNAMIC_PATTERN
  *  - sitemap:      cada URL em public/sitemap.xml deve ter meta indexável e
  *                  canonical coerente; toda rota indexável estática deve
  *                  aparecer no sitemap
+
  *
  * Flags:
  *   --warn                    apenas relata (não falha)
@@ -84,7 +86,12 @@ function validateEntry(path: string, meta: RouteMeta) {
     if (canonicalPath.includes('?') || canonicalPath.includes('#')) {
       push(path, 'error', `canonicalPath não pode ter query/hash (got "${canonicalPath}")`, 'meta');
     }
+    // Verificação de canonical duplicado para rotas indexáveis (se não for alias intencional)
+    if (!noindex && canonicalPath !== path) {
+      push(path, 'warn', `rota indexável com canonicalPath diferente da própria rota`, 'meta');
+    }
   }
+
 
   const shouldBePrivate = PRIVATE_PATTERNS.some((p) => p.test(path));
   const hasAliasCanonical = canonicalPath && canonicalPath !== path;
@@ -290,7 +297,19 @@ code{background:#f5f2e9;padding:1px 6px;border-radius:4px;font-size:12px;}
 <tbody>${rows}</tbody></table>
 </body></html>`;
   writeFileSync(outPath, html);
+  
+  // Gera versão JSON para o resumo do PR no CI
+  const jsonPath = outPath.replace('.html', '.json');
+  writeFileSync(jsonPath, JSON.stringify({
+    total,
+    errors: errors.length,
+    warnings: warnings.length,
+    timestamp: now
+  }, null, 2));
+
   console.log(`\n📄 HTML report: ${outPath}`);
+  console.log(`📄 JSON summary: ${jsonPath}`);
+
 }
 
 // ── Exit code ──────────────────────────────────────────────────
