@@ -13,6 +13,8 @@ import { SanctorumHero } from './SanctorumHero';
 import { SanctorumDateNav } from './SanctorumDateNav';
 import { SEO_CONFIG } from '@/config/seo';
 import { trackEvent } from '@/lib/analytics';
+import { useChurchContext } from '@/hooks/useChurchContext';
+
 import { toISODateLocal, resolveSanctorumDateParam } from '@/lib/sanctorumDate';
 import SanctorumClampNotice from './SanctorumClampNotice';
 
@@ -228,12 +230,22 @@ const PopesPage: React.FC = () => {
 
   const year = date.getFullYear();
 
+  const { currentPope } = useChurchContext(date);
+
   const reigningPope = useMemo(() => {
+    // Se a data for hoje, usamos a SSoT
+    if (toISODateLocal(date) === toISODateLocal(new Date()) && currentPope) {
+      // Tentar encontrar nos dados estáticos para manter a consistência visual (lemas, contributions)
+      const match = POPES_DATA.find(p => p.name.toLowerCase().includes(currentPope.name.toLowerCase()));
+      if (match) return match;
+    }
+
     return POPES_DATA.find((p) => {
       const [start, end] = parseReignYears(p.reign);
       return year >= start && year <= end;
     });
-  }, [year]);
+  }, [year, date, currentPope]);
+
 
   const filteredPopes = useMemo(() => {
     const q = deferredSearch.trim().toLowerCase();
