@@ -126,36 +126,63 @@ const AcervoHomePage: React.FC = () => {
               Hoje no Cathedra
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-spacing-md">
+              {/* SSoT: Papa Atual */}
+              <Link to="/papas" className="group">
+                <EditorialCard density="dense" className="h-full bg-primary/[0.01] hover:bg-primary/[0.03] border-primary/10">
+                  <div className="flex items-center gap-spacing-md">
+                    <div className="w-16 h-16 rounded-full overflow-hidden border border-primary/20 shrink-0">
+                      <SacredImage 
+                        src={currentPope?.image || FALLBACK_POPE.image} 
+                        alt={currentPope?.name || 'Papa'} 
+                        className="w-full h-full object-cover" 
+                      />
+                    </div>
+                    <div>
+                      <EditorialCard.Eyebrow>🇻🇦 Magistério Vivo</EditorialCard.Eyebrow>
+                      <EditorialCard.Title>{currentPope?.name || 'Papa Francisco'}</EditorialCard.Title>
+                      <EditorialCard.Description>O sucessor de Pedro nos guia na fé.</EditorialCard.Description>
+                    </div>
+                  </div>
+                </EditorialCard>
+              </Link>
+
+              {/* SSoT: Santo do Dia */}
+              <Link to="/santos" className="group">
+                <EditorialCard density="dense" className="h-full bg-primary/[0.01] hover:bg-primary/[0.03] border-primary/10">
+                   <div className="flex items-center gap-spacing-md">
+                    <div className="w-16 h-16 rounded-full overflow-hidden border border-primary/20 shrink-0">
+                      <SacredImage 
+                        src={todaySaint?.image || ''} 
+                        alt={todaySaint?.name || 'Santo'} 
+                        className="w-full h-full object-cover" 
+                      />
+                    </div>
+                    <div>
+                      <EditorialCard.Eyebrow>👤 Santo do Dia</EditorialCard.Eyebrow>
+                      <EditorialCard.Title>{todaySaint?.name || 'Vidas Exemplares'}</EditorialCard.Title>
+                      <EditorialCard.Description>O modelo de santidade para hoje.</EditorialCard.Description>
+                    </div>
+                  </div>
+                </EditorialCard>
+              </Link>
+
               <Link to="/liturgia" className="group">
                 <EditorialCard density="dense" className="h-full bg-primary/[0.01] hover:bg-primary/[0.03]">
                   <EditorialCard.Eyebrow>☀ Evangelho do Dia</EditorialCard.Eyebrow>
-                  <EditorialCard.Title>A Palavra Viva</EditorialCard.Title>
-                  <EditorialCard.Description>Reflexão e leitura litúrgica para alimentar sua alma hoje.</EditorialCard.Description>
-                </EditorialCard>
-              </Link>
-              <Link to="/santos" className="group">
-                <EditorialCard density="dense" className="h-full bg-primary/[0.01] hover:bg-primary/[0.03]">
-                  <EditorialCard.Eyebrow>👤 Santo do Dia</EditorialCard.Eyebrow>
-                  <EditorialCard.Title>Vidas exemplares</EditorialCard.Title>
-                  <EditorialCard.Description>Conheça o modelo de santidade que a Igreja celebra nesta data.</EditorialCard.Description>
-                </EditorialCard>
-              </Link>
-              <Link to="/aparicoes" className="group">
-                <EditorialCard density="dense" className="h-full bg-primary/[0.01] hover:bg-primary/[0.03]">
-                  <EditorialCard.Eyebrow>🌟 Visita Celeste</EditorialCard.Eyebrow>
-                  <EditorialCard.Title>Aparições Marianas</EditorialCard.Title>
-                  <EditorialCard.Description>Mensagens de Nossa Senhora reconhecidas pela Igreja.</EditorialCard.Description>
+                  <EditorialCard.Title>{liturgy?.liturgia || 'A Palavra Viva'}</EditorialCard.Title>
+                  <EditorialCard.Description>Reflexão e leitura litúrgica para hoje.</EditorialCard.Description>
                 </EditorialCard>
               </Link>
               <Link to="/catechism" className="group">
                 <EditorialCard density="dense" className="h-full bg-primary/[0.01] hover:bg-primary/[0.03]">
                   <EditorialCard.Eyebrow>🏛 Catecismo da Igreja</EditorialCard.Eyebrow>
                   <EditorialCard.Title>Doutrina Viva</EditorialCard.Title>
-                  <EditorialCard.Description>Aprofunde-se no depósito da fé de forma estruturada.</EditorialCard.Description>
+                  <EditorialCard.Description>Aprofunde-se no depósito da fé.</EditorialCard.Description>
                 </EditorialCard>
               </Link>
             </div>
           </section>
+
         </div>
 
         <EditorialDivider variant="gold-fade" className="max-w-2xl mx-auto opacity-30" />
