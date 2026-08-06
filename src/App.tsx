@@ -128,6 +128,7 @@ const SaintWorkReaderPage = lazy(() => import('./pages/biblioteca/SaintWorkReade
 const BibliotecaCatolicaAcervoPage = lazy(() => import('./pages/biblioteca/BibliotecaCatolicaAcervoPage'));
 const AcervoHomePage = lazy(() => import('./pages/acervo/AcervoHomePage'));
 const AcervoAuditPage = lazy(() => import('./pages/admin/AcervoAuditPage'));
+const AcervoAtlas = lazy(() => import('./pages/AcervoAtlas'));
 
 const HojePage = lazy(() => import('./components/cathedra/HojePage'));
 const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
@@ -541,7 +542,7 @@ const AppLayout: React.FC = () => {
 
         <ScrollToTop />
         <AppErrorBoundary>
-          {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && (
+          {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && location.pathname !== '/atlas' && (
             <AppHeader 
               user={authUserAdapter} 
               isDark={isDark} 
@@ -626,6 +627,7 @@ const AppLayout: React.FC = () => {
               <Route path="/profile/favorites" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><ProfileFavoritesPage /></AuthGuard></Suspense>} />
               <Route path="/spiritual-profile" element={<Suspense fallback={<LoadingFallback />}><AuthGuard><SpiritualProfile /></AuthGuard></Suspense>} />
               <Route path="/onboarding" element={<Suspense fallback={<LoadingFallback />}><OnboardingPage /></Suspense>} />
+              <Route path="/atlas" element={<Suspense fallback={<LoadingFallback />}><AcervoAtlas /></Suspense>} />
 
               {/* Hoje & Diário */}
               <Route path="/hoje" element={<Suspense fallback={<LoadingFallback />}><HojePage /></Suspense>} />

@@ -111,11 +111,12 @@ export const MONASTERY_SHELVES: LibraryShelf[] = [
   },
   {
     id: 'logos',
-    title: '🔍 Logos',
+    title: '🔍 Logos & Atlas',
     icon: Search,
     items: [
       { label: 'Busca Global', to: '/biblioteca/inteligente', icon: Icons.Search, desc: 'Omniscience', badge: 'IA' },
       { label: 'Conexões', to: '/nexus', icon: Icons.Orbit, desc: 'Nexus Graph', count: 'Interdependência' },
+      { label: 'Atlas Católico', to: '/atlas', icon: Icons.Globe, desc: 'Geografia Sagrada', badge: 'Novo' },
       { label: 'Mission Control', to: '/admin/acervo/audit', icon: Icons.Shield, desc: 'Saúde do Acervo', badge: 'Admin' },
     ]
   }

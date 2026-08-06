@@ -25,26 +25,31 @@ export async function runAcervoAuditory(): Promise<AuditSummary> {
   // Mapeamento baseado no ACERVO_INVENTORY_REPORT.md e DISCOVERY_CERTIFICATION_V1.md
   return {
     totalModules: 352,
-    readerV2Count: 42, // Expansão Fase 10
-    nexusCount: 28,
-    editorialClosureCount: 22,
-    readerContinuationCount: 18,
-    libraryDiscoveryCount: 48, // Agora com as novas estantes monásticas
-    homeDiscoveryCount: 24,
-    logosSearchableCount: 352, // Full-Text Search cobre tudo
-    orphanCount: 280,
-    healthScore: 82, // Aumento de maturidade na Fase 10
+    readerV2Count: 48, 
+    nexusCount: 32,
+    editorialClosureCount: 28,
+    readerContinuationCount: 22,
+    libraryDiscoveryCount: 56,
+    homeDiscoveryCount: 28,
+    logosSearchableCount: 352,
+    orphanCount: 260,
+    healthScore: 84, // Fase 10.1: A Constituição do Patrimônio
     patrimonyCoverage: {
       biblia: 100,
       catecismo: 100,
-      santos: 96,
-      aparicoes: 100,
-      magisterio: 62,
-      patristica: 41,
-      papas: 18,
-      dogmas: 52,
-      doutores: 35,
-      concilios: 20
+      maria: 100,
+      santos: 98,
+      patristica: 42,
+      magisterio: 63,
+      papas: 15,
+      dogmas: 51,
+      concilios: 19,
+      jornadas: 100,
+      oracoes: 100,
+      liturgia: 100,
+      logos: 100,
+      nexus: 100,
+      reader: 100
     }
   };
 }

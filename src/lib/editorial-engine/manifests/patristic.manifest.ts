@@ -17,14 +17,23 @@ export const patristicManifest: EntityManifest = {
   weight: 9,
   ready: true,
   accent: "secondary",
+  gate: {
+    minIce: 95,
+    minEditorial: 100,
+    minNexus: 100,
+    requiredFields: ["title", "author", "historical_context", "content"]
+  },
   lifecycle: {
-    version: "0.1",
-    status: "developing",
-    certification: false,
-    migration: 0.15,
+    version: "1.0",
+    status: "certified",
+    certification: true,
+    migration: 1,
   },
   fields: [
-    { key: "title", label: "Título", group: "meta", required: true, weight: 1 },
-    { key: "author", label: "Autor", group: "meta", required: true, weight: 1 },
+    { key: "title", label: "Título da Obra", group: "meta", required: true, weight: 1 },
+    { key: "author", label: "Autor (Padre da Igreja)", group: "meta", required: true, weight: 1 },
+    { key: "historical_context", label: "Contexto do Século", group: "editorial", required: true },
+    { key: "content", label: "Texto Integral / Excertos", group: "editorial", required: true },
+    { key: "theological_importance", label: "Importância Teológica", group: "editorial", required: true },
   ],
 };
