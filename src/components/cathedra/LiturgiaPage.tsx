@@ -85,9 +85,11 @@ const LiturgiaPage: React.FC = () => {
     [searchParams, setSearchParams, todayIso],
   );
 
-  const { liturgy, isLoading: loadingChurch } = useChurchContext(selectedDate);
+  // Kernel eclesial (SSoT) — santo, calendário e liturgia vêm daqui.
+  const church = useChurchContext(selectedDate);
+  const saint = church.todaySaint;
   const { liturgy: readings, isLoading, isOfflineData } = useDailyLiturgy(selectedDate);
-  const { todaySaint: saint } = useChurchContext(selectedDate);
+
 
 
   const { meditation, isLoading: isMeditationLoading, isFetching: isMeditationFetching, retry: retryMeditation } = useLiturgyMeditation(

@@ -11,7 +11,7 @@ vi.mock('@/integrations/supabase/client', () => ({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           limit: vi.fn(() => ({
-            maybeSingle: vi.fn(() => Promise.resolve({ data: { title: 'Francisco', status: 'current' }, error: null }))
+            maybeSingle: vi.fn(() => Promise.resolve({ data: { title: 'Leão XIV', status: 'current' }, error: null }))
           }))
         }))
       }))
@@ -19,38 +19,67 @@ vi.mock('@/integrations/supabase/client', () => ({
   }
 }));
 
-// Mock dos hooks de dependência
 vi.mock('@/hooks/useDailyLiturgy', () => ({
-  useDailyLiturgy: vi.fn(() => ({ liturgy: { liturgia: 'Teste' }, isLoading: false }))
+  useDailyLiturgy: vi.fn(() => ({
+    liturgy: {
+      liturgia: 'Teste',
+      colorToken: 'liturgical-white',
+      evangelho: { referencia: 'Mt 5,1-12', titulo: 'Bem-aventuranças', texto: '...' },
+      salmo: { referencia: 'Sl 1', refrao: '...', texto: '...' },
+    },
+    isLoading: false,
+  })),
 }));
 
 vi.mock('@/hooks/useSaintOfDay', () => ({
-  useSaintOfDay: vi.fn(() => ({ data: { name: 'Santo Teste' }, isLoading: false }))
+  useSaintOfDay: vi.fn(() => ({ data: { name: 'Santo Teste', source: 'official' }, isLoading: false }))
 }));
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-    },
-  },
-});
+vi.mock('@/services/saintsService', () => ({
+  getSaintsByDate: vi.fn(() => Promise.resolve([
+    { name: 'Santo Teste', title: 'Mártir' },
+    { name: 'Beato Secundário', title: 'Bem-aventurado' },
+  ])),
+}));
 
-const wrapper = ({ children }: { children: React.ReactNode }) => React.createElement(QueryClientProvider, { client: queryClient }, children);
+const wrapper = ({ children }: { children: React.ReactNode }) =>
+  React.createElement(
+    QueryClientProvider,
+    { client: new QueryClient({ defaultOptions: { queries: { retry: false } } }) },
+    children,
+  );
 
-describe('useChurchContext', () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-  });
+describe('useChurchContext (Church Context Engine)', () => {
+  beforeEach(() => vi.clearAllMocks());
 
-  it('deve retornar o contexto eclesial completo', async () => {
+  it('expõe o Contexto Eclesial Global completo', async () => {
     const { result } = renderHook(() => useChurchContext(), { wrapper });
 
     await waitFor(() => expect(result.current.isLoading).toBe(false), { timeout: 3000 });
 
-    expect(result.current.currentPope).toBeDefined();
-    expect(result.current.todaySaint).toBeDefined();
-    expect(result.current.liturgy).toBeDefined();
+    // Igreja
+    expect(result.current.currentPope?.name).toBeTruthy();
+    expect(result.current.jubilee).toBeDefined();
+
+    // Santos
+    expect(result.current.todaySaint?.name).toBe('Santo Teste');
+    expect(result.current.saints.secondary.length).toBeGreaterThanOrEqual(1);
+    expect(result.current.saints.martyrs.length).toBeGreaterThanOrEqual(1);
+
+    // Calendário
+    expect(result.current.liturgicalSeason).toBeTruthy();
+    expect(['A', 'B', 'C']).toContain(result.current.yearCycle);
+    expect(['I', 'II']).toContain(result.current.weekCycle);
+    expect(result.current.liturgicalColor).toBe('liturgical-white');
+
+    // Liturgia
+    expect(result.current.gospel?.referencia).toBe('Mt 5,1-12');
+    expect(result.current.psalm?.referencia).toBe('Sl 1');
+    expect(result.current.readings.first).toBeNull();
+
+    // Meta
     expect(result.current.isoDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    expect(result.current.isToday).toBe(true);
+    expect(typeof result.current.dayTick).toBe('number');
   });
 });
