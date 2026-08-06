@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { useDailyLiturgy, type DailyLiturgy } from '@/hooks/useDailyLiturgy';
+import { useDailyLiturgy } from '@/hooks/useDailyLiturgy';
 import { useSaintOfDay, type SaintOfDay } from '@/hooks/useSaintOfDay';
-import { toIsoDateKey } from '@/core/liturgy/LiturgyProvider';
+import { toIsoDateKey, type DailyLiturgy } from '@/core/liturgy/LiturgyProvider';
 import { supabase } from '@/integrations/supabase/client';
 import { useMemo } from 'react';
 
@@ -12,7 +12,6 @@ import { useMemo } from 'react';
  * 1. Papa Atual (Magistério Vivo)
  * 2. Santo do Dia (Sanctorum)
  * 3. Liturgia do Dia (Lex Orandi)
- * 4. Metadados do Tempo Litúrgico
  */
 
 export interface PopeContext {
@@ -49,41 +48,39 @@ export function useChurchContext(date: Date = new Date()) {
   const isoDate = toIsoDateKey(date);
   const isToday = isoDate === toIsoDateKey(new Date());
 
-  // 1. Papa Atual (P0: Se mudar no DB, muda em todo lugar)
+  // 1. Papa Atual (P0)
   const { data: currentPope, isLoading: loadingPope } = useQuery({
     queryKey: ['church-pope', 'current'],
     queryFn: async (): Promise<PopeContext> => {
-      // Tentativa 1: Buscar da library_items_v1 com metadata de papa atual
+      // Nota: library_items_v1 é uma view. Buscamos pelo status 'current'.
       const { data, error } = await supabase
         .from('library_items_v1')
         .select('*')
-        .eq('kind', 'pope')
-        .contains('metadata', { status: 'current' })
+        .eq('status', 'current')
         .limit(1)
         .maybeSingle();
 
-      if (data && !error) {
+      if (data && !error && data.title) {
         return {
-          id: data.id,
+          id: data.id || 'current-pope',
           name: data.title,
-          title: data.metadata?.title || 'Bispo de Roma',
-          image: data.metadata?.image || '',
-          reign: data.metadata?.reign || '',
-          isSaint: !!data.metadata?.is_saint,
+          title: data.author_label || 'Bispo de Roma',
+          image: data.cover_image_url || FALLBACK_POPE.image,
+          reign: data.published_at || FALLBACK_POPE.reign,
+          isSaint: data.category === 'saint',
           status: 'current'
         };
       }
 
-      // Tentativa 2: Fallback local (Hardcoded as a last resort to guarantee P0 availability)
       return FALLBACK_POPE;
     },
-    staleTime: 1000 * 60 * 60 * 24, // 24h (Papas não mudam com frequência)
+    staleTime: 1000 * 60 * 60 * 24,
   });
 
-  // 2. Santo do Dia (Sanctorum)
+  // 2. Santo do Dia
   const { data: todaySaint, isLoading: loadingSaint } = useSaintOfDay(date);
 
-  // 3. Liturgia do Dia (Lex Orandi)
+  // 3. Liturgia do Dia
   const { liturgy, isLoading: loadingLiturgy } = useDailyLiturgy(date);
 
   const context = useMemo<ChurchContext>(() => ({
