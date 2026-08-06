@@ -69,13 +69,13 @@ const AcervoAuditPage: React.FC = () => {
               label="Nexus (Inteligência Teológica)" 
               value={summary?.nexusCount} 
               total={summary?.totalModules}
-              status="critical"
+              status="progress"
             />
             <AuditItem 
               label="Editorial Closure (Fim de Linha Zero)" 
               value={summary?.editorialClosureCount} 
               total={summary?.totalModules}
-              status="critical"
+              status="progress"
             />
              <AuditItem 
               label="Pesquisável via Logos" 
@@ -87,7 +87,7 @@ const AcervoAuditPage: React.FC = () => {
               label="Descoberta na Biblioteca Monástica" 
               value={summary?.libraryDiscoveryCount} 
               total={summary?.totalModules}
-              status="progress"
+              status="success"
             />
              <AuditItem 
               label="Módulos Órfãos (Risco de Inexistência)" 
@@ -120,16 +120,16 @@ const AcervoAuditPage: React.FC = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/40">
-                <CoverageRow label="Bíblia" percent={100} />
-                <CoverageRow label="Catecismo" percent={100} />
-                <CoverageRow label="Santos" percent={96} />
-                <CoverageRow label="Aparições Marianas" percent={100} />
-                <CoverageRow label="Magistério" percent={62} status="progress" />
-                <CoverageRow label="Patrística" percent={41} status="progress" />
-                <CoverageRow label="Papas" percent={18} status="warning" />
-                <CoverageRow label="Dogmas" percent={52} status="progress" />
-                <CoverageRow label="Doutores da Igreja" percent={35} status="progress" />
-                <CoverageRow label="Concílios" percent={20} status="warning" />
+                <CoverageRow label="Bíblia" percent={summary?.patrimonyCoverage.biblia || 0} />
+                <CoverageRow label="Catecismo" percent={summary?.patrimonyCoverage.catecismo || 0} />
+                <CoverageRow label="Santos" percent={summary?.patrimonyCoverage.santos || 0} />
+                <CoverageRow label="Aparições Marianas" percent={summary?.patrimonyCoverage.aparicoes || 0} />
+                <CoverageRow label="Magistério" percent={summary?.patrimonyCoverage.magisterio || 0} status="progress" />
+                <CoverageRow label="Patrística" percent={summary?.patrimonyCoverage.patristica || 0} status="progress" />
+                <CoverageRow label="Papas" percent={summary?.patrimonyCoverage.papas || 0} status="warning" />
+                <CoverageRow label="Dogmas" percent={summary?.patrimonyCoverage.dogmas || 0} status="progress" />
+                <CoverageRow label="Doutores da Igreja" percent={summary?.patrimonyCoverage.doutores || 0} status="progress" />
+                <CoverageRow label="Concílios" percent={summary?.patrimonyCoverage.concilios || 0} status="warning" />
               </tbody>
             </table>
           </div>
