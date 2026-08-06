@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import { EditorialHero, EditorialCard, EditorialDivider, EditorialKicker } from '@/components/editorial/harmony';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
-import { GraduationCap, Heart, Star, Shield } from 'lucide-react';
+import { GraduationCap, Heart, Star, Shield, BookOpen, Church, Users, Library, Route, Search } from 'lucide-react';
+import { MONASTERY_SHELVES } from '@/config/monasteryShelves';
 import {
   countLibraryByKind,
   fetchLibraryFeatured,
@@ -155,84 +156,37 @@ const AcervoHomePage: React.FC = () => {
 
         <EditorialDivider variant="gold-fade" className="max-w-2xl mx-auto opacity-30" />
 
-        {/* Estantes do Conhecimento (Etapa 6) */}
+        {/* Estantes do Conhecimento (Acervo Monástico 3.0) */}
         <section className="space-y-spacing-xl">
             <h2 className="text-premium-small font-black uppercase tracking-[0.2em] text-gold text-center">
-               Estantes Monásticas 2.0
+               Estantes do Mosteiro
             </h2>
            
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-md">
-              {/* Formação — O Alicerce */}
-              <div className="bg-card/40 border border-primary/5 p-spacing-lg rounded-premium space-y-spacing-md shadow-premium-sm flex flex-col">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gold">I. Formação</h3>
-                  <GraduationCap className="w-4 h-4 text-gold/40" />
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-spacing-md">
+              {MONASTERY_SHELVES.map((shelf) => (
+                <div key={shelf.id} className="bg-card/40 border border-primary/5 p-spacing-lg rounded-premium space-y-spacing-md shadow-premium-sm flex flex-col">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gold">{shelf.title}</h3>
+                    <shelf.icon className="w-4 h-4 text-gold/40" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-spacing-sm flex-1">
+                    {shelf.items.map(item => (
+                      <Link key={item.label} to={item.to} className="group flex flex-col">
+                        <div className="p-spacing-md rounded-premium border border-primary/5 bg-background/50 hover:bg-primary/[0.02] hover:border-gold/30 transition-all text-center space-y-2 h-full flex flex-col items-center justify-center relative">
+                           {item.badge && (
+                             <span className="absolute top-1 right-1 text-[6px] font-black bg-gold/10 text-gold px-1 rounded-full uppercase tracking-tighter">
+                               {item.badge}
+                             </span>
+                           )}
+                           <item.icon className="w-7 h-7 mx-auto text-primary/20 group-hover:text-gold transition-colors" />
+                           <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground group-hover:text-gold-light line-clamp-1">{item.label}</h4>
+                           <p className="text-[7px] text-muted-foreground/50 uppercase tracking-tighter">{item.desc} {item.count ? `· ${item.count}` : ''}</p>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-                <div className="grid grid-cols-2 gap-spacing-sm flex-1">
-                  {[
-                    { label: 'Bíblia', to: '/bible', icon: Icons.Bible, count: '73 Livros', desc: 'Escrituras' },
-                    { label: 'Catecismo', to: '/catechism', icon: Icons.BookOpen, count: '2865 Artigos', desc: 'Doutrina' },
-                    { label: 'Magistério', to: '/magisterium', icon: Icons.ScrollText, count: 'Documentos', desc: 'Tradição' },
-                    { label: 'Patrística', to: '/biblioteca', icon: Icons.Church, count: 'Padres', desc: 'Escritos' },
-                  ].map(pilar => (
-                    <Link key={pilar.label} to={pilar.to} className="group flex flex-col">
-                      <div className="p-spacing-md rounded-premium border border-primary/5 bg-background/50 hover:bg-primary/[0.02] hover:border-gold/30 transition-all text-center space-y-2 h-full flex flex-col items-center justify-center">
-                         <pilar.icon className="w-8 h-8 mx-auto text-primary/20 group-hover:text-gold transition-colors" />
-                         <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground group-hover:text-gold-light">{pilar.label}</h4>
-                         <p className="text-[7px] text-muted-foreground/50 uppercase tracking-tighter">{pilar.desc} · {pilar.count}</p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              {/* Espiritualidade — A Vida Interior */}
-              <div className="bg-card/40 border border-primary/5 p-spacing-lg rounded-premium space-y-spacing-md shadow-premium-sm flex flex-col">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gold">II. Espiritualidade</h3>
-                  <Heart className="w-4 h-4 text-gold/40" />
-                </div>
-                <div className="grid grid-cols-2 gap-spacing-sm flex-1">
-                  {[
-                    { label: 'Orações', to: '/oracao', icon: Icons.Heart, count: 'Livro', desc: 'Súplicas' },
-                    { label: 'Liturgia', to: '/liturgia', icon: Icons.Sun, count: 'Diário', desc: 'Missa' },
-                    { label: 'Rosário', to: '/oracao/rosario', icon: Icons.Disc, count: 'Contemplar', desc: 'Mistérios' },
-                    { label: 'Novenas', to: '/novenas', icon: Icons.Clock, count: 'Preces', desc: 'Piedade' },
-                  ].map(pilar => (
-                    <Link key={pilar.label} to={pilar.to} className="group flex flex-col">
-                      <div className="p-spacing-md rounded-premium border border-primary/5 bg-background/50 hover:bg-primary/[0.02] hover:border-gold/30 transition-all text-center space-y-2 h-full flex flex-col items-center justify-center">
-                         <pilar.icon className="w-8 h-8 mx-auto text-primary/20 group-hover:text-gold transition-colors" />
-                         <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground group-hover:text-gold-light">{pilar.label}</h4>
-                         <p className="text-[7px] text-muted-foreground/50 uppercase tracking-tighter">{pilar.desc} · {pilar.count}</p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              {/* Patrimônio — A Nuvem de Testemunhas */}
-              <div className="bg-card/40 border border-primary/5 p-spacing-lg rounded-premium space-y-spacing-md shadow-premium-sm flex flex-col">
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gold">III. Patrimônio</h3>
-                  <Star className="w-4 h-4 text-gold/40" />
-                </div>
-                <div className="grid grid-cols-2 gap-spacing-sm flex-1">
-                  {[
-                    { label: 'Santos', to: '/saints', icon: Icons.User, count: 'Hagiografia', desc: 'Vida' },
-                    { label: 'Maria', to: '/aparicoes', icon: Star, count: 'Aparições', desc: 'Certificadas' },
-                    { label: 'Dogmas', to: '/dogmas', icon: Shield, count: 'Verdades', desc: 'Fé' },
-                    { label: 'Glossário', to: '/glossario', icon: Icons.Search, count: 'Léxico', desc: 'Termos' },
-                  ].map(pilar => (
-                    <Link key={pilar.label} to={pilar.to} className="group flex flex-col">
-                      <div className="p-spacing-md rounded-premium border border-primary/5 bg-background/50 hover:bg-primary/[0.02] hover:border-gold/30 transition-all text-center space-y-2 h-full flex flex-col items-center justify-center">
-                         <pilar.icon className="w-8 h-8 mx-auto text-primary/20 group-hover:text-gold transition-colors" />
-                         <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground group-hover:text-gold-light">{pilar.label}</h4>
-                         <p className="text-[7px] text-muted-foreground/50 uppercase tracking-tighter">{pilar.desc} · {pilar.count}</p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
+              ))}
            </div>
         </section>
 
