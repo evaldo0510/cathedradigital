@@ -17,6 +17,9 @@ import { bibleManifest } from "./bible.manifest";
 import { liturgyManifest } from "./liturgy.manifest";
 import { patristicManifest } from "./patristic.manifest";
 import { magisteriumManifest } from "./magisterium.manifest";
+import { popesManifest } from "./popes.manifest";
+import { dogmasManifest } from "./dogmas.manifest";
+import { historyManifest } from "./history.manifest";
 import { assertValidManifest, validateManifest } from "../validate-manifest";
 
 /** Placeholder para entidades ainda não plugadas (`ready: false`). */
@@ -40,6 +43,9 @@ const rawRegistry: EntityManifest[] = [
   liturgyManifest,
   patristicManifest,
   magisteriumManifest,
+  popesManifest,
+  dogmasManifest,
+  historyManifest,
 ];
 
 // Fail-fast: qualquer manifesto inválido derruba o boot do módulo.
@@ -73,6 +79,9 @@ export {
   bibleManifest,
   liturgyManifest,
   patristicManifest,
-  magisteriumManifest
+  magisteriumManifest,
+  popesManifest,
+  dogmasManifest,
+  historyManifest
 };
 

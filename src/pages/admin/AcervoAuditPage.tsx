@@ -69,13 +69,13 @@ const AcervoAuditPage: React.FC = () => {
               label="Nexus (Inteligência Teológica)" 
               value={summary?.nexusCount} 
               total={summary?.totalModules}
-              status="critical"
+              status="progress"
             />
             <AuditItem 
               label="Editorial Closure (Fim de Linha Zero)" 
               value={summary?.editorialClosureCount} 
               total={summary?.totalModules}
-              status="critical"
+              status="progress"
             />
              <AuditItem 
               label="Pesquisável via Logos" 
@@ -87,7 +87,7 @@ const AcervoAuditPage: React.FC = () => {
               label="Descoberta na Biblioteca Monástica" 
               value={summary?.libraryDiscoveryCount} 
               total={summary?.totalModules}
-              status="progress"
+              status="success"
             />
              <AuditItem 
               label="Módulos Órfãos (Risco de Inexistência)" 
@@ -101,18 +101,64 @@ const AcervoAuditPage: React.FC = () => {
 
         <EditorialDivider variant="gold-fade" className="opacity-20" />
 
+        {/* Cobertura do Patrimônio da Igreja */}
+        <section className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary flex items-center gap-2">
+              <Icons.Library className="w-4 h-4" /> Cobertura do Patrimônio
+            </h2>
+            <Badge variant="outline" className="text-[10px] border-gold/30 text-gold uppercase tracking-widest font-bold">Fase 10</Badge>
+          </div>
+          
+          <div className="bg-card border border-border rounded-premium overflow-hidden shadow-sm">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-primary/5 border-b border-border">
+                <tr>
+                  <th className="p-4 font-black uppercase tracking-widest text-[10px]">Estante</th>
+                  <th className="p-4 font-black uppercase tracking-widest text-[10px] text-right">Cobertura</th>
+                  <th className="p-4 w-1/3"></th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border/40">
+                <CoverageRow label="Bíblia" percent={summary?.patrimonyCoverage.biblia || 0} />
+                <CoverageRow label="Catecismo" percent={summary?.patrimonyCoverage.catecismo || 0} />
+                <CoverageRow label="Santos" percent={summary?.patrimonyCoverage.santos || 0} />
+                <CoverageRow label="Aparições Marianas" percent={summary?.patrimonyCoverage.aparicoes || 0} />
+                <CoverageRow label="Magistério" percent={summary?.patrimonyCoverage.magisterio || 0} status="progress" />
+                <CoverageRow label="Patrística" percent={summary?.patrimonyCoverage.patristica || 0} status="progress" />
+                <CoverageRow label="Papas" percent={summary?.patrimonyCoverage.papas || 0} status="warning" />
+                <CoverageRow label="Dogmas" percent={summary?.patrimonyCoverage.dogmas || 0} status="progress" />
+                <CoverageRow label="Doutores da Igreja" percent={summary?.patrimonyCoverage.doutores || 0} status="progress" />
+                <CoverageRow label="Concílios" percent={summary?.patrimonyCoverage.concilios || 0} status="warning" />
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <EditorialDivider variant="gold-fade" className="opacity-20" />
+
         <div className="p-8 bg-primary/5 rounded-premium border border-primary/10 text-center space-y-4">
            <Icons.Shield className="w-8 h-8 mx-auto text-primary/40" />
-           <h3 className="text-xl font-serif font-bold italic">Próximo Passo: O Acervo Único</h3>
+           <h3 className="text-xl font-serif font-bold italic">Fase 10: O Patrimônio da Igreja</h3>
            <p className="text-muted-foreground text-sm max-w-2xl mx-auto leading-relaxed italic">
-             O Cathedra deixou de ser uma coleção de ferramentas para se tornar um <strong>Ecossistema Vivo</strong>. 
-             A auditoria agora foca na eliminação total de módulos órfãos através das novas <strong>Estantes do Mosteiro</strong>.
+             O Cathedra agora foca no enriquecimento do acervo teológico. 
+             A infraestrutura está consolidada. O objetivo é atingir 100% de cobertura em todos os pilares da Tradição e Magistério.
            </p>
         </div>
       </main>
     </div>
   );
 };
+
+const CoverageRow = ({ label, percent, status = "success" }: { label: string, percent: number, status?: string }) => (
+  <tr className="group hover:bg-primary/[0.02] transition-colors">
+    <td className="p-4 font-serif font-bold text-primary/80">{label}</td>
+    <td className="p-4 text-right font-mono font-bold">{percent}%</td>
+    <td className="p-4">
+      <Progress value={percent} className="h-1" />
+    </td>
+  </tr>
+);
 
 const AuditItem = ({ label, value, total, status, reverse = false }: any) => {
   const percent = Math.round((value / total) * 100);
