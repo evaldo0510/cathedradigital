@@ -44,36 +44,47 @@ export const MONASTERY_SHELVES: LibraryShelf[] = [
     ]
   },
   {
-    id: 'church',
-    title: '🏛 Igreja',
+    id: 'patristic',
+    title: '📜 Patrística',
+    icon: Library,
+    items: [
+      { label: 'Padres Apostólicos', to: '/biblioteca?filter=apostolicos', icon: Icons.Church, desc: 'Primeiro Século', count: 'Patrística' },
+      { label: 'Padres Gregos', to: '/biblioteca?filter=gregos', icon: Icons.ScrollText, desc: 'Leste Cristão', badge: 'Patrística' },
+      { label: 'Padres Latinos', to: '/biblioteca?filter=latinos', icon: Icons.ScrollText, desc: 'Oeste Cristão', badge: 'Patrística' },
+      { label: 'Grandes Obras', to: '/biblioteca?filter=obras-primas', icon: Icons.BookOpen, desc: 'Tesouros da Fé', count: 'Acervo' },
+    ]
+  },
+  {
+    id: 'magisterium',
+    title: '🏛 Magistério',
     icon: Church,
     items: [
-      { label: 'Catecismo', to: '/catechism', icon: Icons.BookOpen, desc: '2865 Artigos', count: 'Doutrina' },
-      { label: 'Magistério', to: '/magisterium', icon: Icons.ScrollText, desc: 'Documentos', count: 'Tradição' },
-      { label: 'Concílios', to: '/magisterium?q=concilio', icon: Icons.Users, desc: 'Assembleias', badge: 'História' },
-      { label: 'Dogmas', to: '/dogmas', icon: Shield, desc: 'Verdades de Fé', count: 'Certificado' },
+      { label: 'Encíclicas', to: '/magisterium?filter=enciclicas', icon: Icons.ScrollText, desc: 'Cartas Circulares', count: 'Magistério' },
+      { label: 'Documentos Conciliares', to: '/magisterium?filter=concilio', icon: Icons.Users, desc: 'Vaticano II e outros', badge: 'História' },
+      { label: 'Cartas Apostólicas', to: '/magisterium?filter=cartas', icon: Icons.ScrollText, desc: 'Orientação', count: 'Doutrina' },
+      { label: 'Motu Proprio', to: '/magisterium?filter=motu', icon: Icons.Shield, desc: 'Iniciativa Própria', badge: 'Legal' },
     ]
   },
   {
-    id: 'saints',
-    title: '👤 Santos',
+    id: 'saints-popes',
+    title: '👤 Santos e Papas',
     icon: Users,
     items: [
-      { label: 'Santos', to: '/saints', icon: Icons.User, desc: 'Hagiografia', count: 'Vidas' },
-      { label: 'Doutores', to: '/saints?filter=doutor', icon: GraduationCap, desc: 'Mestres', badge: 'Sapiência' },
-      { label: 'Padres', to: '/biblioteca?filter=patristica', icon: Icons.Church, desc: 'Era Apostólica', count: 'Patrística' },
+      { label: 'Vidas dos Santos', to: '/saints', icon: Icons.User, desc: 'Hagiografia', count: 'Vidas' },
+      { label: 'Sucessores de Pedro', to: '/papas', icon: Icons.Crown, desc: 'Pontificado', badge: 'Papas' },
       { label: 'Mártires', to: '/saints?filter=martir', icon: Flame, desc: 'Testemunho', count: 'Sangue' },
+      { label: 'Aparições', to: '/aparicoes', icon: Star, desc: 'Visitas Celestes', count: 'Maria' },
     ]
   },
   {
-    id: 'mary',
-    title: '🌹 Maria',
-    icon: Star,
+    id: 'doctrine',
+    title: '🛡 Doutrina e Dogmas',
+    icon: Shield,
     items: [
-      { label: 'Aparições', to: '/aparicoes', icon: Star, desc: 'Visitas Celestes', count: 'Certificadas' },
-      { label: 'Dogmas Marianos', to: '/dogmas?q=maria', icon: Shield, desc: 'Doutrina', badge: 'Theotokos' },
-      { label: 'Títulos', to: '/glossario?q=nossa+senhora', icon: Icons.BookOpen, desc: 'Invocações', count: 'Devoção' },
-      { label: 'Rosário', to: '/oracao/rosario', icon: Icons.Disc, desc: 'Contemplação', count: 'Mistérios' },
+      { label: 'Catecismo', to: '/catechism', icon: Icons.BookOpen, desc: '2865 Artigos', count: 'Doutrina' },
+      { label: 'Doutores da Igreja', to: '/doutores', icon: GraduationCap, desc: 'Mestres', badge: 'Sapiência' },
+      { label: 'Dogmas de Fé', to: '/dogmas', icon: Shield, desc: 'Verdades Eternas', count: 'Certificado' },
+      { label: 'Summa Theologica', to: '/aquinas', icon: Icons.BookOpen, desc: 'Sto. Tomás', badge: 'Doutor' },
     ]
   },
   {
@@ -84,18 +95,7 @@ export const MONASTERY_SHELVES: LibraryShelf[] = [
       { label: 'Orações', to: '/oracao', icon: Icons.Heart, desc: 'Livro de Preces', count: 'Devocionário' },
       { label: 'Liturgia', to: '/liturgia', icon: Icons.Sun, desc: 'Missa Diária', count: 'Calendário' },
       { label: 'Breviário', to: '/liturgia/horas', icon: Icons.Book, desc: 'Horas', count: 'Opus Dei' },
-      { label: 'Novenas', to: '/novenas', icon: Icons.Clock, desc: 'Piedade', count: 'Intercessão' },
-    ]
-  },
-  {
-    id: 'heritage',
-    title: '📜 Patrimônio',
-    icon: Library,
-    items: [
-      { label: 'Patrística', to: '/biblioteca', icon: Icons.Church, desc: 'Escritos Iniciais', count: 'Fundação' },
-      { label: 'Sto. Tomás', to: '/aquinas', icon: Icons.BookOpen, desc: 'Suma Teológica', badge: 'Doutor' },
-      { label: 'Clássicos', to: '/biblioteca?filter=classicos', icon: Library, desc: 'Obras Primas', count: 'Acervo' },
-      { label: 'Imitação', to: '/biblioteca/imitacao-de-cristo', icon: Icons.Heart, desc: 'Kempis', badge: 'Mística' },
+      { label: 'História da Igreja', to: '/timeline', icon: Icons.Clock, desc: 'Linha do Tempo', badge: 'Nexus' },
     ]
   },
   {
@@ -116,6 +116,7 @@ export const MONASTERY_SHELVES: LibraryShelf[] = [
     items: [
       { label: 'Busca Global', to: '/biblioteca/inteligente', icon: Icons.Search, desc: 'Omniscience', badge: 'IA' },
       { label: 'Conexões', to: '/nexus', icon: Icons.Orbit, desc: 'Nexus Graph', count: 'Interdependência' },
+      { label: 'Mission Control', to: '/admin/acervo/audit', icon: Icons.Shield, desc: 'Saúde do Acervo', badge: 'Admin' },
     ]
   }
 ];
