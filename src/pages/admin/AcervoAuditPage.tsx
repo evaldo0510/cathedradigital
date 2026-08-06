@@ -27,9 +27,9 @@ const AcervoAuditPage: React.FC = () => {
       </Helmet>
 
       <EditorialHero align="center" density="minimal" className="bg-primary/5">
-        <EditorialHero.Meta>Mission Control · Auditoria Global</EditorialHero.Meta>
-        <EditorialHero.Title>Saúde do Acervo Cathedra</EditorialHero.Title>
-        <EditorialHero.Subtitle>Monitoramento técnico da unificação da Biblioteca Monástica.</EditorialHero.Subtitle>
+        <EditorialHero.Meta>Mission Control · Constituição Editorial</EditorialHero.Meta>
+        <EditorialHero.Title>Constituição do Patrimônio</EditorialHero.Title>
+        <EditorialHero.Subtitle>Certificação global de maturidade e fidelidade à Tradição.</EditorialHero.Subtitle>
       </EditorialHero>
 
       <main className="max-w-5xl mx-auto px-6 mt-12 space-y-12">
