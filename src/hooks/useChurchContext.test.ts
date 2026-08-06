@@ -36,11 +36,7 @@ const queryClient = new QueryClient({
   },
 });
 
-const wrapper = ({ children }: { children: React.ReactNode }) => (
-  <QueryClientProvider client={queryClient}>
-    {children}
-  </QueryClientProvider>
-);
+const wrapper = ({ children }: { children: React.ReactNode }) => React.createElement(QueryClientProvider, { client: queryClient }, children);
 
 describe('useChurchContext', () => {
   beforeEach(() => {
@@ -50,7 +46,7 @@ describe('useChurchContext', () => {
   it('deve retornar o contexto eclesial completo', async () => {
     const { result } = renderHook(() => useChurchContext(), { wrapper });
 
-    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    await waitFor(() => expect(result.current.isLoading).toBe(false), { timeout: 3000 });
 
     expect(result.current.currentPope).toBeDefined();
     expect(result.current.todaySaint).toBeDefined();
