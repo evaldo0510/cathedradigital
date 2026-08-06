@@ -834,7 +834,8 @@ const AppLayout: React.FC = () => {
                   <AdminGuard>
                     <Routes>
                       <Route path="/" element={<AdminDashboard />} />
-                      <Route path="/knowledge-audit" element={<GlobalKnowledgeAudit />} />
+                       <Route path="/knowledge-audit" element={<GlobalKnowledgeAudit />} />
+                       <Route path="/acervo/audit" element={<AcervoAuditPage />} />
                       <Route path="/production-ready" element={<ProductionReadyDashboard />} />
                       <Route path="/security" element={<SecurityDashboard />} />
                       <Route path="/cid-compliance" element={<CidComplianceDashboardPage />} />
