@@ -29,7 +29,7 @@ export interface Apparition extends Partial<DeepContent> {
 
 const baseEditorial = {
   textoBase: 'A Mãe de Deus convida seus filhos à conversão, à oração sincera e à reparação pelos pecados do mundo.',
-  explicacao: 'As aparições marianas não acrescentam nada ao depósito da fé revelada, mas são sinais do cuidado materno de Maria para guiar a Igreja no caminho do Evangelho.',
+  explicacao: 'Maria fala a Juan Diego quando ele estava angustiado com a doença de seu tio (cf. Sl 91,4). Ela assegura que sua presença materna é um escudo e que nada deve nos perturbar, pois ela cuida de nós como seus filhos mais queridos (cf. CIC §968).',
   interpretacaoProfunda: 'Cada aparição carrega uma teologia própria voltada para o contexto da época: misericórdia, penitência, reparação ou consagração.',
   aplicacaoPratica: 'Hoje, o convite de Maria é para a simplicidade na fé e a fidelidade ao Rosário, arma poderosa contra as trevas.',
   reflexaoFinal: 'Como posso tornar meu coração mais aberto ao convite materno de Maria para uma conversão diária?',

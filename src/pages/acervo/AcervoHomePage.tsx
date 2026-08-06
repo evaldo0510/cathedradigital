@@ -219,7 +219,7 @@ const AcervoHomePage: React.FC = () => {
                 <div className="grid grid-cols-2 gap-spacing-sm flex-1">
                   {[
                     { label: 'Santos', to: '/saints', icon: Icons.User, count: 'Hagiografia', desc: 'Vida' },
-                    { label: 'Maria', to: '/aparicoes', icon: Star, count: 'Aparições', desc: 'Mensagens' },
+                    { label: 'Maria', to: '/aparicoes', icon: Star, count: 'Aparições', desc: 'Certificadas' },
                     { label: 'Dogmas', to: '/dogmas', icon: Shield, count: 'Verdades', desc: 'Fé' },
                     { label: 'Glossário', to: '/glossario', icon: Icons.Search, count: 'Léxico', desc: 'Termos' },
                   ].map(pilar => (
