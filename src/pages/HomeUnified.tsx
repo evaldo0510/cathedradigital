@@ -163,6 +163,12 @@ const HomeUnified: React.FC = () => {
 
           {/* Busca Spotlight-like */}
           <div data-rise="3" className="mt-14 w-full max-w-2xl md:mt-20">
+            <Link 
+              to="/admin/acervo/audit" 
+              className="absolute -top-12 right-0 text-[8px] font-black uppercase tracking-[0.4em] text-gold/20 hover:text-gold transition-colors z-20"
+            >
+              Mission Control
+            </Link>
             <label htmlFor="home-search" className="sr-only">Pesquisar</label>
             <div
               className="group flex items-center gap-3 rounded-full border px-6 py-4 transition-colors md:py-5"

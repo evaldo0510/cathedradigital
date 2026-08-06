@@ -127,6 +127,7 @@ const SaintWorkOverviewPage = lazy(() => import('./pages/biblioteca/SaintWorkOve
 const SaintWorkReaderPage = lazy(() => import('./pages/biblioteca/SaintWorkReaderPage'));
 const BibliotecaCatolicaAcervoPage = lazy(() => import('./pages/biblioteca/BibliotecaCatolicaAcervoPage'));
 const AcervoHomePage = lazy(() => import('./pages/acervo/AcervoHomePage'));
+const AcervoAuditPage = lazy(() => import('./pages/admin/AcervoAuditPage'));
 
 const HojePage = lazy(() => import('./components/cathedra/HojePage'));
 const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
@@ -833,7 +834,8 @@ const AppLayout: React.FC = () => {
                   <AdminGuard>
                     <Routes>
                       <Route path="/" element={<AdminDashboard />} />
-                      <Route path="/knowledge-audit" element={<GlobalKnowledgeAudit />} />
+                       <Route path="/knowledge-audit" element={<GlobalKnowledgeAudit />} />
+                       <Route path="/acervo/audit" element={<AcervoAuditPage />} />
                       <Route path="/production-ready" element={<ProductionReadyDashboard />} />
                       <Route path="/security" element={<SecurityDashboard />} />
                       <Route path="/cid-compliance" element={<CidComplianceDashboardPage />} />
