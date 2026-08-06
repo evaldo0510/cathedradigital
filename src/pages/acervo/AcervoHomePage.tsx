@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { EditorialHero, EditorialCard, EditorialDivider, EditorialKicker } from '@/components/editorial/harmony';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
-import { GraduationCap, Heart, Star, Shield, BookOpen, Church, Users, Library, Route, Search } from 'lucide-react';
+import { GraduationCap, Heart, Star, Shield, BookOpen, Church, Users, Library, Route, Search, Crown } from 'lucide-react';
 import { MONASTERY_SHELVES } from '@/config/monasteryShelves';
 import {
   countLibraryByKind,
@@ -14,9 +14,12 @@ import type { LibraryItem, LibraryKind } from '@/types/library';
 import AcervoContinueReadingPanel from './AcervoContinueReadingPanel';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
+import { useChurchContext } from '@/hooks/useChurchContext';
+import SacredImage from '@/components/cathedra/SacredImage';
 
 const AcervoHomePage: React.FC = () => {
   const { profile } = useAuth();
+  const { currentPope, todaySaint, liturgy, isLoading: loadingChurch } = useChurchContext();
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [featured, setFeatured] = useState<LibraryItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -39,6 +42,7 @@ const AcervoHomePage: React.FC = () => {
   const firstName = profile?.name?.split(' ')[0] || 'Peregrino';
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite';
+
 
   return (
     <div className="min-h-screen bg-background" data-space="atrium">
