@@ -34,7 +34,7 @@ export interface ChurchContext {
 }
 
 // Fallback do Papa Francisco caso a base falhe
-const FALLBACK_POPE: PopeContext = {
+export const FALLBACK_POPE: PopeContext = {
   id: 'francis',
   name: 'Francisco',
   title: 'Bispo de Roma, Vigário de Jesus Cristo',
@@ -43,6 +43,7 @@ const FALLBACK_POPE: PopeContext = {
   isSaint: false,
   status: 'current'
 };
+
 
 export function useChurchContext(date: Date = new Date()) {
   const isoDate = toIsoDateKey(date);

@@ -14,8 +14,9 @@ import type { LibraryItem, LibraryKind } from '@/types/library';
 import AcervoContinueReadingPanel from './AcervoContinueReadingPanel';
 import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
-import { useChurchContext } from '@/hooks/useChurchContext';
+import { useChurchContext, FALLBACK_POPE } from '@/hooks/useChurchContext';
 import SacredImage from '@/components/cathedra/SacredImage';
+
 
 const AcervoHomePage: React.FC = () => {
   const { profile } = useAuth();
