@@ -26,7 +26,7 @@ const AcervoAuditPage: React.FC = () => {
         <title>Auditoria do Acervo Cathedra — Ecossistema Vivo</title>
       </Helmet>
 
-      <EditorialHero align="center" density="dense" className="bg-primary/5">
+      <EditorialHero align="center" density="minimal" className="bg-primary/5">
         <EditorialHero.Meta>Mission Control · Auditoria Global</EditorialHero.Meta>
         <EditorialHero.Title>Saúde do Acervo Cathedra</EditorialHero.Title>
         <EditorialHero.Subtitle>Monitoramento técnico da unificação da Biblioteca Monástica.</EditorialHero.Subtitle>
