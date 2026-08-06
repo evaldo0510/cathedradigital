@@ -31,6 +31,7 @@ export const APP_ROUTES: RouteConfig[] = [
   { path: '/', label: 'Início', icon: Icons.Home, showInMenu: false, category: 'core' },
   { path: '/catechism', label: 'Catecismo', icon: Icons.Book, showInMenu: false, category: 'content' },
   { path: '/magisterium', label: 'Magistério', icon: Icons.ScrollText, showInMenu: false, category: 'content' },
+  { path: '/atlas', label: 'Atlas Católico', icon: Icons.Globe, showInMenu: false, category: 'content' },
 
 
   // Content & Resources
