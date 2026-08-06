@@ -10,8 +10,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
 import { useDailyLiturgy } from '@/hooks/useDailyLiturgy';
-import { useSaintOfDay } from '@/hooks/useSaintOfDay';
+import { useChurchContext } from '@/hooks/useChurchContext';
 import { toIsoDateKey } from '@/core/liturgy/LiturgyProvider';
+
 import { LiturgiaSkeleton } from './LiturgiaSkeleton';
 import SacredImage from './SacredImage';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
@@ -84,13 +85,11 @@ const LiturgiaPage: React.FC = () => {
     [searchParams, setSearchParams, todayIso],
   );
 
-  const {
-    liturgy: readings,
-    isLoading,
-    isOfflineData,
-  } = useDailyLiturgy(selectedDate);
+  const { liturgy, isLoading: loadingChurch } = useChurchContext(selectedDate);
+  const { liturgy: readings, isLoading, isOfflineData } = useDailyLiturgy(selectedDate);
+  const { todaySaint: saint } = useChurchContext(selectedDate);
 
-  const { data: saint } = useSaintOfDay(selectedDate);
+
   const { meditation, isLoading: isMeditationLoading, isFetching: isMeditationFetching, retry: retryMeditation } = useLiturgyMeditation(
     selectedIso,
     readings ?? null,
