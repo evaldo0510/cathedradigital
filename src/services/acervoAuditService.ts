@@ -37,7 +37,7 @@ export async function runAcervoAuditory(): Promise<AuditSummary> {
     patrimonyCoverage: {
       biblia: 100,
       catecismo: 100,
-      maria: 100, // Maria Certificada
+      maria: 100,
       santos: 98,
       patristica: 42,
       magisterio: 63,
