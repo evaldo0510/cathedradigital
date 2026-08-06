@@ -85,7 +85,10 @@ const LiturgiaPage: React.FC = () => {
     [searchParams, setSearchParams, todayIso],
   );
 
-  const { todaySaint: saint, liturgy: readings, isLoading, isLoading: loadingChurch } = useChurchContext(selectedDate);
+  const { liturgy, isLoading: loadingChurch } = useChurchContext(selectedDate);
+  const { liturgy: readings, isLoading, isOfflineData } = useDailyLiturgy(selectedDate);
+  const { todaySaint: saint } = useChurchContext(selectedDate);
+
 
   const { meditation, isLoading: isMeditationLoading, isFetching: isMeditationFetching, retry: retryMeditation } = useLiturgyMeditation(
     selectedIso,
