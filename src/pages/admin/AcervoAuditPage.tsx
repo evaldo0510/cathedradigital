@@ -122,14 +122,19 @@ const AcervoAuditPage: React.FC = () => {
               <tbody className="divide-y divide-border/40">
                 <CoverageRow label="Bíblia" percent={summary?.patrimonyCoverage.biblia || 0} />
                 <CoverageRow label="Catecismo" percent={summary?.patrimonyCoverage.catecismo || 0} />
+                <CoverageRow label="Maria" percent={summary?.patrimonyCoverage.maria || 0} />
                 <CoverageRow label="Santos" percent={summary?.patrimonyCoverage.santos || 0} />
-                <CoverageRow label="Aparições Marianas" percent={summary?.patrimonyCoverage.aparicoes || 0} />
-                <CoverageRow label="Magistério" percent={summary?.patrimonyCoverage.magisterio || 0} status="progress" />
                 <CoverageRow label="Patrística" percent={summary?.patrimonyCoverage.patristica || 0} status="progress" />
+                <CoverageRow label="Magistério" percent={summary?.patrimonyCoverage.magisterio || 0} status="progress" />
                 <CoverageRow label="Papas" percent={summary?.patrimonyCoverage.papas || 0} status="warning" />
                 <CoverageRow label="Dogmas" percent={summary?.patrimonyCoverage.dogmas || 0} status="progress" />
-                <CoverageRow label="Doutores da Igreja" percent={summary?.patrimonyCoverage.doutores || 0} status="progress" />
                 <CoverageRow label="Concílios" percent={summary?.patrimonyCoverage.concilios || 0} status="warning" />
+                <CoverageRow label="Jornadas" percent={summary?.patrimonyCoverage.jornadas || 0} />
+                <CoverageRow label="Orações" percent={summary?.patrimonyCoverage.oracoes || 0} />
+                <CoverageRow label="Liturgia" percent={summary?.patrimonyCoverage.liturgia || 0} />
+                <CoverageRow label="Logos IA" percent={summary?.patrimonyCoverage.logos || 0} />
+                <CoverageRow label="Nexus Graph" percent={summary?.patrimonyCoverage.nexus || 0} />
+                <CoverageRow label="Reader V2" percent={summary?.patrimonyCoverage.reader || 0} />
               </tbody>
             </table>
           </div>
@@ -139,10 +144,10 @@ const AcervoAuditPage: React.FC = () => {
 
         <div className="p-8 bg-primary/5 rounded-premium border border-primary/10 text-center space-y-4">
            <Icons.Shield className="w-8 h-8 mx-auto text-primary/40" />
-           <h3 className="text-xl font-serif font-bold italic">Fase 10: O Patrimônio da Igreja</h3>
+           <h3 className="text-xl font-serif font-bold italic">Fase 10.1: Constituição do Patrimônio</h3>
            <p className="text-muted-foreground text-sm max-w-2xl mx-auto leading-relaxed italic">
-             O Cathedra agora foca no enriquecimento do acervo teológico. 
-             A infraestrutura está consolidada. O objetivo é atingir 100% de cobertura em todos os pilares da Tradição e Magistério.
+             A infraestrutura chegou à maturidade. Agora, o Cathedra opera sob uma Constituição Editorial rigorosa: 
+             nenhum conteúdo entra sem 100% de conformidade com o Reader V2, Nexus, Logos e fidelidade documental.
            </p>
         </div>
       </main>
