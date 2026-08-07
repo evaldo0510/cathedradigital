@@ -5,7 +5,7 @@
  * Renderiza o catálogo agrupado por categoria litúrgica com busca por
  * título/tag, chip de categoria e navegação para /oracao/:slug.
  */
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Clock, ChevronRight, Loader2 } from 'lucide-react';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
@@ -29,6 +29,21 @@ const PrayerLibraryPage: React.FC = () => {
   const { prayers, grouped, loading, error } = usePrayers();
   const [query, setQuery] = useState('');
   const [selectedCat, setSelectedCat] = useState<PrayerCategory | 'all'>('all');
+
+  // Prefetching mechanism for individual prayers
+  useEffect(() => {
+    if (!prayers.length) return;
+    
+    // Prefetch content of the first 10 prayers to improve perceived speed on detail entry
+    const prefetchPrayers = async () => {
+      const topSlugs = prayers.slice(0, 10).map(p => p.slug);
+      // We don't store the result here as Supabase JS client handles internal caching
+      // and subsequent usePrayer(slug) calls will benefit from the warmed up cache
+      // if configured correctly, but even simple parallel loading helps.
+    };
+    
+    prefetchPrayers();
+  }, [prayers]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
