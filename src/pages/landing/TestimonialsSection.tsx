@@ -20,7 +20,7 @@ const TestimonialsSection = () => {
       <div className="app-container space-y-spacing-3xl relative z-10">
         <div className="text-center space-y-spacing-lg">
           <span className="text-premium-xs font-bold uppercase tracking-[0.4em] text-primary/60 italic">Comunidade</span>
-          <h2 className="font-display font-bold">Vozes da Comunidade</h2>
+          <h2 className="text-premium-4xl md:text-premium-5xl font-display font-bold">Vozes da Comunidade</h2>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-xl md:gap-spacing-xl">
