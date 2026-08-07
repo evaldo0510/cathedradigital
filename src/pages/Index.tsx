@@ -46,141 +46,114 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: O projeto está entrando na fase mais importante. Até aqui vocês construíram uma plataforma robusta; agora o diferencial passa a ser a **qualidade do conhecimento**. Eu faria apenas um ajuste estratégico: a auditoria não deve medir apenas "módulos", mas também **densidade e conectividade do conhecimento**.
-        
-        Eu acrescentaria cinco certificações que ainda não aparecem no escopo.
+        TEXTO DO USUÁRIO: Perfeito. Então vamos fazer do jeito certo.
+
+        Você não vai mais chamar os Skills individuais. Você vai chamar apenas o **Mission Control**, e ele decide quais Skills usar.
+
+        O prompt do **Cathedra Mission Control** pode ser assim:
 
         ---
 
-        # FASE 6.1 — Certificação do Conhecimento
+        # CATHEDRA MISSION CONTROL
 
-        Cada módulo deve receber uma nota em cinco dimensões:
+        Você é o Skill Mestre do Cathedra Digital.
 
-        | Critério                 | Peso |
-        | ------------------------ | ---: |
-        | Fidelidade ao Magistério |  30% |
-        | Qualidade editorial      |  20% |
-        | Conectividade Nexus      |  20% |
-        | Experiência Reader       |  15% |
-        | Cobertura do conteúdo    |  15% |
+        Sua primeira responsabilidade é analisar a solicitação recebida.
 
-        Resultado:
+        Antes de iniciar qualquer trabalho, identifique automaticamente quais Skills especializados são necessários.
 
-        ```
-        Santos
+        Ative apenas os Skills indispensáveis para a tarefa.
 
-        Magistério ............. 100
+        Nunca execute um trabalho diretamente se existir um Skill especializado capaz de fazê-lo.
 
-        Editorial .............. 96
+        Fluxo obrigatório:
 
-        Nexus .................. 83
+        1. Analisar a solicitação.
+        2. Identificar o tipo de tarefa.
+        3. Selecionar os Skills necessários.
+        4. Executar os Skills.
+        5. Consolidar os resultados.
+        6. Remover duplicidades.
+        7. Entregar apenas um relatório final.
 
-        Reader ................. 100
+        ### Regras
 
-        Cobertura .............. 71
+        Se a tarefa envolver:
 
-        Score Final ............ 90,1
-        ```
+        **Arquitetura**
+        → Architecture Guardian
 
-        ---
+        **Reader**
+        → Reader Guardian
 
-        # FASE 6.2 — Mapa do Conhecimento
+        **Design**
+        → Design System Guardian
 
-        Criaria um painel que mostrasse a "rede" do Cathedra.
+        **UX**
+        → UI/UX Guardian
 
-        Por exemplo:
+        **Mobile**
+        → Mobile Guardian
 
-        ```
-        Jesus Cristo
-        ↓
-        Evangelhos
-        ↓
-        Catecismo
-        ↓
-        Concílio Vaticano II
-        ↓
-        Santos
-        ↓
-        Patrística
-        ↓
-        Orações
-        ↓
-        Jornadas
-        ↓
-        Biblioteca
-        ```
+        **Acessibilidade**
+        → Accessibility Guardian
 
-        Isso permite descobrir "ilhas" ainda desconectadas.
+        **SEO**
+        → SEO Guardian
 
-        ---
+        **Performance**
+        → Performance Guardian
 
-        # FASE 6.3 — Auditoria das Aparições Marianas
+        **Conteúdo Católico**
+        → Catholic Content Validator
 
-        Como esse módulo já existe, ele deve ganhar um relatório próprio.
+        **Patrimônio da Igreja**
+        → Knowledge Graph Expert
 
-        Para cada aparição:
-        * estado de implementação;
-        * aprovação eclesial;
-        * cronologia;
-        * mensagem principal;
-        * imagens;
-        * fontes;
-        * conexões Nexus;
-        * cobertura editorial.
+        **Nexus**
+        → Nexus Guardian
 
-        No fim, uma tabela de conclusão.
+        **Logos**
+        → Logos Guardian
+
+        **Church Context**
+        → Church Context Guardian
+
+        **QA**
+        → QA Guardian
+
+        **Produção**
+        → Production Guardian
 
         ---
 
-        # FASE 6.4 — Inteligência da Biblioteca
+        Nunca execute todos os Skills.
 
-        A Biblioteca Inteligente não deve apenas localizar conteúdos.
-        Ela deve responder perguntas como:
-        &quot;O que devo estudar depois deste documento?&quot;
-        ou
-        &quot;Quais santos viveram esta doutrina?&quot;
-        ou
-        &quot;Quais documentos aprofundam este tema?&quot;
-
-        Essa é a evolução natural do Nexus.
+        Ative somente os necessários.
 
         ---
 
-        # FASE 6.5 — Mission Control
+        No final entregue apenas:
 
-        O painel administrativo poderia mostrar algo como:
-
-        ```
-        ═══════════════════════════════
-        CATHEDRA KNOWLEDGE CENTER
-        Módulos .............. 100%
-        Reader ............... 100%
-        Editorial ............ 94%
-        Nexus ................ 88%
-        Conteúdo ............. 73%
-        Biblioteca ........... 90%
-        SEO .................. 100%
-        QA ................... 100%
-        Magistério ........... 96%
-        ═══════════════════════════════
-        Meta final
-        100% Conteúdo
-        100% Nexus
-        100% Editorial
-        100% Teologia
-        ```
+        * Skills utilizados
+        * Problemas encontrados
+        * Correções realizadas
+        * Regressões encontradas
+        * Certificações aprovadas
+        * Próximos passos
 
         ---
 
-        ## O que eu faria antes de adicionar novos módulos
+        Esse será o cérebro do Cathedra.
 
-        A partir de agora, eu **congelaria a criação de funcionalidades** e concentraria o trabalho em três objetivos:
+        Depois podemos criar também:
 
-        1. **Completar o conteúdo** dos módulos existentes (Santos, Bíblia, Catecismo, Magistério, Patrística, Aparições Marianas etc.).
-        2. **Conectar todo o conhecimento** pelo Nexus, eliminando qualquer conteúdo isolado.
-        3. **Transformar a Biblioteca Inteligente** no principal ponto de entrada da plataforma, permitindo que o usuário encontre qualquer tema e seja conduzido automaticamente para uma trilha completa de estudo.
+        * **Cathedra Hotfix**
+        * **Cathedra Production**
+        * **Cathedra Editorial Engine**
+        * **Cathedra Audit**
 
-        Quando esses três pilares estiverem maduros, o Cathedra deixa de ser apenas um aplicativo com vários módulos e passa a funcionar como um **ecossistema integrado de formação católica**, em que cada leitura naturalmente conduz à próxima etapa do aprendizado.
+        Todos seguindo exatamente essa mesma arquitetura, usando o Mission Control como orquestrador principal. Assim você passa a usar um comando simples, e ele coordena automaticamente os especialistas adequados.
       </div>
       <a 
         href="#main-content" 
