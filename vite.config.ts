@@ -143,6 +143,7 @@ export default defineConfig(({ mode }) => ({
           if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-')) return 'vendor-recharts';
           if (id.includes('node_modules/lucide-react')) return 'vendor-lucide';
           if (id.includes('node_modules/@sentry')) return 'vendor-sentry';
+          if (id.includes('node_modules/jspdf')) return 'vendor-pdf';
           if (id.includes('node_modules/canvas-confetti')) return 'vendor-confetti';
           if (id.includes('node_modules/html2canvas')) return 'vendor-html2canvas';
           if (id.includes('node_modules/@radix-ui/')) return 'vendor-ui';
