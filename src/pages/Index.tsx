@@ -46,7 +46,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: a loogo pode ser maior? dentro do admim,Implemente uma calculadora no painel para estimar o custo mensal de IA por usuário com base em prompts e tokens.
+        TEXTO DO USUÁRIO: esssa primeira pagina a landing page nao estaou gostando
       </div>
       <a 
         href="#main-content" 
