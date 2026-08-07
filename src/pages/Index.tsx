@@ -50,7 +50,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Execute uma auditoria de performance com Lighthouse e ajuste o que estiver prejudicando o carregamento em celular e tablet.
+        TEXTO DO USUÁRIO: Adicione meta tags completas, Open Graph e schema estruturado (FAQ e depoimentos) para melhorar o ranqueamento e compartilhamento.Adicione eventos no analytics para medir cliques nos botões de chamada para ação e conversões, com um painel para acompanhar o desempenho.Execute uma auditoria de performance com Lighthouse e ajuste o que estiver prejudicando o carregamento em celular e tablet.Adicione eventos no analytics para medir cliques nos botões de chamada para ação e conversões, com um painel para acompanhar o desempenho.Implemente um formulário de captura de leads na landing com validação e mensagem de sucesso.
       </div>
       <a 
         href="#main-content" 
