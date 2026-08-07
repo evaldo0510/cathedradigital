@@ -51,7 +51,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Salvar as submissões do formulário de captura de leads em uma tabela e exibi-las no painel de Mission Control.Melhore o LCP removendo render-blocking e priorizando o carregamento do conteúdo acima da dobra.
+        TEXTO DO USUÁRIO: Implementar um onboarding passo a passo que peça os 6 campos essenciais e gere uma prévia do “conceito-mãe” para a marca.
       </div>
       <a 
         href="#main-content" 
