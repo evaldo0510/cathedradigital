@@ -64,7 +64,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Implemente rotinas automáticas de validação Desktop e Mobile para cada módulo existente, executando testes independentes por módulo e registrando o resultado no relatório de certificação.
+        TEXTO DO USUÁRIO: Configure limites de consumo e alertas automáticos quando o gasto de IA atingir um orçamento definido por mês.Registre custos de IA por módulo (ex.: Desktop/Mobile e áreas do app) e mostre isso no relatório final de certificação.Adicione um relatório mensal de custos de IA com gráficos e exportação em CSV/PDF para eu auditar o gasto.Crie um medidor de uso diário por usuário (prompts, tokens e duração das respostas) para eu acompanhar o consumo real.
       </div>
       
       <SEOHead

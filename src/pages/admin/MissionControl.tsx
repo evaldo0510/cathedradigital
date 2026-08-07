@@ -12,8 +12,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Target, ArrowRight, Lock, ShieldCheck, Trophy } from "lucide-react";
+import { Target, ArrowRight, Lock, ShieldCheck, Trophy, PieChart } from "lucide-react";
 import { IACalculator } from "@/components/admin/IACalculator";
+import { IAMetricsDashboard } from "@/components/admin/IAMetricsDashboard";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { editorialRegistry } from "@/lib/editorial-engine/manifests";
 import { useEditorialSummary } from "@/lib/editorial-engine/useEditorialAudit";
 import { iceTierLabel } from "@/lib/editorial-engine/ice";
@@ -190,17 +192,30 @@ export default function MissionControl() {
         </div>
       </div>
 
-      <div className="mb-8">
-        <IACalculator />
-      </div>
+      <Tabs defaultValue="knowledge" className="mb-8">
+        <TabsList className="grid w-full max-w-md grid-cols-2 mb-6">
+          <TabsTrigger value="knowledge" className="flex items-center gap-2">
+            <Target className="h-4 w-4" /> Editorial
+          </TabsTrigger>
+          <TabsTrigger value="costs" className="flex items-center gap-2">
+            <PieChart className="h-4 w-4" /> Custos IA
+          </TabsTrigger>
+        </TabsList>
+        
+        <TabsContent value="knowledge" className="space-y-8">
+          <SystemPanel />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
+            {entities.map(m => (
+              <EntityRow key={m.id} manifest={m} />
+            ))}
+          </div>
+        </TabsContent>
 
-      <SystemPanel />
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
-        {entities.map(m => (
-          <EntityRow key={m.id} manifest={m} />
-        ))}
-      </div>
+        <TabsContent value="costs" className="space-y-8">
+          <IAMetricsDashboard />
+          <IACalculator />
+        </TabsContent>
+      </Tabs>
 
       <p className="mt-6 text-[11px] text-muted-foreground">
         Módulos com selo <b>Placeholder</b> aguardam registro do manifesto no Editorial Engine
