@@ -46,7 +46,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Implementar rotinas automáticas de validação para Desktop e Mobile para cada módulo existente, registrando evidências e falhas no relatório de certificação.
+        TEXTO DO USUÁRIO: ativas os skills . Adicione o registro de evidências (capturas, logs e tempos) para validações Desktop e Mobile, vinculando cada evidência ao módulo e à respectiva falha no relatório final.Configure a execução dessas validações em um pipeline de CI para Desktop e Mobile a cada atualização relevante, garantindo que o relatório de certificação seja atualizado automaticamente.
       </div>
       <a 
         href="#main-content" 
