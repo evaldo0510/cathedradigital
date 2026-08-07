@@ -34,16 +34,16 @@ import ReadingModeToggle from './components/cathedra/ReadingModeToggle';
 import { ReadingSettingsProvider, useReadingSettings } from './contexts/ReadingSettingsContext';
 import { initGA4AutoTracking } from './lib/analytics';
 
-import CathedralSidebar from './components/cathedra/Sidebar';
+const CathedralSidebar = lazy(() => import('./components/cathedra/Sidebar'));
 const TheologicalTextFixture = lazy(() => import('./pages/__test/TheologicalTextFixture'));
 const EditorialShowcase = lazy(() => import('./pages/dev/EditorialShowcase'));
 const MobileShowcase = lazy(() => import('./pages/dev/MobileShowcase'));
-import CathedralFooter from './components/cathedra/Footer';
+const CathedralFooter = lazy(() => import('./components/cathedra/Footer'));
 import NotFound from './pages/NotFound';
-import BottomNav from './components/cathedra/BottomNav';
-import AppHeader from './components/cathedra/AppHeader';
+const BottomNav = lazy(() => import('./components/cathedra/BottomNav'));
+const AppHeader = lazy(() => import('./components/cathedra/AppHeader'));
 import { TooltipProvider } from '@/components/ui/tooltip';
-import { NexusMetricsOverlay } from '@/components/nexus/NexusMetricsOverlay';
+const NexusMetricsOverlay = lazy(() => import('@/components/nexus/NexusMetricsOverlay').then(m => ({ default: m.NexusMetricsOverlay })));
 import { useRenderPerf } from './hooks/useRenderPerf';
 import { useA11yGuard } from './lib/a11y-guard';
 
@@ -114,7 +114,7 @@ const Index = lazy(() => import('./pages/Index'));
 const HomeUnified = lazy(() => import('./pages/HomeUnified'));
 const AtriumHome = lazy(() => import('./pages/AtriumHome'));
 const PublicLanding = lazy(() => import('./pages/PublicLanding'));
-import RootGate from './components/cathedra/RootGate';
+const RootGate = lazy(() => import('./components/cathedra/RootGate'));
 import { setLastRoute, resolveAuthHome } from './lib/lastRoute';
 
 const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
