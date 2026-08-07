@@ -69,7 +69,7 @@ const AppHeader: React.FC<AppHeaderProps> = memo(({
             }}
           >
             <div className="flex items-center gap-2">
-              <Icons.Logo className="w-8 h-8 md:w-10 md:h-10 text-primary transition-all group-hover:scale-110" />
+              <Icons.Logo className="w-10 h-10 md:w-14 md:h-14 text-primary transition-all group-hover:scale-110" />
               <div className="flex flex-col leading-none">
                 <span
                   className="text-primary/90 group-hover:text-primary transition-colors"
