@@ -46,61 +46,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: # CATHEDRA MISSION CONTROL — MODO CONSOLIDAÇÃO
-
-        Entramos oficialmente na fase de CONSOLIDAÇÃO.
-
-        NÃO crie nenhum módulo novo.
-
-        NÃO crie novas páginas.
-
-        NÃO crie novos componentes.
-
-        NÃO crie novas rotas.
-
-        Sua missão é exclusivamente consolidar o que JÁ EXISTE.
-
-        Para cada tarefa execute obrigatoriamente:
-
-        1. Fazer inventário do módulo.
-        2. Verificar tudo que já existe.
-        3. Reutilizar componentes existentes.
-        4. Corrigir erros.
-        5. Conectar o módulo ao Reader V2.
-        6. Conectar ao Nexus.
-        7. Conectar ao Logos.
-        8. Conectar ao Church Context (quando aplicável).
-        9. Validar Desktop.
-        10. Validar Mobile.
-        11. Executar QA.
-        12. Certificar.
-
-        É proibido substituir componentes certificados.
-
-        É proibido duplicar funcionalidades.
-
-        É proibido criar versões paralelas.
-
-        Se existir algo parcialmente pronto, complete.
-
-        Se existir algo quebrado, corrija.
-
-        Se existir algo desconectado, integre.
-
-        Objetivo único:
-
-        Levar TODOS os módulos existentes para 100% de funcionamento, totalmente integrados e certificados antes de qualquer nova funcionalidade.
-
-        Ao final entregue apenas:
-
-        • Módulos auditados
-        • Problemas encontrados
-        • Correções realizadas
-        • Integrações concluídas
-        • Regressões encontradas
-        • Status final de certificação (CERTIFIED ou BLOCKED)
-
-        Não proponha novas funcionalidades. Concentre-se exclusivamente na estabilidade, integração e certificação do ecossistema existente.Publishing failed because your Supabase project is paused. Resume it from the Supabase dashboard, then publish again.
+        TEXTO DO USUÁRIO: O bloco de instruções do Cathedra Mission Control foi atualizado para o Modo Consolidação, estabelecendo o foco exclusivo na estabilidade, integração e certificação dos módulos existentes.Gerar um relatório final de certificação com status CERTIFIED ou BLOCKED, listando problemas encontrados, correções realizadas, integrações concluídas e regressões encontradas.Adicionar rotinas automáticas para validar Desktop e Mobile, e confirmar a integração completa com Reader V2, Nexus e Logos para cada módulo existente.Implementar a camada de acesso useChurchContext() para garantir que todos os módulos consultem o Contexto Eclesial Global de forma consistente, sem consultas independentes.
       </div>
       <a 
         href="#main-content" 
