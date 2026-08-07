@@ -12,9 +12,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Target, ArrowRight, Lock, ShieldCheck, Trophy, PieChart } from "lucide-react";
+import { Target, ArrowRight, Lock, ShieldCheck, Trophy, PieChart, Activity } from "lucide-react";
 import { IACalculator } from "@/components/admin/IACalculator";
 import { IAMetricsDashboard } from "@/components/admin/IAMetricsDashboard";
+import { LandingAnalyticsDashboard } from "@/components/admin/LandingAnalyticsDashboard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { editorialRegistry } from "@/lib/editorial-engine/manifests";
 import { useEditorialSummary } from "@/lib/editorial-engine/useEditorialAudit";
@@ -193,9 +194,12 @@ export default function MissionControl() {
       </div>
 
       <Tabs defaultValue="knowledge" className="mb-8">
-        <TabsList className="grid w-full max-w-md grid-cols-2 mb-6">
+        <TabsList className="grid w-full max-w-lg grid-cols-3 mb-6">
           <TabsTrigger value="knowledge" className="flex items-center gap-2">
             <Target className="h-4 w-4" /> Editorial
+          </TabsTrigger>
+          <TabsTrigger value="analytics" className="flex items-center gap-2">
+            <Activity className="h-4 w-4" /> Analytics
           </TabsTrigger>
           <TabsTrigger value="costs" className="flex items-center gap-2">
             <PieChart className="h-4 w-4" /> Custos IA
@@ -209,6 +213,10 @@ export default function MissionControl() {
               <EntityRow key={m.id} manifest={m} />
             ))}
           </div>
+        </TabsContent>
+
+        <TabsContent value="analytics" className="space-y-8">
+          <LandingAnalyticsDashboard />
         </TabsContent>
 
         <TabsContent value="costs" className="space-y-8">

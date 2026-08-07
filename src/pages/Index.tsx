@@ -9,6 +9,7 @@ import TestimonialsSection from "./landing/TestimonialsSection";
 import FaqSection from "./landing/FaqSection";
 import PricingSection from "./landing/PricingSection";
 import { SectionSkeleton } from "@/components/cathedra/HomeSkeletons";
+import LeadCaptureForm from "@/components/landing/LeadCaptureForm";
 import { LangContext } from "@/contexts/LangContext";
 import ContemplativeLayout from "@/components/cathedra/ContemplativeLayout";
 import { Icons } from "@/constants";
@@ -50,7 +51,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Execute uma auditoria de performance com Lighthouse e ajuste o que estiver prejudicando o carregamento em celular e tablet.
+        TEXTO DO USUÁRIO: Adicione meta tags completas, Open Graph e schema estruturado (FAQ e depoimentos) para melhorar o ranqueamento e compartilhamento.Adicione eventos no analytics para medir cliques nos botões de chamada para ação e conversões, com um painel para acompanhar o desempenho.Execute uma auditoria de performance com Lighthouse e ajuste o que estiver prejudicando o carregamento em celular e tablet.Adicione eventos no analytics para medir cliques nos botões de chamada para ação e conversões, com um painel para acompanhar o desempenho.Implemente um formulário de captura de leads na landing com validação e mensagem de sucesso.
       </div>
       <a 
         href="#main-content" 
@@ -80,6 +81,12 @@ const Index = () => {
         breadcrumbs={[
           { name: "Home", path: "/" }
         ]}
+        faqs={[
+          { question: "O Cathedra é gratuito?", answer: "Sim! O acesso à Bíblia, Catecismo, Santos, Liturgia e Orações é totalmente gratuito. Recursos avançados como o Logos IA e análises aprofundadas estão disponíveis no plano Premium." },
+          { question: "Preciso ser católico para usar?", answer: "Não. Embora o conteúdo seja baseado na tradição católica, qualquer pessoa interessada em estudar a Bíblia, a história dos santos ou a teologia cristã é bem-vinda." },
+          { question: "Posso usar offline?", answer: "Sim! O Cathedra é um Progressive Web App (PWA). Após o primeiro acesso, grande parte do conteúdo fica disponível mesmo sem conexão à internet." },
+          { question: "Como funciona o Logos IA?", answer: "É um assistente de inteligência artificial contemplativo treinado com documentos do Magistério da Igreja. Ele responde perguntas teológicas com citações das fontes oficiais, auxiliando seus estudos e vida de oração." }
+        ]}
       />
 
       {!authenticated && (
@@ -90,6 +97,11 @@ const Index = () => {
             <FeaturesSection onNavigate={handleNavigate} />
             <PricingSection />
             <TestimonialsSection />
+            <div className="w-full bg-card/30 py-spacing-4xl border-y border-border/10">
+              <div className="app-container max-w-spacing-4xl">
+                <LeadCaptureForm />
+              </div>
+            </div>
             <FaqSection />
           </div>
         </div>
