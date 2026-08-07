@@ -80,8 +80,8 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
           </motion.div>
         </div>
 
-        <div className="relative hidden lg:block">
-          <motion.div initial={{ rotate: 3 }} whileHover={{ rotate: 0, scale: 1.01 }} transition={{ duration: 0.5 }} className="relative aspect-square rounded-[3rem] overflow-hidden border border-white/20 shadow-premium">
+        <div className="relative order-first lg:order-last">
+          <motion.div initial={{ rotate: 3 }} whileHover={{ rotate: 0, scale: 1.01 }} transition={{ duration: 0.5 }} className="relative aspect-[4/3] lg:aspect-square rounded-[2rem] lg:rounded-[3rem] overflow-hidden border border-white/20 shadow-premium">
             <motion.img
               src="https://images.unsplash.com/photo-1544427928-201cd49e6657?auto=format&fit=crop&q=80&w=800&fm=webp"
               alt="Devoção católica"

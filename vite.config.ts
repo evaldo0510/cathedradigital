@@ -141,9 +141,11 @@ export default defineConfig(({ mode }) => ({
           if (id.includes('node_modules/@supabase')) return 'vendor-supabase';
           if (id.includes('node_modules/framer-motion')) return 'vendor-motion';
           if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-')) return 'vendor-recharts';
+          if (id.includes('node_modules/lucide-react')) return 'vendor-lucide';
+          if (id.includes('node_modules/@sentry')) return 'vendor-sentry';
           if (id.includes('node_modules/canvas-confetti')) return 'vendor-confetti';
           if (id.includes('node_modules/html2canvas')) return 'vendor-html2canvas';
-          if (id.includes('node_modules/@radix-ui/react-dialog') || id.includes('node_modules/@radix-ui/react-popover') || id.includes('node_modules/@radix-ui/react-tabs') || id.includes('node_modules/@radix-ui/react-accordion') || id.includes('node_modules/@radix-ui/react-dropdown-menu') || id.includes('node_modules/@radix-ui/react-scroll-area') || id.includes('node_modules/@radix-ui/react-select') || id.includes('node_modules/@radix-ui/react-tooltip')) return 'vendor-ui';
+          if (id.includes('node_modules/@radix-ui/')) return 'vendor-ui';
           // Isolate heavy data files
           if (id.includes('src/data/apparitions')) return 'data-apparitions';
           if (id.includes('src/data/cross-references')) return 'data-cross-refs';

@@ -79,7 +79,7 @@ const FeaturesSection = ({ onNavigate }: FeaturesSectionProps) => {
       <div className="app-container relative z-10">
         <div className="text-center space-y-spacing-lg max-w-spacing-3xl mx-auto mb-spacing-3xl md:mb-spacing-4xl">
           <span className="text-premium-xs font-bold uppercase tracking-[0.4em] text-primary/70 italic">O Caminho</span>
-          <h2 className="font-display font-bold text-foreground">Arquitetura do Conhecimento</h2>
+          <h2 className="text-premium-4xl md:text-premium-5xl font-display font-bold text-foreground">Arquitetura do Conhecimento</h2>
           <p className="text-muted-foreground/90 font-serif text-premium-lg md:text-premium-xl mx-auto">A luz de Cristo ilumina o coração.</p>
         </div>
         
