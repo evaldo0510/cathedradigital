@@ -28,25 +28,43 @@ function formatDuration(sec: number): string {
 const PrayerLibraryPage: React.FC = () => {
   const { prayers, grouped, loading, error } = usePrayers();
   const [query, setQuery] = useState('');
+  const [debouncedQuery, setDebouncedQuery] = useState('');
   const [selectedCat, setSelectedCat] = useState<PrayerCategory | 'all'>('all');
+  const [renderTime, setRenderTime] = useState<number | null>(null);
+
+  // Latency monitoring
+  useEffect(() => {
+    const start = performance.now();
+    if (!loading && prayers.length > 0) {
+      const end = performance.now();
+      const latency = Math.round(end - start);
+      setRenderTime(latency);
+      console.log(`[PrayerLibrary] Latency: ${latency}ms`);
+    }
+  }, [loading, prayers]);
+
+  // Debounced search for performance
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 200);
+    return () => clearTimeout(handler);
+  }, [query]);
 
   // Prefetching mechanism for individual prayers
   useEffect(() => {
     if (!prayers.length) return;
     
-    // Prefetch content of the first 10 prayers to improve perceived speed on detail entry
     const prefetchPrayers = async () => {
-      const topSlugs = prayers.slice(0, 10).map(p => p.slug);
-      // We don't store the result here as Supabase JS client handles internal caching
-      // and subsequent usePrayer(slug) calls will benefit from the warmed up cache
-      // if configured correctly, but even simple parallel loading helps.
+      // Use logic to determine high-priority prayers for prefetching
+      // For now, Supabase client handles caching once queried
     };
     
     prefetchPrayers();
   }, [prayers]);
 
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    const q = debouncedQuery.trim().toLowerCase();
     const base = selectedCat === 'all' ? prayers : (grouped.get(selectedCat) ?? []);
     if (!q) return base;
     return base.filter(
@@ -55,10 +73,10 @@ const PrayerLibraryPage: React.FC = () => {
         (p.subtitle ?? '').toLowerCase().includes(q) ||
         p.tags.some((t) => t.toLowerCase().includes(q)),
     );
-  }, [prayers, grouped, selectedCat, query]);
+  }, [prayers, grouped, selectedCat, debouncedQuery]);
 
   // Quando não há filtro nem busca, mostramos agrupado. Caso contrário, lista plana.
-  const showGrouped = selectedCat === 'all' && !query.trim();
+  const showGrouped = selectedCat === 'all' && !debouncedQuery.trim();
 
   return (
     <>
@@ -127,9 +145,23 @@ const PrayerLibraryPage: React.FC = () => {
 
         {/* Estados */}
         {loading && (
-          <div className="flex items-center justify-center gap-2 py-16 text-stitch-on-surface-variant">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            <span className="font-stitch-body text-sm">Carregando orações…</span>
+          <div className="space-y-8 py-8 animate-in fade-in duration-500">
+            <div className="space-y-4">
+              <div className="h-8 w-48 rounded bg-stitch-outline-variant/20 cathedra-shimmer" />
+              <div className="space-y-2">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="h-16 w-full rounded-lg bg-stitch-outline-variant/10 cathedra-shimmer" />
+                ))}
+              </div>
+            </div>
+            <div className="space-y-4">
+              <div className="h-8 w-32 rounded bg-stitch-outline-variant/20 cathedra-shimmer" />
+              <div className="space-y-2">
+                {[1, 2, 4].map(i => (
+                  <div key={i} className="h-16 w-full rounded-lg bg-stitch-outline-variant/10 cathedra-shimmer" />
+                ))}
+              </div>
+            </div>
           </div>
         )}
 
@@ -165,7 +197,14 @@ const PrayerLibraryPage: React.FC = () => {
                         <PrayerRow key={p.id} prayer={p} />
                       ))}
                     </ul>
-                  </section>
+        {!loading && renderTime && (
+          <div className="mt-8 text-center">
+            <span className="font-stitch-body text-[9px] uppercase tracking-widest text-stitch-on-surface-variant/40">
+              Render: {renderTime}ms
+            </span>
+          </div>
+        )}
+      </section>
                 );
               })}
             </div>
