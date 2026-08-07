@@ -46,7 +46,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Publishing failed because your Supabase project is paused. Resume it from the Supabase dashboard, then publish again.
+        TEXTO DO USUÁRIO: quanto de ia vamos gastar para usar  cathedra pr  usuário em pmedia se ele usr tds s dias
       </div>
       <a 
         href="#main-content" 
