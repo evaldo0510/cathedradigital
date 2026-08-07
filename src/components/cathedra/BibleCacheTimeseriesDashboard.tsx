@@ -262,7 +262,7 @@ export default function BibleCacheTimeseriesDashboard() {
     } finally { setDrillLoading(false); }
   };
 
-  const handleChartClick = (e: { activePayload?: Array<{ payload?: { bucket_start?: string; time?: string } }> }) => {
+  const handleChartClick = (e: any) => {
     const p = e?.activePayload?.[0]?.payload;
     if (p?.bucket_start) openDrilldown(p.bucket_start, p.time ?? p.bucket_start);
   };

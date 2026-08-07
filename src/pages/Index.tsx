@@ -64,9 +64,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Otimize imagens e fontes usados na página de Orações para reduzir o tempo de primeira renderização no navegador.Implemente uma busca mais rápida dentro da PrayerLibrary, com debounce e resultados pré-carregados para melhorar a navegação entre verbetes.
-
-Implemente um registro de latência (tempo até renderizar) do módulo de Orações para eu identificar gargalos por dispositivo e rota.Adicione um indicador de carregamento e estados de skeleton para a entrada nas Orações enquanto os dados são carregados.
+        TEXTO DO USUÁRIO: Melhore o pré-carregamento de resultados e dos verbetes adjacentes durante a busca e ao navegar para a frente/volta na PrayerLibrary.Adicione métricas de latência por etapas (busca, render e commit) com percentis P50/P95 no registro do módulo de Orações para eu identificar gargalos por dispositivo.Implemente code splitting e pré-carregamento de rota/componentes da PrayerLibrary para diminuir o tempo até exibir o conteúdo ao entrar e trocar de verbete.Ative lazy loading para recursos pesados dentro do módulo de Orações e adicione placeholders coerentes para manter a UI fluida durante a navegação entre verbetes.Configure compressão e formatos modernos (WebP/AVIF) nas imagens e carregamento otimizado das fontes para reduzir ainda mais o tempo de primeira renderização em Orações.
       </div>
       
       <SEOHead
