@@ -46,7 +46,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: esssa primeira pagina a landing page nao estaou gostando
+        TEXTO DO USUÁRIO: Inclua na landing seções como benefícios, prova social (depoimentos) e perguntas frequentes para explicar melhor o produto.Otimize a landing page para carregar mais rápido, reduzindo imagens pesadas e melhorando o tempo de renderização inicial.Garanta que a landing fique perfeita em celular e tablet, ajustando espaçamentos, fontes e quebras de layout.Reescreva os textos principais da landing e revise botões de chamada para ação para aumentar o engajamento.Redesenhe a primeira página da landing para ficar mais atraente, com seções bem alinhadas e hierarquia visual clara.
       </div>
       <a 
         href="#main-content" 
