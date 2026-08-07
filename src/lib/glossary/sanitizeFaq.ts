@@ -1,3 +1,5 @@
+import { trackEvent } from "@/lib/analytics";
+
 /**
  * Sanitização de FAQs vindos do banco/glossário.
  *
@@ -242,8 +244,8 @@ export function validateFaqJsonLdLive(items: FaqItem[] | null | undefined): FaqJ
   }
   const parsed = FaqPageJsonLdSchema.safeParse(candidate);
   if (!parsed.success) {
-  trackEvent('glossary_faq_sanitized', { count: faqs.length });
-  return {
+    trackEvent('glossary_faq_sanitized', { count: candidate.mainEntity.length });
+    return {
       ok: false,
       jsonLd: null,
       issues: parsed.error.issues.map((i) => ({ path: i.path.join('.'), code: i.code, message: i.message })),
