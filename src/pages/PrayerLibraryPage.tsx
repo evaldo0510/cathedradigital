@@ -30,16 +30,19 @@ const PrayerLibraryPage: React.FC = () => {
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [selectedCat, setSelectedCat] = useState<PrayerCategory | 'all'>('all');
-  const [renderTime, setRenderTime] = useState<number | null>(null);
+  const [metrics, setMetrics] = useState<{ p50: number; p95: number; last: number } | null>(null);
 
-  // Latency monitoring
+  // Latency monitoring with percentiles P50/P95
   useEffect(() => {
-    const start = performance.now();
-    if (!loading && prayers.length > 0) {
-      const end = performance.now();
-      const latency = Math.round(end - start);
-      setRenderTime(latency);
-      console.log(`[PrayerLibrary] Latency: ${latency}ms`);
+    if (loading || prayers.length === 0) return;
+
+    const entries = performance.getEntriesByType("measure").filter(e => e.name.startsWith("prayer_"));
+    const durations = entries.map(e => e.duration).sort((a, b) => a - b);
+    
+    if (durations.length > 0) {
+      const p50 = durations[Math.floor(durations.length * 0.5)];
+      const p95 = durations[Math.floor(durations.length * 0.95)];
+      setMetrics({ p50: Math.round(p50), p95: Math.round(p95), last: Math.round(durations[durations.length - 1]) });
     }
   }, [loading, prayers]);
 
@@ -197,10 +200,13 @@ const PrayerLibraryPage: React.FC = () => {
                         <PrayerRow key={p.id} prayer={p} />
                       ))}
                     </ul>
-        {!loading && renderTime && (
-          <div className="mt-8 text-center">
+        {!loading && metrics && (
+          <div className="mt-8 text-center space-x-4">
             <span className="font-stitch-body text-[9px] uppercase tracking-widest text-stitch-on-surface-variant/40">
-              Render: {renderTime}ms
+              P50: {metrics.p50}ms
+            </span>
+            <span className="font-stitch-body text-[9px] uppercase tracking-widest text-stitch-on-surface-variant/40">
+              P95: {metrics.p95}ms
             </span>
           </div>
         )}
