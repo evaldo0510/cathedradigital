@@ -1,6 +1,7 @@
 import { Icons } from '@/constants';
 
 import { HomeButton } from "@/components/cathedra/HomeButton";
+import { trackEvent } from "@/lib/analytics";
 import { CathedraCard } from "@/components/cathedra/CathedraCard";
 
 const PricingSection = () => {
@@ -113,6 +114,7 @@ const PricingSection = () => {
                   variant={tier.popular ? "primary" : "outline"}
                   className="w-full"
                   aria-label={`Assinar o plano ${tier.name}`}
+                  onClick={() => trackEvent('conversion', { type: 'pricing_click', tier: tier.name })}
                 >
                   {tier.button}
                 </HomeButton>

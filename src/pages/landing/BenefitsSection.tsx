@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 
 import { HomeButton } from "@/components/cathedra/HomeButton";
+import { trackEvent } from "@/lib/analytics";
 import { fadeUp, cardHover, buttonHover } from "./animations";
 
 const registerBenefits = [
@@ -74,7 +75,10 @@ const BenefitsSection = ({ onLogin }: BenefitsSectionProps) => {
           </div>
 
           <motion.div variants={buttonHover} initial="rest" whileHover="hover" whileTap="tap">
-            <HomeButton size="lg" className="h-spacing-3xl px-spacing-2xl rounded-premium-full bg-primary text-primary-foreground font-black uppercase tracking-widest w-full sm:w-auto" onClick={onLogin}>
+            <HomeButton size="lg" className="h-spacing-3xl px-spacing-2xl rounded-premium-full bg-primary text-primary-foreground font-black uppercase tracking-widest w-full sm:w-auto" onClick={() => {
+              trackEvent('conversion', { type: 'signup_click', source: 'benefits' });
+              onLogin();
+            }}>
               Criar Conta Gratuitamente
             </HomeButton>
           </motion.div>
