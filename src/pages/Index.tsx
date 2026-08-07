@@ -51,7 +51,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Executar uma nova auditoria com Lighthouse focada em celular e tablet e ajustar o que estiver piorando o FCP/LCP.
+        TEXTO DO USUÁRIO: Salvar as submissões do formulário de captura de leads em uma tabela e exibi-las no painel de Mission Control.Melhore o LCP removendo render-blocking e priorizando o carregamento do conteúdo acima da dobra.
       </div>
       <a 
         href="#main-content" 

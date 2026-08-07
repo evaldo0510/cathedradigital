@@ -3,6 +3,7 @@ import { HomeButton } from '@/components/cathedra/HomeButton';
 import { trackEvent } from '@/lib/analytics';
 import { useToast } from '@/hooks/use-toast';
 import { Icons } from '@/constants';
+import { supabase } from '@/integrations/supabase/client';
 
 const LeadCaptureForm = () => {
   const [email, setEmail] = useState('');
@@ -25,8 +26,11 @@ const LeadCaptureForm = () => {
     trackEvent('conversion', { type: 'lead_capture_attempt' });
 
     try {
-      // Simulação de envio para um CRM/Supabase
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const { error } = await supabase
+        .from('landing_leads')
+        .insert([{ email }]);
+
+      if (error) throw error;
       
       setSubmitted(true);
       trackEvent('conversion', { type: 'lead_capture_success' });
