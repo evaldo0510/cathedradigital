@@ -3,7 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { AppRoute } from "@/types";
 import { useAuth } from "@/hooks/useAuth";
 import HeroSection from "./landing/HeroSection";
-// import LandingHeader from "@/components/landing/LandingHeader";
+import BenefitsSection from "./landing/BenefitsSection";
+import FeaturesSection from "./landing/FeaturesSection";
+import TestimonialsSection from "./landing/TestimonialsSection";
+import FaqSection from "./landing/FaqSection";
+import PricingSection from "./landing/PricingSection";
 import { SectionSkeleton } from "@/components/cathedra/HomeSkeletons";
 import { LangContext } from "@/contexts/LangContext";
 import ContemplativeLayout from "@/components/cathedra/ContemplativeLayout";
@@ -46,7 +50,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Inclua na landing seções como benefícios, prova social (depoimentos) e perguntas frequentes para explicar melhor o produto.Otimize a landing page para carregar mais rápido, reduzindo imagens pesadas e melhorando o tempo de renderização inicial.Garanta que a landing fique perfeita em celular e tablet, ajustando espaçamentos, fontes e quebras de layout.Reescreva os textos principais da landing e revise botões de chamada para ação para aumentar o engajamento.Redesenhe a primeira página da landing para ficar mais atraente, com seções bem alinhadas e hierarquia visual clara.
+        TEXTO DO USUÁRIO: Garanta que a landing fique perfeita em celular e tablet ajustando espaçamentos, fontes e quebras de layout, e revise os botões de chamada para ação para aumentar o engajamento.Otimize a landing page para carregar mais rápido reduzindo imagens pesadas, aplicando WebP/AVIF e melhorando o carregamento de fontes.Implemente uma seção de perguntas frequentes (FAQ) com perguntas e respostas para reduzir dúvidas antes da compra.Inclua uma seção de prova social com depoimentos para aumentar a confiança dos visitantes.Adicione seções de benefícios na landing page para explicar claramente por que meu produto é melhor.Otimize a landing page para carregar mais rápido reduzindo imagens pesadas, aplicando WebP/AVIF e melhorando o carregamento de fontes.
       </div>
       <a 
         href="#main-content" 
@@ -78,7 +82,18 @@ const Index = () => {
         ]}
       />
 
-      {!authenticated && <HeroSection onStart={handleStart} />}
+      {!authenticated && (
+        <div className="w-full flex flex-col">
+          <HeroSection onStart={handleStart} />
+          <div id="main-content" className="w-full">
+            <BenefitsSection onLogin={() => navigate('/auth')} />
+            <FeaturesSection onNavigate={handleNavigate} />
+            <PricingSection />
+            <TestimonialsSection />
+            <FaqSection />
+          </div>
+        </div>
+      )}
       
       {authenticated && (
         <ContemplativeLayout
