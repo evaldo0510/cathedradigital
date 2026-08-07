@@ -46,7 +46,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: O bloco de instruções do Cathedra Mission Control foi atualizado para o Modo Consolidação, estabelecendo o foco exclusivo na estabilidade, integração e certificação dos módulos existentes.Gerar um relatório final de certificação com status CERTIFIED ou BLOCKED, listando problemas encontrados, correções realizadas, integrações concluídas e regressões encontradas.Adicionar rotinas automáticas para validar Desktop e Mobile, e confirmar a integração completa com Reader V2, Nexus e Logos para cada módulo existente.Implementar a camada de acesso useChurchContext() para garantir que todos os módulos consultem o Contexto Eclesial Global de forma consistente, sem consultas independentes.
+        TEXTO DO USUÁRIO: Implementar rotinas automáticas de validação para Desktop e Mobile para cada módulo existente, registrando evidências e falhas no relatório de certificação.
       </div>
       <a 
         href="#main-content" 
