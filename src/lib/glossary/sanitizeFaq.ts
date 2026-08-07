@@ -242,7 +242,8 @@ export function validateFaqJsonLdLive(items: FaqItem[] | null | undefined): FaqJ
   }
   const parsed = FaqPageJsonLdSchema.safeParse(candidate);
   if (!parsed.success) {
-    return {
+  trackEvent('glossary_faq_sanitized', { count: faqs.length });
+  return {
       ok: false,
       jsonLd: null,
       issues: parsed.error.issues.map((i) => ({ path: i.path.join('.'), code: i.code, message: i.message })),
