@@ -64,7 +64,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Adicionar testes automatizados de regressão para validação de rota e SEO (incluindo sitemap/JSON-LD) para rodar no CI antes do prebuild. Implementar um fallback automático de metadados para qualquer rota que fique sem meta, evitando falhas em modo estrito de SEO.
+        TEXTO DO USUÁRIO: Implemente rotinas automáticas de validação Desktop e Mobile para cada módulo existente, executando testes independentes por módulo e registrando o resultado no relatório de certificação.
       </div>
       
       <SEOHead
