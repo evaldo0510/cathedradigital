@@ -50,7 +50,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Garanta que a landing fique perfeita em celular e tablet ajustando espaçamentos, fontes e quebras de layout, e revise os botões de chamada para ação para aumentar o engajamento.Otimize a landing page para carregar mais rápido reduzindo imagens pesadas, aplicando WebP/AVIF e melhorando o carregamento de fontes.Implemente uma seção de perguntas frequentes (FAQ) com perguntas e respostas para reduzir dúvidas antes da compra.Inclua uma seção de prova social com depoimentos para aumentar a confiança dos visitantes.Adicione seções de benefícios na landing page para explicar claramente por que meu produto é melhor.Otimize a landing page para carregar mais rápido reduzindo imagens pesadas, aplicando WebP/AVIF e melhorando o carregamento de fontes.
+        TEXTO DO USUÁRIO: Execute uma auditoria de performance com Lighthouse e ajuste o que estiver prejudicando o carregamento em celular e tablet.
       </div>
       <a 
         href="#main-content" 
