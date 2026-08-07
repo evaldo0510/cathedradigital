@@ -7,7 +7,7 @@
     /* --- Core Visual Tokens: Cathedra Premium System --- */
     
     /* 1. Colors (HSL) */
-    --background: 45 40% 98%; /* #FDF8F3 - Light Cream */
+    --background: 220 15% 96%; /* Ajustado de 45 40% 98% (#FDF8F3) para um tom mais sóbrio e menos amarelado */
 
     --foreground: 220 25% 15%; /* Aumentado de 10% para 15% para suavizar mas manter contraste */
 
@@ -15,7 +15,7 @@
     --card: 45 35% 99.4%;
     --card-foreground: 220 25% 10%;
     
-    --primary: 220 20% 12%;
+    --primary: 220 30% 12%; /* Escurecido levemente para maior profundidade */
     --primary-foreground: 45 40% 99%;
     
     --secondary: 42 30% 35%; /* Escurecido de 45% para 35% para melhor contraste no mobile */
@@ -266,10 +266,10 @@
 
   /* Reading Themes - Consolidated with Core */
   .reading-theme-paper { 
-    --background: 45 40% 98%; 
+    --background: 220 15% 96%; 
     --foreground: 220 25% 10%;
-    --primary: 220 20% 12%;
-    background-color: #FDF8F3 !important;
+    --primary: 220 30% 12%;
+    background-color: #f1f3f5 !important;
     color: #1a1a1a !important;
   }
 
