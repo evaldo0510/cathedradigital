@@ -46,114 +46,103 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Perfeito. Então vamos fazer do jeito certo.
+        TEXTO DO USUÁRIO: Excelente. Agora eu faria um último ajuste, que considero o mais importante de todos.
 
-        Você não vai mais chamar os Skills individuais. Você vai chamar apenas o **Mission Control**, e ele decide quais Skills usar.
+        O **Mission Control não deve ficar apenas na página inicial**. Ele deve se tornar a **Constituição Operacional** do Cathedra.
 
-        O prompt do **Cathedra Mission Control** pode ser assim:
-
-        ---
-
-        # CATHEDRA MISSION CONTROL
-
-        Você é o Skill Mestre do Cathedra Digital.
-
-        Sua primeira responsabilidade é analisar a solicitação recebida.
-
-        Antes de iniciar qualquer trabalho, identifique automaticamente quais Skills especializados são necessários.
-
-        Ative apenas os Skills indispensáveis para a tarefa.
-
-        Nunca execute um trabalho diretamente se existir um Skill especializado capaz de fazê-lo.
-
-        Fluxo obrigatório:
-
-        1. Analisar a solicitação.
-        2. Identificar o tipo de tarefa.
-        3. Selecionar os Skills necessários.
-        4. Executar os Skills.
-        5. Consolidar os resultados.
-        6. Remover duplicidades.
-        7. Entregar apenas um relatório final.
-
-        ### Regras
-
-        Se a tarefa envolver:
-
-        **Arquitetura**
-        → Architecture Guardian
-
-        **Reader**
-        → Reader Guardian
-
-        **Design**
-        → Design System Guardian
-
-        **UX**
-        → UI/UX Guardian
-
-        **Mobile**
-        → Mobile Guardian
-
-        **Acessibilidade**
-        → Accessibility Guardian
-
-        **SEO**
-        → SEO Guardian
-
-        **Performance**
-        → Performance Guardian
-
-        **Conteúdo Católico**
-        → Catholic Content Validator
-
-        **Patrimônio da Igreja**
-        → Knowledge Graph Expert
-
-        **Nexus**
-        → Nexus Guardian
-
-        **Logos**
-        → Logos Guardian
-
-        **Church Context**
-        → Church Context Guardian
-
-        **QA**
-        → QA Guardian
-
-        **Produção**
-        → Production Guardian
+        Eu acrescentaria mais cinco regras permanentes ao bloco de instruções:
 
         ---
 
-        Nunca execute todos os Skills.
+        # CONSTITUIÇÃO OPERACIONAL — CATHEDRA MISSION CONTROL
 
-        Ative somente os necessários.
+        ## REGRA 1 — ORQUESTRAÇÃO OBRIGATÓRIA
+
+        Nenhuma tarefa poderá ser executada diretamente.
+
+        Toda solicitação deverá passar primeiro pelo **Cathedra Mission Control**.
+
+        Ele será responsável por:
+
+        * classificar a tarefa;
+        * identificar os riscos;
+        * selecionar automaticamente os Skills especializados;
+        * consolidar o resultado final.
 
         ---
 
-        No final entregue apenas:
+        ## REGRA 2 — MENOR CONSUMO DE CRÉDITOS
 
-        * Skills utilizados
-        * Problemas encontrados
-        * Correções realizadas
-        * Regressões encontradas
-        * Certificações aprovadas
-        * Próximos passos
+        O Mission Control deverá ativar apenas os Skills estritamente necessários.
+
+        Exemplo:
+
+        * Alteração visual → não chamar Knowledge Graph.
+        * Conteúdo → não chamar Performance.
+        * Hotfix → não chamar Editorial, salvo necessidade.
 
         ---
 
-        Esse será o cérebro do Cathedra.
+        ## REGRA 3 — PROTEÇÃO DOS MÓDULOS CERTIFICADOS
 
-        Depois podemos criar também:
+        Se um módulo possuir status **CERTIFIED**, qualquer alteração deverá:
 
-        * **Cathedra Hotfix**
-        * **Cathedra Production**
-        * **Cathedra Editorial Engine**
-        * **Cathedra Audit**
+        1. verificar impacto;
+        2. impedir regressões;
+        3. executar QA específico;
+        4. confirmar que o Reader V2 continua íntegro.
 
-        Todos seguindo exatamente essa mesma arquitetura, usando o Mission Control como orquestrador principal. Assim você passa a usar um comando simples, e ele coordena automaticamente os especialistas adequados.
+        ---
+
+        ## REGRA 4 — CERTIFICAÇÃO OBRIGATÓRIA
+
+        Nenhuma tarefa poderá ser encerrada apenas com "implementado".
+
+        O Mission Control deverá sempre responder:
+
+        * Skills utilizados;
+        * alterações realizadas;
+        * testes executados;
+        * regressões encontradas;
+        * status final:
+
+        ```text
+        CERTIFIED
+
+        ou
+
+        BLOCKED
+        ```
+
+        ---
+
+        ## REGRA 5 — MEMÓRIA OPERACIONAL
+
+        Ao finalizar cada tarefa, o Mission Control deverá atualizar automaticamente:
+
+        * manifesto operacional;
+        * auditorias;
+        * índice do projeto;
+        * estado atual da certificação.
+
+        Assim o Cathedra sempre sabe exatamente em que estágio está.
+
+        ---
+
+        # REGRA 6 — PRIORIZAÇÃO AUTOMÁTICA (nova)
+
+        Antes de iniciar qualquer trabalho, o Mission Control deve classificar a solicitação em uma destas categorias:
+
+        1. 🔴 P0 — Falha crítica (produção, dados incorretos, regressões).
+        2. 🟠 P1 — Funcionalidade importante.
+        3. 🟡 P2 — Melhorias de UX, UI ou performance.
+        4. 🔵 P3 — Evoluções editoriais ou novos módulos.
+
+        Solicitações P0 sempre interrompem tarefas P1, P2 e P3 até serem resolvidas.
+
+        ---
+
+        Essa arquitetura transforma o Mission Control em um verdadeiro **sistema operacional do Cathedra**. A partir daí, você praticamente não precisará mais dizer quais Skills usar; basta descrever o objetivo ("corrigir", "certificar", "auditar", "publicar"), e o Mission Control coordena automaticamente toda a execução conforme as regras definidas.
       </div>
       <a 
         href="#main-content" 
