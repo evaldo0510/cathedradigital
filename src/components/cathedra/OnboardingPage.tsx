@@ -7,6 +7,7 @@ import { AppRoute } from '@/types';
 import { Icons } from '@/constants';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { BrandConceptOnboarding } from '../onboarding/BrandConceptOnboarding';
 import onboardingBible from '@/assets/onboarding-bible.webp';
 import onboardingPrayer from '@/assets/onboarding-prayer.webp';
 import onboardingStudy from '@/assets/onboarding-study.webp';
@@ -142,7 +143,7 @@ function getRecommendedCategory(answers: Record<string, string>): string {
 }
 
 /* ── Component ── */
-type Phase = 'slides' | 'diagnosis' | 'result';
+type Phase = 'slides' | 'diagnosis' | 'brand_concept' | 'result';
 
 const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
   const [phase, setPhase] = useState<Phase>('slides');
@@ -216,7 +217,7 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
 
     localStorage.setItem('cathedra_onboarding_done', 'true');
     setSaving(false);
-    setPhase('result');
+    setPhase('brand_concept');
   };
 
   const handleGoToJourney = async () => {
@@ -281,6 +282,33 @@ const OnboardingPage = React.forwardRef<HTMLDivElement>((_, ref) => {
             Começar Minha Jornada <Icons.ChevronRight className="w-spacing-md h-spacing-md" />
           </Button>
         </motion.div>
+      </div>
+    );
+  }
+
+  /* ── Render: Brand Concept phase ── */
+  if (phase === 'brand_concept') {
+    return (
+      <div ref={ref} className="min-h-[100dvh] flex flex-col items-center justify-center bg-background p-spacing-md">
+        <BrandConceptOnboarding 
+          onComplete={async (brandData) => {
+            setSaving(true);
+            try {
+              if (user) {
+                await (supabase as any)
+                  .from('user_sensitive_data')
+                  .update({ 
+                    brand_concept: brandData
+                  })
+                  .eq('user_id', user.id);
+              }
+            } catch (err) {
+              console.error('Failed to save brand concept:', err);
+            }
+            setSaving(false);
+            setPhase('result');
+          }}
+        />
       </div>
     );
   }
