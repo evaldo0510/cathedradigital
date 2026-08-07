@@ -64,7 +64,9 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: esta demorando para enyrar nas oração
+        TEXTO DO USUÁRIO: Otimize imagens e fontes usados na página de Orações para reduzir o tempo de primeira renderização no navegador.Implemente uma busca mais rápida dentro da PrayerLibrary, com debounce e resultados pré-carregados para melhorar a navegação entre verbetes.
+
+Implemente um registro de latência (tempo até renderizar) do módulo de Orações para eu identificar gargalos por dispositivo e rota.Adicione um indicador de carregamento e estados de skeleton para a entrada nas Orações enquanto os dados são carregados.
       </div>
       
       <SEOHead
