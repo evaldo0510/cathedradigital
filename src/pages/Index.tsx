@@ -46,103 +46,61 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Excelente. Agora eu faria um último ajuste, que considero o mais importante de todos.
+        TEXTO DO USUÁRIO: # CATHEDRA MISSION CONTROL — MODO CONSOLIDAÇÃO
 
-        O **Mission Control não deve ficar apenas na página inicial**. Ele deve se tornar a **Constituição Operacional** do Cathedra.
+        Entramos oficialmente na fase de CONSOLIDAÇÃO.
 
-        Eu acrescentaria mais cinco regras permanentes ao bloco de instruções:
+        NÃO crie nenhum módulo novo.
 
-        ---
+        NÃO crie novas páginas.
 
-        # CONSTITUIÇÃO OPERACIONAL — CATHEDRA MISSION CONTROL
+        NÃO crie novos componentes.
 
-        ## REGRA 1 — ORQUESTRAÇÃO OBRIGATÓRIA
+        NÃO crie novas rotas.
 
-        Nenhuma tarefa poderá ser executada diretamente.
+        Sua missão é exclusivamente consolidar o que JÁ EXISTE.
 
-        Toda solicitação deverá passar primeiro pelo **Cathedra Mission Control**.
+        Para cada tarefa execute obrigatoriamente:
 
-        Ele será responsável por:
+        1. Fazer inventário do módulo.
+        2. Verificar tudo que já existe.
+        3. Reutilizar componentes existentes.
+        4. Corrigir erros.
+        5. Conectar o módulo ao Reader V2.
+        6. Conectar ao Nexus.
+        7. Conectar ao Logos.
+        8. Conectar ao Church Context (quando aplicável).
+        9. Validar Desktop.
+        10. Validar Mobile.
+        11. Executar QA.
+        12. Certificar.
 
-        * classificar a tarefa;
-        * identificar os riscos;
-        * selecionar automaticamente os Skills especializados;
-        * consolidar o resultado final.
+        É proibido substituir componentes certificados.
 
-        ---
+        É proibido duplicar funcionalidades.
 
-        ## REGRA 2 — MENOR CONSUMO DE CRÉDITOS
+        É proibido criar versões paralelas.
 
-        O Mission Control deverá ativar apenas os Skills estritamente necessários.
+        Se existir algo parcialmente pronto, complete.
 
-        Exemplo:
+        Se existir algo quebrado, corrija.
 
-        * Alteração visual → não chamar Knowledge Graph.
-        * Conteúdo → não chamar Performance.
-        * Hotfix → não chamar Editorial, salvo necessidade.
+        Se existir algo desconectado, integre.
 
-        ---
+        Objetivo único:
 
-        ## REGRA 3 — PROTEÇÃO DOS MÓDULOS CERTIFICADOS
+        Levar TODOS os módulos existentes para 100% de funcionamento, totalmente integrados e certificados antes de qualquer nova funcionalidade.
 
-        Se um módulo possuir status **CERTIFIED**, qualquer alteração deverá:
+        Ao final entregue apenas:
 
-        1. verificar impacto;
-        2. impedir regressões;
-        3. executar QA específico;
-        4. confirmar que o Reader V2 continua íntegro.
+        • Módulos auditados
+        • Problemas encontrados
+        • Correções realizadas
+        • Integrações concluídas
+        • Regressões encontradas
+        • Status final de certificação (CERTIFIED ou BLOCKED)
 
-        ---
-
-        ## REGRA 4 — CERTIFICAÇÃO OBRIGATÓRIA
-
-        Nenhuma tarefa poderá ser encerrada apenas com "implementado".
-
-        O Mission Control deverá sempre responder:
-
-        * Skills utilizados;
-        * alterações realizadas;
-        * testes executados;
-        * regressões encontradas;
-        * status final:
-
-        ```text
-        CERTIFIED
-
-        ou
-
-        BLOCKED
-        ```
-
-        ---
-
-        ## REGRA 5 — MEMÓRIA OPERACIONAL
-
-        Ao finalizar cada tarefa, o Mission Control deverá atualizar automaticamente:
-
-        * manifesto operacional;
-        * auditorias;
-        * índice do projeto;
-        * estado atual da certificação.
-
-        Assim o Cathedra sempre sabe exatamente em que estágio está.
-
-        ---
-
-        # REGRA 6 — PRIORIZAÇÃO AUTOMÁTICA (nova)
-
-        Antes de iniciar qualquer trabalho, o Mission Control deve classificar a solicitação em uma destas categorias:
-
-        1. 🔴 P0 — Falha crítica (produção, dados incorretos, regressões).
-        2. 🟠 P1 — Funcionalidade importante.
-        3. 🟡 P2 — Melhorias de UX, UI ou performance.
-        4. 🔵 P3 — Evoluções editoriais ou novos módulos.
-
-        Solicitações P0 sempre interrompem tarefas P1, P2 e P3 até serem resolvidas.
-
-        ---
-
-        Essa arquitetura transforma o Mission Control em um verdadeiro **sistema operacional do Cathedra**. A partir daí, você praticamente não precisará mais dizer quais Skills usar; basta descrever o objetivo ("corrigir", "certificar", "auditar", "publicar"), e o Mission Control coordena automaticamente toda a execução conforme as regras definidas.
+        Não proponha novas funcionalidades. Concentre-se exclusivamente na estabilidade, integração e certificação do ecossistema existente.Publishing failed because your Supabase project is paused. Resume it from the Supabase dashboard, then publish again.
       </div>
       <a 
         href="#main-content" 
