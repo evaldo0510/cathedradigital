@@ -20,7 +20,7 @@ import { resolveRouterBasename } from '@/lib/i18n/locales';
  */
 const ROUTER_BASENAME = resolveRouterBasename();
 
-const { supabase } = await import('@/integrations/supabase/client');
+import { supabase } from '@/integrations/supabase/client';
 import AuthGuard from './components/cathedra/AuthGuard';
 import AdminGuard from './components/cathedra/AdminGuard';
 import GlossaryAdminGuard from './components/cathedra/GlossaryAdminGuard';
