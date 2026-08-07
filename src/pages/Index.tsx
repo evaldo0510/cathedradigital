@@ -9,6 +9,7 @@ import TestimonialsSection from "./landing/TestimonialsSection";
 import FaqSection from "./landing/FaqSection";
 import PricingSection from "./landing/PricingSection";
 import { SectionSkeleton } from "@/components/cathedra/HomeSkeletons";
+import LeadCaptureForm from "@/components/landing/LeadCaptureForm";
 import { LangContext } from "@/contexts/LangContext";
 import ContemplativeLayout from "@/components/cathedra/ContemplativeLayout";
 import { Icons } from "@/constants";
@@ -96,6 +97,11 @@ const Index = () => {
             <FeaturesSection onNavigate={handleNavigate} />
             <PricingSection />
             <TestimonialsSection />
+            <div className="w-full bg-card/30 py-spacing-4xl border-y border-border/10">
+              <div className="app-container max-w-spacing-4xl">
+                <LeadCaptureForm />
+              </div>
+            </div>
             <FaqSection />
           </div>
         </div>

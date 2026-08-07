@@ -1,6 +1,7 @@
 import { Icons } from '@/constants';
 
 import { HomeButton } from "@/components/cathedra/HomeButton";
+import { trackEvent } from "@/lib/analytics";
 import { CathedraCard } from "@/components/cathedra/CathedraCard";
 
 interface CtaBannerSectionProps {
@@ -29,7 +30,10 @@ const CtaBannerSection = ({ onStart }: CtaBannerSectionProps) => (
           <div className="flex flex-col items-center gap-spacing-lg">
             <HomeButton 
               size="lg" 
-              onClick={onStart}
+              onClick={() => {
+                trackEvent('conversion', { type: 'cta_banner_click' });
+                onStart();
+              }}
               aria-label="Iniciar minha jornada agora"
             >
               Iniciar Minha Jornada
