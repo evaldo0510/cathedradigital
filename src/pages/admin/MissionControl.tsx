@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Target, ArrowRight, Lock, ShieldCheck, Trophy } from "lucide-react";
+import { IACalculator } from "@/components/admin/IACalculator";
 import { editorialRegistry } from "@/lib/editorial-engine/manifests";
 import { useEditorialSummary } from "@/lib/editorial-engine/useEditorialAudit";
 import { iceTierLabel } from "@/lib/editorial-engine/ice";
@@ -187,6 +188,10 @@ export default function MissionControl() {
             Sala de controle do ecossistema editorial · agregando todos os módulos plugados no Editorial Engine.
           </p>
         </div>
+      </div>
+
+      <div className="mb-8">
+        <IACalculator />
       </div>
 
       <SystemPanel />
