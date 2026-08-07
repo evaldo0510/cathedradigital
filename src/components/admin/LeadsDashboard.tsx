@@ -21,12 +21,12 @@ export function LeadsDashboard() {
     async function fetchLeads() {
       try {
         const { data, error } = await supabase
-          .from('landing_leads')
+          .from('landing_leads' as any)
           .select('*')
           .order('created_at', { ascending: false });
 
         if (error) throw error;
-        setLeads(data || []);
+        setLeads((data as any) || []);
       } catch (err) {
         console.error('Error fetching leads:', err);
       } finally {

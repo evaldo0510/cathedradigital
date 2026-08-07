@@ -27,8 +27,8 @@ const LeadCaptureForm = () => {
 
     try {
       const { error } = await supabase
-        .from('landing_leads')
-        .insert([{ email }]);
+        .from('landing_leads' as any)
+        .insert([{ email } as any]);
 
       if (error) throw error;
       
