@@ -22,12 +22,48 @@ interface StepProps {
 }
 
 const steps = [
-  { id: 'brandName', title: 'Qual o nome da sua marca?', placeholder: 'Ex: Cathedra Digital', label: 'Nome da Marca' },
-  { id: 'brandNiche', title: 'Em qual nicho ela atua?', placeholder: 'Ex: Educação Católica, Tecnologia', label: 'Nicho de Atuação' },
-  { id: 'targetAudience', title: 'Quem é seu público-alvo?', placeholder: 'Ex: Fiéis em busca de formação', label: 'Público-Alvo' },
-  { id: 'brandValues', title: 'Quais os valores fundamentais?', placeholder: 'Ex: Tradição, Verdade, Beleza', label: 'Valores' },
-  { id: 'brandVoice', title: 'Qual o tom de voz da marca?', placeholder: 'Ex: Solene, Acolhedor, Profundo', label: 'Tom de Voz' },
-  { id: 'mainObjective', title: 'Qual seu objetivo principal?', placeholder: 'Ex: Evangelizar através do conhecimento', label: 'Objetivo Principal' },
+  { 
+    id: 'brandName', 
+    title: 'Qual o nome da sua marca?', 
+    placeholder: 'Ex: Cathedra Digital', 
+    label: 'Nome da Marca',
+    validation: (val: string) => val.length < 3 ? 'O nome deve ter pelo menos 3 caracteres.' : null
+  },
+  { 
+    id: 'brandNiche', 
+    title: 'Em qual nicho ela atua?', 
+    placeholder: 'Ex: Educação Católica, Tecnologia', 
+    label: 'Nicho de Atuação',
+    validation: (val: string) => val.length < 4 ? 'Descreva o nicho com mais detalhes.' : null
+  },
+  { 
+    id: 'targetAudience', 
+    title: 'Quem é seu público-alvo?', 
+    placeholder: 'Ex: Fiéis em busca de formação', 
+    label: 'Público-Alvo',
+    validation: (val: string) => val.length < 5 ? 'Especifique melhor quem é seu público.' : null
+  },
+  { 
+    id: 'brandValues', 
+    title: 'Quais os valores fundamentais?', 
+    placeholder: 'Ex: Tradição, Verdade, Beleza', 
+    label: 'Valores',
+    validation: (val: string) => val.split(',').length < 2 ? 'Insira pelo menos 2 valores separados por vírgula.' : null
+  },
+  { 
+    id: 'brandVoice', 
+    title: 'Qual o tom de voz da marca?', 
+    placeholder: 'Ex: Solene, Acolhedor, Profundo', 
+    label: 'Tom de Voz',
+    validation: (val: string) => val.length < 4 ? 'O tom de voz precisa ser mais descritivo.' : null
+  },
+  { 
+    id: 'mainObjective', 
+    title: 'Qual seu objetivo principal?', 
+    placeholder: 'Ex: Evangelizar através do conhecimento', 
+    label: 'Objetivo Principal',
+    validation: (val: string) => val.length < 10 ? 'O objetivo deve ser uma frase mais completa (mín. 10 caracteres).' : null
+  },
 ];
 
 export const BrandConceptOnboarding = ({ onComplete }: { onComplete: (data: BrandOnboardingData) => void }) => {
@@ -40,13 +76,33 @@ export const BrandConceptOnboarding = ({ onComplete }: { onComplete: (data: Bran
     brandVoice: '',
     mainObjective: '',
   });
+  const [errors, setErrors] = useState<Record<string, string | null>>({});
   const [isPreviewMode, setIsPreviewMode] = useState(false);
+
+  const validateField = (id: string, value: string) => {
+    const step = steps.find(s => s.id === id);
+    if (step?.validation) {
+      const error = step.validation(value);
+      setErrors(prev => ({ ...prev, [id]: error }));
+      return !error;
+    }
+    return true;
+  };
 
   const updateData = (fields: Partial<BrandOnboardingData>) => {
     setData(prev => ({ ...prev, ...fields }));
+    // Real-time validation
+    Object.keys(fields).forEach(key => {
+      validateField(key, (fields as any)[key]);
+    });
   };
 
   const handleNext = () => {
+    const currentId = steps[currentStep].id;
+    const isValid = validateField(currentId, (data as any)[currentId]);
+    
+    if (!isValid) return;
+
     if (currentStep < steps.length - 1) {
       setCurrentStep(prev => prev + 1);
     } else {
@@ -151,12 +207,23 @@ export const BrandConceptOnboarding = ({ onComplete }: { onComplete: (data: Bran
                 value={(data as any)[stepInfo.id]}
                 onChange={(e) => updateData({ [stepInfo.id]: e.target.value })}
                 placeholder={stepInfo.placeholder}
-                className="h-spacing-2xl text-premium-lg bg-card border-border focus:ring-primary/20 rounded-premium"
+                className={`h-spacing-2xl text-premium-lg bg-card border-border focus:ring-primary/20 rounded-premium transition-all ${
+                  errors[stepInfo.id] ? 'border-destructive/50 focus:ring-destructive/20' : ''
+                }`}
                 autoFocus
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter' && (data as any)[stepInfo.id]) handleNext();
+                  if (e.key === 'Enter') handleNext();
                 }}
               />
+              {errors[stepInfo.id] && (
+                <motion.p 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-[10px] font-bold text-destructive uppercase tracking-widest mt-spacing-xs"
+                >
+                  {errors[stepInfo.id]}
+                </motion.p>
+              )}
             </div>
 
             <div className="flex gap-spacing-md pt-spacing-lg">
