@@ -51,219 +51,266 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: CATHEDRA MISSION CONTROL — ONDA 2.1
-        PREPARAÇÃO DOS P0 SEM BACKEND
+        TEXTO DO USUÁRIO: CATHEDRA MISSION CONTROL — ONDA 2.2
+        VALIDAÇÃO DOS DADOS REAIS APÓS REATIVAÇÃO DA CLOUD
 
-        A Onda 2 foi bloqueada porque a Lovable Cloud está pausada.
+        A infraestrutura da Lovable Cloud foi reativada.
 
-        NÃO inventar dados.
-        NÃO criar banco alternativo.
-        NÃO criar conteúdo fictício.
-        NÃO substituir o Supabase.
-        NÃO transformar fallback em fonte permanente.
-        NÃO criar módulos novos.
+        A Onda 2.1 já certificou a integridade técnica dos P0.
 
-        O objetivo desta execução é preparar e auditar tudo que pode ser validado SEM acesso ao banco.
+        NÃO criar módulos.
+        NÃO criar funcionalidades.
+        NÃO alterar arquitetura.
+        NÃO alterar Reader V2.
+        NÃO substituir o SSoT.
+        NÃO criar dados artificiais.
 
-        ATIVAR OS SKILLS EXISTENTES:
+        Agora executar exclusivamente a validação dos DADOS REAIS.
+
+        ATIVAR:
 
         - cathedra-operating-system
         - cathedra-liturgy-expert
         - cathedra-liturgista
         - cathedra-prayer-engine-expert
         - cathedra-saints-expert
-        - cathedra-architecture-guardian
         - cathedra-knowledge-graph-expert
+        - cathedra-architecture-guardian
 
         ==================================================
         P0.1 — ORAÇÕES
         ==================================================
 
-        Auditar:
+        Validar diretamente:
 
-        - `usePrayers`
-        - rota `/oracao`
-        - componentes do Reader de oração
-        - queries Supabase
-        - estados loading
-        - estados empty
-        - estados error
-        - tratamento de indisponibilidade do backend
-        - links e navegação das orações
+        `public.prayers`
 
-        Determinar exatamente:
+        Confirmar:
 
-        1. Qual tabela é consultada.
-        2. Qual query é executada.
-        3. Quais campos são esperados.
-        4. Qual componente consome os dados.
-        5. Onde a falha acontece quando o banco está indisponível.
+        - tabela acessível;
+        - registros existentes;
+        - `is_published = true`;
+        - conteúdo retornado corretamente;
+        - categorias;
+        - títulos;
+        - slugs;
+        - links;
+        - rota `/oracao`;
+        - abertura de uma oração;
+        - Reader;
+        - encerramento editorial;
+        - ReaderContinuation;
+        - Nexus quando aplicável.
 
-        NÃO corrigir criando dados artificiais.
+        Testar também:
 
-        Se o código estiver correto e a única falha for a Cloud pausada:
+        oração → Bíblia
+        oração → Santo
+        oração → Liturgia
+        oração → Catecismo
 
-        STATUS = BLOCKED — INFRAESTRUTURA
+        Nenhum link pode abrir rota inexistente ou tela vazia.
 
         ==================================================
         P0.2 — SANTO DO DIA
         ==================================================
 
-        Auditar completamente o caminho:
+        Validar:
 
-        Church Context
-        → calendário litúrgico
-        → santo do dia
-        → `useOfficialSaint`
-        → componentes consumidores.
+        `useChurchContext`
+        → Edge Function
+        → `public.saints`
+        → Santo do Dia
+        → interface.
 
-        Verificar se a lógica está preparada para funcionar quando o backend voltar.
+        Confirmar que o santo apresentado corresponde REALMENTE à data atual.
 
-        Separar claramente:
+        Não considerar o fallback como validação.
 
-        FUNCIONAMENTO DO CÓDIGO
+        Testar:
 
-        de
+        - Home
+        - Liturgia
+        - Acervo
+        - página do Santo
+        - mobile
+        - desktop.
 
-        DISPONIBILIDADE DOS DADOS.
-
-        Não declarar PASS apenas porque o componente renderiza.
+        Confirmar que todos apresentam o MESMO Santo do Dia.
 
         ==================================================
         P0.3 — PAPA ATUAL
         ==================================================
 
-        Auditar:
+        Validar:
 
-        - `useChurchContext`
-        - fonte de dados do Papa
-        - `library_items_v1`
-        - `FALLBACK_POPE`
-        - componentes que exibem o Papa.
+        `useChurchContext`
+        → `library_items_v1`
+        → `status = current`
+
+        Confirmar que o registro retornado corresponde ao Papa atualmente válido.
 
         IMPORTANTE:
 
-        O fallback não deve ser considerado a fonte oficial.
+        Se o banco retornar um Papa diferente do fallback, o dado do SSoT deve prevalecer.
 
-        Verificar se:
+        Não manter informações duplicadas.
 
-        - o fallback está claramente identificado;
-        - existe caminho para substituição automática quando o SSoT voltar;
-        - nenhum componente mantém informação duplicada;
-        - não existem nomes diferentes do Papa espalhados pela aplicação.
-
-        Não alterar o Papa manualmente nesta execução.
+        Testar todos os locais onde o Papa aparece.
 
         ==================================================
         P1 — PATRÍSTICA / MAGISTÉRIO
         ==================================================
 
-        Verificar somente a arquitetura existente.
+        Com o banco ativo:
+
+        validar:
+
+        - registros reais;
+        - rotas;
+        - slugs;
+        - Reader V2;
+        - Nexus;
+        - Logos;
+        - Acervo;
+        - links internos;
+        - conteúdo editorial.
+
+        Selecionar registros reais existentes e testar a navegação completa.
+
+        Não criar conteúdo para preencher lacunas.
+
+        Se faltar conteúdo:
+
+        STATUS = CONTENT GAP
+
+        ==================================================
+        VALIDAÇÃO NEXUS
+        ==================================================
+
+        Para cada módulo validado:
+
+        abrir uma conexão real exibida pelo Nexus.
 
         Confirmar:
 
-        - rotas;\n- componentes;
-        - tabelas;
-        - hooks;
-        - Reader;
-        - Nexus;
-        - Logos;
-        - Acervo.
+        1. origem existe;
+        2. destino existe;
+        3. destino possui rota;
+        4. rota abre;
+        5. conteúdo aparece;
+        6. não existe tela vazia;
+        7. não existe link morto.
 
-        Não criar conteúdo.
+        Testar bidirecionalmente quando houver relação:
 
-        Não criar novos módulos.
-
-        Registrar exatamente o que depende do banco.
+        A → B
+        B → A
 
         ==================================================
-        VALIDAÇÃO
+        VALIDAÇÃO LOGOS
         ==================================================
 
-        Executar tudo que não depende da Cloud:
+        Testar consultas reais relacionadas a:
+
+        - Bíblia
+        - Catecismo
+        - Santos
+        - Orações
+        - Liturgia
+        - Patrística
+        - Magistério
+
+        Confirmar que os resultados apontam para conteúdo existente.
+
+        ==================================================
+        VALIDAÇÃO FINAL
+        ==================================================
+
+        Executar:
 
         - TypeScript
         - testes unitários
-        - testes de componentes
-        - guardrails
-        - análise das rotas
-        - análise dos imports
-        - análise dos hooks
-        - análise das queries
-        - Playwright das telas até onde for possível
-        - verificar estados loading/error/empty
+        - testes de integração
+        - Playwright Desktop
+        - Playwright Mobile
+        - rotas
+        - links
+        - Nexus
+        - Logos
+        - Church Context
+        - Reader
+        - SEO quando afetado
 
         ==================================================
-        CRITÉRIO
+        REGRA DE CERTIFICAÇÃO
         ==================================================
 
-        Não declarar CERTIFIED enquanto o backend estiver pausado.
+        CERTIFIED somente se:
 
-        Separar o resultado em:
+        ORAÇÕES = PASS
+        SANTO DO DIA = PASS
+        PAPA ATUAL = PASS
+        PATRÍSTICA = PASS
+        MAGISTÉRIO = PASS
+        NEXUS = PASS
+        LOGOS = PASS
+        DESKTOP = PASS
+        MOBILE = PASS
 
-        A — Código validado
+        Se existir qualquer problema:
 
-        B — Código que depende da Cloud
+        BLOCKED
 
-        C — Dados que dependem da Cloud
+        Não esconder falhas com fallback.
 
-        D — Falhas reais de código
+        Não criar dados artificiais.
 
-        E — Falhas causadas exclusivamente pela infraestrutura pausada
+        Não declarar PASS estrutural quando os dados reais estiverem incorretos.
 
         ==================================================
-        ENTREGA
+        RELATÓRIO FINAL
         ==================================================
 
-        Apresentar:
+        P0
+        - Orações:
+        - Santo do Dia:
+        - Papa Atual:
 
-        P0 — Orações
-        Código:
-        Dados:
-        Infraestrutura:
-        Status:
+        P1
+        - Patrística:
+        - Magistério:
 
-        P0 — Santo do Dia
-        Código:
-        Dados:
-        Infraestrutura:
-        Status:
+        INTEGRAÇÕES
+        - Nexus:
+        - Logos:
+        - Church Context:
+        - Reader:
 
-        P0 — Papa Atual
-        Código:
-        Dados:
-        Infraestrutura:
-        Status:
+        VALIDAÇÃO
+        - TypeScript:
+        - Testes:
+        - Desktop:
+        - Mobile:
+        - Links:
+        - Rotas:
 
-        P1 — Patrística/Magistério
-        Código:
-        Dados:
-        Infraestrutura:
-        Status:
+        DADOS INCORRETOS:
+        listar exatamente.
 
-        VALIDAÇÃO TÉCNICA
+        DADOS AUSENTES:
+        listar exatamente.
 
-        TypeScript:
-        Testes:
-        Guardrails:
-        Rotas:
-        Playwright:
+        LINKS QUEBRADOS:
+        listar exatamente.
 
-        STATUS DA ONDA 2.1:
+        STATUS FINAL:
 
-        READY FOR BACKEND
+        CERTIFIED
 
         ou
 
-        BLOCKED BY CODE
-
-        Não avançar para novas funcionalidades.
-
-        Não modificar o Reader V2 certificado.
-
-        Não criar dados fictícios.
-
-        A missão é deixar o sistema tecnicamente preparado para que, assim que a Lovable Cloud for reativada, possamos executar uma única rodada de validação dos dados reais.
+        BLOCKED
       </div>
       <a 
         href="#main-content" 
