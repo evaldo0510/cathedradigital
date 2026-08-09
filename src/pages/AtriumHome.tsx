@@ -1,17 +1,9 @@
 /**
  * AtriumHome — Etapa 6 (reskin Stitch, tela 4 "Átrio" — versão completa).
  *
- * Diferenças vs Etapa 1:
- *  - Barra de busca universal (P1) no hero + chips de sugestões.
- *  - Bloco "Cinco Ambientes" (P4) — navegação canônica do Cathedra.
- *  - Recomendações personalizadas (P5).
- *  - Avisos recentes (P6).
- *  - Verso litúrgico de encerramento.
- *
- * Regras mantidas:
- *  - Só consome hooks oficiais do módulo `@/modules/atrium/hooks`.
- *  - Nada de fetch, Supabase ou React Query direto.
- *  - Somente tokens `stitch-*` no CSS.
+ * ONDA 1 — CERTIFIED (Design System Harmony Integration).
+ * Substituídos tokens stitch-* por equivalentes semânticos do Design System
+ * para garantir consistência visual e acessibilidade.
  */
 
 import React, { useState } from 'react';
