@@ -7,7 +7,7 @@ import { auth, defineMcp } from "npm:@lovable.dev/mcp-js@0.24.0";
 
 // src/lib/mcp/tools/search-glossary.ts
 import { defineTool } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient } from "npm:@supabase/supabase-js@^2.112.2";
 import { z } from "npm:zod@^3.25.76";
 var search_glossary_default = defineTool({
   name: "search_glossary",
@@ -33,7 +33,7 @@ var search_glossary_default = defineTool({
 
 // src/lib/mcp/tools/get-glossary-term.ts
 import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient as createClient2 } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient as createClient2 } from "npm:@supabase/supabase-js@^2.112.2";
 import { z as z2 } from "npm:zod@^3.25.76";
 var get_glossary_term_default = defineTool2({
   name: "get_glossary_term",
@@ -62,7 +62,7 @@ var get_glossary_term_default = defineTool2({
 
 // src/lib/mcp/tools/list-journal-entries.ts
 import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient as createClient3 } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient as createClient3 } from "npm:@supabase/supabase-js@^2.112.2";
 import { z as z3 } from "npm:zod@^3.25.76";
 var list_journal_entries_default = defineTool3({
   name: "list_journal_entries",
@@ -90,7 +90,7 @@ var list_journal_entries_default = defineTool3({
 
 // src/lib/mcp/tools/create-journal-entry.ts
 import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient as createClient4 } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient as createClient4 } from "npm:@supabase/supabase-js@^2.112.2";
 import { z as z4 } from "npm:zod@^3.25.76";
 var create_journal_entry_default = defineTool4({
   name: "create_journal_entry",
@@ -125,7 +125,7 @@ var create_journal_entry_default = defineTool4({
 
 // src/lib/mcp/tools/search-saints.ts
 import { defineTool as defineTool5 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient as createClient5 } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient as createClient5 } from "npm:@supabase/supabase-js@^2.112.2";
 import { z as z5 } from "npm:zod@^3.25.76";
 var search_saints_default = defineTool5({
   name: "search_saints",
@@ -152,7 +152,7 @@ var search_saints_default = defineTool5({
 
 // src/lib/mcp/tools/get-saint.ts
 import { defineTool as defineTool6 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient as createClient6 } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient as createClient6 } from "npm:@supabase/supabase-js@^2.112.2";
 import { z as z6 } from "npm:zod@^3.25.76";
 var get_saint_default = defineTool6({
   name: "get_saint",
@@ -180,7 +180,7 @@ var get_saint_default = defineTool6({
 
 // src/lib/mcp/tools/get-prayer.ts
 import { defineTool as defineTool7 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient as createClient7 } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient as createClient7 } from "npm:@supabase/supabase-js@^2.112.2";
 import { z as z7 } from "npm:zod@^3.25.76";
 var get_prayer_default = defineTool7({
   name: "get_prayer",
@@ -208,7 +208,7 @@ var get_prayer_default = defineTool7({
 
 // src/lib/mcp/tools/get-collection.ts
 import { defineTool as defineTool8 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient as createClient8 } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient as createClient8 } from "npm:@supabase/supabase-js@^2.112.2";
 import { z as z8 } from "npm:zod@^3.25.76";
 var get_collection_default = defineTool8({
   name: "get_collection",
@@ -236,7 +236,7 @@ var get_collection_default = defineTool8({
 
 // src/lib/mcp/tools/catechism-paragraph.ts
 import { defineTool as defineTool9 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient as createClient9 } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient as createClient9 } from "npm:@supabase/supabase-js@^2.112.2";
 import { z as z9 } from "npm:zod@^3.25.76";
 var catechism_paragraph_default = defineTool9({
   name: "catechism_paragraph",
@@ -267,7 +267,7 @@ var catechism_paragraph_default = defineTool9({
 
 // src/lib/mcp/tools/bible-reference.ts
 import { defineTool as defineTool10 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient as createClient10 } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient as createClient10 } from "npm:@supabase/supabase-js@^2.112.2";
 import { z as z10 } from "npm:zod@^3.25.76";
 var bible_reference_default = defineTool10({
   name: "bible_reference",
@@ -331,7 +331,7 @@ ${textJoined}` }],
 
 // src/lib/mcp/tools/search-nexus.ts
 import { defineTool as defineTool11 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient as createClient11 } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient as createClient11 } from "npm:@supabase/supabase-js@^2.112.2";
 import { z as z11 } from "npm:zod@^3.25.76";
 var search_nexus_default = defineTool11({
   name: "search_nexus",
@@ -369,7 +369,7 @@ var search_nexus_default = defineTool11({
 
 // src/lib/mcp/tools/related-content.ts
 import { defineTool as defineTool12 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient as createClient12 } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient as createClient12 } from "npm:@supabase/supabase-js@^2.112.2";
 import { z as z12 } from "npm:zod@^3.25.76";
 var related_content_default = defineTool12({
   name: "related_content",
@@ -431,7 +431,7 @@ var related_content_default = defineTool12({
 
 // src/lib/mcp/tools/daily-liturgy.ts
 import { defineTool as defineTool13 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient as createClient13 } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient as createClient13 } from "npm:@supabase/supabase-js@^2.112.2";
 import { z as z13 } from "npm:zod@^3.25.76";
 var daily_liturgy_default = defineTool13({
   name: "daily_liturgy",
@@ -464,7 +464,7 @@ var daily_liturgy_default = defineTool13({
 
 // src/lib/mcp/tools/daily-office.ts
 import { defineTool as defineTool14 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient as createClient14 } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient as createClient14 } from "npm:@supabase/supabase-js@^2.112.2";
 import { z as z14 } from "npm:zod@^3.25.76";
 var HOURS = [
   "invitatorio",
@@ -509,7 +509,7 @@ var daily_office_default = defineTool14({
 
 // src/lib/mcp/tools/search-prayers.ts
 import { defineTool as defineTool15 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient as createClient15 } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient as createClient15 } from "npm:@supabase/supabase-js@^2.112.2";
 import { z as z15 } from "npm:zod@^3.25.76";
 var search_prayers_default = defineTool15({
   name: "search_prayers",
@@ -538,7 +538,7 @@ var search_prayers_default = defineTool15({
 
 // src/lib/mcp/tools/search-collections.ts
 import { defineTool as defineTool16 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient as createClient16 } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient as createClient16 } from "npm:@supabase/supabase-js@^2.112.2";
 import { z as z16 } from "npm:zod@^3.25.76";
 var search_collections_default = defineTool16({
   name: "search_collections",
@@ -567,7 +567,7 @@ var search_collections_default = defineTool16({
 
 // src/lib/mcp/tools/get-journey.ts
 import { defineTool as defineTool17 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient as createClient17 } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient as createClient17 } from "npm:@supabase/supabase-js@^2.112.2";
 import { z as z17 } from "npm:zod@^3.25.76";
 var get_journey_default = defineTool17({
   name: "get_journey",
@@ -601,7 +601,7 @@ var get_journey_default = defineTool17({
 
 // src/lib/mcp/tools/search-patristics.ts
 import { defineTool as defineTool18 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient as createClient18 } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient as createClient18 } from "npm:@supabase/supabase-js@^2.112.2";
 import { z as z18 } from "npm:zod@^3.25.76";
 var search_patristics_default = defineTool18({
   name: "search_patristics",
@@ -632,7 +632,7 @@ var search_patristics_default = defineTool18({
 
 // src/lib/mcp/tools/search-magisterium.ts
 import { defineTool as defineTool19 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient as createClient19 } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient as createClient19 } from "npm:@supabase/supabase-js@^2.112.2";
 import { z as z19 } from "npm:zod@^3.25.76";
 var search_magisterium_default = defineTool19({
   name: "search_magisterium",
@@ -666,7 +666,7 @@ var search_magisterium_default = defineTool19({
 
 // src/lib/mcp/tools/semantic-search.ts
 import { defineTool as defineTool20 } from "npm:@lovable.dev/mcp-js@0.24.0";
-import { createClient as createClient20 } from "npm:@supabase/supabase-js@^2.49.1";
+import { createClient as createClient20 } from "npm:@supabase/supabase-js@^2.112.2";
 import { z as z20 } from "npm:zod@^3.25.76";
 var semantic_search_default = defineTool20({
   name: "semantic_search",
