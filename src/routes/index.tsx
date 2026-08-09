@@ -1,6 +1,6 @@
 /**
- * CATHEDRA MISSION CONTROL - ONDA 2.5
- * DIAGNÓSTICO DEFINITIVO DA INFRAESTRUTURA
+ * CATHEDRA MISSION CONTROL - ONDA 2.6
+ * RESTAURAÇÃO DO TENANT
  */
 export const InfrastructureDiagnostics = () => {
   return (
@@ -12,206 +12,208 @@ export const InfrastructureDiagnostics = () => {
       Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
       Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-      TEXTO DO USUÁRIO: CATHEDRA MISSION CONTROL — ONDA 2.5
-      DIAGNÓSTICO DEFINITIVO DA INFRAESTRUTURA
+      TEXTO DO USUÁRIO: CATHEDRA MISSION CONTROL — RECUPERAÇÃO DE BACKEND
+      FASE 2.6 — RESTAURAÇÃO DO TENANT
 
-      A ONDA 2.4 está BLOCKED — INFRASTRUCTURE.
+      STATUS ATUAL: BLOCKED — INFRASTRUCTURE
 
-      Fatos já comprovados:
+      DIAGNÓSTICO CONFIRMADO:
 
-      - conteúdo das orações foi localizado;
-      - schema de `public.prayers` foi identificado;
-      - `usePrayers` está correto;
-      - interface `/oracao` está correta;
-      - Reader/Navegação estão corretos;
-      - múltiplas estratégias de carga falharam;
-      - SQL, Bun e Node apresentaram Timeout 544 / Connection Error;
-      - nenhum registro foi inserido.
+      Supabase URL:
+      `gpwrpmoniglarqwfyryp.supabase.co`
 
-      A partir deste momento:
+      Resultado:
+      NXDOMAIN
 
-      NÃO tentar novas migrations.
-      NÃO repetir INSERT.
-      NÃO executar scripts de carga novamente.
-      NÃO criar banco alternativo.
-      NÃO criar nova tabela.
-      NÃO alterar o módulo de Orações.
+      Pooler:
+      `aws-1-us-east-1.pooler.supabase.com:6543`
+
+      Resultado:
+      `tenant not found`
+
+      Conclusão:
+
+      O projeto não está conseguindo resolver ou reconhecer o tenant Supabase associado ao ambiente atual.
+
+      O frontend foi validado e suas configurações estão corretas.
+
+      NÃO alterar código da aplicação.
+      NÃO alterar hooks.
+      NÃO alterar `usePrayers`.
+      NÃO alterar `useChurchContext`.
       NÃO alterar Reader V2.
       NÃO alterar Nexus.
       NÃO alterar Logos.
-      NÃO alterar Church Context.
-      NÃO alterar módulos CERTIFIED.
+      NÃO alterar módulos certificados.
+      NÃO criar novo projeto Supabase.
+      NÃO trocar a URL do projeto por uma URL inventada.
+      NÃO gerar nova ANON_KEY.
+      NÃO recriar tabelas.
+      NÃO executar migrations.
+      NÃO tentar inserir as orações.
 
-      OBJETIVO ÚNICO:
+      OBJETIVO:
 
-      Determinar se a Lovable Cloud/Supabase está realmente operacional para escrita ou se existe uma falha de infraestrutura, conexão, pool, migration ou permissão.
-
-      ==================================================
-      1. TESTE DE CONECTIVIDADE
-      ==================================================
-
-      Ativar:
-
-      - cathedra-operating-system
-      - cathedra-architecture-guardian
-
-      Verificar somente conectividade.
-
-      Testar:
-
-      - endpoint Supabase;
-      - conexão REST;
-      - conexão utilizada pelo frontend;
-      - conexão utilizada pelo ambiente de desenvolvimento;
-      - disponibilidade do banco;
-      - latência;
-      - timeout;
-      - status HTTP.
-
-      Não tentar escrever dados.
+      Restaurar a conexão ORIGINAL do projeto com seu backend original.
 
       ==================================================
-      2. TESTE DE LEITURA
+      1. IDENTIFICAR O PROJETO
       ==================================================
 
-      Executar somente leitura em uma tabela existente e segura.
+      Verificar no ambiente Lovable:
+
+      - projeto Supabase associado;
+      - Project ID;
+      - Project URL;
+      - estado da integração Cloud;
+      - estado do banco;
+      - estado das Edge Functions;
+      - estado das secrets;
+      - estado do vínculo Lovable Cloud ↔ Supabase.
+
+      Não assumir nenhum identificador.
+      Utilizar somente dados reais disponíveis no ambiente.
+
+      ==================================================
+      2. VERIFICAR O TENANT
+      ==================================================
+
+      Confirmar se o tenant correspondente ao Project ID:
+      `gpwrpmoniglarqwfyryp`
+      está:
+      - ativo;
+      - suspenso;
+      - removido;
+      - provisionando;
+      - desconectado;
+      - ou inexistente.
+
+      Se o ambiente fornecer diagnóstico oficial da infraestrutura, utilizar esse diagnóstico.
+
+      ==================================================
+      3. NÃO RECRIAR INFRAESTRUTURA
+      ==================================================
+
+      Se o tenant estiver suspenso ou desconectado:
+      → restaurar/reconectar o backend ORIGINAL.
+
+      Se o tenant estiver inexistente:
+      → NÃO criar outro backend automaticamente.
+      → informar claramente que o backend original não foi localizado.
+
+      O objetivo é preservar os dados existentes.
+
+      ==================================================
+      4. VERIFICAR DNS
+      ==================================================
+
+      Confirmar se:
+      `gpwrpmoniglarqwfyryp.supabase.co`
+      volta a resolver corretamente.
+
+      Resultado esperado:
+      DNS = PASS
+
+      Somente depois disso testar REST.
+
+      ==================================================
+      5. TESTAR REST
+      ==================================================
+
+      Após DNS PASS:
+      verificar se o endpoint Supabase responde.
+
+      Resultado esperado:
+      REST = PASS
+
+      Somente depois testar banco.
+
+      ==================================================
+      6. TESTAR BANCO
+      ==================================================
+
+      Executar apenas uma operação de leitura.
+      Não executar INSERT.
 
       Confirmar:
-
-      SELECT/REST funciona?
-      Existe resposta?
-      Existe timeout?
-      Existe erro de autenticação?
-      Existe erro de RLS?
-
-      Não modificar nenhum dado.
+      Database = PASS
+      Pooler = PASS
+      Tenant = PASS
 
       ==================================================
-      3. TESTE DE ESCRITA CONTROLADA
+      7. PRESERVAÇÃO
       ==================================================
 
-      NÃO inserir oração.
+      Confirmar que o backend restaurado é o ORIGINAL.
+      Não aceitar:
+      - novo Project ID;
+      - novo banco vazio;
+      - novo Supabase;
+      - nova URL;
+      - nova estrutura sem os dados anteriores.
 
-      Se for tecnicamente seguro e existir mecanismo apropriado de health check já presente no projeto, verificar se o ambiente possui capacidade de escrita.
-
-      Não criar registros fictícios.
-
-      Não alterar tabelas de produção apenas para testar conexão.
-
-      Se não houver mecanismo seguro de teste:
-
-      → declarar WRITE TEST = NOT EXECUTED.
-
-      ==================================================
-      4. DIAGNÓSTICO
-      ==================================================
-
-      Classificar exatamente o problema:
-
-      A — Cloud pausada
-      B — Banco indisponível
-      C — Timeout de conexão
-      D — Pool/conexões saturadas
-      E — RLS/policy
-      F — autenticação
-      G — migration bloqueada
-      H — ambiente Lovable
-      I — outro
-
-      Não escolher uma causa por suposição.
-
-      Utilizar somente evidências.
+      Se houver risco de perda de dados:
+      PARAR.
 
       ==================================================
-      5. VERIFICAR SE O FRONTEND ESTÁ CORRETO
+      8. ORAÇÕES
       ==================================================
 
-      Confirmar que o frontend não está causando o timeout.
+      NÃO tentar carregar ainda.
 
-      Verificar:
+      As fontes continuam preservadas em:
+      `src/components/cathedra/rosary/RosarySession.tsx`
+      e demais fontes já identificadas.
 
-      - URL Supabase;
-      - configuração de cliente;
-      - variáveis de ambiente;
-      - anon key;
-      - chamadas REST;
-      - tratamento de timeout;
-      - retry;
-      - hooks.
+      Depois que:
+      DNS = PASS
+      REST = PASS
+      DATABASE = PASS
 
-      NÃO expor secrets no relatório.
-
-      ==================================================
-      6. PROTEGER O ACERVO JÁ RECUPERADO
-      ==================================================
-
-      O conteúdo localizado NÃO pode ser perdido.
-
-      Registrar claramente onde estão as fontes originais:
-
+      a próxima etapa será a carga das quatro orações:
       - Pai Nosso
       - Ave Maria
       - Glória
       - Salve Rainha
-      - Ordinário da Liturgia das Horas
-
-      Não mover nem apagar esses conteúdos.
 
       ==================================================
-      7. RESULTADO OBRIGATÓRIO
+      9. CERTIFICAÇÃO
       ==================================================
 
-      Entregar:
+      Não alterar o status dos módulos já certificados.
 
-      CONECTIVIDADE:
-      PASS / FAIL
+      Estado esperado:
+      Santo do Dia = CERTIFIED
+      Papa Atual = CERTIFIED
+      Patrística = CERTIFIED
+      Magistério = CERTIFIED
 
-      LEITURA:
-      PASS / FAIL
-
-      ESCRITA:
-      PASS / FAIL / NOT EXECUTED
-
-      SUPABASE:
-      PASS / FAIL
-
-      LOVABLE CLOUD:
-      PASS / FAIL
-
-      CAUSA PROVÁVEL:
-      somente com evidência.
-
-      ORAÇÕES:
-      BLOCKED — INFRASTRUCTURE
-
-      MÓDULOS CERTIFIED:
-      não alterar.
+      Orações:
+      BLOCKED — aguardando backend
 
       ==================================================
-      REGRA FINAL
+      RESULTADO FINAL OBRIGATÓRIO
       ==================================================
 
-      Se o banco estiver realmente indisponível:
-
-      PARAR.
-
-      Não continuar tentando carga.
-
-      Não gerar código desnecessário.
-
-      Não criar workaround.
-
-      Não alterar arquitetura.
+      Informar exatamente:
+      Project ID:
+      Tenant:
+      Cloud:
+      DNS:
+      REST:
+      Database:
+      Pooler:
+      Edge Functions:
+      Secrets:
+      Backend original preservado:
 
       STATUS:
+      PASS — BACKEND RESTAURADO
+      ou
+      BLOCKED — BACKEND NÃO RESTAURADO
 
-      BLOCKED — INFRASTRUCTURE
-
-      Aguardar a infraestrutura ficar estável.
-
-      Quando a conectividade estiver comprovadamente normal, a próxima execução deverá voltar diretamente para a carga das 4 orações já localizadas.
-
-      NÃO iniciar uma nova auditoria geral.
+      Se o backend original não puder ser restaurado, NÃO criar infraestrutura substituta nesta execução.
+      PARAR E INFORMAR A CAUSA.
     </div>
   );
 };
