@@ -51,7 +51,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Implementar um onboarding passo a passo que peça os 6 campos essenciais e gere uma prévia do “conceito-mãe” para a marca.
+        TEXTO DO USUÁRIO: Implemente validação em tempo real para os 6 campos essenciais e mostre mensagens de erro claras antes de permitir avançar.
       </div>
       <a 
         href="#main-content" 
