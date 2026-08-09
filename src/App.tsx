@@ -112,6 +112,7 @@ const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPa
 const AtriumBuscarPage = lazy(() => import('./pages/AtriumBuscarPage'));
 const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
 const Index = lazy(() => import('./pages/Index'));
+const HomeUnified = lazy(() => import('./pages/HomeUnified'));
 const AtriumHome = lazy(() => import('./pages/AtriumHome'));
 const PublicLanding = lazy(() => import('./pages/PublicLanding'));
 const RootGate = lazy(() => import('./components/cathedra/RootGate'));
@@ -132,6 +133,7 @@ const AcervoAtlas = lazy(() => import('./pages/AcervoAtlas'));
 const HojePage = lazy(() => import('./components/cathedra/HojePage'));
 const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
 const AtriumJornadasPage = lazy(() => import('./pages/AtriumJornadasPage'));
+const MinhaJornadaPage = lazy(() => import('./pages/conta/sections/JornadaSection'));
 const MinhaJornadaPage = lazy(() => import('./pages/conta/sections/JornadaSection'));
 const JornadaDetailPage = lazy(() => import('./components/cathedra/JornadaDetailPage'));
 const JornadaStepPage = lazy(() => import('./components/cathedra/JornadaStepPage'));
@@ -169,6 +171,7 @@ const NovenaDetailPage = lazy(() => import('./pages/NovenaDetailPage'));
 
 const PrayerPage = lazy(() => import('./components/cathedra/PrayerPage'));
 const PrayerLibraryPage = lazy(() => import('./pages/PrayerLibraryPage'));
+const PopesPageAlias = () => <Navigate to="/igreja" replace />;
 const PopesPage = lazy(() => import('./components/cathedra/PopesPage'));
 const PrayerDetailPage = lazy(() => import('./pages/PrayerDetailPage'));
 const LectioDivina = lazy(() => import('./components/cathedra/LectioDivina'));
