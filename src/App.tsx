@@ -1,3 +1,4 @@
+// SKILLS ATIVADOS: cathedra-operating-system, cathedra-design-system-guardian, cathedra-architecture-guardian, cathedra-saints-expert
 import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useContext } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation, useParams } from 'react-router-dom';
@@ -110,6 +111,7 @@ const ContaConfiguracoes = lazy(() => import('./pages/conta/sections/Configuraco
 const ContaAdmin = lazy(() => import('./pages/conta/sections/AdminSection'));
 const GlobalSearchPage = lazy(() => import('./components/cathedra/GlobalSearchPage'));
 const AtriumBuscarPage = lazy(() => import('./pages/AtriumBuscarPage'));
+const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
 const Index = lazy(() => import('./pages/Index'));
 const HomeUnified = lazy(() => import('./pages/HomeUnified'));
 const AtriumHome = lazy(() => import('./pages/AtriumHome'));
@@ -117,7 +119,6 @@ const PublicLanding = lazy(() => import('./pages/PublicLanding'));
 const RootGate = lazy(() => import('./components/cathedra/RootGate'));
 import { setLastRoute, resolveAuthHome } from './lib/lastRoute';
 
-const LogosAI = lazy(() => import('./components/cathedra/LogosAI'));
 const SpiritualProfile = lazy(() => import('./components/cathedra/SpiritualProfile'));
 const Saints = lazy(() => import('./components/cathedra/Saints'));
 const SaintAutoPageRoute = lazy(() => import('./features/saints/editorialEngine/SaintAutoPageRoute'));
@@ -133,6 +134,7 @@ const AcervoAtlas = lazy(() => import('./pages/AcervoAtlas'));
 const HojePage = lazy(() => import('./components/cathedra/HojePage'));
 const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
 const AtriumJornadasPage = lazy(() => import('./pages/AtriumJornadasPage'));
+const MinhaJornadaPage = lazy(() => import('./pages/conta/sections/JornadaSection'));
 const JornadaDetailPage = lazy(() => import('./components/cathedra/JornadaDetailPage'));
 const JornadaStepPage = lazy(() => import('./components/cathedra/JornadaStepPage'));
 const JornadaCompletePage = lazy(() => import('./components/cathedra/JornadaCompletePage'));
@@ -169,13 +171,15 @@ const NovenaDetailPage = lazy(() => import('./pages/NovenaDetailPage'));
 
 const PrayerPage = lazy(() => import('./components/cathedra/PrayerPage'));
 const PrayerLibraryPage = lazy(() => import('./pages/PrayerLibraryPage'));
+const PopesPageAlias = () => <Navigate to="/igreja" replace />;
+const PopesPage = lazy(() => import('./components/cathedra/PopesPage'));
 const PrayerDetailPage = lazy(() => import('./pages/PrayerDetailPage'));
 const LectioDivina = lazy(() => import('./components/cathedra/LectioDivina'));
 const ContemplatioPage = lazy(() => import('./pages/ContemplatioPage'));
 const RezarPage = lazy(() => import('./pages/RezarPage'));
 const PoenitentiaPage = lazy(() => import('./components/cathedra/PoenitentiaPage'));
 const DogmasPage = lazy(() => import('./components/cathedra/DogmasPage'));
-const PopesPage = lazy(() => import('./components/cathedra/PopesPage'));
+
 const AparicoesPage = lazy(() => import('./components/cathedra/AparicoesPage'));
 const AquinasOpera = lazy(() => import('./components/cathedra/AquinasOpera'));
 const AZFaithPage = lazy(() => import('./components/cathedra/AZFaithPage'));
@@ -605,7 +609,7 @@ const AppLayout: React.FC = () => {
               <Route path="/catechism" element={<Suspense fallback={<CatechismSkeleton />}><AtriumCatechismReader /></Suspense>} />
               <Route path="/catechism-legacy" element={<Suspense fallback={<CatechismSkeleton />}><Catechism /></Suspense>} />
               <Route path="/catecismo" element={<Navigate to="/catechism" replace />} />
-              <Route path="/igreja" element={<Navigate to="/catechism" replace />} />
+              <Route path="/igreja" element={<Suspense fallback={<LoadingFallback />}><AtriumHome /></Suspense>} />
               <Route path="/rezar" element={<Suspense fallback={<LoadingFallback />}><RezarPage /></Suspense>} />
               <Route path="/magisterium" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
               <Route path="/magisterio" element={<Navigate to="/magisterium" replace />} />
@@ -616,7 +620,7 @@ const AppLayout: React.FC = () => {
               <Route path="/buscar" element={<Suspense fallback={<LoadingFallback />}><AtriumBuscarPage /></Suspense>} />
               <Route path="/buscar-legacy" element={<Suspense fallback={<LoadingFallback />}><GlobalSearchPage /></Suspense>} />
               <Route path="/search" element={<Navigate to="/buscar" replace />} />
-              <Route path="/logos" element={<Suspense fallback={<LogosSkeleton />}><LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} /></Suspense>} />
+              <Route path="/logos" element={<Navigate to="/buscar" replace />} />
 
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
               <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate(resolveAuthHome(), { replace: true })} /></Suspense>} />
@@ -674,7 +678,7 @@ const AppLayout: React.FC = () => {
               <Route path="/santos" element={<Suspense fallback={<LoadingFallback />}><Saints /></Suspense>} />
               <Route path="/santos/:id" element={<Suspense fallback={<LoadingFallback />}><SaintAutoPageRoute /></Suspense>} />
               <Route path="/saints-legacy/:id" element={<Suspense fallback={<LoadingFallback />}><Saints legacyReader /></Suspense>} />
-              <Route path="/papas" element={<Suspense fallback={<LoadingFallback />}><PopesPage /></Suspense>} />
+              <Route path="/papas" element={<PopesPageAlias />} />
               <Route path="/aparicoes" element={<Suspense fallback={<LoadingFallback />}><AparicoesPage /></Suspense>} />
               <Route path="/dogmas" element={<Suspense fallback={<LoadingFallback />}><DogmasPage /></Suspense>} />
 
