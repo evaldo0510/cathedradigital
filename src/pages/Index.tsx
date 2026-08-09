@@ -51,166 +51,219 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: CATHEDRA MISSION CONTROL — ONDA 2 (AUDITORIA P0)
+        TEXTO DO USUÁRIO: CATHEDRA MISSION CONTROL — ONDA 2.1
+        PREPARAÇÃO DOS P0 SEM BACKEND
 
-        ATENÇÃO: NÃO CRIE NADA NOVO.
+        A Onda 2 foi bloqueada porque a Lovable Cloud está pausada.
 
-        Antes de executar qualquer alteração, faça obrigatoriamente um INVENTÁRIO DOS SKILLS EXISTENTES no projeto.
+        NÃO inventar dados.
+        NÃO criar banco alternativo.
+        NÃO criar conteúdo fictício.
+        NÃO substituir o Supabase.
+        NÃO transformar fallback em fonte permanente.
+        NÃO criar módulos novos.
 
-        1. Localize todos os Skills/Agentes já existentes.
-        2. Leia suas instruções.
-        3. Identifique quais Skills são responsáveis por:
-           - arquitetura
-           - Reader
-           - Design System
-           - UI/UX
-           - mobile
-           - acessibilidade
-           - performance
-           - SEO
-           - Nexus
-           - Logos
-           - Church Context
-           - conteúdo/editorial
-           - QA
-           - navegação
-        4. Utilize os Skills existentes sempre que forem aplicáveis.
-        5. NÃO recrie Skills que já existem.
-        6. NÃO substitua Skills existentes.
-        7. NÃO invente novos agentes.
-        8. NÃO crie novas funcionalidades.
+        O objetivo desta execução é preparar e auditar tudo que pode ser validado SEM acesso ao banco.
 
-        MISSÃO:
+        ATIVAR OS SKILLS EXISTENTES:
 
-        Usar os Skills que JÁ EXISTEM para encontrar tudo que está:
+        - cathedra-operating-system
+        - cathedra-liturgy-expert
+        - cathedra-liturgista
+        - cathedra-prayer-engine-expert
+        - cathedra-saints-expert
+        - cathedra-architecture-guardian
+        - cathedra-knowledge-graph-expert
 
-        - quebrado;
-        - incompleto;
-        - desconectado;
-        - duplicado;
-        - inconsistente;
-        - sem conteúdo;
-        - sem rota;
-        - com rota quebrada;
-        - com botão sem ação;
-        - com link apontando para destino errado;
-        - com módulo que existe mas não está integrado;
-        - com conteúdo existente que não aparece na interface;
-        - com Reader incompleto;
-        - com Nexus sem conexão;
-        - com dados incorretos;
-        - com problema mobile;
-        - com problema desktop.
+        ==================================================
+        P0.1 — ORAÇÕES
+        ==================================================
 
-        PRIORIDADE:
+        Auditar:
 
-        P0 → funcionamento quebrado ou informação incorreta
-        P1 → módulo existente incompleto ou desconectado
-        P2 → inconsistência visual/UX
-        P3 → melhorias secundárias
+        - `usePrayers`
+        - rota `/oracao`
+        - componentes do Reader de oração
+        - queries Supabase
+        - estados loading
+        - estados empty
+        - estados error
+        - tratamento de indisponibilidade do backend
+        - links e navegação das orações
 
-        REGRA FUNDAMENTAL:
+        Determinar exatamente:
 
-        Se algo já existe, NÃO recriar.
+        1. Qual tabela é consultada.
+        2. Qual query é executada.
+        3. Quais campos são esperados.
+        4. Qual componente consome os dados.
+        5. Onde a falha acontece quando o banco está indisponível.
 
-        Se está quebrado → corrigir.
+        NÃO corrigir criando dados artificiais.
 
-        Se está incompleto → completar usando o que já existe.
+        Se o código estiver correto e a única falha for a Cloud pausada:
 
-        Se está desconectado → conectar.
+        STATUS = BLOCKED — INFRAESTRUTURA
 
-        Se existe conteúdo → fazer o conteúdo aparecer corretamente.
+        ==================================================
+        P0.2 — SANTO DO DIA
+        ==================================================
 
-        Se existe rota → garantir que ela funcione.
+        Auditar completamente o caminho:
 
-        Se existe componente certificado → reutilizar.
+        Church Context
+        → calendário litúrgico
+        → santo do dia
+        → `useOfficialSaint`
+        → componentes consumidores.
 
-        Se existe Skill especializado → ativá-lo e utilizá-lo.
+        Verificar se a lógica está preparada para funcionar quando o backend voltar.
 
-        NÃO criar novos módulos durante esta auditoria.
+        Separar claramente:
 
-        NÃO iniciar expansão do Cathedra.
+        FUNCIONAMENTO DO CÓDIGO
 
-        NÃO adicionar funcionalidades apenas porque parecem interessantes.
+        de
 
-        OBJETIVO:
+        DISPONIBILIDADE DOS DADOS.
 
-        Fazer o Cathedra funcionar 100% com aquilo que JÁ EXISTE.
+        Não declarar PASS apenas porque o componente renderiza.
 
-        Depois da correção, validar:
+        ==================================================
+        P0.3 — PAPA ATUAL
+        ==================================================
 
-        - Desktop
-        - Mobile
-        - rotas
-        - menus
-        - botões
-        - CTAs
-        - breadcrumbs
-        - cards
-        - Reader
-        - Nexus
-        - Logos
-        - Church Context
-        - navegação entre módulos
-        - conteúdo
-        - SEO
-        - acessibilidade
-        - testes
-        - build
+        Auditar:
+
+        - `useChurchContext`
+        - fonte de dados do Papa
+        - `library_items_v1`
+        - `FALLBACK_POPE`
+        - componentes que exibem o Papa.
 
         IMPORTANTE:
 
-        Não declarar "CERTIFIED" apenas porque o código compila.
+        O fallback não deve ser considerado a fonte oficial.
 
-        CERTIFIED somente quando a funcionalidade estiver realmente funcionando no navegador e sem rota, botão, conteúdo ou conexão quebrada.
+        Verificar se:
 
-        Se houver qualquer falha, declarar BLOCKED e informar exatamente:
+        - o fallback está claramente identificado;
+        - existe caminho para substituição automática quando o SSoT voltar;
+        - nenhum componente mantém informação duplicada;
+        - não existem nomes diferentes do Papa espalhados pela aplicação.
 
-        1. o que está quebrado;
-        2. onde está;
-        3. qual Skill foi utilizado;
-        4. o que foi corrigido;
-        5. o que ainda falta.
+        Não alterar o Papa manualmente nesta execução.
 
-        AO FINAL:
+        ==================================================
+        P1 — PATRÍSTICA / MAGISTÉRIO
+        ==================================================
 
-        Entregar um relatório objetivo com:
+        Verificar somente a arquitetura existente.
 
-        SKILLS EXISTENTES ENCONTRADOS
+        Confirmar:
 
-        SKILLS ATIVADOS
+        - rotas;\n- componentes;
+        - tabelas;
+        - hooks;
+        - Reader;
+        - Nexus;
+        - Logos;
+        - Acervo.
 
-        MÓDULOS AUDITADOS
+        Não criar conteúdo.
 
-        P0
+        Não criar novos módulos.
 
-        P1
+        Registrar exatamente o que depende do banco.
 
-        P2
+        ==================================================
+        VALIDAÇÃO
+        ==================================================
 
-        P3
+        Executar tudo que não depende da Cloud:
 
-        CORREÇÕES REALIZADAS
+        - TypeScript
+        - testes unitários
+        - testes de componentes
+        - guardrails
+        - análise das rotas
+        - análise dos imports
+        - análise dos hooks
+        - análise das queries
+        - Playwright das telas até onde for possível
+        - verificar estados loading/error/empty
 
-        ITENS AINDA BLOQUEADOS
+        ==================================================
+        CRITÉRIO
+        ==================================================
 
-        STATUS FINAL
+        Não declarar CERTIFIED enquanto o backend estiver pausado.
 
-        CERTIFIED
+        Separar o resultado em:
+
+        A — Código validado
+
+        B — Código que depende da Cloud
+
+        C — Dados que dependem da Cloud
+
+        D — Falhas reais de código
+
+        E — Falhas causadas exclusivamente pela infraestrutura pausada
+
+        ==================================================
+        ENTREGA
+        ==================================================
+
+        Apresentar:
+
+        P0 — Orações
+        Código:
+        Dados:
+        Infraestrutura:
+        Status:
+
+        P0 — Santo do Dia
+        Código:
+        Dados:
+        Infraestrutura:
+        Status:
+
+        P0 — Papa Atual
+        Código:
+        Dados:
+        Infraestrutura:
+        Status:
+
+        P1 — Patrística/Magistério
+        Código:
+        Dados:
+        Infraestrutura:
+        Status:
+
+        VALIDAÇÃO TÉCNICA
+
+        TypeScript:
+        Testes:
+        Guardrails:
+        Rotas:
+        Playwright:
+
+        STATUS DA ONDA 2.1:
+
+        READY FOR BACKEND
+
         ou
-        BLOCKED
 
-        NÃO INVENTE.
+        BLOCKED BY CODE
 
-        NÃO EXPANDA.
+        Não avançar para novas funcionalidades.
 
-        NÃO REFAÇA.
+        Não modificar o Reader V2 certificado.
 
-        PRIMEIRO ENCONTRE O QUE JÁ EXISTE.
-        DEPOIS ATIVE OS SKILLS ADEQUADOS.
-        DEPOIS CORRIJA.
-        DEPOIS TESTE.
-        SOMENTE ENTÃO CERTIFIQUE.
+        Não criar dados fictícios.
+
+        A missão é deixar o sistema tecnicamente preparado para que, assim que a Lovable Cloud for reativada, possamos executar uma única rodada de validação dos dados reais.
       </div>
       <a 
         href="#main-content" 
