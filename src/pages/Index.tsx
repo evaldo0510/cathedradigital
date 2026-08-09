@@ -51,7 +51,166 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: Implemente validação em tempo real para os 6 campos essenciais e mostre mensagens de erro claras antes de permitir avançar.
+        TEXTO DO USUÁRIO: CATHEDRA MISSION CONTROL — CONSOLIDAÇÃO REAL
+
+        ATENÇÃO: NÃO CRIE NADA NOVO.
+
+        Antes de executar qualquer alteração, faça obrigatoriamente um INVENTÁRIO DOS SKILLS EXISTENTES no projeto.
+
+        1. Localize todos os Skills/Agentes já existentes.
+        2. Leia suas instruções.
+        3. Identifique quais Skills são responsáveis por:
+           - arquitetura
+           - Reader
+           - Design System
+           - UI/UX
+           - mobile
+           - acessibilidade
+           - performance
+           - SEO
+           - Nexus
+           - Logos
+           - Church Context
+           - conteúdo/editorial
+           - QA
+           - navegação
+        4. Utilize os Skills existentes sempre que forem aplicáveis.
+        5. NÃO recrie Skills que já existem.
+        6. NÃO substitua Skills existentes.
+        7. NÃO invente novos agentes.
+        8. NÃO crie novas funcionalidades.
+
+        MISSÃO:
+
+        Usar os Skills que JÁ EXISTEM para encontrar tudo que está:
+
+        - quebrado;
+        - incompleto;
+        - desconectado;
+        - duplicado;
+        - inconsistente;
+        - sem conteúdo;
+        - sem rota;
+        - com rota quebrada;
+        - com botão sem ação;
+        - com link apontando para destino errado;
+        - com módulo que existe mas não está integrado;
+        - com conteúdo existente que não aparece na interface;
+        - com Reader incompleto;
+        - com Nexus sem conexão;
+        - com dados incorretos;
+        - com problema mobile;
+        - com problema desktop.
+
+        PRIORIDADE:
+
+        P0 → funcionamento quebrado ou informação incorreta
+        P1 → módulo existente incompleto ou desconectado
+        P2 → inconsistência visual/UX
+        P3 → melhorias secundárias
+
+        REGRA FUNDAMENTAL:
+
+        Se algo já existe, NÃO recriar.
+
+        Se está quebrado → corrigir.
+
+        Se está incompleto → completar usando o que já existe.
+
+        Se está desconectado → conectar.
+
+        Se existe conteúdo → fazer o conteúdo aparecer corretamente.
+
+        Se existe rota → garantir que ela funcione.
+
+        Se existe componente certificado → reutilizar.
+
+        Se existe Skill especializado → ativá-lo e utilizá-lo.
+
+        NÃO criar novos módulos durante esta auditoria.
+
+        NÃO iniciar expansão do Cathedra.
+
+        NÃO adicionar funcionalidades apenas porque parecem interessantes.
+
+        OBJETIVO:
+
+        Fazer o Cathedra funcionar 100% com aquilo que JÁ EXISTE.
+
+        Depois da correção, validar:
+
+        - Desktop
+        - Mobile
+        - rotas
+        - menus
+        - botões
+        - CTAs
+        - breadcrumbs
+        - cards
+        - Reader
+        - Nexus
+        - Logos
+        - Church Context
+        - navegação entre módulos
+        - conteúdo
+        - SEO
+        - acessibilidade
+        - testes
+        - build
+
+        IMPORTANTE:
+
+        Não declarar "CERTIFIED" apenas porque o código compila.
+
+        CERTIFIED somente quando a funcionalidade estiver realmente funcionando no navegador e sem rota, botão, conteúdo ou conexão quebrada.
+
+        Se houver qualquer falha, declarar BLOCKED e informar exatamente:
+
+        1. o que está quebrado;
+        2. onde está;
+        3. qual Skill foi utilizado;
+        4. o que foi corrigido;
+        5. o que ainda falta.
+
+        AO FINAL:
+
+        Entregar um relatório objetivo com:
+
+        SKILLS EXISTENTES ENCONTRADOS
+
+        SKILLS ATIVADOS
+
+        MÓDULOS AUDITADOS
+
+        P0
+
+        P1
+
+        P2
+
+        P3
+
+        CORREÇÕES REALIZADAS
+
+        ITENS AINDA BLOQUEADOS
+
+        STATUS FINAL
+
+        CERTIFIED
+        ou
+        BLOCKED
+
+        NÃO INVENTE.
+
+        NÃO EXPANDA.
+
+        NÃO REFAÇA.
+
+        PRIMEIRO ENCONTRE O QUE JÁ EXISTE.
+        DEPOIS ATIVE OS SKILLS ADEQUADOS.
+        DEPOIS CORRIJA.
+        DEPOIS TESTE.
+        SOMENTE ENTÃO CERTIFIQUE.
       </div>
       <a 
         href="#main-content" 
