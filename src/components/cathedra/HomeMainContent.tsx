@@ -35,7 +35,7 @@ const HomeMainContent: React.FC<HomeMainContentProps> = React.memo(({ user, prof
     if (e) e.preventDefault();
     const query = logosQuery.trim();
     if (!query) return;
-    navigate(`/biblioteca/inteligente?q=${encodeURIComponent(query)}`);
+    navigate(`/buscar?q=${encodeURIComponent(query)}`);
   };
 
   return (

@@ -134,7 +134,6 @@ const HojePage = lazy(() => import('./components/cathedra/HojePage'));
 const JornadasPage = lazy(() => import('./components/cathedra/JornadasPage'));
 const AtriumJornadasPage = lazy(() => import('./pages/AtriumJornadasPage'));
 const MinhaJornadaPage = lazy(() => import('./pages/conta/sections/JornadaSection'));
-const MinhaJornadaPage = lazy(() => import('./pages/conta/sections/JornadaSection'));
 const JornadaDetailPage = lazy(() => import('./components/cathedra/JornadaDetailPage'));
 const JornadaStepPage = lazy(() => import('./components/cathedra/JornadaStepPage'));
 const JornadaCompletePage = lazy(() => import('./components/cathedra/JornadaCompletePage'));
@@ -171,7 +170,6 @@ const NovenaDetailPage = lazy(() => import('./pages/NovenaDetailPage'));
 
 const PrayerPage = lazy(() => import('./components/cathedra/PrayerPage'));
 const PrayerLibraryPage = lazy(() => import('./pages/PrayerLibraryPage'));
-const PopesPageAlias = () => <Navigate to="/igreja" replace />;
 const PopesPage = lazy(() => import('./components/cathedra/PopesPage'));
 const PrayerDetailPage = lazy(() => import('./pages/PrayerDetailPage'));
 const LectioDivina = lazy(() => import('./components/cathedra/LectioDivina'));
@@ -609,7 +607,7 @@ const AppLayout: React.FC = () => {
               <Route path="/catechism" element={<Suspense fallback={<CatechismSkeleton />}><AtriumCatechismReader /></Suspense>} />
               <Route path="/catechism-legacy" element={<Suspense fallback={<CatechismSkeleton />}><Catechism /></Suspense>} />
               <Route path="/catecismo" element={<Navigate to="/catechism" replace />} />
-              <Route path="/igreja" element={<Navigate to="/catechism" replace />} />
+              <Route path="/igreja" element={<Suspense fallback={<LoadingFallback />}><AtriumHome /></Suspense>} />
               <Route path="/rezar" element={<Suspense fallback={<LoadingFallback />}><RezarPage /></Suspense>} />
               <Route path="/magisterium" element={<Suspense fallback={<LoadingFallback />}><Magisterium /></Suspense>} />
               <Route path="/magisterio" element={<Navigate to="/magisterium" replace />} />
@@ -620,7 +618,7 @@ const AppLayout: React.FC = () => {
               <Route path="/buscar" element={<Suspense fallback={<LoadingFallback />}><AtriumBuscarPage /></Suspense>} />
               <Route path="/buscar-legacy" element={<Suspense fallback={<LoadingFallback />}><GlobalSearchPage /></Suspense>} />
               <Route path="/search" element={<Navigate to="/buscar" replace />} />
-              <Route path="/logos" element={<Suspense fallback={<LogosSkeleton />}><LogosAI variant="integrated" isOpen={true} onClose={() => navigate('/')} /></Suspense>} />
+              <Route path="/logos" element={<Navigate to="/buscar" replace />} />
 
               <Route path="/chat" element={<Navigate to="/logos" replace />} />
               <Route path="/auth" element={<Suspense fallback={<LoadingFallback />}><Auth onSuccess={() => navigate(resolveAuthHome(), { replace: true })} /></Suspense>} />

@@ -73,7 +73,7 @@ const AcervoHomePage: React.FC = () => {
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     const query = (e.target as HTMLInputElement).value.trim();
-                    if (query) window.location.href = `/biblioteca/inteligente?q=${encodeURIComponent(query)}`;
+                    if (query) window.location.href = `/buscar?q=${encodeURIComponent(query)}`;
                   }
                 }}
               />
@@ -111,7 +111,7 @@ const AcervoHomePage: React.FC = () => {
                       variant="outline" 
                       size="sm" 
                       className="rounded-full bg-card/40 border-primary/10 hover:border-primary/30 transition-all px-spacing-lg h-auto py-2 text-xs"
-                      onClick={() => window.location.href = `/biblioteca/inteligente?q=${encodeURIComponent(trilha.label)}`}
+                      onClick={() => window.location.href = `/buscar?q=${encodeURIComponent(trilha.label)}`}
                     >
                       <span className="mr-2" aria-hidden="true">{trilha.emoji}</span>
                       {trilha.label}
@@ -228,7 +228,7 @@ const AcervoHomePage: React.FC = () => {
               <Icons.Sparkles className="w-12 h-12 mx-auto text-primary/40" />
               <h2 className="type-h2">O Logos</h2>
               <p className="type-lead opacity-80">Converse com o Logos e encontre conexões profundas entre a Bíblia, o Catecismo e a Tradição.</p>
-              <Button size="lg" className="rounded-premium-full px-spacing-xl" onClick={() => window.location.href = '/biblioteca/inteligente'}>
+              <Button size="lg" className="rounded-premium-full px-spacing-xl" onClick={() => window.location.href = '/buscar'}>
                 Iniciar Conversa com o Logos
               </Button>
            </div>

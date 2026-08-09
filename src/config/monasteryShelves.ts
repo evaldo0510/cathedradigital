@@ -71,7 +71,7 @@ export const MONASTERY_SHELVES: LibraryShelf[] = [
     icon: Users,
     items: [
       { label: 'Vidas dos Santos', to: '/saints', icon: Icons.User, desc: 'Hagiografia', count: 'Vidas' },
-      { label: 'Sucessores de Pedro', to: '/papas', icon: Icons.Crown, desc: 'Pontificado', badge: 'Papas' },
+      { label: 'Sucessores de Pedro', to: '/igreja', icon: Icons.Crown, desc: 'Pontificado', badge: 'Papas' },
       { label: 'Mártires', to: '/saints?filter=martir', icon: Flame, desc: 'Testemunho', count: 'Sangue' },
       { label: 'Aparições', to: '/aparicoes', icon: Star, desc: 'Visitas Celestes', count: 'Maria' },
     ]
