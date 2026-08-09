@@ -38,7 +38,7 @@ export const MONASTERY_SHELVES: LibraryShelf[] = [
     icon: BookOpen,
     items: [
       { label: 'Bíblia', to: '/bible', icon: Icons.Bible, desc: '73 Livros', count: 'Escrituras' },
-      { label: 'Comentários', to: '/biblioteca/inteligente?q=comentarios', icon: Icons.BookOpen, desc: 'Exegese', badge: 'Nexus' },
+      { label: 'Comentários', to: '/buscar?q=comentarios', icon: Icons.BookOpen, desc: 'Exegese', badge: 'Nexus' },
       { label: 'Evangelhos', to: '/bible/gospels', icon: Crown, desc: 'Boa Nova', count: 'Vida de Cristo' },
       { label: 'Salmos', to: '/bible/psalms', icon: Icons.Music, desc: 'Oração', count: 'Harpa de Davi' },
     ]
@@ -114,7 +114,7 @@ export const MONASTERY_SHELVES: LibraryShelf[] = [
     title: '🔍 Logos & Atlas',
     icon: Search,
     items: [
-      { label: 'Busca Global', to: '/biblioteca/inteligente', icon: Icons.Search, desc: 'Omniscience', badge: 'IA' },
+      { label: 'Busca Global', to: '/buscar', icon: Icons.Search, desc: 'Omniscience', badge: 'IA' },
       { label: 'Conexões', to: '/nexus', icon: Icons.Orbit, desc: 'Nexus Graph', count: 'Interdependência' },
       { label: 'Atlas Católico', to: '/atlas', icon: Icons.Globe, desc: 'Geografia Sagrada', badge: 'Novo' },
       { label: 'Mission Control', to: '/admin/acervo/audit', icon: Icons.Shield, desc: 'Saúde do Acervo', badge: 'Admin' },

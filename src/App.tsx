@@ -177,7 +177,7 @@ const ContemplatioPage = lazy(() => import('./pages/ContemplatioPage'));
 const RezarPage = lazy(() => import('./pages/RezarPage'));
 const PoenitentiaPage = lazy(() => import('./components/cathedra/PoenitentiaPage'));
 const DogmasPage = lazy(() => import('./components/cathedra/DogmasPage'));
-const PopesPageAlias = () => <Navigate to="/igreja" replace />;
+
 const AparicoesPage = lazy(() => import('./components/cathedra/AparicoesPage'));
 const AquinasOpera = lazy(() => import('./components/cathedra/AquinasOpera'));
 const AZFaithPage = lazy(() => import('./components/cathedra/AZFaithPage'));
