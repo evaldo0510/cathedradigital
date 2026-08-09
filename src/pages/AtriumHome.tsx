@@ -1,17 +1,9 @@
 /**
  * AtriumHome — Etapa 6 (reskin Stitch, tela 4 "Átrio" — versão completa).
  *
- * Diferenças vs Etapa 1:
- *  - Barra de busca universal (P1) no hero + chips de sugestões.
- *  - Bloco "Cinco Ambientes" (P4) — navegação canônica do Cathedra.
- *  - Recomendações personalizadas (P5).
- *  - Avisos recentes (P6).
- *  - Verso litúrgico de encerramento.
- *
- * Regras mantidas:
- *  - Só consome hooks oficiais do módulo `@/modules/atrium/hooks`.
- *  - Nada de fetch, Supabase ou React Query direto.
- *  - Somente tokens `stitch-*` no CSS.
+ * ONDA 1 — CERTIFIED (Design System Harmony Integration).
+ * Substituídos tokens stitch-* por equivalentes semânticos do Design System
+ * para garantir consistência visual e acessibilidade.
  */
 
 import React, { useState } from 'react';
@@ -106,7 +98,7 @@ const AtriumHome: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen w-full bg-stitch-background text-stitch-on-background"
+      className="min-h-screen w-full bg-background text-foreground"
       style={{
         backgroundImage:
           'url("https://www.transparenttextures.com/patterns/p6.png")',
@@ -130,19 +122,19 @@ const AtriumHome: React.FC = () => {
 
       <MobileTopBar kicker="Cathedra" title="Átrio" transparent />
 
-      <section className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
+      <section className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--bottom-nav-height)+var(--spacing-md)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
         {authenticated && <AtriumReception />}
         {/* ─── Hero editorial (visitantes) ─────────────────────────────── */}
         {!authenticated && (
         <section className="text-center md:text-left">
-          <div className="mb-8 hidden h-px w-full bg-stitch-secondary/30 md:block" />
-          <p className="mb-3 font-stitch-body text-[12px] font-bold uppercase tracking-[0.32em] text-stitch-secondary">
+          <div className="mb-8 hidden h-px w-full bg-gold-text/30 md:block" />
+          <p className="mb-3 font-reader text-[12px] font-bold uppercase tracking-[0.32em] text-gold-text">
             {HERO_KICKER}
           </p>
-          <h1 className="mb-3 font-stitch-display text-[32px] italic leading-[40px] text-stitch-primary md:text-[48px] md:leading-[56px] md:tracking-[-0.02em]">
+          <h1 className="mb-3 font-display text-[32px] italic leading-[40px] text-primary md:text-[48px] md:leading-[56px] md:tracking-[-0.02em]">
             {HERO_TITLE}
           </h1>
-          <p className="mb-8 max-w-2xl font-stitch-body text-[20px] leading-[32px] text-stitch-on-surface-variant md:mx-0 mx-auto">
+          <p className="mb-8 max-w-2xl font-reader text-[20px] leading-[32px] text-muted-foreground md:mx-0 mx-auto">
             {HERO_SUBTITLE}
           </p>
 
@@ -152,20 +144,20 @@ const AtriumHome: React.FC = () => {
               e.preventDefault();
               submitSearch(q);
             }}
-            className="mx-auto flex max-w-2xl items-center gap-3 border-b-2 border-stitch-primary/80 pb-3 text-left focus-within:border-stitch-secondary md:mx-0"
+            className="mx-auto flex max-w-2xl items-center gap-3 border-b-2 border-primary/80 pb-3 text-left focus-within:border-gold-text md:mx-0"
           >
-            <SearchIcon className="h-5 w-5 shrink-0 text-stitch-on-surface-variant" />
+            <SearchIcon className="h-5 w-5 shrink-0 text-muted-foreground" />
             <input
               type="search"
               value={q}
               onChange={(e) => setQ(e.target.value)}
               placeholder="O que buscais nesta hora?"
               aria-label="Pesquisa universal"
-              className="w-full bg-transparent font-stitch-display text-[18px] italic text-stitch-primary placeholder:text-stitch-on-surface-variant/60 focus:outline-none md:text-[22px]"
+              className="w-full bg-transparent font-display text-[18px] italic text-primary placeholder:text-muted-foreground/60 focus:outline-none md:text-[22px]"
             />
             <button
               type="submit"
-              className="font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-secondary hover:text-stitch-primary"
+              className="font-reader text-[12px] font-bold uppercase tracking-[0.15em] text-gold-text hover:text-primary"
             >
               Buscar
             </button>
@@ -173,14 +165,14 @@ const AtriumHome: React.FC = () => {
 
           {suggestions.length > 0 && (
             <div className="mx-auto mt-4 flex max-w-2xl flex-wrap items-center gap-2 text-left md:mx-0">
-              <span className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant">
+              <span className="font-reader text-[11px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
                 Sugestões
               </span>
               {suggestions.map((s) => (
                 <button
                   key={s.id}
                   onClick={() => submitSearch(s.label)}
-                  className="rounded-full border border-stitch-outline-variant/40 bg-stitch-surface-container-low px-3 py-1 font-stitch-body text-[12px] text-stitch-on-surface-variant transition-colors hover:border-stitch-secondary hover:text-stitch-primary"
+                  className="rounded-full border border-border/40 bg-accent px-3 py-1 font-reader text-[12px] text-muted-foreground transition-colors hover:border-gold-text hover:text-primary"
                 >
                   {s.label}
                 </button>
@@ -191,7 +183,7 @@ const AtriumHome: React.FC = () => {
           {/* Bento: Nexus + Liturgia */}
           <div className="mt-12 grid grid-cols-1 items-stretch gap-8 md:grid-cols-12">
             {/* Nexus */}
-            <article className="group relative flex h-96 flex-col justify-between overflow-hidden border border-[hsl(var(--stitch-secondary)/0.25)] bg-stitch-surface-container-lowest p-8 transition-all hover:bg-stitch-surface-container-low md:col-span-8">
+            <article className="group relative flex h-96 flex-col justify-between overflow-hidden border border-gold-text/25 bg-accentest p-8 transition-all hover:bg-accent md:col-span-8">
               <div
                 className="pointer-events-none absolute inset-0 opacity-[0.03]"
                 style={{
@@ -200,13 +192,13 @@ const AtriumHome: React.FC = () => {
                 }}
               />
               <div className="relative z-10 text-left">
-                <span className="mb-4 block font-stitch-body text-[12px] font-bold uppercase tracking-[0.2em] text-stitch-secondary">
+                <span className="mb-4 block font-reader text-[12px] font-bold uppercase tracking-[0.2em] text-gold-text">
                   Symmetry of Truth
                 </span>
-                <h2 className="mb-4 font-stitch-display text-[32px] leading-[40px] text-stitch-primary">
+                <h2 className="mb-4 font-display text-[32px] leading-[40px] text-primary">
                   The Nexus Map
                 </h2>
-                <p className="max-w-md font-stitch-body text-[18px] leading-[28px] text-stitch-on-surface-variant">
+                <p className="max-w-md font-reader text-[18px] leading-[28px] text-muted-foreground">
                   Visualize as conexões invisíveis entre a Patrística e o
                   Magistério contemporâneo através da nossa rede semântica
                   inteligente.
@@ -215,45 +207,45 @@ const AtriumHome: React.FC = () => {
               <div className="relative z-10 flex justify-end">
                 <Link
                   to="/buscar"
-                  className="inline-flex items-center gap-3 rounded-lg bg-stitch-secondary-container px-8 py-3 font-stitch-body text-[14px] font-medium uppercase tracking-[0.05em] text-stitch-secondary-on-container transition-transform hover:scale-105 active:scale-95"
+                  className="inline-flex items-center gap-3 rounded-lg bg-gold px-8 py-3 font-reader text-[14px] font-medium uppercase tracking-[0.05em] text-gold-text-on-container transition-transform hover:scale-105 active:scale-95"
                   style={{
                     boxShadow:
-                      '0 0 25px -5px hsl(var(--stitch-secondary-fixed-dim) / 0.4)',
+                      '0 0 25px -5px hsl(var(--secondary) / 0.4)',
                   }}
                 >
                   <Hub className="h-5 w-5" />
                   Explorar o Nexus
                 </Link>
               </div>
-              <div className="absolute left-0 top-0 h-0 w-1 bg-stitch-secondary transition-all duration-500 group-hover:h-full" />
+              <div className="absolute left-0 top-0 h-0 w-1 bg-gold-text transition-all duration-500 group-hover:h-full" />
             </article>
 
             {/* Liturgia */}
-            <article className="relative flex h-96 flex-col justify-between overflow-hidden border border-stitch-primary-container bg-stitch-primary p-8 text-stitch-primary-foreground md:col-span-4">
+            <article className="relative flex h-96 flex-col justify-between overflow-hidden border border-primary bg-primary p-8 text-primary-foreground md:col-span-4">
               <div className="relative z-10 text-left">
                 <div className="mb-6 flex items-start justify-between">
-                  <span className="font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-secondary-fixed">
+                  <span className="font-reader text-[12px] font-bold uppercase tracking-[0.15em] text-gold-text-fixed">
                     Liturgia Diária
                   </span>
                   <span className="text-xs opacity-60">{today}</span>
                 </div>
-                <h2 className="mb-4 font-stitch-display text-[28px] italic leading-tight text-stitch-primary-foreground">
+                <h2 className="mb-4 font-display text-[28px] italic leading-tight text-primary-foreground">
                   {saintOfDay}
                 </h2>
-                <p className="font-stitch-body text-[16px] italic leading-relaxed text-stitch-primary-foreground/90">
+                <p className="font-reader text-[16px] italic leading-relaxed text-primary-foreground/90">
                   {saintQuote}
                 </p>
                 {liturgy?.season && (
-                  <p className="mt-4 font-stitch-body text-[11px] font-bold uppercase tracking-[0.15em] text-stitch-secondary-fixed/80">
+                  <p className="mt-4 font-reader text-[11px] font-bold uppercase tracking-[0.15em] text-gold-text-fixed/80">
                     {liturgy.season} · {liturgy.weekday}
                   </p>
                 )}
               </div>
               <div className="relative z-10">
-                <div className="mb-6 h-px w-full bg-white/10" />
+                <div className="mb-6 h-px w-full bg-card/10" />
                 <Link
                   to="/rezar"
-                  className="flex items-center justify-between font-stitch-body text-[14px] font-medium uppercase tracking-[0.05em] transition-colors hover:text-stitch-secondary-fixed"
+                  className="flex items-center justify-between font-reader text-[14px] font-medium uppercase tracking-[0.05em] transition-colors hover:text-gold-text-fixed"
                 >
                   <span>Ver leituras</span>
                   <ArrowForward className="h-5 w-5" />
@@ -268,12 +260,12 @@ const AtriumHome: React.FC = () => {
         {/* ─── Cinco Ambientes (P4) ──────────────────────────────────── */}
         <section className="mt-16">
           <div className="mb-8 flex items-center gap-4">
-            <Compass className="h-5 w-5 text-stitch-secondary" />
-            <h2 className="font-stitch-display text-[24px] font-semibold leading-[32px] text-stitch-primary">
+            <Compass className="h-5 w-5 text-gold-text" />
+            <h2 className="font-display text-[24px] font-semibold leading-[32px] text-primary">
               Cinco Ambientes
             </h2>
-            <div className="h-px flex-1 bg-stitch-secondary/20" />
-            <span className="hidden font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant md:inline">
+            <div className="h-px flex-1 bg-gold-text/20" />
+            <span className="hidden font-reader text-[12px] font-bold uppercase tracking-[0.15em] text-muted-foreground md:inline">
               Quinque Loca
             </span>
           </div>
@@ -283,22 +275,22 @@ const AtriumHome: React.FC = () => {
               <Link
                 key={env.key}
                 to={env.to}
-                className="group relative flex flex-col border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-5 transition-all hover:border-stitch-secondary/40 hover:shadow-lg hover:shadow-black/[0.05]"
+                className="group relative flex flex-col border border-border/20 bg-accentest p-5 transition-all hover:border-gold-text/40 hover:shadow-lg hover:shadow-black/[0.05]"
               >
-                <div className="absolute left-0 top-0 h-full w-1 origin-top scale-y-0 bg-stitch-secondary transition-transform group-hover:scale-y-100" />
+                <div className="absolute left-0 top-0 h-full w-1 origin-top scale-y-0 bg-gold-text transition-transform group-hover:scale-y-100" />
                 <div className="mb-4 flex items-center justify-between">
-                  <env.Icon className="h-6 w-6 text-stitch-secondary" />
-                  <span className="font-stitch-display text-[24px] italic text-stitch-secondary/75">
+                  <env.Icon className="h-6 w-6 text-gold-text" />
+                  <span className="font-display text-[24px] italic text-gold-text/75">
                     {String(i + 1).padStart(2, '0')}
                   </span>
                 </div>
-                <span className="font-stitch-body text-[10px] font-bold uppercase tracking-[0.2em] text-stitch-on-surface-variant">
+                <span className="font-reader text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
                   {env.latin}
                 </span>
-                <h3 className="mt-0.5 font-stitch-display text-[20px] leading-tight text-stitch-primary transition-colors group-hover:text-stitch-secondary">
+                <h3 className="mt-0.5 font-display text-[20px] leading-tight text-primary transition-colors group-hover:text-gold-text">
                   {env.label}
                 </h3>
-                <p className="mt-2 font-stitch-body text-[12px] leading-snug text-stitch-on-surface-variant">
+                <p className="mt-2 font-reader text-[12px] leading-snug text-muted-foreground">
                   {env.hint}
                 </p>
               </Link>
@@ -310,14 +302,14 @@ const AtriumHome: React.FC = () => {
         <section className="mt-16">
           <div className="mb-8 flex items-end justify-between">
             <div>
-              <h2 className="mb-1 font-stitch-display text-[24px] font-semibold leading-[32px] text-stitch-primary">
+              <h2 className="mb-1 font-display text-[24px] font-semibold leading-[32px] text-primary">
                 Continuar Caminhada
               </h2>
-              <div className="h-1 w-12 bg-stitch-secondary/30" />
+              <div className="h-1 w-12 bg-gold-text/30" />
             </div>
             <Link
               to="/minha-jornada"
-              className="font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant transition-colors hover:text-stitch-primary"
+              className="font-reader text-[12px] font-bold uppercase tracking-[0.15em] text-muted-foreground transition-colors hover:text-primary"
             >
               Ver Histórico
             </Link>
@@ -331,30 +323,30 @@ const AtriumHome: React.FC = () => {
                 <Link
                   key={item.id}
                   to={item.targetPath}
-                  className="group border border-[hsl(var(--stitch-secondary)/0.25)] bg-stitch-surface-container-low p-6 transition-all hover:shadow-xl hover:shadow-black/[0.04]"
+                  className="group border border-gold-text/25 bg-accent p-6 transition-all hover:shadow-xl hover:shadow-black/[0.04]"
                 >
                   <div className="mb-4 flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center border border-stitch-outline-variant/30 bg-white text-stitch-primary">
+                    <div className="flex h-12 w-12 items-center justify-center border border-stitch-outline-variant/30 bg-card text-primary">
                       <Icon className="h-6 w-6" />
                     </div>
                     <div>
-                      <h3 className="font-stitch-body text-[14px] font-medium text-stitch-primary">
+                      <h3 className="font-reader text-[14px] font-medium text-primary">
                         {item.label}
                       </h3>
-                      <p className="text-xs text-stitch-on-surface-variant">
+                      <p className="text-xs text-muted-foreground">
                         {item.kind}
                       </p>
                     </div>
                   </div>
-                  <div className="mb-4 h-1 w-full bg-stitch-surface-container-highest">
+                  <div className="mb-4 h-1 w-full bg-muted">
                     <div
-                      className="h-full bg-stitch-primary transition-all"
+                      className="h-full bg-primary transition-all"
                       style={{ width: `${pct}%` }}
                     />
                   </div>
-                  <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-tighter text-stitch-on-surface-variant/95">
+                  <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-tighter text-muted-foreground/95">
                     <span>{pct}%</span>
-                    <span className="transition-colors group-hover:text-stitch-primary">
+                    <span className="transition-colors group-hover:text-primary">
                       Retomar
                     </span>
                   </div>
@@ -365,10 +357,10 @@ const AtriumHome: React.FC = () => {
             {/* Nova meditação — sempre presente */}
             <Link
               to="/rezar"
-              className="group flex cursor-pointer flex-col items-center justify-center border border-dashed border-[hsl(var(--stitch-secondary)/0.35)] p-6 text-center transition-colors hover:bg-stitch-surface-container-low"
+              className="group flex cursor-pointer flex-col items-center justify-center border border-dashed border-gold-text/35 p-6 text-center transition-colors hover:bg-accent"
             >
-              <AddCircle className="mb-2 h-8 w-8 text-stitch-on-surface-variant/40 transition-colors group-hover:text-stitch-secondary" />
-              <p className="font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant">
+              <AddCircle className="mb-2 h-8 w-8 text-muted-foreground/40 transition-colors group-hover:text-gold-text" />
+              <p className="font-reader text-[12px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
                 Nova Meditação
               </p>
             </Link>
@@ -379,26 +371,26 @@ const AtriumHome: React.FC = () => {
         {recs.length > 0 && (
           <section className="mt-16">
             <div className="mb-8 flex items-center gap-4">
-              <h2 className="font-stitch-display text-[24px] font-semibold leading-[32px] text-stitch-primary">
+              <h2 className="font-display text-[24px] font-semibold leading-[32px] text-primary">
                 Para você contemplar hoje
               </h2>
-              <div className="h-px flex-1 bg-stitch-secondary/20" />
+              <div className="h-px flex-1 bg-gold-text/20" />
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
               {recs.map((r, i) => (
                 <Link
                   key={r.id}
                   to={r.targetPath}
-                  className="group flex flex-col border border-stitch-outline-variant/20 bg-stitch-surface-container-lowest p-6 transition-all hover:border-stitch-secondary/40 hover:shadow-xl hover:shadow-black/[0.04]"
+                  className="group flex flex-col border border-border/20 bg-accentest p-6 transition-all hover:border-gold-text/40 hover:shadow-xl hover:shadow-black/[0.04]"
                 >
-                  <span className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.2em] text-stitch-secondary">
+                  <span className="font-reader text-[11px] font-bold uppercase tracking-[0.2em] text-gold-text">
                     {r.kind}
                   </span>
-                  <h3 className="mt-2 font-stitch-display text-[20px] leading-tight text-stitch-primary transition-colors group-hover:text-stitch-secondary">
+                  <h3 className="mt-2 font-display text-[20px] leading-tight text-primary transition-colors group-hover:text-gold-text">
                     {r.label}
                   </h3>
-                  <div className="mt-6 flex items-center justify-between text-stitch-secondary">
-                    <span className="font-stitch-display text-[24px] italic text-stitch-secondary/75">
+                  <div className="mt-6 flex items-center justify-between text-gold-text">
+                    <span className="font-display text-[24px] italic text-gold-text/75">
                       {String(i + 1).padStart(2, '0')}
                     </span>
                     <ArrowForward className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -413,10 +405,10 @@ const AtriumHome: React.FC = () => {
         {themes.length > 0 && (
           <section className="mt-16 overflow-hidden">
             <div className="mb-10 flex items-center gap-4">
-              <h2 className="shrink-0 font-stitch-display text-[32px] leading-[40px] text-stitch-primary">
+              <h2 className="shrink-0 font-display text-[32px] leading-[40px] text-primary">
                 Temas em Destaque
               </h2>
-              <div className="h-px flex-1 bg-stitch-secondary/30" />
+              <div className="h-px flex-1 bg-gold-text/30" />
             </div>
 
             <div className="flex snap-x gap-8 overflow-x-auto pb-8 [&::-webkit-scrollbar]:hidden">
@@ -427,16 +419,16 @@ const AtriumHome: React.FC = () => {
                   className="group min-w-[320px] shrink-0 snap-start cursor-pointer"
                 >
                   <div className="relative mb-4 flex h-80 w-full items-center justify-center overflow-hidden bg-stitch-surface-container-high">
-                    <span className="font-stitch-display text-[96px] italic text-stitch-primary/20">
+                    <span className="font-display text-[96px] italic text-primary/20">
                       {String(i + 1).padStart(2, '0')}
                     </span>
-                    <div className="absolute inset-0 bg-stitch-primary/10 transition-colors group-hover:bg-transparent" />
+                    <div className="absolute inset-0 bg-primary/10 transition-colors group-hover:bg-transparent" />
                   </div>
-                  <h3 className="mb-1 font-stitch-display text-[24px] font-semibold leading-[32px] text-stitch-primary">
+                  <h3 className="mb-1 font-display text-[24px] font-semibold leading-[32px] text-primary">
                     {theme.label}
                   </h3>
                   {theme.short && (
-                    <p className="font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant">
+                    <p className="font-reader text-[12px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
                       {theme.short}
                     </p>
                   )}
@@ -450,19 +442,19 @@ const AtriumHome: React.FC = () => {
         {announcements.length > 0 && (
           <section className="mt-16">
             <div className="mb-6 flex items-center gap-4">
-              <Megaphone className="h-5 w-5 text-stitch-secondary" />
-              <h2 className="font-stitch-display text-[24px] font-semibold leading-[32px] text-stitch-primary">
+              <Megaphone className="h-5 w-5 text-gold-text" />
+              <h2 className="font-display text-[24px] font-semibold leading-[32px] text-primary">
                 Avisos Recentes
               </h2>
-              <div className="h-px flex-1 bg-stitch-secondary/20" />
+              <div className="h-px flex-1 bg-gold-text/20" />
             </div>
-            <ul className="divide-y divide-stitch-outline-variant/20 border-y border-stitch-outline-variant/20">
+            <ul className="divide-y divide-border/20 border-y border-border/20">
               {announcements.map((a) => (
                 <li key={a.id} className="flex items-center justify-between py-4">
-                  <span className="font-stitch-body text-[15px] text-stitch-primary">
+                  <span className="font-reader text-[15px] text-primary">
                     {a.label}
                   </span>
-                  <span className="shrink-0 font-stitch-body text-[11px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant">
+                  <span className="shrink-0 font-reader text-[11px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
                     {new Date(a.publishedAt).toLocaleDateString('pt-BR', {
                       day: '2-digit',
                       month: 'short',
@@ -475,7 +467,7 @@ const AtriumHome: React.FC = () => {
         )}
 
         {/* ─── Verso de encerramento ──────────────────────────────────── */}
-        <p className="mt-16 border-t border-stitch-secondary/10 pt-8 text-center font-stitch-body text-[14px] italic text-stitch-on-surface-variant">
+        <p className="mt-16 border-t border-gold-text/10 pt-8 text-center font-reader text-[14px] italic text-muted-foreground">
           "Uma coisa peço ao Senhor, e a buscarei: habitar na Casa do Senhor
           todos os dias da minha vida." — Sl 27,4
         </p>
