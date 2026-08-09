@@ -51,7 +51,7 @@ const Index = () => {
         Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
         Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-        TEXTO DO USUÁRIO: CATHEDRA MISSION CONTROL — FECHAMENTO DA ONDA 1
+        TEXTO DO USUÁRIO: CATHEDRA MISSION CONTROL — ONDA 2 (AUDITORIA P0)
 
         ATENÇÃO: NÃO CRIE NADA NOVO.
 
