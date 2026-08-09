@@ -170,6 +170,7 @@ const NovenaDetailPage = lazy(() => import('./pages/NovenaDetailPage'));
 
 const PrayerPage = lazy(() => import('./components/cathedra/PrayerPage'));
 const PrayerLibraryPage = lazy(() => import('./pages/PrayerLibraryPage'));
+const PopesPageAlias = () => <Navigate to="/igreja" replace />;
 const PopesPage = lazy(() => import('./components/cathedra/PopesPage'));
 const PrayerDetailPage = lazy(() => import('./pages/PrayerDetailPage'));
 const LectioDivina = lazy(() => import('./components/cathedra/LectioDivina'));
