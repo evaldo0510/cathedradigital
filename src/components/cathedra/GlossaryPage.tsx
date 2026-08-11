@@ -365,14 +365,14 @@ const GlossaryPage: React.FC = () => {
                   <header className="flex items-baseline gap-6 mb-8">
                     <span
                       aria-hidden="true"
-                      className="font-stitch-display text-stitch-display-lg text-stitch-secondary leading-none"
+                      className="font-display text-premium-3xl text-[color:var(--gold-text)] leading-none"
                     >
                       {letter}
                     </span>
                     <EditorialKicker>
                       {items.length} {items.length === 1 ? 'verbete' : 'verbetes'}
                     </EditorialKicker>
-                    <div className="flex-1 h-px bg-stitch-outline-variant/40" />
+                    <div className="flex-1 h-px bg-border/40" />
                   </header>
                   <ul className="grid gap-4 md:grid-cols-2">
                     {items.map((t) => (
