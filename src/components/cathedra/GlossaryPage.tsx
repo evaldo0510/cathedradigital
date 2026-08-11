@@ -431,7 +431,7 @@ const TermCard: React.FC<{ term: GlossaryTerm; highlight?: string }> = ({ term, 
             )}
           </div>
         )}
-        <h3 className="font-stitch-display text-stitch-headline-sm text-stitch-on-background group-hover:text-stitch-secondary transition-colors">
+        <h3 className="font-display text-premium-xl text-foreground group-hover:text-[color:var(--gold-text)] transition-colors">
           {highlight ? (
             <HighlightedText text={term.term} query={highlight} />
           ) : (
