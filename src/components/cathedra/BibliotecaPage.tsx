@@ -71,10 +71,11 @@ const escritos: Escrito[] = [
   { title: 'Bíblia',           kicker: 'Sagrada Escritura',      to: AppRoute.BIBLE,                              description: 'Antigo e Novo Testamento com anotações e Nexus.', spine: 'Vulgata Clementina',   palette: { bg: '#111111', fg: '#F4E9D0', accent: '#C9A24C', grain: 'ink'   } },
   { title: 'Catecismo',        kicker: 'Doutrina',                to: AppRoute.CATECHISM,                          description: 'CIC organizado por parágrafos e referências.',    spine: 'Igreja Católica',      palette: { bg: '#0E2748', fg: '#EAE3D2', accent: '#B8965A', grain: 'ink'   } },
   { title: 'Magistério',       kicker: 'Documentos Pontifícios',  to: AppRoute.MAGISTERIUM,                        description: 'Encíclicas, exortações e constituições.',         spine: 'Libreria Editrice',    palette: { bg: '#4A1220', fg: '#F0E4D0', accent: '#C9A24C', grain: 'ink'   } },
-  { title: 'Padres',           kicker: 'Patrística',              to: `${AppRoute.BUSCAR}?tipo=padres`,            description: 'Escritos dos Padres do Oriente e Ocidente.',      spine: 'Patrologia Latina',    palette: { bg: '#E8DCC0', fg: '#3A2A18', accent: '#8A6B3E', grain: 'paper' } },
-  { title: 'Santos',           kicker: 'Vida e Escritos',         to: AppRoute.SAINTS,                             description: 'Biografias, escritos e testemunhos.',             spine: 'Acta Sanctorum',       palette: { bg: '#1F3A2A', fg: '#EADFC6', accent: '#B8965A', grain: 'ink'   } },
-  { title: 'Concílios',        kicker: 'Assembleias da Igreja',   to: `${AppRoute.BUSCAR}?tipo=concilios`,         description: 'Documentos conciliares em texto integral.',       spine: 'Decreta Conciliorum',  palette: { bg: '#5A5651', fg: '#EFE8DA', accent: '#C9A24C', grain: 'ink'   } },
-  { title: 'Direito Canônico', kicker: 'Normas',                  to: `${AppRoute.BUSCAR}?tipo=direito-canonico`,  description: 'Código de 1983 e legislação eclesiástica.',       spine: 'Codex Iuris Canonici', palette: { bg: '#1C1C1C', fg: '#E9E1CE', accent: '#8E7B4A', grain: 'ink'   } },
+  { title: 'Padres',           kicker: 'Patrística',              to: `/buscar?tipo=padres`,            description: 'Escritos dos Padres do Oriente e Ocidente.',      spine: 'Patrologia Latina',    palette: { bg: '#E8DCC0', fg: '#3A2A18', accent: '#8A6B3E', grain: 'paper' } },
+  { title: 'Santos',           kicker: 'Vida e Escritos',         to: '/santos',                             description: 'Biografias, escritos e testemunhos.',             spine: 'Acta Sanctorum',       palette: { bg: '#1F3A2A', fg: '#EADFC6', accent: '#B8965A', grain: 'ink'   } },
+  { title: 'Concílios',        kicker: 'Assembleias da Igreja',   to: `/buscar?tipo=concilios`,         description: 'Documentos conciliares em texto integral.',       spine: 'Decreta Conciliorum',  palette: { bg: '#5A5651', fg: '#EFE8DA', accent: '#C9A24C', grain: 'ink'   } },
+  { title: 'Direito Canônico', kicker: 'Normas',                  to: `/buscar?tipo=direito-canonico`,  description: 'Código de 1983 e legislação eclesiástica.',       spine: 'Codex Iuris Canonici', palette: { bg: '#1C1C1C', fg: '#E9E1CE', accent: '#8E7B4A', grain: 'ink'   } },
+
 ];
 
 type ColecaoItem = { title: string; kicker: string; spine: string; to: string; palette: CoverPalette };
@@ -153,11 +154,12 @@ const seriesColecoes: ColecaoSerie[] = [
     curator: 'A Igreja pensando em voz alta nos primeiros séculos — a Tradição em sua fonte.',
     accent: '#8A6B3E',
     items: [
-      { title: 'Inácio de Antioquia', kicker: 'Padre Apostólico', spine: 'Séc. I–II',   to: `${AppRoute.BUSCAR}?tipo=padres&q=inacio-antioquia`, palette: { bg: '#1C1C1C', fg: '#E9E1CE', accent: '#8E7B4A', grain: 'ink' } },
-      { title: 'Ireneu de Lyon',      kicker: 'Padre Grego',      spine: 'Séc. II',     to: `${AppRoute.BUSCAR}?tipo=padres&q=ireneu`,           palette: { bg: '#1F3A2A', fg: '#EADFC6', accent: '#B8965A', grain: 'ink' } },
-      { title: 'Atanásio',            kicker: 'Padre Grego',      spine: 'Séc. IV',     to: `${AppRoute.BUSCAR}?tipo=padres&q=atanasio`,         palette: { bg: '#4A1220', fg: '#F0E4D0', accent: '#C9A24C', grain: 'ink' } },
-      { title: 'João Crisóstomo',     kicker: 'Padre Grego',      spine: 'Séc. IV–V',   to: `${AppRoute.BUSCAR}?tipo=padres&q=crisostomo`,       palette: { bg: '#E8DCC0', fg: '#3A2A18', accent: '#8A6B3E', grain: 'paper' } },
-      { title: 'Gregório Magno',      kicker: 'Padre Latino',     spine: 'Séc. VI–VII', to: `${AppRoute.BUSCAR}?tipo=padres&q=gregorio-magno`,   palette: { bg: '#0E2748', fg: '#EAE3D2', accent: '#B8965A', grain: 'ink' } },
+      { title: 'Inácio de Antioquia', kicker: 'Padre Apostólico', spine: 'Séc. I–II',   to: `/buscar?tipo=padres&q=inacio-antioquia`, palette: { bg: '#1C1C1C', fg: '#E9E1CE', accent: '#8E7B4A', grain: 'ink' } },
+      { title: 'Ireneu de Lyon',      kicker: 'Padre Grego',      spine: 'Séc. II',     to: `/buscar?tipo=padres&q=ireneu`,           palette: { bg: '#1F3A2A', fg: '#EADFC6', accent: '#B8965A', grain: 'ink' } },
+      { title: 'Atanásio',            kicker: 'Padre Grego',      spine: 'Séc. IV',     to: `/buscar?tipo=padres&q=atanasio`,         palette: { bg: '#4A1220', fg: '#F0E4D0', accent: '#C9A24C', grain: 'ink' } },
+      { title: 'João Crisóstomo',     kicker: 'Padre Grego',      spine: 'Séc. IV–V',   to: `/buscar?tipo=padres&q=crisostomo`,       palette: { bg: '#E8DCC0', fg: '#3A2A18', accent: '#8A6B3E', grain: 'paper' } },
+      { title: 'Gregório Magno',      kicker: 'Padre Latino',     spine: 'Séc. VI–VII', to: `/buscar?tipo=padres&q=gregorio-magno`,   palette: { bg: '#0E2748', fg: '#EAE3D2', accent: '#B8965A', grain: 'ink' } },
+
     ],
   },
   {
@@ -167,10 +169,11 @@ const seriesColecoes: ColecaoSerie[] = [
     curator: 'Quando a Igreja inteira se reúne para escutar o Espírito e responder ao seu tempo.',
     accent: '#B8965A',
     items: [
-      { title: 'Niceia I',      kicker: 'Concílio', spine: '325 · Trindade',      to: `${AppRoute.BUSCAR}?tipo=concilios&q=niceia`,      palette: { bg: '#5A5651', fg: '#EFE8DA', accent: '#C9A24C', grain: 'ink' } },
-      { title: 'Calcedônia',    kicker: 'Concílio', spine: '451 · Cristologia',   to: `${AppRoute.BUSCAR}?tipo=concilios&q=calcedonia`,  palette: { bg: '#3E2A18', fg: '#EFE0C4', accent: '#C9A24C', grain: 'ink' } },
-      { title: 'Trento',        kicker: 'Concílio', spine: '1545–1563',           to: `${AppRoute.BUSCAR}?tipo=concilios&q=trento`,      palette: { bg: '#4A1220', fg: '#F0E4D0', accent: '#C9A24C', grain: 'ink' } },
-      { title: 'Vaticano II',   kicker: 'Concílio', spine: '1962–1965',           to: `${AppRoute.BUSCAR}?tipo=concilios&q=vaticano-ii`, palette: { bg: '#0E2748', fg: '#EAE3D2', accent: '#B8965A', grain: 'ink' } },
+      { title: 'Niceia I',      kicker: 'Concílio', spine: '325 · Trindade',      to: `/buscar?tipo=concilios&q=niceia`,      palette: { bg: '#5A5651', fg: '#EFE8DA', accent: '#C9A24C', grain: 'ink' } },
+      { title: 'Calcedônia',    kicker: 'Concílio', spine: '451 · Cristologia',   to: `/buscar?tipo=concilios&q=calcedonia`,  palette: { bg: '#3E2A18', fg: '#EFE0C4', accent: '#C9A24C', grain: 'ink' } },
+      { title: 'Trento',        kicker: 'Concílio', spine: '1545–1563',           to: `/buscar?tipo=concilios&q=trento`,      palette: { bg: '#4A1220', fg: '#F0E4D0', accent: '#C9A24C', grain: 'ink' } },
+      { title: 'Vaticano II',   kicker: 'Concílio', spine: '1962–1965',           to: `/buscar?tipo=concilios&q=vaticano-ii`, palette: { bg: '#0E2748', fg: '#EAE3D2', accent: '#B8965A', grain: 'ink' } },
+
     ],
   },
   {
@@ -213,19 +216,20 @@ function resolveSearchTarget(query: string, axis: AxisFilter): string {
   const qp = q ? `q=${encodeURIComponent(q)}` : '';
   switch (axis) {
     case 'tema':
-      return `${AppRoute.TEMAS}${qp ? `?${qp}` : ''}`;
+      return `/temas${qp ? `?${qp}` : ''}`;
     case 'pessoa':
-      return `${AppRoute.BUSCAR}?tipo=autores${qp ? `&${qp}` : ''}`;
+      return `/buscar?tipo=autores${qp ? `&${qp}` : ''}`;
     case 'documento':
-      return `${AppRoute.BUSCAR}?tipo=documentos${qp ? `&${qp}` : ''}`;
+      return `/buscar?tipo=documentos${qp ? `&${qp}` : ''}`;
     case 'periodo':
-      return `${AppRoute.BUSCAR}?tipo=periodo${qp ? `&${qp}` : ''}`;
+      return `/buscar?tipo=periodo${qp ? `&${qp}` : ''}`;
     case 'fonte':
-      return `${AppRoute.BUSCAR}?tipo=fontes${qp ? `&${qp}` : ''}`;
+      return `/buscar?tipo=fontes${qp ? `&${qp}` : ''}`;
     default:
-      return `${AppRoute.BUSCAR}${qp ? `?${qp}` : ''}`;
+      return `/buscar${qp ? `?${qp}` : ''}`;
   }
 }
+
 
 type BibliotecaTheme = 'vaticana' | 'apple' | 'logos';
 

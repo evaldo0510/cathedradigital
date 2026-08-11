@@ -353,9 +353,10 @@ const JornadasPage = React.forwardRef<HTMLDivElement>((_props, ref) => {
                 <p className="text-premium-sm font-semibold text-foreground">Inicie sua caminhada</p>
                 <p className="text-premium-xs text-muted-foreground">O Logos pode recomendar a melhor jornada para sua alma.</p>
               </div>
-              <Button size="sm" variant="outline" onClick={() => navigate(AppRoute.DIAGNOSTICO)} className="flex-shrink-0">
+              <Button size="sm" variant="outline" onClick={() => navigate('/diagnostico')} className="flex-shrink-0">
                 Diagnóstico <Icons.ArrowRight className="w-spacing-md h-spacing-md ml-spacing-2xs" />
               </Button>
+
           </CathedraCard>
         </motion.div>
       )}
