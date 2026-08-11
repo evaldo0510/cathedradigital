@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -82,6 +83,7 @@ const renderWithRefs = (text: string, keyPrefix: string) =>
   });
 
 const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) => {
+  const navigate = useNavigate();
   const dateLabel = useMemo(
     () => format(date, "d 'de' MMMM 'de' yyyy", { locale: ptBR }),
     [date],
@@ -396,10 +398,7 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
             className="flex-1"
             onClick={() => onOpen(true)}
             onMouseEnter={() => {
-              // Prefetch Logos search
-              navigate(`/logos?about=${encodeURIComponent(`saint:${saint.slug || saint.id}`)}`, { replace: true });
-              // Wait, I shouldn't navigate on hover. Just prefetch the chunk if possible.
-              // For now, just prefetch the SaintDetail since Logos might use it.
+              // Apenas prefetch do componente de detalhes
               import('./SaintDetail');
             }}
             aria-label={`Refletir com Logos sobre ${saint.name}`}
