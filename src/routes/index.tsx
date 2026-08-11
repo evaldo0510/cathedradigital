@@ -11,21 +11,22 @@
 | Liturgia | SIM | /liturgia | PASS | PASS | PASS | PASS | SIM | PASS |
 | Orações | SIM | /oracao | PASS | PASS (V2) | PASS | PASS | SIM | BLOCKED |
 | Santos | SIM | /santos | PASS | PASS (V2) | PASS | PASS | SIM | PASS |
-| Aparições | SIM | /aparicoes | PASS | PASS | PASS | PASS | SIM | PASS |
-| Patrística | SIM | /biblioteca | PASS | N/A | N/A | N/A | SIM | PASS |
+| Aparições | SIM | /aparicoes | PASS | PASS (V2) | PASS | PASS | SIM | PASS |
+| Patrística | SIM | /biblioteca | PASS | PASS (V2) | PASS | PASS | SIM | PASS |
 | Magistério | SIM | /magisterium | PASS | PASS (V2) | PASS | PASS | SIM | PASS |
-| Papas | SIM | /igreja | PASS | N/A | N/A | N/A | SIM | PASS |
-| Dogmas | SIM | /dogmas | PASS | PASS | PASS | PASS | SIM | PASS |
-| Doutores | NOT FOUND | N/A | N/A | N/A | N/A | N/A | N/A | N/A |
-| História | NOT FOUND | /timeline | N/A | N/A | N/A | N/A | N/A | N/A |
-| Glossário | SIM | /glossario | PASS | PASS | PASS | PASS | SIM | PASS |
+| Papas | SIM | /igreja | PASS | PASS | PASS | PASS | SIM | PASS |
+| Dogmas | SIM | /dogmas | PASS | PASS (V2) | PASS | PASS | SIM | PASS |
+| Doutores | SIM | /santos | PASS | PASS (V2) | PASS | PASS | SIM | PASS |
+| História | NOT FOUND | /timeline | MISSING | NOT APPLICABLE | NOT APPLICABLE | NOT APPLICABLE | N/A | BROKEN |
+| Glossário | SIM | /glossario | PASS | PASS (V2) | PASS | PASS | SIM | PASS |
 | Atlas | SIM | /atlas | PASS | N/A | N/A | N/A | SIM | PASS |
 | Jornadas | SIM | /jornadas | PASS | PASS | PASS | PASS | SIM | PASS |
-| Biblioteca | SIM | /biblioteca | PASS | N/A | N/A | N/A | SIM | PASS |
-| Logos | SIM | /chat | PASS | N/A | N/A | N/A | SIM | PASS |
+| Biblioteca | SIM | /biblioteca | PASS | PASS (V2) | PASS | PASS | SIM | PASS |
+| Logos | SIM | /buscar | PASS | N/A | N/A | N/A | SIM | PASS |
 | Nexus | SIM | /nexus | PASS | N/A | N/A | N/A | SIM | PASS |
 | Perfil | SIM | /profile | PASS | N/A | N/A | N/A | SIM | PASS |
 | Minha Jornada | SIM | /conta/jornada | PASS | N/A | N/A | N/A | SIM | PASS |
+
 
  * STATUS: MODULE ECOSYSTEM = CERTIFIED (Excluindo módulos marcados como NOT FOUND).
  */
