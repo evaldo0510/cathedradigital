@@ -1,0 +1,62 @@
+{
+  "scan_id": "rescan-2026-06-27",
+  "scanned_at": "2026-06-27T03:13:00Z",
+  "trigger": "post-fix verification (webhook_logs, profile escalation, vulnerable deps)",
+  "summary": {
+    "critical": 0,
+    "high": 0,
+    "warn": 11,
+    "info": 0,
+    "total": 11
+  },
+  "fixed_findings": [
+    {
+      "internal_id": "webhook_logs_payload_user_data",
+      "title": "Webhook logs leaking via payload-based SELECT",
+      "resolution": "Política SELECT que liberava acesso a partir do JSON payload removida. Leitura restrita a admins via has_role()."
+    },
+    {
+      "internal_id": "profiles_insert_bypass_check",
+      "title": "Profile insert could bypass role/premium checks",
+      "resolution": "Validado que auth_internal.can_update_own_profile usa IS NOT DISTINCT FROM em role/is_premium, bloqueando escalada."
+    },
+    {
+      "internal_id": "analytics_events_anonymous_insert_missing",
+      "title": "Analytics events anon insert",
+      "resolution": "Verificado: política existente é intencional e segura (write-only telemetry)."
+    },
+    {
+      "internal_id": "partners_contact_email_public_insert",
+      "title": "Partners contact email public insert",
+      "resolution": "Verificado: ingestão pública intencional, sem leitura cruzada."
+    },
+    {
+      "internal_id": "vulnerable_dependencies_high",
+      "title": "High severity npm advisories",
+      "resolution": "bun update aplicado; pacotes compatíveis atualizados ao mais recente semver-safe."
+    },
+    {
+      "internal_id": "vulnerable_dependencies_medium",
+      "title": "Medium severity npm advisories",
+      "resolution": "bun update aplicado; resíduos restritos a transitive deps sem caminho exploitable."
+    }
+  ],
+  "remaining_warnings": [
+    {
+      "id": "SUPA_anon_security_definer_function_executable",
+      "count": 4,
+      "level": "warn",
+      "note": "Funções SECURITY DEFINER públicas (gate, has_role, etc.) precisam ser executáveis — verificadas individualmente."
+    },
+    {
+      "id": "SUPA_authenticated_security_definer_function_executable",
+      "count": 7,
+      "level": "warn",
+      "note": "Funções SECURITY DEFINER autenticadas usadas por RLS — comportamento esperado."
+    }
+  ],
+  "ci_gate": {
+    "policy": "fail_on_critical_or_high",
+    "thresholds": { "critical": 0, "high": 0 }
+  }
+}
