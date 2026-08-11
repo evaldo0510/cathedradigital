@@ -143,8 +143,8 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
     queryKey: ['saints-date', selectedDate.getMonth() + 1, selectedDate.getDate()],
     queryFn: () => getSaintsByDateOrThrow(selectedDate.getMonth() + 1, selectedDate.getDate()),
     enabled: viewMode === 'daily',
-    staleTime: 1000 * 60 * 30, // 30min — santos do dia mudam só à meia-noite
-    gcTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 60 * 24, // 24h para santos do dia
+    gcTime: 1000 * 60 * 60 * 24 * 7, // 7 dias em cache persistente
     retry: 1,
   });
 
@@ -158,8 +158,8 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
       return [];
     },
     enabled: ['writers', 'popes', 'all', 'cloud'].includes(viewMode),
-    staleTime: 1000 * 60 * 15, // 15min — catálogo é estável
-    gcTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 60 * 12, // 12h
+    gcTime: 1000 * 60 * 60 * 24,
   });
 
   // Debounced search to avoid one DB hit per keystroke
@@ -199,6 +199,7 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
   };
 
   const saintsForSelectedDate = useMemo(() => {
+    if (!localSaints.length) return [];
     const dailyList = localSaints;
     if (officialSaint && officialSaint.name && isSameDay(selectedDate, new Date()) && 
         officialSaint.name !== "Menu" && officialSaint.name !== "Santo do Dia") {

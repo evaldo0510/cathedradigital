@@ -183,6 +183,7 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
             alt={saint.name}
             category={(saint as any).category}
             className="w-full h-full object-cover"
+            priority={true}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/70 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-transparent" />

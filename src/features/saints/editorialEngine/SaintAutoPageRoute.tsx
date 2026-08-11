@@ -30,7 +30,8 @@ const SaintAutoPageRoute: React.FC = () => {
     queryKey: ['saint-auto', id],
     queryFn: () => (id ? getSaintById(id) : Promise.resolve(null)),
     enabled: Boolean(id),
-    staleTime: 1000 * 60 * 30,
+    staleTime: 1000 * 60 * 60 * 24, // 24h
+    gcTime: 1000 * 60 * 60 * 24 * 7, // 7 dias
   });
 
   useEffect(() => {
