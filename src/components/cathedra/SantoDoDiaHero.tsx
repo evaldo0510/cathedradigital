@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -82,6 +83,7 @@ const renderWithRefs = (text: string, keyPrefix: string) =>
   });
 
 const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) => {
+  const navigate = useNavigate();
   const dateLabel = useMemo(
     () => format(date, "d 'de' MMMM 'de' yyyy", { locale: ptBR }),
     [date],
@@ -383,6 +385,9 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
             variant="primary"
             className="flex-1"
             onClick={() => onOpen(false)}
+            onMouseEnter={() => {
+              import('./SaintDetail');
+            }}
             aria-label={`Conhecer a história completa de ${saint.name}`}
           >
             <Icons.BookOpen className="w-spacing-md h-spacing-md" />
@@ -392,6 +397,10 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
             variant="secondary"
             className="flex-1"
             onClick={() => onOpen(true)}
+            onMouseEnter={() => {
+              // Apenas prefetch do componente de detalhes
+              import('./SaintDetail');
+            }}
             aria-label={`Refletir com Logos sobre ${saint.name}`}
           >
             <Icons.Sparkles className="w-spacing-md h-spacing-md" />

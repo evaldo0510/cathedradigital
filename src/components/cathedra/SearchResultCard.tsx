@@ -25,6 +25,8 @@ export interface SearchResultCardProps {
   icon?: React.ReactNode;
   /** Click handler — typically navigates to the detail view. */
   onClick?: () => void;
+  /** Optional hover handler for prefetching. */
+  onMouseEnter?: () => void;
   /** Show a trailing chevron arrow. Defaults to true. */
   showArrow?: boolean;
   /** Extra wrapper classes. */
@@ -47,6 +49,7 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
   score,
   icon,
   onClick,
+  onMouseEnter,
   showArrow = true,
   className,
   index = 0,
@@ -81,6 +84,7 @@ export const SearchResultCard = React.forwardRef<HTMLDivElement, SearchResultCar
         className,
       )}
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
       onKeyDown={handleKeyDown}
     >
     <div className="p-spacing-sm flex items-center gap-spacing-sm">
