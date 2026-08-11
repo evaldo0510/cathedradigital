@@ -217,7 +217,7 @@ const GlossaryPage: React.FC = () => {
           </label>
           <div className="relative">
             <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-stitch-on-surface-variant"
+              className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"
               aria-hidden="true"
             />
             <input
@@ -228,14 +228,14 @@ const GlossaryPage: React.FC = () => {
               placeholder="Digite uma palavra ou conceito…"
               className={cn(
                 'w-full pl-12 pr-12 py-4 rounded-full',
-                'bg-stitch-surface-container-lowest border border-stitch-outline-variant/60',
-                'font-stitch-serif text-stitch-body text-stitch-on-background',
-                'placeholder:text-stitch-on-surface-variant/70',
-                'focus-visible:outline-none focus-visible:border-stitch-secondary focus-visible:ring-2 focus-visible:ring-stitch-secondary/30',
+                'bg-card border border-border/60',
+                'font-serif text-premium-base text-foreground',
+                'placeholder:text-muted-foreground/70',
+                'focus-visible:outline-none focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/30',
               )}
             />
             {isSearchPending && (
-              <span className="absolute right-5 top-1/2 -translate-y-1/2 font-stitch-label text-stitch-label-sm uppercase tracking-[0.22em] text-stitch-secondary">
+              <span className="absolute right-5 top-1/2 -translate-y-1/2 type-rubrica text-[color:var(--gold-text)]">
                 buscando…
               </span>
             )}
