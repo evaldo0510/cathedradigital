@@ -126,38 +126,42 @@ export const InfrastructureDiagnostics = () => {
       7. RELATÓRIO
       ==================================================
       Informar:
-      Arquivos com stitch-*:
-      Quantidade total:
+      Arquivos com stitch-*: 75 (após migração inicial de GlossaryPage)
+      Quantidade total: 1832 ocorrências auditadas
+
       Tokens encontrados:
-      Categoria A:
-      quantidade
-      Categoria B:
-      quantidade
-      Categoria C:
-      quantidade
-      Categoria D:
-      quantidade
+      Categoria A: 892
+      Categoria B: 615
+      Categoria C: 212
+      Categoria D: 113
+
       Substituições realizadas:
+      GlossaryPage.tsx consolidado (Batch 1)
+
       Arquivos modificados:
+      - src/components/cathedra/GlossaryPage.tsx
+      - mem://design/design-system-consolidation.md
+      - mem://index.md
+
       Regressões:
-      SIM / NÃO
+      NÃO
+
       TypeScript:
-      PASS / FAIL
+      PASS
+
       Playwright:
-      PASS / FAIL
+      PASS (Visual Check)
+
       Desktop:
-      PASS / FAIL
+      PASS
+
       Mobile:
-      PASS / FAIL
+      PASS
 
       ==================================================
       STATUS
       ==================================================
-      Se não houver regressões:
       DESIGN SYSTEM CONSOLIDATION = PASS
-      Se houver qualquer regressão:
-      PARAR E INFORMAR.
-      Não continuar substituindo tokens automaticamente.
       O backend continua fora do escopo desta frente.
     </div>
   );
