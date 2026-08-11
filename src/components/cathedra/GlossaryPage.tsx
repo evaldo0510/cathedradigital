@@ -402,18 +402,19 @@ const TermCard: React.FC<{ term: GlossaryTerm; highlight?: string }> = ({ term, 
       <Link
         to={to}
         className={cn(
-          'group block h-full p-6 rounded-[var(--stitch-radius-xl)]',
-          'bg-stitch-surface-container-lowest border border-stitch-outline-variant/40',
-          'hover:border-stitch-secondary/60 focus-visible:border-stitch-secondary',
+          'group block h-full p-6 rounded-premium',
+          'bg-card border border-border/40',
+          'hover:border-gold/60 focus-visible:border-gold',
           'focus-visible:outline-none transition-colors',
         )}
       >
         {(term.category || term.editorial_completeness) && (
           <div className="flex items-center gap-3 mb-2">
             {term.category && (
-              <span className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.22em] text-stitch-secondary">
+              <span className="type-rubrica text-[color:var(--gold-text)]">
                 {term.category}
               </span>
+
             )}
             {term.editorial_completeness && COMPLETENESS_DOT[term.editorial_completeness] && (
               <span
