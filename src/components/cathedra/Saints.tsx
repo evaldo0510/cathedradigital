@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, lazy, Suspense } from 'react';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { useOfficialSaint } from '@/hooks/useSaints';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -8,7 +8,8 @@ import { Icons } from '../../constants';
 import StaggeredList from './StaggeredList';
 import SacredImage from './SacredImage';
 import { SaintCardSkeleton, SaintGridSkeleton } from './SacredSkeleton';
-import SaintDetail, { CATEGORY_LABELS } from './SaintDetail';
+import { CATEGORY_LABELS } from './SaintDetail.categories';
+const SaintDetail = lazy(() => import('./SaintDetail'));
 import { type Saint } from '@/data/saints';
 import { getSaintsByDate, getSaintsByDateOrThrow, searchSaints, getSaintsByCategory, getAllSaints, getSaintById, formatSaint, type SaintWithScore } from '@/services/saintsService';
 import SaintsFetchError from './SaintsFetchError';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useContext, useMemo, useCallback, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Icons } from '@/constants';
@@ -15,7 +15,7 @@ import { DashboardSkeleton } from './DashboardSkeleton';
 import DevDataInspector from './DevDataInspector';
 import { useEnhancedRecommendations } from '@/hooks/useEnhancedRecommendations';
 import { SpiritualContinuity } from './SpiritualContinuity';
-import ContemplativeLayout from './ContemplativeLayout';
+const ContemplativeLayout = lazy(() => import('./ContemplativeLayout'));
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 
 
