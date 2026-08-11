@@ -6,6 +6,8 @@ import { resolveSpaceForPath } from '@/lib/spaces/resolveSpace';
 
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
+import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
 import ScrollToTop from './components/ScrollToTop';
 import RouteSeo from './components/RouteSeo';
 
@@ -76,10 +78,15 @@ const queryClient = new QueryClient({
     queries: {
       retry: 1,
       refetchOnWindowFocus: false,
-      staleTime: 1000 * 60 * 60, // Aumentado para 1h para conteúdos estáticos como orações
-      gcTime: 1000 * 60 * 120,    // 2h de garbage collection
+      staleTime: 1000 * 60 * 30, // 30min para evitar refetch constante
+      gcTime: 1000 * 60 * 60 * 24, // 24h para manter no cache persistente
     },
   },
+});
+
+const persister = createSyncStoragePersister({
+  storage: window.localStorage,
+  key: 'CATHEDRA_QUERY_CACHE',
 });
 
 // Lazy loaded routes
@@ -974,20 +981,22 @@ const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   return (
     <HelmetProvider>
       <Sentry.ErrorBoundary fallback={<AppErrorBoundary children={<LoadingFallback />} />}>
-        <QueryClientProvider client={queryClient}>
+        <PersistQueryClientProvider
+          client={queryClient}
+          persistOptions={{ persister }}
+        >
           <BrowserRouter basename={ROUTER_BASENAME}>
             <AuthProvider>
               <LangProvider>
                 <ReadingSettingsProvider>
                   <TooltipProvider>
                     {children}
-                    
                   </TooltipProvider>
                 </ReadingSettingsProvider>
               </LangProvider>
             </AuthProvider>
           </BrowserRouter>
-        </QueryClientProvider>
+        </PersistQueryClientProvider>
       </Sentry.ErrorBoundary>
     </HelmetProvider>
   );

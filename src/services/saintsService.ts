@@ -5,7 +5,9 @@ import { combinedSimilarity } from '@/lib/similarity';
 // Colunas mínimas para listagens/cards (evita puxar full_bio, works e refs
 // pesados). Detalhes (getSaintById) continuam com select('*').
 const LIST_COLUMNS =
-  'id, name, title, category, feast_day, feast_month, feast_day_num, image, patron_of, virtues';
+  'id, name, title, category, feast_day, feast_month, feast_day_num, image, patron_of, virtues, born, died, bio';
+
+const DETAIL_COLUMNS = '*';
 
 export const getSaintsByDate = async (month: number, day: number): Promise<Saint[]> => {
   const { data, error } = await supabase
@@ -162,7 +164,7 @@ export const getSaintBySubtitle = async (subtitle: string): Promise<Saint | null
 export const getSaintById = async (id: string): Promise<Saint | null> => {
   const { data, error } = await supabase
     .from('saints')
-    .select('*')
+    .select(DETAIL_COLUMNS)
     .eq('id', id)
     .maybeSingle();
 
