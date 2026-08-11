@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-08-05T11:02:02.889Z",
+  "generated_at": "2026-08-11T18:16:15.456Z",
   "project_domain": "https://www.cathedradigital.com.br",
   "summary": {
-    "pass": 12,
-    "warn": 2,
-    "fail": 0
+    "pass": 8,
+    "warn": 3,
+    "fail": 2
   },
   "checks": [
     {
       "id": "sitemap_exists",
       "label": "sitemap.xml presente",
       "status": "pass",
-      "detail": "666 URLs declaradas."
+      "detail": "128 URLs declaradas."
     },
     {
       "id": "sitemap_host",
@@ -52,14 +52,14 @@
     {
       "id": "meta_title",
       "label": "<title> definido e não genérico",
-      "status": "pass",
-      "detail": "Cathedra Digital — Bíblia, Catecismo e Tradição Católica"
+      "status": "fail",
+      "detail": "ausente"
     },
     {
       "id": "meta_description",
       "label": "meta description definida",
-      "status": "pass",
-      "detail": "150 caracteres"
+      "status": "fail",
+      "detail": "ausente"
     },
     {
       "id": "meta_canonical",
@@ -71,7 +71,7 @@
       "id": "meta_og",
       "label": "Open Graph (og:title, og:url) presentes",
       "status": "warn",
-      "detail": "og:title=true, og:url=false"
+      "detail": "og:title=false, og:url=false"
     },
     {
       "id": "gsc_meta",
@@ -81,15 +81,9 @@
     },
     {
       "id": "glossary_in_sitemap",
-      "label": "Verbetes do Glossário no sitemap (42 publicados)",
-      "status": "pass",
-      "detail": "Todos presentes."
-    },
-    {
-      "id": "glossary_in_rss",
-      "label": "Verbetes do Glossário no feed RSS",
-      "status": "pass",
-      "detail": "Todos presentes no feed."
+      "label": "Verbetes do Glossário no sitemap",
+      "status": "warn",
+      "detail": "Erro: Unable to connect. Is the computer able to access the url?"
     }
   ]
 }
