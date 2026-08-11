@@ -384,8 +384,8 @@ export const ReaderContinuation: React.FC<ReaderContinuationProps> = ({
         {/* Sprint 5 — Guided Walk Text */}
         {context.id && (
           <p className="mt-spacing-md text-premium-sm text-foreground/80 leading-relaxed max-w-[50ch] mx-auto animate-fade-in">
-            Se você está lendo isto, provavelmente deveria continuar por aqui...
-            A sua leitura de agora não é um fim, mas um convite. 
+            A sua leitura de agora não é um fim, mas um convite.
+
           </p>
         )}
       </header>

@@ -107,7 +107,7 @@ const EditorialShowcase: React.FC = () => {
       <Block label="CTA">
         <div className="flex flex-wrap gap-8 items-center">
           <EditorialCTA>Retomar leitura</EditorialCTA>
-          <EditorialCTA as="a" href="#">Explorar acervo</EditorialCTA>
+          <EditorialCTA as="a" href="/acervo">Explorar acervo</EditorialCTA>
         </div>
       </Block>
 

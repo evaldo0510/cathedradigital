@@ -43,9 +43,10 @@ const MinhaJornada: React.FC = () => {
         <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground mb-2">
           Assinatura & Doação
         </p>
-        <Link to="#" className="text-sm text-primary underline">
+        <Link to="/pricing" className="text-sm text-primary underline">
           Conhecer Cathedra PRO →
         </Link>
+
       </section>
     </PrototypeShell>
   );
