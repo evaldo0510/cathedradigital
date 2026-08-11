@@ -7,7 +7,7 @@ import { Icons } from '../../constants';
 import SacredImage from './SacredImage';
 import PassageActions from '@/components/shared/PassageActions';
 import { Button } from '@/components/ui/button';
-import { CATEGORY_LABELS } from './SaintDetail';
+import { CATEGORY_LABELS } from './SaintDetail.categories';
 import { type Saint } from '@/data/saints';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
