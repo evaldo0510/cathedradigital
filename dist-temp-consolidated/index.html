@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="pt-BR" class="overflow-x-hidden">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content" />
+
+    <!-- Google Search Console verification (manual via HTML tag) -->
+    <!-- TODO: substituir o content pelo código fornecido pelo Google Search Console -->
+    <meta name="google-site-verification" content="SUBSTITUIR_PELO_CODIGO_GSC" />
+
+    <!-- External dependencies minimized for offline integrity -->
+    <link rel="preconnect" href="https://gpwrpmoniglarqwfyryp.supabase.co" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@400;500;600;700;800;900&family=Karla:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&display=swap" rel="stylesheet" />
+    <meta name="robots" content="index, follow">
+
+
+    <!-- Preload critical assets removed for external call minimization -->
+
+
+    <meta name="keywords" content="bíblia católica online, catecismo online, liturgia diária online, santos do dia, oração diária, app católico gratuito, bíblia digital, jornada espiritual, magistério, dogmas católicos, rosário online">
+    <meta name="author" content="Cathedra Digital">
+    <!-- canonical e og:url são definidos por página via SEOHead (react-helmet-async) -->
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Cathedra Digital" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta name="twitter:card" content="summary_large_image">
+
+    <meta property="og:image" content="https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-image.png">
+    <meta name="twitter:image" content="https://gpwrpmoniglarqwfyryp.supabase.co/storage/v1/object/public/public-assets/og-image.png">
+
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="alternate" type="application/rss+xml" title="Cathedra · Léxico Teológico" href="https://gpwrpmoniglarqwfyryp.supabase.co/functions/v1/glossary-rss?format=rss">
+    <link rel="alternate" type="application/atom+xml" title="Cathedra · Léxico Teológico (Atom)" href="https://gpwrpmoniglarqwfyryp.supabase.co/functions/v1/glossary-rss?format=atom">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Cathedra Digital",
+      "url": "https://www.cathedradigital.com.br",
+      "description": "Plataforma católica unificada com Bíblia Sagrada, Catecismo da Igreja, vidas dos santos, liturgia diária e assistente de IA teológica.",
+      "applicationCategory": "ReligiousApplication",
+      "operatingSystem": "Web",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "BRL"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Cathedra Digital"
+      },
+      "inLanguage": "pt-BR"
+    }
+    </script>
+    <script>
+      (function() {
+        try {
+          const stored = localStorage.getItem('cathedra_reading_settings');
+          if (stored) {
+            const settings = JSON.parse(stored);
+            const root = document.documentElement;
+            
+            // Apply theme
+            if (settings.theme === 'night') {
+              root.classList.add('reading-theme-night', 'reading-night', 'dark');
+            } else if (settings.theme === 'dark') {
+              root.classList.add('reading-theme-dark', 'dark');
+            } else {
+              root.classList.add(`reading-theme-${settings.theme || 'paper'}`);
+            }
+            
+            // Apply High Contrast
+            if (settings.highContrast) {
+              root.classList.add('high-contrast');
+            }
+          }
+        } catch (e) {
+          console.error('Theme initialization failed', e);
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/assets/index-DjS0FQDj.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/vendor-motion-LObaHNe-.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-supabase-BopLTUAJ.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-recharts-DztTTzs2.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-ui-core-CnXuf4vn.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-date-utils-UOxoxWm7.js">
+    <link rel="modulepreload" crossorigin href="/assets/shared-ui-DxDQ2sS7.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-query-DPuV1pOg.js">
+    <link rel="modulepreload" crossorigin href="/assets/data-cross-refs-B1JIZBnY.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-lucide-2RqHwtkD.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-confetti-bits9m5W.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-sentry-CflYyxY-.js">
+    <link rel="modulepreload" crossorigin href="/assets/feature-saints-aQngRoAS.js">
+    <link rel="modulepreload" crossorigin href="/assets/vendor-react-BNa3R_zh.js">
+    <link rel="stylesheet" crossorigin href="/assets/index-bkQ7Ez3F.css">
+  <link rel="manifest" href="/manifest.webmanifest"></head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

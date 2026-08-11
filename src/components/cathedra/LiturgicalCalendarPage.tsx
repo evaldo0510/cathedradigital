@@ -7,7 +7,7 @@ import type { Saint } from '@/data/saints';
 import { useAllSaintsDB } from '@/hooks/useSaints';
 import { useLiturgicalMonth } from '@/hooks/useLiturgicalMonth';
 import SacredImage from './SacredImage';
-import SaintDetail from './SaintDetail';
+const SaintDetail = React.lazy(() => import('./SaintDetail'));
 import LiturgicalCalendarCachePanel from './LiturgicalCalendarCachePanel';
 import { AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';

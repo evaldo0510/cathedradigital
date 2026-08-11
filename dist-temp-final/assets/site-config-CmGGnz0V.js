@@ -1,0 +1,2 @@
+const t={INSTAGRAM:"https://www.instagram.com/cathedradigital/",YOUTUBE:"https://www.youtube.com/@cathedradigital",TWITTER:"https://twitter.com/cathedradigital",FACEBOOK:"https://facebook.com/cathedradigital",WHATSAPP:"https://wa.me/5511999999999"},a={VATICAN:"https://www.vatican.va",VATICAN_NEWS:"https://www.vaticannews.va/pt.html",CNBB:"https://www.cnbb.org.br",CATECHISM_OFFICIAL:"https://www.vatican.va/archive/ccc/index_po.htm"};export{a as E,t as S};
+//# sourceMappingURL=site-config-CmGGnz0V.js.map

@@ -1,0 +1,2 @@
+import{j as s}from"./vendor-react-DkealLyu.js";import{ao as m,I as p}from"./feature-saints-CvIAsjLx.js";import{B as h}from"./shared-ui-tWDYY2zs.js";const j=({title:r,text:t,url:a,className:i="",size:n="icon",variant:c="outline"})=>{const e=m(),o=n==="icon";return s.jsxs(h,{onClick:()=>e({title:r,text:t,url:a}),variant:c,size:o?"icon":"sm",className:i,title:"Compartilhar",children:[s.jsx(p.Share2,{className:"w-spacing-md h-spacing-md"}),!o&&"Compartilhar"]})};export{j as S};
+//# sourceMappingURL=ShareButton-DYk0ZOEz.js.map

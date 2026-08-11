@@ -1,0 +1,15 @@
+{
+  "current": "security-rescan-report.json",
+  "runs": [
+    {
+      "scan_id": "rescan-2026-06-27",
+      "scanned_at": "2026-06-27T03:13:00Z",
+      "trigger": "post-fix verification",
+      "summary": { "critical": 0, "high": 0, "warn": 11, "info": 0, "total": 11 },
+      "gate": { "status": "ok", "blocked": false, "blocking": [] },
+      "report_url": "/security-rescan-report.json",
+      "commit": null,
+      "pr": null
+    }
+  ]
+}

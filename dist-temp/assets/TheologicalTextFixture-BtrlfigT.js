@@ -1,0 +1,2 @@
+import{e as r,j as o}from"./vendor-react-C7QBJBbo.js";import"./index-BPjEQjYp.js";import"./vendor-pdf-hULenUmj.js";import"./vendor-supabase-BopLTUAJ.js";import"./vendor-confetti-bits9m5W.js";import"./vendor-sentry-B14sYVNw.js";import"./vendor-ui-BnUW9JXG.js";import"./vendor-recharts-CscXAUa0.js";import"./vendor-lucide-CAT-QOmT.js";import"./vendor-motion-XPJzivEp.js";const u=()=>{const[t]=r();return t.get("text"),o.jsx("div",{children:"Not available"})};export{u as default};
+//# sourceMappingURL=TheologicalTextFixture-BtrlfigT.js.map

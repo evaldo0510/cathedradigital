@@ -146,7 +146,23 @@ export default defineConfig(({ mode }) => ({
           if (id.includes('node_modules/jspdf')) return 'vendor-pdf';
           if (id.includes('node_modules/canvas-confetti')) return 'vendor-confetti';
           if (id.includes('node_modules/html2canvas')) return 'vendor-html2canvas';
-          if (id.includes('node_modules/@radix-ui/')) return 'vendor-ui';
+          if (id.includes('node_modules/@radix-ui/') || id.includes('node_modules/class-variance-authority')) return 'vendor-ui-core';
+          if (id.includes('node_modules/@tanstack/react-query')) return 'vendor-query';
+          if (id.includes('node_modules/date-fns')) return 'vendor-date-utils';
+          
+          // Consolidated Feature: Saints
+          if (id.includes('src/components/cathedra/Saints') || 
+              id.includes('src/components/cathedra/SaintDetail') ||
+              id.includes('src/components/cathedra/SanctorumHero') ||
+              id.includes('src/components/cathedra/SacredImage') ||
+              id.includes('src/services/saintsService.ts') ||
+              id.includes('src/hooks/useSaints.ts')) {
+            return 'feature-saints';
+          }
+
+          // Shared UI components that are too small to be separate chunks
+          if (id.includes('src/components/ui/')) return 'shared-ui';
+          
           // Isolate heavy data files
           if (id.includes('src/data/apparitions')) return 'data-apparitions';
           if (id.includes('src/data/cross-references')) return 'data-cross-refs';

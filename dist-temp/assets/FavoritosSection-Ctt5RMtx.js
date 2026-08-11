@@ -1,0 +1,2 @@
+import{j as o}from"./vendor-react-C7QBJBbo.js";import r from"./ProfileFavoritesPage-5K4-NB1P.js";import"./index-BPjEQjYp.js";import"./vendor-pdf-hULenUmj.js";import"./vendor-supabase-BopLTUAJ.js";import"./vendor-confetti-bits9m5W.js";import"./vendor-sentry-B14sYVNw.js";import"./vendor-ui-BnUW9JXG.js";import"./vendor-recharts-CscXAUa0.js";import"./vendor-lucide-CAT-QOmT.js";import"./vendor-motion-XPJzivEp.js";import"./input-BcnbzH9F.js";function c(){return o.jsx(r,{})}export{c as default};
+//# sourceMappingURL=FavoritosSection-Ctt5RMtx.js.map

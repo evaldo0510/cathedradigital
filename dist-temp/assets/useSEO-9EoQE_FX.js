@@ -1,0 +1,2 @@
+import{P as s,D as t}from"./index-BPjEQjYp.js";const o=()=>s({queryKey:["seo-settings"],queryFn:async()=>{const{data:r,error:e}=await t.from("public_seo_settings").select("*").maybeSingle();if(e)throw e;return r},staleTime:1e3*60*30}),i=()=>s({queryKey:["site-keywords"],queryFn:async()=>{const{data:r,error:e}=await t.from("site_keywords").select("*").eq("is_active",!0).order("priority",{ascending:!1});if(e)throw e;return r},staleTime:1e3*60*60});export{i as a,o as u};
+//# sourceMappingURL=useSEO-9EoQE_FX.js.map

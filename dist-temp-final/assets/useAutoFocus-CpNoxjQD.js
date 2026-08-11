@@ -1,0 +1,2 @@
+import{r as o}from"./vendor-react-DkealLyu.js";const u=()=>{o.useEffect(()=>{if(sessionStorage.getItem("cathedra_auto_focus")){sessionStorage.removeItem("cathedra_auto_focus");const t=document.querySelector("h1");if(t)t.tabIndex=-1,t.focus(),t.classList.add("auto-focused-title"),setTimeout(()=>{t.classList.remove("auto-focused-title")},2e3);else{const e=document.getElementById("main-content");e&&e.focus()}}},[])};export{u};
+//# sourceMappingURL=useAutoFocus-CpNoxjQD.js.map

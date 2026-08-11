@@ -1,0 +1,2 @@
+import{r as t,j as r}from"./vendor-react-C7QBJBbo.js";import{Y as a,Z as m}from"./vendor-ui-BnUW9JXG.js";import{R as i}from"./index-BPjEQjYp.js";const n=t.forwardRef(({className:s,value:o,...e},l)=>r.jsx(a,{ref:l,className:i("relative h-spacing-md w-full overflow-hidden rounded-premium-full bg-secondary",s),...e,children:r.jsx(m,{className:"h-full w-full flex-1 bg-primary transition-all",style:{transform:`translateX(-${100-(o||0)}%)`}})}));n.displayName=a.displayName;export{n as P};
+//# sourceMappingURL=progress-CUt-qf_8.js.map
