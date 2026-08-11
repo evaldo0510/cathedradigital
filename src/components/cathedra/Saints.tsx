@@ -679,10 +679,11 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
 
 Saints.displayName = 'Saints';
 
-const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void }> = ({ saint, onClick }) => {
+const SaintCard: React.FC<{ saint: SaintWithScore; onClick: () => void; onMouseEnter?: () => void }> = ({ saint, onClick, onMouseEnter }) => {
   return (
     <Button
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
       className="group bg-card border border-border rounded-[2rem] overflow-hidden hover:border-primary/50 hover:shadow-premium-hover hover:-translate-y-1 transition-all duration-500 text-left flex flex-col h-full focus-visible:ring-2 focus-visible:ring-primary outline-none"
     >
       <div className="relative h-spacing-4xl overflow-hidden">
