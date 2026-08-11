@@ -19,7 +19,6 @@
  * 
  * STATUS: AUDIT 7.3 = CERTIFIED (Infrastructure Ready)
  */
- */
 export const InfrastructureDiagnostics = () => {
   return (
     <div style={{ display: 'none' }}>
