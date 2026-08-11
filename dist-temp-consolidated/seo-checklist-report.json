@@ -1,0 +1,89 @@
+{
+  "generated_at": "2026-08-11T18:16:15.456Z",
+  "project_domain": "https://www.cathedradigital.com.br",
+  "summary": {
+    "pass": 8,
+    "warn": 3,
+    "fail": 2
+  },
+  "checks": [
+    {
+      "id": "sitemap_exists",
+      "label": "sitemap.xml presente",
+      "status": "pass",
+      "detail": "128 URLs declaradas."
+    },
+    {
+      "id": "sitemap_host",
+      "label": "sitemap.xml usa domínio do projeto",
+      "status": "pass",
+      "detail": "Base https://www.cathedradigital.com.br confirmada."
+    },
+    {
+      "id": "robots_exists",
+      "label": "robots.txt presente",
+      "status": "pass",
+      "detail": "Arquivo presente."
+    },
+    {
+      "id": "robots_sitemap",
+      "label": "robots.txt aponta para o sitemap correto",
+      "status": "pass",
+      "detail": "Sitemap: https://www.cathedradigital.com.br/sitemap.xml"
+    },
+    {
+      "id": "robots_not_blocking",
+      "label": "robots.txt não bloqueia o site inteiro",
+      "status": "pass",
+      "detail": "Crawl permitido em /."
+    },
+    {
+      "id": "llms_exists",
+      "label": "llms.txt presente",
+      "status": "pass",
+      "detail": "2493 bytes."
+    },
+    {
+      "id": "llms_summary",
+      "label": "llms.txt traz resumo (>)",
+      "status": "pass",
+      "detail": "Resumo presente."
+    },
+    {
+      "id": "meta_title",
+      "label": "<title> definido e não genérico",
+      "status": "fail",
+      "detail": "ausente"
+    },
+    {
+      "id": "meta_description",
+      "label": "meta description definida",
+      "status": "fail",
+      "detail": "ausente"
+    },
+    {
+      "id": "meta_canonical",
+      "label": "canonical aponta para o domínio",
+      "status": "warn",
+      "detail": "ausente"
+    },
+    {
+      "id": "meta_og",
+      "label": "Open Graph (og:title, og:url) presentes",
+      "status": "warn",
+      "detail": "og:title=false, og:url=false"
+    },
+    {
+      "id": "gsc_meta",
+      "label": "Google Search Console: meta verification",
+      "status": "pass",
+      "detail": "Meta google-site-verification presente."
+    },
+    {
+      "id": "glossary_in_sitemap",
+      "label": "Verbetes do Glossário no sitemap",
+      "status": "warn",
+      "detail": "Erro: Unable to connect. Is the computer able to access the url?"
+    }
+  ]
+}

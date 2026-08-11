@@ -1,0 +1,82 @@
+User-agent: *
+Allow: /
+Disallow: /a11y-audit
+Disallow: /admin
+Disallow: /admin/seo-verify
+Disallow: /admin/visual-audit
+Disallow: /admin/visual-regression
+Disallow: /az-faith
+Disallow: /bible-legacy
+Disallow: /biblia
+Disallow: /biblioteca-legacy
+Disallow: /buscar-legacy
+Disallow: /cache-manager
+Disallow: /catechism-legacy
+Disallow: /catechism/health
+Disallow: /catechism/integrity
+Disallow: /catechism/verify
+Disallow: /catecismo
+Disallow: /chat
+Disallow: /checkout
+Disallow: /checkout/result
+Disallow: /confession
+Disallow: /confissao
+Disallow: /contemplacao
+Disallow: /dashboard
+Disallow: /dev/editorial
+Disallow: /dev/mobile
+Disallow: /diagnostics
+Disallow: /diario
+Disallow: /encyclopedia
+Disallow: /favorites
+Disallow: /glossary
+Disallow: /home
+Disallow: /home-v3
+Disallow: /ladainhas
+Disallow: /legacy-home
+Disallow: /legal/privacy
+Disallow: /login
+Disallow: /magisterio
+Disallow: /offline
+Disallow: /oracao-legacy
+Disallow: /planos
+Disallow: /prayers
+Disallow: /profile
+Disallow: /rosario
+Disallow: /rosary
+Disallow: /rosary-legacy
+Disallow: /search
+Disallow: /security-audit
+Disallow: /sobre
+Disallow: /transactions
+Disallow: /upgrade
+Disallow: /vendedor
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Applebot-Extended
+Disallow: /
+
+User-agent: Meta-ExternalAgent
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: Amazonbot
+Disallow: /
+
+Sitemap: https://www.cathedradigital.com.br/sitemap.xml

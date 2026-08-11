@@ -1,0 +1,2 @@
+const i=[{name:"Catecúmeno",minXp:0},{name:"Peregrino",minXp:100},{name:"Acólito",minXp:300},{name:"Leitor",minXp:600},{name:"Discípulo",minXp:1e3},{name:"Apologista",minXp:1800},{name:"Teólogo",minXp:3e3},{name:"Doutor da Fé",minXp:5e3},{name:"Mestre Erudito",minXp:8e3},{name:"Patriarca",minXp:12e3}];function X(o){const e=i.reduce((a,p,r)=>o>=p.minXp?r:a,0),n=i[e],m=i[e+1],t=m?(o-n.minXp)/(m.minXp-n.minXp)*100:100;return{levelIdx:e,levelName:n.name,nextLevel:m,progress:t}}export{X as g};
+//# sourceMappingURL=levels-DnxpzdMV.js.map
