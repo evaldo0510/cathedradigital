@@ -8,7 +8,7 @@ import PassageActions from '@/components/shared/PassageActions';
 import DocumentViewer from './DocumentViewer';
 import Relatio from './Relatio';
 import DeepContentSection from './DeepContentSection';
-import SaintDetailTabs from './SaintDetailTabs';
+const SaintDetailTabs = lazy(() => import('./SaintDetailTabs'));
 import { type Saint } from '@/data/saints';
 
 import { AppRoute } from '@/types';
@@ -24,8 +24,8 @@ import SourceAttribution from './SourceAttribution';
 import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 import { resolveSaintAutoNexus } from '@/core/knowledge/adapters/saintAutoNexus';
 import { NexusPanel } from '@/components/reader';
-import SaintCuratedConnections from '@/components/cathedra/SaintCuratedConnections';
-import SaintWorksSection from '@/components/cathedra/SaintWorksSection';
+const SaintCuratedConnections = lazy(() => import('@/components/cathedra/SaintCuratedConnections'));
+const SaintWorksSection = lazy(() => import('@/components/cathedra/SaintWorksSection'));
 import { EditorialReaderHeader, EditorialDivider } from '@/components/editorial';
 import { ReaderToolbar } from '@/components/reader';
 import SanctumEditorial, { SanctumCurationBadge } from './SanctumEditorial';
@@ -309,15 +309,17 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
         </div>
 
         {/* Abas: História · Virtude · Padroeiro(a) · Refletir com Logos */}
-        <SaintDetailTabs
-          saint={saint}
-          autoReflect={autoReflect}
-          onReflect={() => {
-            const targetId = (saint as any).slug || saint.id;
-            navigate(`/logos?about=${encodeURIComponent(`saint:${targetId}`)}`);
-            onClose();
-          }}
-        />
+        <Suspense fallback={<div className="h-40 animate-pulse bg-muted/20 rounded-premium" />}>
+          <SaintDetailTabs
+            saint={saint}
+            autoReflect={autoReflect}
+            onReflect={() => {
+              const targetId = (saint as any).slug || saint.id;
+              navigate(`/logos?about=${encodeURIComponent(`saint:${targetId}`)}`);
+              onClose();
+            }}
+          />
+        </Suspense>
 
         {/* Sanctorum 2.0 — capítulos editoriais, timeline, iconografia, vida espiritual */}
         <SanctumEditorial saint={saint} />

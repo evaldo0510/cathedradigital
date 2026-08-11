@@ -8,7 +8,7 @@ import { Icons } from '../../constants';
 import StaggeredList from './StaggeredList';
 import SacredImage from './SacredImage';
 import { SaintCardSkeleton, SaintGridSkeleton } from './SacredSkeleton';
-import SaintDetail, { CATEGORY_LABELS } from './SaintDetail';
+const SaintDetail = lazy(() => import('./SaintDetail'));
 import { type Saint } from '@/data/saints';
 import { getSaintsByDate, getSaintsByDateOrThrow, searchSaints, getSaintsByCategory, getAllSaints, getSaintById, formatSaint, type SaintWithScore } from '@/services/saintsService';
 import SaintsFetchError from './SaintsFetchError';
