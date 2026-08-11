@@ -1,6 +1,6 @@
 /**
- * CATHEDRA MISSION CONTROL - ONDA 2.6
- * RESTAURAÇÃO DO TENANT
+ * CATHEDRA MISSION CONTROL - FRENTE 3
+ * CONSOLIDAÇÃO DO FRONTEND SEM BACKEND
  */
 export const InfrastructureDiagnostics = () => {
   return (
@@ -12,208 +12,334 @@ export const InfrastructureDiagnostics = () => {
       Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
       Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-      TEXTO DO USUÁRIO: CATHEDRA MISSION CONTROL — RECUPERAÇÃO DE BACKEND
-      FASE 2.6 — RESTAURAÇÃO DO TENANT
+      TEXTO DO USUÁRIO: CATHEDRA MISSION CONTROL — FRENTE 3
+      CONSOLIDAÇÃO DO FRONTEND SEM BACKEND
 
-      STATUS ATUAL: BLOCKED — INFRASTRUCTURE
+      O backend original está temporariamente inacessível.
 
-      DIAGNÓSTICO CONFIRMADO:
-
-      Supabase URL:
-      `gpwrpmoniglarqwfyryp.supabase.co`
-
-      Resultado:
-      NXDOMAIN
-
-      Pooler:
-      `aws-1-us-east-1.pooler.supabase.com:6543`
-
-      Resultado:
-      `tenant not found`
-
-      Conclusão:
-
-      O projeto não está conseguindo resolver ou reconhecer o tenant Supabase associado ao ambiente atual.
-
-      O frontend foi validado e suas configurações estão corretas.
-
-      NÃO alterar código da aplicação.
-      NÃO alterar hooks.
-      NÃO alterar `usePrayers`.
-      NÃO alterar `useChurchContext`.
-      NÃO alterar Reader V2.
-      NÃO alterar Nexus.
-      NÃO alterar Logos.
-      NÃO alterar módulos certificados.
-      NÃO criar novo projeto Supabase.
-      NÃO trocar a URL do projeto por uma URL inventada.
-      NÃO gerar nova ANON_KEY.
-      NÃO recriar tabelas.
+      NÃO tentar restaurar o backend nesta execução.
       NÃO executar migrations.
-      NÃO tentar inserir as orações.
+      NÃO inserir dados.
+      NÃO criar banco alternativo.
+
+      Vamos avançar exclusivamente naquilo que pode ser validado sem Supabase.
 
       OBJETIVO:
 
-      Restaurar a conexão ORIGINAL do projeto com seu backend original.
+      Auditar e estabilizar toda a experiência FRONTEND do Cathedra Digital, preservando os módulos já certificados.
+
+      ATIVAR OS SKILLS EXISTENTES:
+
+      - cathedra-operating-system
+      - cathedra-design-system-guardian
+      - cathedra-architecture-guardian
+      - cathedra-knowledge-graph-expert
+      - cathedra-saints-expert
+      - cathedra-prayer-engine-expert
+      - cathedra-liturgy-expert
 
       ==================================================
-      1. IDENTIFICAR O PROJETO
+      1. NAVEGAÇÃO PRINCIPAL
       ==================================================
 
-      Verificar no ambiente Lovable:
+      Auditar:
 
-      - projeto Supabase associado;
-      - Project ID;
-      - Project URL;
-      - estado da integração Cloud;
-      - estado do banco;
-      - estado das Edge Functions;
-      - estado das secrets;
-      - estado do vínculo Lovable Cloud ↔ Supabase.
+      - Home
+      - Ler
+      - Orar
+      - Igreja
+      - Biblioteca
+      - Perfil
+      - Acervo
+      - Nexus
+      - Logos
+      - Jornadas
+      - Santos
+      - Liturgia
+      - Catecismo
+      - Bíblia
+      - Patrística
+      - Magistério
+      - Aparições Marianas
+      - Atlas
 
-      Não assumir nenhum identificador.
-      Utilizar somente dados reais disponíveis no ambiente.
+      Verificar:
 
-      ==================================================
-      2. VERIFICAR O TENANT
-      ==================================================
+      - rota existe;
+      - botão abre a rota correta;
+      - breadcrumb correto;
+      - voltar funciona;
+      - links internos não geram 404;
+      - nenhuma tela fica vazia por erro de frontend.
 
-      Confirmar se o tenant correspondente ao Project ID:
-      `gpwrpmoniglarqwfyryp`
-      está:
-      - ativo;
-      - suspenso;
-      - removido;
-      - provisionando;
-      - desconectado;
-      - ou inexistente.
-
-      Se o ambiente fornecer diagnóstico oficial da infraestrutura, utilizar esse diagnóstico.
-
-      ==================================================
-      3. NÃO RECRIAR INFRAESTRUTURA
-      ==================================================
-
-      Se o tenant estiver suspenso ou desconectado:
-      → restaurar/reconectar o backend ORIGINAL.
-
-      Se o tenant estiver inexistente:
-      → NÃO criar outro backend automaticamente.
-      → informar claramente que o backend original não foi localizado.
-
-      O objetivo é preservar os dados existentes.
+      Não considerar ausência de dados do backend como erro de rota.
 
       ==================================================
-      4. VERIFICAR DNS
+      2. BIBLIOTECA / MOSTEIRO DO CONHECIMENTO
       ==================================================
 
-      Confirmar se:
-      `gpwrpmoniglarqwfyryp.supabase.co`
-      volta a resolver corretamente.
+      Auditar `/acervo`.
 
-      Resultado esperado:
-      DNS = PASS
+      Preservar o conceito atual:
 
-      Somente depois disso testar REST.
+      MOSTEIRO DO CONHECIMENTO
 
-      ==================================================
-      5. TESTAR REST
-      ==================================================
+      Verificar:
 
-      Após DNS PASS:
-      verificar se o endpoint Supabase responde.
+      - estantes;
+      - cards;
+      - ícones;
+      - categorias;
+      - responsividade;
+      - desktop;
+      - mobile;
+      - busca Logos;
+      - navegação para os módulos.
 
-      Resultado esperado:
-      REST = PASS
+      No MOBILE:
 
-      Somente depois testar banco.
+      Os módulos devem funcionar como uma biblioteca visual.
 
-      ==================================================
-      6. TESTAR BANCO
-      ==================================================
+      Cada estante/card/ícone deve representar claramente uma função.
 
-      Executar apenas uma operação de leitura.
-      Não executar INSERT.
+      Ao tocar:
 
-      Confirmar:
-      Database = PASS
-      Pooler = PASS
-      Tenant = PASS
+      → abrir exatamente o módulo correspondente.
+
+      Não criar novos módulos.
 
       ==================================================
-      7. PRESERVAÇÃO
+      3. HOME DESKTOP
       ==================================================
 
-      Confirmar que o backend restaurado é o ORIGINAL.
-      Não aceitar:
-      - novo Project ID;
-      - novo banco vazio;
-      - novo Supabase;
-      - nova URL;
-      - nova estrutura sem os dados anteriores.
+      Auditar a Home Desktop como:
 
-      Se houver risco de perda de dados:
-      PARAR.
+      PAINEL DO MOSTEIRO
 
-      ==================================================
-      8. ORAÇÕES
-      ==================================================
+      Verificar:
 
-      NÃO tentar carregar ainda.
+      - Hero;
+      - Sua Caminhada;
+      - Hoje no Cathedra;
+      - recomendações;
+      - Nexus;
+      - Logos;
+      - Santo do Dia;
+      - Liturgia;
+      - ações principais.
 
-      As fontes continuam preservadas em:
-      `src/components/cathedra/rosary/RosarySession.tsx`
-      e demais fontes já identificadas.
+      Garantir hierarquia visual clara.
 
-      Depois que:
-      DNS = PASS
-      REST = PASS
-      DATABASE = PASS
+      Não adicionar informação falsa caso o dado dependa do backend.
 
-      a próxima etapa será a carga das quatro orações:
-      - Pai Nosso
-      - Ave Maria
-      - Glória
-      - Salve Rainha
+      Quando o dado não estiver disponível:
+
+      usar estado de carregamento/indisponibilidade já existente.
+
+      Não inventar conteúdo.
 
       ==================================================
-      9. CERTIFICAÇÃO
+      4. MOBILE
       ==================================================
 
-      Não alterar o status dos módulos já certificados.
+      Auditar todas as telas principais em viewport mobile.
 
-      Estado esperado:
-      Santo do Dia = CERTIFIED
-      Papa Atual = CERTIFIED
-      Patrística = CERTIFIED
-      Magistério = CERTIFIED
+      Prioridade:
 
-      Orações:
-      BLOCKED — aguardando backend
+      - navegação;
+      - hit areas;
+      - ícones;
+      - textos;
+      - overflow;
+      - cards;
+      - botões;
+      - menus;
+      - retorno;
+      - acessibilidade.
+
+      Nenhum botão pode parecer clicável e não executar ação.
 
       ==================================================
-      RESULTADO FINAL OBRIGATÓRIO
+      5. LOGO E IDENTIDADE
       ==================================================
 
-      Informar exatamente:
-      Project ID:
-      Tenant:
-      Cloud:
-      DNS:
-      REST:
-      Database:
-      Pooler:
-      Edge Functions:
-      Secrets:
-      Backend original preservado:
+      Auditar:
+
+      - Logo Desktop;
+      - Monograma Mobile;
+      - Header;
+      - Sidebar;
+      - Bottom Navigation;
+      - Splash;
+      - Biblioteca.
+
+      Garantir que todos utilizem a identidade oficial existente.
+
+      Não criar uma nova identidade.
+
+      Não alterar a marca sem necessidade.
+
+      ==================================================
+      6. READER V2
+      ==================================================
+
+      Auditar estruturalmente:
+
+      - Bíblia;
+      - Catecismo;
+      - Santos;
+      - Aparições;
+      - Patrística;
+      - Magistério;
+      - Liturgia;
+      - Orações.
+
+      Verificar:
+
+      ReaderShell
+      → conteúdo
+      → Nexus
+      → ReaderContinuation
+
+      Se o conteúdo não puder carregar por falta do backend:
+
+      não alterar o Reader.
+
+      Registrar:
+
+      BACKEND DEPENDENCY
+
+      ==================================================
+      7. NEXUS
+      ==================================================
+
+      Auditar somente a interface e navegação.
+
+      Para cada conexão disponível estaticamente:
+
+      origem
+      → card
+      → destino
+      → rota
+
+      Verificar se o destino existe.
+
+      Não exigir dados dinâmicos enquanto o backend estiver indisponível.
+
+      ==================================================
+      8. DESIGN SYSTEM
+      ==================================================
+
+      Executar auditoria:
+
+      - tokens legados;
+      - classes `stitch-*`;
+      - tokens Harmony;
+      - tipografia;
+      - espaçamentos;
+      - cards;
+      - botões;
+      - ícones;
+      - estados hover/focus;
+      - contraste.
+
+      Corrigir somente inconsistências reais encontradas.
+
+      Não fazer redesign desnecessário.
+
+      ==================================================
+      9. TESTES
+      ==================================================
+
+      Executar tudo que NÃO depende do backend:
+
+      - TypeScript;
+      - lint;
+      - testes unitários;
+      - testes de componentes;
+      - Playwright;
+      - rotas;
+      - navegação;
+      - Desktop;
+      - Mobile;
+      - acessibilidade;
+      - headings;
+      - SEO estrutural.
+
+      Separar falhas:
+
+      FRONTEND FAILURE
+
+      de
+
+      BACKEND DEPENDENCY.
+
+      ==================================================
+      10. REGRA FUNDAMENTAL
+      ==================================================
+
+      Não criar funcionalidades novas.
+
+      Não inventar dados.
+
+      Não substituir o Supabase.
+
+      Não criar fallback permanente.
+
+      Não alterar módulos CERTIFIED sem encontrar uma regressão real.
+
+      O objetivo é deixar o FRONTEND 100% pronto enquanto o backend é recuperado separadamente.
+
+      ==================================================
+      RELATÓRIO FINAL
+      ==================================================
+
+      NAVEGAÇÃO:
+      PASS / FAIL
+
+      HOME:
+      PASS / FAIL
+
+      ACERVO:
+      PASS / FAIL
+
+      MOBILE:
+      PASS / FAIL
+
+      DESKTOP:
+      PASS / FAIL
+
+      LOGO:
+      PASS / FAIL
+
+      READER V2:
+      PASS / FAIL / BACKEND DEPENDENCY
+
+      NEXUS:
+      PASS / FAIL / BACKEND DEPENDENCY
+
+      DESIGN SYSTEM:
+      PASS / FAIL
+
+      TESTES:
+      PASS / FAIL
+
+      LISTAR SOMENTE:
+
+      1. problemas reais encontrados;
+      2. correções realizadas;
+      3. dependências do backend;
+      4. itens que permanecem bloqueados.
 
       STATUS:
-      PASS — BACKEND RESTAURADO
-      ou
-      BLOCKED — BACKEND NÃO RESTAURADO
 
-      Se o backend original não puder ser restaurado, NÃO criar infraestrutura substituta nesta execução.
-      PARAR E INFORMAR A CAUSA.
+      FRONTEND CERTIFIED
+
+      ou
+
+      FRONTEND BLOCKED
+
+      Não declarar o Cathedra inteiro certificado enquanto o backend estiver indisponível.
     </div>
   );
 };
