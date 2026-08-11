@@ -981,20 +981,22 @@ const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => 
   return (
     <HelmetProvider>
       <Sentry.ErrorBoundary fallback={<AppErrorBoundary children={<LoadingFallback />} />}>
-        <QueryClientProvider client={queryClient}>
+        <PersistQueryClientProvider
+          client={queryClient}
+          persistOptions={{ persister }}
+        >
           <BrowserRouter basename={ROUTER_BASENAME}>
             <AuthProvider>
               <LangProvider>
                 <ReadingSettingsProvider>
                   <TooltipProvider>
                     {children}
-                    
                   </TooltipProvider>
                 </ReadingSettingsProvider>
               </LangProvider>
             </AuthProvider>
           </BrowserRouter>
-        </QueryClientProvider>
+        </PersistQueryClientProvider>
       </Sentry.ErrorBoundary>
     </HelmetProvider>
   );
