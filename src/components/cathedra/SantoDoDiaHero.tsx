@@ -383,6 +383,9 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
             variant="primary"
             className="flex-1"
             onClick={() => onOpen(false)}
+            onMouseEnter={() => {
+              import('./SaintDetail');
+            }}
             aria-label={`Conhecer a história completa de ${saint.name}`}
           >
             <Icons.BookOpen className="w-spacing-md h-spacing-md" />
@@ -392,6 +395,13 @@ const SantoDoDiaHero: React.FC<SantoDoDiaHeroProps> = ({ saint, date, onOpen }) 
             variant="secondary"
             className="flex-1"
             onClick={() => onOpen(true)}
+            onMouseEnter={() => {
+              // Prefetch Logos search
+              navigate(`/logos?about=${encodeURIComponent(`saint:${saint.slug || saint.id}`)}`, { replace: true });
+              // Wait, I shouldn't navigate on hover. Just prefetch the chunk if possible.
+              // For now, just prefetch the SaintDetail since Logos might use it.
+              import('./SaintDetail');
+            }}
             aria-label={`Refletir com Logos sobre ${saint.name}`}
           >
             <Icons.Sparkles className="w-spacing-md h-spacing-md" />
