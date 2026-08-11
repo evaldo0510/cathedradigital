@@ -442,6 +442,11 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                               key={saint.id}
                               type="button"
                               onClick={() => handleOpenSaint(saint, false)}
+                              onMouseEnter={() => {
+                                // Prefetch do componente e dados do santo
+                                import('./SaintDetail');
+                                getSaintById(saint.id);
+                              }}
                               className="group text-left border-l-2 border-secondary/40 hover:border-secondary pl-spacing-md pr-spacing-xs py-spacing-sm min-h-11 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-secondary/60 focus-visible:ring-offset-2 focus-visible:ring-offset-background rounded-sm"
                               aria-label={`Abrir ficha de ${saint.name}`}
                             >
@@ -519,6 +524,10 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                             score={saint.similarityScore}
                             icon={<Icons.User className="w-spacing-md h-spacing-md" />}
                             onClick={() => handleOpenSaint(saint, false)}
+                            onMouseEnter={() => {
+                              import('./SaintDetail');
+                              getSaintById(saint.id);
+                            }}
                             index={i}
                           />
                         ))}
@@ -527,10 +536,14 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                             key={saint.id}
                             title={saint.name}
                             subtitle={saint.title}
-                            icon={<Icons.Sparkles className="w-spacing-md h-spacing-md" />}
-                            onClick={() => handleOpenSaint(saint, false)}
-                            index={searchResults.length + i}
-                          />
+                             icon={<Icons.Sparkles className="w-spacing-md h-spacing-md" />}
+                             onClick={() => handleOpenSaint(saint, false)}
+                             onMouseEnter={() => {
+                               import('./SaintDetail');
+                               getSaintById(saint.id);
+                             }}
+                             index={searchResults.length + i}
+                           />
                         ))}
                         </AnimatePresence>
                       </div>
@@ -632,7 +645,15 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                 ) : (
                   <StaggeredList className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-spacing-lg">
                     {modeSaints.map(saint => (
-                      <SaintCard key={saint.id} saint={saint} onClick={() => handleOpenSaint(saint, false)} />
+                      <SaintCard 
+                        key={saint.id} 
+                        saint={saint} 
+                        onClick={() => handleOpenSaint(saint, false)}
+                        onMouseEnter={() => {
+                          import('./SaintDetail');
+                          getSaintById(saint.id);
+                        }}
+                      />
                     ))}
                   </StaggeredList>
                 )}
