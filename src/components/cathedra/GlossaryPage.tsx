@@ -217,7 +217,7 @@ const GlossaryPage: React.FC = () => {
           </label>
           <div className="relative">
             <Search
-              className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-stitch-on-surface-variant"
+              className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground"
               aria-hidden="true"
             />
             <input
@@ -228,14 +228,14 @@ const GlossaryPage: React.FC = () => {
               placeholder="Digite uma palavra ou conceito…"
               className={cn(
                 'w-full pl-12 pr-12 py-4 rounded-full',
-                'bg-stitch-surface-container-lowest border border-stitch-outline-variant/60',
-                'font-stitch-serif text-stitch-body text-stitch-on-background',
-                'placeholder:text-stitch-on-surface-variant/70',
-                'focus-visible:outline-none focus-visible:border-stitch-secondary focus-visible:ring-2 focus-visible:ring-stitch-secondary/30',
+                'bg-card border border-border/60',
+                'font-serif text-premium-base text-foreground',
+                'placeholder:text-muted-foreground/70',
+                'focus-visible:outline-none focus-visible:border-gold focus-visible:ring-2 focus-visible:ring-gold/30',
               )}
             />
             {isSearchPending && (
-              <span className="absolute right-5 top-1/2 -translate-y-1/2 font-stitch-label text-stitch-label-sm uppercase tracking-[0.22em] text-stitch-secondary">
+              <span className="absolute right-5 top-1/2 -translate-y-1/2 type-rubrica text-[color:var(--gold-text)]">
                 buscando…
               </span>
             )}
@@ -365,14 +365,14 @@ const GlossaryPage: React.FC = () => {
                   <header className="flex items-baseline gap-6 mb-8">
                     <span
                       aria-hidden="true"
-                      className="font-stitch-display text-stitch-display-lg text-stitch-secondary leading-none"
+                      className="font-display text-premium-3xl text-[color:var(--gold-text)] leading-none"
                     >
                       {letter}
                     </span>
                     <EditorialKicker>
                       {items.length} {items.length === 1 ? 'verbete' : 'verbetes'}
                     </EditorialKicker>
-                    <div className="flex-1 h-px bg-stitch-outline-variant/40" />
+                    <div className="flex-1 h-px bg-border/40" />
                   </header>
                   <ul className="grid gap-4 md:grid-cols-2">
                     {items.map((t) => (
@@ -402,18 +402,19 @@ const TermCard: React.FC<{ term: GlossaryTerm; highlight?: string }> = ({ term, 
       <Link
         to={to}
         className={cn(
-          'group block h-full p-6 rounded-[var(--stitch-radius-xl)]',
-          'bg-stitch-surface-container-lowest border border-stitch-outline-variant/40',
-          'hover:border-stitch-secondary/60 focus-visible:border-stitch-secondary',
+          'group block h-full p-6 rounded-premium',
+          'bg-card border border-border/40',
+          'hover:border-gold/60 focus-visible:border-gold',
           'focus-visible:outline-none transition-colors',
         )}
       >
         {(term.category || term.editorial_completeness) && (
           <div className="flex items-center gap-3 mb-2">
             {term.category && (
-              <span className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.22em] text-stitch-secondary">
+              <span className="type-rubrica text-[color:var(--gold-text)]">
                 {term.category}
               </span>
+
             )}
             {term.editorial_completeness && COMPLETENESS_DOT[term.editorial_completeness] && (
               <span
@@ -430,7 +431,7 @@ const TermCard: React.FC<{ term: GlossaryTerm; highlight?: string }> = ({ term, 
             )}
           </div>
         )}
-        <h3 className="font-stitch-display text-stitch-headline-sm text-stitch-on-background group-hover:text-stitch-secondary transition-colors">
+        <h3 className="font-display text-premium-xl text-foreground group-hover:text-[color:var(--gold-text)] transition-colors">
           {highlight ? (
             <HighlightedText text={term.term} query={highlight} />
           ) : (

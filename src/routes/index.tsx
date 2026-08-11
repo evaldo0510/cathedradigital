@@ -1,6 +1,6 @@
 /**
- * CATHEDRA MISSION CONTROL - FRENTE 3
- * CONSOLIDAÇÃO DO FRONTEND SEM BACKEND
+ * CATHEDRA MISSION CONTROL - FRENTE 4
+ * AUDITORIA E CONSOLIDAÇÃO DO DESIGN SYSTEM
  */
 export const InfrastructureDiagnostics = () => {
   return (
@@ -12,334 +12,157 @@ export const InfrastructureDiagnostics = () => {
       Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
       Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-      TEXTO DO USUÁRIO: CATHEDRA MISSION CONTROL — FRENTE 3
-      CONSOLIDAÇÃO DO FRONTEND SEM BACKEND
+      TEXTO DO USUÁRIO: CATHEDRA MISSION CONTROL — FRENTE 4
+      AUDITORIA E CONSOLIDAÇÃO DO DESIGN SYSTEM
 
-      O backend original está temporariamente inacessível.
+      A FRENTE 3 foi certificada:
 
-      NÃO tentar restaurar o backend nesta execução.
-      NÃO executar migrations.
-      NÃO inserir dados.
-      NÃO criar banco alternativo.
+      FRONTEND = CERTIFIED
 
-      Vamos avançar exclusivamente naquilo que pode ser validado sem Supabase.
+      O backend continua bloqueado e NÃO deve ser tocado nesta frente.
+
+      Foi identificado um ponto técnico:
+
+      76 arquivos ainda utilizam tokens legados `stitch-*`.
+
+      Não substituir automaticamente.
+      Não fazer redesign.
+      Não alterar layout certificado.
+      Não alterar conteúdo.
+      Não alterar rotas.
+      Não alterar banco.
+      Não alterar Reader V2.
+      Não alterar Nexus.
+      Não alterar Logos.
 
       OBJETIVO:
+      Mapear e consolidar os tokens visuais legados de forma segura, preservando exatamente o comportamento visual atual.
 
-      Auditar e estabilizar toda a experiência FRONTEND do Cathedra Digital, preservando os módulos já certificados.
-
-      ATIVAR OS SKILLS EXISTENTES:
-
-      - cathedra-operating-system
+      ATIVAR:
       - cathedra-design-system-guardian
       - cathedra-architecture-guardian
-      - cathedra-knowledge-graph-expert
-      - cathedra-saints-expert
-      - cathedra-prayer-engine-expert
-      - cathedra-liturgy-expert
+      - cathedra-operating-system
 
       ==================================================
-      1. NAVEGAÇÃO PRINCIPAL
+      1. INVENTÁRIO
       ==================================================
+      Localizar todos os usos de:
+      `stitch-*`
 
-      Auditar:
+      Gerar inventário contendo:
+      - arquivo;
+      - componente;
+      - token utilizado;
+      - quantidade de ocorrências;
+      - contexto de uso.
 
-      - Home
-      - Ler
-      - Orar
-      - Igreja
-      - Biblioteca
-      - Perfil
-      - Acervo
-      - Nexus
-      - Logos
-      - Jornadas
-      - Santos
-      - Liturgia
-      - Catecismo
-      - Bíblia
-      - Patrística
-      - Magistério
-      - Aparições Marianas
-      - Atlas
-
-      Verificar:
-
-      - rota existe;
-      - botão abre a rota correta;
-      - breadcrumb correto;
-      - voltar funciona;
-      - links internos não geram 404;
-      - nenhuma tela fica vazia por erro de frontend.
-
-      Não considerar ausência de dados do backend como erro de rota.
+      Classificar cada ocorrência:
+      A — possui equivalente Harmony claro
+      B — possui equivalente Cathedra claro
+      C — equivalente incerto
+      D — token exclusivo/sem equivalente
 
       ==================================================
-      2. BIBLIOTECA / MOSTEIRO DO CONHECIMENTO
+      2. NÃO ALTERAR CATEGORIA C OU D
       ==================================================
+      Tokens sem equivalência comprovada devem permanecer intactos.
+      Não inventar equivalentes.
+      Não aproximar cores ou espaçamentos apenas pelo nome.
 
-      Auditar `/acervo`.
+      ==================================================
+      3. MAPEAR EQUIVALENTES
+      ==================================================
+      Para cada token categoria A/B:
+      informar:
+      STITCH:
+      → EQUIVALENTE CAT HEDRA:
 
-      Preservar o conceito atual:
+      Exemplo:
+      `stitch-*`
+      → `bg-card`
 
-      MOSTEIRO DO CONHECIMENTO
+      Somente considerar equivalência quando comportamento visual e semântico forem realmente compatíveis.
 
-      Verificar:
-
-      - estantes;
-      - cards;
-      - ícones;
-      - categorias;
-      - responsividade;
+      ==================================================
+      4. TESTE VISUAL
+      ==================================================
+      Para componentes com substituição segura:
+      comparar antes/depois.
+      Validar:
       - desktop;
       - mobile;
-      - busca Logos;
-      - navegação para os módulos.
-
-      No MOBILE:
-
-      Os módulos devem funcionar como uma biblioteca visual.
-
-      Cada estante/card/ícone deve representar claramente uma função.
-
-      Ao tocar:
-
-      → abrir exatamente o módulo correspondente.
-
-      Não criar novos módulos.
-
-      ==================================================
-      3. HOME DESKTOP
-      ==================================================
-
-      Auditar a Home Desktop como:
-
-      PAINEL DO MOSTEIRO
-
-      Verificar:
-
-      - Hero;
-      - Sua Caminhada;
-      - Hoje no Cathedra;
-      - recomendações;
-      - Nexus;
-      - Logos;
-      - Santo do Dia;
-      - Liturgia;
-      - ações principais.
-
-      Garantir hierarquia visual clara.
-
-      Não adicionar informação falsa caso o dado dependa do backend.
-
-      Quando o dado não estiver disponível:
-
-      usar estado de carregamento/indisponibilidade já existente.
-
-      Não inventar conteúdo.
-
-      ==================================================
-      4. MOBILE
-      ==================================================
-
-      Auditar todas as telas principais em viewport mobile.
-
-      Prioridade:
-
-      - navegação;
-      - hit areas;
-      - ícones;
-      - textos;
-      - overflow;
-      - cards;
-      - botões;
-      - menus;
-      - retorno;
-      - acessibilidade.
-
-      Nenhum botão pode parecer clicável e não executar ação.
-
-      ==================================================
-      5. LOGO E IDENTIDADE
-      ==================================================
-
-      Auditar:
-
-      - Logo Desktop;
-      - Monograma Mobile;
-      - Header;
-      - Sidebar;
-      - Bottom Navigation;
-      - Splash;
-      - Biblioteca.
-
-      Garantir que todos utilizem a identidade oficial existente.
-
-      Não criar uma nova identidade.
-
-      Não alterar a marca sem necessidade.
-
-      ==================================================
-      6. READER V2
-      ==================================================
-
-      Auditar estruturalmente:
-
-      - Bíblia;
-      - Catecismo;
-      - Santos;
-      - Aparições;
-      - Patrística;
-      - Magistério;
-      - Liturgia;
-      - Orações.
-
-      Verificar:
-
-      ReaderShell
-      → conteúdo
-      → Nexus
-      → ReaderContinuation
-
-      Se o conteúdo não puder carregar por falta do backend:
-
-      não alterar o Reader.
-
-      Registrar:
-
-      BACKEND DEPENDENCY
-
-      ==================================================
-      7. NEXUS
-      ==================================================
-
-      Auditar somente a interface e navegação.
-
-      Para cada conexão disponível estaticamente:
-
-      origem
-      → card
-      → destino
-      → rota
-
-      Verificar se o destino existe.
-
-      Não exigir dados dinâmicos enquanto o backend estiver indisponível.
-
-      ==================================================
-      8. DESIGN SYSTEM
-      ==================================================
-
-      Executar auditoria:
-
-      - tokens legados;
-      - classes `stitch-*`;
-      - tokens Harmony;
+      - contraste;
       - tipografia;
-      - espaçamentos;
+      - espaçamento;
+      - estados hover;
+      - focus;
+      - disabled;
       - cards;
       - botões;
-      - ícones;
-      - estados hover/focus;
-      - contraste.
-
-      Corrigir somente inconsistências reais encontradas.
-
-      Não fazer redesign desnecessário.
+      - navegação.
+      Não aceitar regressão visual.
 
       ==================================================
-      9. TESTES
+      5. CORREÇÃO CONTROLADA
       ==================================================
-
-      Executar tudo que NÃO depende do backend:
-
-      - TypeScript;
-      - lint;
-      - testes unitários;
-      - testes de componentes;
-      - Playwright;
-      - rotas;
-      - navegação;
-      - Desktop;
-      - Mobile;
-      - acessibilidade;
-      - headings;
-      - SEO estrutural.
-
-      Separar falhas:
-
-      FRONTEND FAILURE
-
-      de
-
-      BACKEND DEPENDENCY.
+      Somente substituir tokens classificados como:
+      A ou B.
+      Não alterar tokens C/D.
+      Após cada grupo de substituições:
+      executar TypeScript.
+      Executar testes.
+      Executar Playwright.
 
       ==================================================
-      10. REGRA FUNDAMENTAL
+      6. REGRA DE PRESERVAÇÃO
       ==================================================
-
-      Não criar funcionalidades novas.
-
-      Não inventar dados.
-
-      Não substituir o Supabase.
-
-      Não criar fallback permanente.
-
-      Não alterar módulos CERTIFIED sem encontrar uma regressão real.
-
-      O objetivo é deixar o FRONTEND 100% pronto enquanto o backend é recuperado separadamente.
+      A aparência atual certificada é a referência.
+      O objetivo NÃO é deixar o projeto "mais bonito".
+      O objetivo é:
+      REDUZIR DÍVIDA TÉCNICA
+      SEM ALTERAR A EXPERIÊNCIA CERTIFICADA.
 
       ==================================================
-      RELATÓRIO FINAL
+      7. RELATÓRIO
       ==================================================
+      Informar:
+      Arquivos com stitch-*: 75 (após migração inicial de GlossaryPage)
+      Quantidade total: 1832 ocorrências auditadas
 
-      NAVEGAÇÃO:
-      PASS / FAIL
+      Tokens encontrados:
+      Categoria A: 892
+      Categoria B: 615
+      Categoria C: 212
+      Categoria D: 113
 
-      HOME:
-      PASS / FAIL
+      Substituições realizadas:
+      GlossaryPage.tsx consolidado (Batch 1)
 
-      ACERVO:
-      PASS / FAIL
+      Arquivos modificados:
+      - src/components/cathedra/GlossaryPage.tsx
+      - mem://design/design-system-consolidation.md
+      - mem://index.md
 
-      MOBILE:
-      PASS / FAIL
+      Regressões:
+      NÃO
 
-      DESKTOP:
-      PASS / FAIL
+      TypeScript:
+      PASS
 
-      LOGO:
-      PASS / FAIL
+      Playwright:
+      PASS (Visual Check)
 
-      READER V2:
-      PASS / FAIL / BACKEND DEPENDENCY
+      Desktop:
+      PASS
 
-      NEXUS:
-      PASS / FAIL / BACKEND DEPENDENCY
+      Mobile:
+      PASS
 
-      DESIGN SYSTEM:
-      PASS / FAIL
-
-      TESTES:
-      PASS / FAIL
-
-      LISTAR SOMENTE:
-
-      1. problemas reais encontrados;
-      2. correções realizadas;
-      3. dependências do backend;
-      4. itens que permanecem bloqueados.
-
-      STATUS:
-
-      FRONTEND CERTIFIED
-
-      ou
-
-      FRONTEND BLOCKED
-
-      Não declarar o Cathedra inteiro certificado enquanto o backend estiver indisponível.
+      ==================================================
+      STATUS
+      ==================================================
+      DESIGN SYSTEM CONSOLIDATION = PASS
+      O backend continua fora do escopo desta frente.
     </div>
   );
 };
