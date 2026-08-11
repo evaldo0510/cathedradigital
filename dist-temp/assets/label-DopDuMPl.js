@@ -1,0 +1,2 @@
+import{r,j as t}from"./vendor-react-C7QBJBbo.js";import{z as a}from"./vendor-ui-BnUW9JXG.js";import{R as m,Z as i}from"./index-BPjEQjYp.js";const l=i("text-premium-small font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"),p=r.forwardRef(({className:e,...s},o)=>t.jsx(a,{ref:o,className:m(l(),e),...s}));p.displayName=a.displayName;export{p as L};
+//# sourceMappingURL=label-DopDuMPl.js.map

@@ -1,0 +1,2 @@
+import{D as o}from"./index-BPjEQjYp.js";async function s(r){if(r.length===0)return r;const i=Array.from(new Set(r.map(e=>e.ref))).slice(0,200),{data:t,error:f}=await o.from("nexus_node_degree").select("kind, ref, degree").in("ref",i).limit(500);if(f||!t)return r.map(e=>({...e,weight:0}));const n=new Map;for(const e of t)!e.kind||!e.ref||n.set(`${e.kind}#${e.ref}`,e.degree??0);return r.map(e=>({...e,weight:n.get(`${e.kind}#${e.ref}`)??0}))}export{s as w};
+//# sourceMappingURL=nexusCentrality-Cd40xhlS.js.map
