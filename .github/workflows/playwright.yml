@@ -67,9 +67,19 @@ jobs:
           CI: 'true'
         run: bunx playwright test --project=${{ matrix.project }}
 
+      - name: PR Summary Table
+        if: github.event_name == 'pull_request' && always()
+        run: |
+          echo "### 🎭 Playwright Results (${{ matrix.project }})" >> $GITHUB_STEP_SUMMARY
+          if [ -d playwright-report ]; then
+            echo "| Status | Relatório | Artefatos |" >> $GITHUB_STEP_SUMMARY
+            echo "| --- | --- | --- |" >> $GITHUB_STEP_SUMMARY
+            echo "| ${{ job.status }} | [HTML Report](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) | [Download](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) |" >> $GITHUB_STEP_SUMMARY
+          fi
+
       # Sempre que houver falha, suba TUDO: relatório HTML, screenshots, vídeos e traces
       - name: Upload Playwright HTML report
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report-${{ matrix.project }}
@@ -78,20 +88,10 @@ jobs:
           if-no-files-found: ignore
 
       - name: Upload Playwright test-results (screenshots / videos / traces)
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-test-results-${{ matrix.project }}
           path: test-results/
           retention-days: 14
-          if-no-files-found: ignore
-
-      # Em runs bem-sucedidas mantemos o relatório resumido por menos tempo
-      - name: Upload Playwright HTML report (success)
-        if: success()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report-success-${{ matrix.project }}
-          path: playwright-report/
-          retention-days: 3
           if-no-files-found: ignore
