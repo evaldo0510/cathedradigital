@@ -192,6 +192,10 @@ const CatechismContent: React.FC<{
     const code: string = err?.code ?? 'unknown';
     const status = err?.status;
 
+    // Fallback Offline: se for erro de rede, verifica se existe no cache IndexedDB
+    // via CatechismOfflineFallback (que já é injetado no módulo).
+    const isNetworkError = code === 'network' || (err?.message?.toLowerCase().includes('failed to fetch'));
+
     if (code === 'not_found') {
       return (
         <div
@@ -224,10 +228,35 @@ const CatechismContent: React.FC<{
       );
     }
 
+    if (isNetworkError) {
+      return (
+        <div className="reader-text space-y-spacing-md animate-fade-in">
+          <div className="bg-destructive/5 border border-destructive/10 rounded-premium p-spacing-md text-destructive font-serif text-premium-sm space-y-spacing-xs">
+            <div className="font-bold flex items-center gap-spacing-xs">
+              <Icons.ShieldAlert className="w-spacing-md h-spacing-md" />
+              Sem conexão com o depósito da fé
+            </div>
+            <p className="font-serif italic opacity-80">
+              Não conseguimos carregar o parágrafo §{paragraph} do servidor. 
+              Tentando recuperar do cache local do mosteiro...
+            </p>
+            <div className="flex items-center gap-spacing-xs pt-spacing-xs">
+              <Button onClick={handleRetry} disabled={isFetching} variant="outline" size="sm">
+                {isFetching ? 'Reconectando…' : 'Tentar Novamente'}
+              </Button>
+            </div>
+          </div>
+          <CatechismOfflineFallback 
+            paragraph={paragraph} 
+            onNavigate={(p) => window.location.href = `/catechism?p=${p}`} 
+          />
+        </div>
+      );
+    }
+
     const title =
       code === 'unauthorized' ? `Sessão expirada — faça login para ler §${paragraph}.` :
       code === 'forbidden'    ? `Sem permissão para acessar §${paragraph}.` :
-      code === 'network'      ? `Sem conexão para carregar §${paragraph}.` :
                                 `Ops! Não conseguimos carregar §${paragraph}.`;
     return (
       <div
@@ -255,11 +284,6 @@ const CatechismContent: React.FC<{
           >
             {isFetching ? 'Tentando…' : 'Tentar novamente'}
           </Button>
-          {code === 'unauthorized' && (
-            <Button asChild variant="ghost" size="sm">
-              <a href="/auth">Entrar</a>
-            </Button>
-          )}
         </div>
       </div>
     );
