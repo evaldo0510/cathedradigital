@@ -4,6 +4,7 @@ import { ShieldAlert } from 'lucide-react';
 import { useBibleReadGate } from '@/hooks/useBibleReadGate';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import BiblePartialCoverageBanner from './BiblePartialCoverageBanner';
 
 /**
@@ -27,7 +28,8 @@ export const BibleReadGate: React.FC<{ children: React.ReactNode }> = ({ childre
   // Manutenção total apenas quando a diagnose FALHOU (erro real, não dados parciais).
   if (gate?.blocked && gate.status === 'error') {
     const lastRun = gate.last_run_at ? new Date(gate.last_run_at).toLocaleString('pt-BR') : '—';
-    const isNetworkError = gate.status === 'error' && (gate.blocking_findings?.includes('fetch') || !navigator.onLine);
+    const isNetworkError = gate.status === 'error' && (String(gate.blocking_findings || '').includes('fetch') || !navigator.onLine);
+
 
     return (
       <div className="min-h-[60vh] flex items-center justify-center p-6 animate-fade-in">

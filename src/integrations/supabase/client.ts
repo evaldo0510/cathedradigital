@@ -32,7 +32,7 @@ const customStorage = {
   },
   removeItem: (key: string) => {
     if (typeof window !== 'undefined' && window.localStorage) {
-      window.localStorage.removeItem(key, value);
+      window.localStorage.removeItem(key);
     }
   },
 };

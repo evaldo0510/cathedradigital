@@ -39,10 +39,39 @@ export const NexusPanel: React.FC<NexusPanelProps> = ({
   className,
   limitPerBucket = DEFAULT_LIMIT,
 }) => {
+  const [isOffline, setIsOffline] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleUnreachable = () => setIsOffline(true);
+    window.addEventListener('supabase-unreachable' as any, handleUnreachable);
+    return () => window.removeEventListener('supabase-unreachable' as any, handleUnreachable);
+  }, []);
+
   const buckets = (order ?? (Object.keys(output.byBucket) as ReaderNexusBucket[]))
     .filter((b) => (output.byBucket[b]?.length ?? 0) > 0);
 
-  if (buckets.length === 0) return null;
+  if (buckets.length === 0) {
+    if (isOffline) {
+      return (
+        <aside className={cn(
+          'w-full max-w-[68ch] mx-auto',
+          'rounded-premium border border-destructive/10 bg-destructive/5',
+          'p-spacing-lg space-y-spacing-sm',
+          className
+        )}>
+          <header className="flex items-center gap-spacing-sm text-destructive">
+            <Icons.ShieldAlert className="w-5 h-5" />
+            <h2 className="font-serif text-premium-base">Conexões Temporariamente Indisponíveis</h2>
+          </header>
+          <p className="text-premium-xs text-destructive/70 font-serif italic">
+            Não conseguimos conectar ao Nexus para mapear as raízes teológicas desta passagem.
+          </p>
+        </aside>
+      );
+    }
+    return null;
+  }
+
 
   const rootClass = [
     'w-full max-w-[68ch] mx-auto',

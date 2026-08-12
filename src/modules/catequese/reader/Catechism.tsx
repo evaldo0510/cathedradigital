@@ -241,14 +241,13 @@ const CatechismContent: React.FC<{
               Tentando recuperar do cache local do mosteiro...
             </p>
             <div className="flex items-center gap-spacing-xs pt-spacing-xs">
-              <Button onClick={handleRetry} disabled={isFetching} variant="outline" size="sm">
+            <Button onClick={handleRetry} disabled={isFetching} variant="outline" size="sm">
                 {isFetching ? 'Reconectando…' : 'Tentar Novamente'}
-              </Button>
+            </Button>
             </div>
           </div>
           <CatechismOfflineFallback 
             paragraph={paragraph} 
-            onNavigate={(p) => window.location.href = `/catechism?p=${p}`} 
           />
         </div>
       );
