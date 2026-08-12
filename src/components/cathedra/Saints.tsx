@@ -407,7 +407,7 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                 </span>
                 {isDailyError ? (
                   <SaintsOfflineFallback
-                    message={dailyError instanceof Error ? dailyError.message : undefined}
+                    message={dailyError instanceof Error ? dailyError.message : "Erro ao carregar o Santoral. Verifique a conexão com o banco de dados."}
                     onRetry={() => refetchDaily()}
                     isRetrying={isRefetchingDaily}
                   />
