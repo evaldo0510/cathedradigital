@@ -76,8 +76,13 @@ async function fetchDay(date: Date): Promise<{ data: DailyLiturgy; offline: bool
       return { data: cached, offline: true };
     }
     bumpStats('error');
+    
+    // Dispara evento global para UI reagir à falha de infra
+    window.dispatchEvent(new CustomEvent('supabase-unreachable'));
+    
     throw e;
   }
+
 }
 
 function queryKey(date: Date): [string, string] {
