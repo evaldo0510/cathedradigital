@@ -6,20 +6,9 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Implementar uma página de diagnóstico que valide o Preview e mostre erros de build/dev/runtime em tempo real. P0 — Página /admin/diagnostics criada e integrada. STATUS: AUDIT 7.7.1 — DIAGNOSTICS ACTIVE.
-
-A ordem deve ser:
-
-**Preview → Catecismo → Bíblia → Santos → Biblioteca/Acervo → Nexus → Performance → certificação.**
-
-E mantenha uma regra absoluta: **PASS somente quando a função principal realmente funcionar; BLOCKED somente quando houver dependência comprovada do backend; FAIL quando houver problema no frontend.**
-
-Assim evitamos continuar acumulando “certificações” enquanto ainda existem portas quebradas para o peregrino.
-
-STATUS:
-
-AUDIT 7.7.1 — EXECUTION REQUIRED
+TEXTO DO USUÁRIO: Criar um histórico persistente das execuções do diagnóstico (com data/hora, status e detalhes) para eu comparar falhas ao longo do tempo.Criar um histórico persistente das execuções do diagnóstico (com data/hora, status e detalhes) para eu comparar falhas ao longo do tempo.
 */
+
 
 import React from 'react';
 

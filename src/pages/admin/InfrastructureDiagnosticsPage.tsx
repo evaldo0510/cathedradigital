@@ -15,10 +15,14 @@ import {
   Clock,
   Layout,
   Smartphone,
-  Monitor,
   AlertTriangle,
-  Code
+  Code,
+  History,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
+import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 
 interface DiagnosticResult {
   id: string;
@@ -27,6 +31,19 @@ interface DiagnosticResult {
   details?: string;
   type: 'BUILD' | 'DEV' | 'RUNTIME' | 'BACKEND';
 }
+
+interface DiagnosticHistoryItem {
+  id: string;
+  created_at: string;
+  status: string;
+  details: {
+    progress: number;
+    fatal_error?: string;
+    backend_status: string;
+  };
+  results: DiagnosticResult[];
+}
+
 
 export default function InfrastructureDiagnosticsPage() {
   const [results, setResults] = useState<DiagnosticResult[]>([
@@ -38,15 +55,29 @@ export default function InfrastructureDiagnosticsPage() {
   ]);
   const [isChecking, setIsChecking] = useState(false);
   const [lastCheck, setLastCheck] = useState<Date | null>(null);
+  const [history, setHistory] = useState<DiagnosticHistoryItem[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
+
+  const fetchHistory = async () => {
+    const { data, error } = await supabase
+      .from('diagnostics_history' as any)
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(10);
+    
+    if (data) setHistory(data as any);
+  };
+
 
   const runDiagnostics = async () => {
     setIsChecking(true);
+    let currentResults = [...results];
     
     // 1. Check Supabase
     try {
       const { error } = await supabase.from('app_feature_flags').select('count', { count: 'exact', head: true });
       
-      setResults(prev => prev.map(r => {
+      currentResults = currentResults.map(r => {
         if (r.id === 'supabase') {
           if (error) {
             const isPaused = error.message.includes('paused') || error.code === 'PGRST301';
@@ -62,33 +93,50 @@ export default function InfrastructureDiagnosticsPage() {
           return { ...r, status: 'PASS', details: 'Root node detected in DOM' };
         }
         return r;
-      }));
+      });
     } catch (e: any) {
-      setResults(prev => prev.map(r => r.id === 'supabase' ? { ...r, status: 'FAIL', details: e.message } : r));
+      currentResults = currentResults.map(r => r.id === 'supabase' ? { ...r, status: 'FAIL', details: e.message } : r);
     }
 
     // 2. Check Auth
     const { data: { session } } = await supabase.auth.getSession();
-    setResults(prev => prev.map(r => r.id === 'auth' ? { 
+    currentResults = currentResults.map(r => r.id === 'auth' ? { 
       ...r, 
       status: session ? 'PASS' : 'PENDING', 
       details: session ? `Authenticated as ${session.user.email}` : 'No active session detected'
-    } : r));
+    } : r);
 
-    // 3. Simular Build status (baseado no contexto da IA)
-    setResults(prev => prev.map(r => r.id === 'build' ? { 
+    // 3. Simulate Build status
+    currentResults = currentResults.map(r => r.id === 'build' ? { 
       ...r, 
       status: 'FAIL', 
       details: 'Heading Hierarchy Violation (H1 -> H3) - CI check failed' 
-    } : r));
+    } : r);
 
+    setResults(currentResults);
     setIsChecking(false);
     setLastCheck(new Date());
+
+    // Save to history
+    const progress = Math.round((currentResults.filter(r => r.status === 'PASS').length / currentResults.length) * 100);
+    await supabase.from('diagnostics_history' as any).insert({
+      status: progress === 100 ? 'HEALTHY' : 'DEGRADED',
+      details: {
+        progress,
+        fatal_error: currentResults.find(r => r.status === 'FAIL')?.details,
+        backend_status: currentResults.find(r => r.id === 'supabase')?.status || 'UNKNOWN'
+      },
+      results: currentResults
+    });
+    
+    fetchHistory();
   };
 
   useEffect(() => {
     runDiagnostics();
+    fetchHistory();
   }, []);
+
 
   const progress = Math.round((results.filter(r => r.status === 'PASS').length / results.length) * 100);
 
@@ -187,6 +235,61 @@ export default function InfrastructureDiagnosticsPage() {
         ))}
       </div>
 
+      <div className="mt-12">
+        <Button 
+          variant="ghost" 
+          className="w-full flex justify-between items-center py-6 px-4 bg-muted/30 hover:bg-muted/50 rounded-xl"
+          onClick={() => setShowHistory(!showHistory)}
+        >
+          <div className="flex items-center gap-2">
+            <History className="h-5 w-5 text-primary" />
+            <span className="font-serif text-lg">Histórico de Execuções</span>
+          </div>
+          {showHistory ? <ChevronUp /> : <ChevronDown />}
+        </Button>
+
+        {showHistory && (
+          <div className="mt-4 space-y-3">
+            {history.length === 0 ? (
+              <p className="text-center py-8 text-muted-foreground italic">Nenhum histórico disponível.</p>
+            ) : (
+              history.map((item) => (
+                <Card key={item.id} className="bg-white/50">
+                  <CardContent className="p-4 flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <Clock className="h-4 w-4 text-muted-foreground" />
+                      <div>
+                        <div className="text-sm font-medium">
+                          {format(new Date(item.created_at), "dd 'de' MMM, HH:mm:ss", { locale: ptBR })}
+                        </div>
+                        <div className="text-[10px] text-muted-foreground uppercase">
+                          {item.status} · {item.details.progress}% SAÚDE
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      {item.results.map((r, i) => (
+                        <div 
+                          key={i} 
+                          className="w-2 h-2 rounded-full" 
+                          style={{ 
+                            backgroundColor: 
+                              r.status === 'PASS' ? '#10b981' : 
+                              r.status === 'FAIL' ? '#ef4444' : 
+                              r.status === 'BLOCKED' ? '#f59e0b' : '#94a3b8' 
+                          }}
+                          title={`${r.name}: ${r.status}`}
+                        />
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
+        )}
+      </div>
+
       <div className="mt-12 p-6 bg-slate-50 border rounded-xl">
         <h2 className="text-lg font-serif mb-4 flex items-center gap-2">
           <Smartphone className="h-5 w-5" />
@@ -211,6 +314,7 @@ export default function InfrastructureDiagnosticsPage() {
           </div>
         </div>
       </div>
+
 
       <div className="mt-8 text-center">
         <p className="text-[10px] text-muted-foreground uppercase tracking-widest">
