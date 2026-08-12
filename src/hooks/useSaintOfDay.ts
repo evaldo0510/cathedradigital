@@ -36,7 +36,11 @@ async function fetchOfficial(): Promise<OfficialSaintPayload | null> {
       // signal é suportado pelo runtime do supabase-js
       signal: controller.signal,
     } as any);
-    if (error) return null;
+    if (error) {
+      window.dispatchEvent(new CustomEvent('supabase-unreachable'));
+      return null;
+    }
+
     if (!data || typeof data !== 'object') return null;
     const d = data as OfficialSaintPayload;
     if (!d.name || d.name === 'Santo do Dia') return null;

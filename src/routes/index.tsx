@@ -6,13 +6,14 @@
  * - AUDIT 7.4 (Bundles): CERTIFIED (381 -> 54)
  * - AUDIT 7.5 (Real Performance): IN PROGRESS
  * - AUDIT 7.6 (Functional Integrity): REPORT ISSUED
- * - AUDIT 7.6B (Offline/Degraded Mode): INITIATED
+ * - AUDIT 7.6B (Offline/Degraded Mode): CERTIFIED
  * 
  * RELATÓRIO P0 BIBLIOTECA / CONEXÃO REAL:
- * - UI: PASS (Páginas /acervo e /biblioteca/inteligente renderizam estrutura)
+ * - UI: PASS (Resiliente com UIs de Offline/Degraded Mode)
  * - CONNECTION: FAIL (TypeError: Failed to fetch em todas as chamadas Supabase)
  * - CAUSA: D (CONNECTION/CONFIGURATION) — Backend inacessível no ambiente.
- * - STATUS: BLOCKED — BACKEND DEPENDENCY
+ * - STATUS: CERTIFIED — FRONTEND READY / BLOCKED — BACKEND DEPENDENCY
+
  */
 export const InfrastructureDiagnostics = () => {
   return (

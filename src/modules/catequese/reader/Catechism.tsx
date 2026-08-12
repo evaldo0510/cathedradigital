@@ -1,56 +1,43 @@
 import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { Button } from '@/components/ui/button';
-import ReactMarkdown from 'react-markdown';
-import { motion, AnimatePresence } from 'framer-motion';
-
-import SEOHead from '@/components/SEOHead';
-
 import { Icons } from '@/constants';
 import { supabase } from '@/integrations/supabase/client';
 import Relatio from '@/components/cathedra/Relatio';
-import NotesPanel from '@/components/cathedra/NotesPanel';
 import BibleVersePopover from '@/components/cathedra/BibleVersePopover';
-import DeepContentSection from '@/components/cathedra/DeepContentSection';
 import MagisteriumPopover from '@/components/cathedra/MagisteriumPopover';
-import { getCatechismCrossRefs, getCatechismDocs } from '@/data/cross-references';
-import { CIC_SECTIONS, CATECHISM_LOCAL_DATA } from '@/data/catechism';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getParagraphParam } from '@/lib/queryParams';
 import { isValidCatechismParagraph } from '@/lib/nexusNavigation';
 import { AppRoute } from '@/types';
 import { useFavorites } from '@/hooks/useFavorites';
-import { useAuth } from '@/hooks/useAuth';
 import { useCatechismParagraph, usePrefetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import { normalizeCatechismTextCached, totalChanges } from '@/lib/catechismTextNormalizer';
 import { CatechismNormalizationDiff } from '../components/CatechismNormalizationDiff';
 import { trackEvent } from '@/lib/analytics';
 import CatechismPopover from '../components/CatechismPopover';
-import AudioButton from '@/components/cathedra/AudioButton';
 import { CatechismParagraphSkeleton } from '@/components/cathedra/SacredSkeleton';
 import CatechismOfflineFallback from '../components/CatechismOfflineFallback';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import ReadingControlPanel from '@/components/cathedra/ReadingControlPanel';
-import LogosAI from '@/components/cathedra/LogosAI';
-import { LogosContextualSuggestions } from '@/components/cathedra/LogosContextualSuggestions';
-import ReadingMark from '@/components/cathedra/ReadingMark';
+import ReadingMarkComponent from '@/components/cathedra/ReadingMark';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
+import type { ReadingMark as ReadingMarkType } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { toast } from 'sonner';
 import ContemplativeLayout from '@/components/cathedra/ContemplativeLayout';
 import useReadingAutoHide from '@/hooks/useReadingAutoHide';
-import { ReadingProgress } from '@/components/cathedra/ReadingProgress';
-import { TextSelectionToolbar } from '@/components/cathedra/TextSelectionToolbar';
-import ChapterNotesList from '@/components/cathedra/ChapterNotesList';
-import { useNotes, UserNote } from '@/hooks/useNotes';
-import { NoteEditModal } from '@/components/cathedra/NoteEditModal';
+import { UserNote, useNotes } from '@/hooks/useNotes';
 import { cn } from '@/lib/utils';
 import PassageActions from '@/components/shared/PassageActions';
 import { CathedraCard } from '@/components/cathedra/CathedraCard';
 import CatechismDiagnosticPanel from '../components/CatechismDiagnosticPanel';
 import { CatechismPendingProvider, useCatechismPending } from '@/contexts/CatechismPendingContext';
 import CatechismPendingPanel from '../components/CatechismPendingPanel';
+import SEOHead from '@/components/SEOHead';
+import { CIC_SECTIONS } from '@/data/catechism';
+
 // Reader Template Master (COS §10) — única cadeia de leitura permitida.
 import {
   ReaderShell,
@@ -58,13 +45,16 @@ import {
   NexusPanel,
   ReaderContinuation,
   CatechesisContext,
+  EditorialClosure,
 } from '@/components/reader';
 import { useCatechismNexus } from '@/hooks/useCatechismNexus';
 import { EditorialDivider } from '@/components/editorial';
-import { EditorialClosure } from '@/components/reader';
 import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
+
 // Sprint 3 — motor editorial do Catecismo (dado puro + composição presentacional).
-import { resolveCatechismLocation } from '@/features/catechism/editorialEngine/catechismStructure';
+import {
+  resolveCatechismLocation,
+} from '@/features/catechism/editorialEngine/catechismStructure';
 import {
   resolveCatechismEditorial,
   buildCatechismClosure,
@@ -73,6 +63,9 @@ import {
   CatechismEditorialOpening,
   CatechismFurtherReading,
 } from '@/features/catechism/editorialEngine/CatechismEditorialFrame';
+
+
+
 
 
 
@@ -192,6 +185,10 @@ const CatechismContent: React.FC<{
     const code: string = err?.code ?? 'unknown';
     const status = err?.status;
 
+    // Fallback Offline: se for erro de rede, verifica se existe no cache IndexedDB
+    // via CatechismOfflineFallback (que já é injetado no módulo).
+    const isNetworkError = code === 'network' || (err?.message?.toLowerCase().includes('failed to fetch'));
+
     if (code === 'not_found') {
       return (
         <div
@@ -224,10 +221,34 @@ const CatechismContent: React.FC<{
       );
     }
 
+    if (isNetworkError) {
+      return (
+        <div className="reader-text space-y-spacing-md animate-fade-in">
+          <div className="bg-destructive/5 border border-destructive/10 rounded-premium p-spacing-md text-destructive font-serif text-premium-sm space-y-spacing-xs">
+            <div className="font-bold flex items-center gap-spacing-xs">
+              <Icons.ShieldAlert className="w-spacing-md h-spacing-md" />
+              Sem conexão com o depósito da fé
+            </div>
+            <p className="font-serif italic opacity-80">
+              Não conseguimos carregar o parágrafo §{paragraph} do servidor. 
+              Tentando recuperar do cache local do mosteiro...
+            </p>
+            <div className="flex items-center gap-spacing-xs pt-spacing-xs">
+            <Button onClick={handleRetry} disabled={isFetching} variant="outline" size="sm">
+                {isFetching ? 'Reconectando…' : 'Tentar Novamente'}
+            </Button>
+            </div>
+          </div>
+          <CatechismOfflineFallback 
+            paragraph={paragraph} 
+          />
+        </div>
+      );
+    }
+
     const title =
       code === 'unauthorized' ? `Sessão expirada — faça login para ler §${paragraph}.` :
       code === 'forbidden'    ? `Sem permissão para acessar §${paragraph}.` :
-      code === 'network'      ? `Sem conexão para carregar §${paragraph}.` :
                                 `Ops! Não conseguimos carregar §${paragraph}.`;
     return (
       <div
@@ -255,11 +276,6 @@ const CatechismContent: React.FC<{
           >
             {isFetching ? 'Tentando…' : 'Tentar novamente'}
           </Button>
-          {code === 'unauthorized' && (
-            <Button asChild variant="ghost" size="sm">
-              <a href="/auth">Entrar</a>
-            </Button>
-          )}
         </div>
       </div>
     );
@@ -418,7 +434,7 @@ const LazyParagraph: React.FC<{
             >
               <Icons.Sparkles className="w-spacing-sm h-spacing-sm" />
             </Button>
-            <ReadingMark contentType="catechism" contentId={`${p}`} label={`Catecismo §${p}`} paragraph={p} />
+            <ReadingMarkComponent contentType="catechism" contentId={`${p}`} label={`Catecismo §${p}`} paragraph={p} />
           </div>
         </div>
         <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.05] via-transparent to-transparent" />

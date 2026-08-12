@@ -18,7 +18,6 @@ if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
 }
 
 // Custom storage handler for SSR/CI environments
-// This prevents "localStorage is not defined" errors during build/test/SSR
 const customStorage = {
   getItem: (key: string) => {
     if (typeof window !== 'undefined' && window.localStorage) {
@@ -38,8 +37,17 @@ const customStorage = {
   },
 };
 
+/**
+ * Dispara o evento global de indisponibilidade do banco.
+ * Sprint 7.6B — Frontend Offline / Degraded Mode.
+ */
+function notifySupabaseUnreachable() {
+  if (typeof window === 'undefined') return;
+  window.dispatchEvent(new CustomEvent('supabase-unreachable'));
+}
+
 export const supabase = createClient<Database>(
-  SUPABASE_URL || 'https://placeholder.supabase.co', // Use placeholder to avoid crash during build if vars are missing
+  SUPABASE_URL || 'https://placeholder.supabase.co',
   SUPABASE_PUBLISHABLE_KEY || 'placeholder', 
   {
     auth: {
@@ -47,6 +55,22 @@ export const supabase = createClient<Database>(
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: typeof window !== 'undefined',
+    },
+    global: {
+      fetch: async (url, options) => {
+        try {
+          const response = await fetch(url, options);
+          // 5xx errors or 404 on API endpoints might indicate backend trouble
+          if (response.status >= 500) {
+            notifySupabaseUnreachable();
+          }
+          return response;
+        } catch (error) {
+          // Network errors (Failed to fetch)
+          notifySupabaseUnreachable();
+          throw error;
+        }
+      }
     }
   }
 );

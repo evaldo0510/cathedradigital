@@ -4,6 +4,7 @@ import { ShieldAlert } from 'lucide-react';
 import { useBibleReadGate } from '@/hooks/useBibleReadGate';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import BiblePartialCoverageBanner from './BiblePartialCoverageBanner';
 
 /**
@@ -27,24 +28,44 @@ export const BibleReadGate: React.FC<{ children: React.ReactNode }> = ({ childre
   // Manutenção total apenas quando a diagnose FALHOU (erro real, não dados parciais).
   if (gate?.blocked && gate.status === 'error') {
     const lastRun = gate.last_run_at ? new Date(gate.last_run_at).toLocaleString('pt-BR') : '—';
+    const isNetworkError = gate.status === 'error' && (String(gate.blocking_findings || '').includes('fetch') || !navigator.onLine);
+
+
     return (
-      <div className="min-h-[60vh] flex items-center justify-center p-6">
-        <div className="max-w-md w-full rounded-lg border border-border bg-card text-card-foreground p-6 shadow-sm">
+      <div className="min-h-[60vh] flex items-center justify-center p-6 animate-fade-in">
+        <div className="max-w-md w-full rounded-lg border border-destructive/20 bg-card text-card-foreground p-6 shadow-premium-sm">
           <div className="flex items-start gap-3">
-            <ShieldAlert className="h-6 w-6 text-amber-600 shrink-0" aria-hidden />
+            <ShieldAlert className={cn("h-6 w-6 shrink-0", isNetworkError ? "text-destructive" : "text-amber-600")} aria-hidden />
             <div className="space-y-2">
-              <h1 className="text-lg font-serif font-semibold">Bíblia em manutenção</h1>
-              <p className="text-sm text-muted-foreground">
-                A verificação de integridade falhou. Estamos investigando.
+              <h1 className="text-lg font-serif font-semibold">
+                {isNetworkError ? 'Sem conexão com a Escritura' : 'Bíblia em manutenção'}
+              </h1>
+              <p className="text-sm text-muted-foreground font-serif italic">
+                {isNetworkError 
+                  ? 'Não conseguimos carregar o cânon sagrado. Verifique sua conexão e tente novamente.' 
+                  : 'A verificação de integridade falhou. Estamos investigando.'}
               </p>
-              <div className="text-xs text-muted-foreground border-t border-border pt-2 mt-2 space-y-0.5">
-                <div><span className="font-medium">Status:</span> {gate.status}</div>
-                <div><span className="font-medium">Última verificação:</span> {lastRun}</div>
-                <div><span className="font-medium">Pendências:</span> {gate.blocking_findings}</div>
-              </div>
+              
+              {!isNetworkError && (
+                <div className="text-xs text-muted-foreground border-t border-border pt-2 mt-2 space-y-0.5">
+                  <div><span className="font-medium">Status:</span> {gate.status}</div>
+                  <div><span className="font-medium">Última verificação:</span> {lastRun}</div>
+                  <div><span className="font-medium">Pendências:</span> {gate.blocking_findings}</div>
+                </div>
+              )}
+              
               <div className="pt-3 flex gap-2">
-                <Button asChild variant="outline" size="sm"><Link to="/">Voltar ao início</Link></Button>
-                <Button asChild variant="ghost" size="sm"><Link to="/catechism">Ler o Catecismo</Link></Button>
+                <Button 
+                  variant={isNetworkError ? 'default' : 'outline'} 
+                  size="sm"
+                  onClick={() => window.location.reload()}
+                  className="rounded-premium-full"
+                >
+                  Tentar Novamente
+                </Button>
+                <Button asChild variant="ghost" size="sm" className="rounded-premium-full">
+                  <Link to="/">Início</Link>
+                </Button>
               </div>
             </div>
           </div>

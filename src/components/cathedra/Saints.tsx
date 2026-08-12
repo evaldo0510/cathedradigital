@@ -13,6 +13,8 @@ const SaintDetail = lazy(() => import('./SaintDetail'));
 import { type Saint } from '@/data/saints';
 import { getSaintsByDate, getSaintsByDateOrThrow, searchSaints, getSaintsByCategory, getAllSaints, getSaintById, formatSaint, type SaintWithScore } from '@/services/saintsService';
 import SaintsFetchError from './SaintsFetchError';
+import SaintsOfflineFallback from './SaintsOfflineFallback';
+
 import { supabase } from '@/integrations/supabase/client';
 import { useDebounce } from '@/hooks/useDebounce';
 
@@ -404,12 +406,13 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                   })()}
                 </span>
                 {isDailyError ? (
-                  <SaintsFetchError
+                  <SaintsOfflineFallback
                     message={dailyError instanceof Error ? dailyError.message : undefined}
                     onRetry={() => refetchDaily()}
                     isRetrying={isRefetchingDaily}
                   />
                 ) : isLoadingDaily ? (
+
                   <>
                     <SantoDoDiaHeroSkeleton />
                     <SantoDoDiaSecondaryListSkeleton count={2} />

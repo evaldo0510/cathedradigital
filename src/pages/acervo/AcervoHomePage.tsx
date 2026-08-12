@@ -4,41 +4,71 @@ import { Link } from 'react-router-dom';
 import { EditorialHero, EditorialCard, EditorialDivider, EditorialKicker } from '@/components/editorial/harmony';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
-import { GraduationCap, Heart, Star, Shield, BookOpen, Church, Users, Library, Route, Search, Crown } from 'lucide-react';
+import { ShieldAlert, RefreshCw } from 'lucide-react';
 import { MONASTERY_SHELVES } from '@/config/monasteryShelves';
 import {
   countLibraryByKind,
   fetchLibraryFeatured,
 } from '@/services/libraryService';
-import type { LibraryItem, LibraryKind } from '@/types/library';
+import type { LibraryItem } from '@/types/library';
 import AcervoContinueReadingPanel from './AcervoContinueReadingPanel';
 import { useAuth } from '@/hooks/useAuth';
-import { cn } from '@/lib/utils';
 import { useChurchContext, FALLBACK_POPE } from '@/hooks/useChurchContext';
 import SacredImage from '@/components/cathedra/SacredImage';
 
+const LibraryOfflineFallback: React.FC<{ onRetry: () => void }> = ({ onRetry }) => (
+  <div className="py-spacing-2xl px-spacing-md text-center space-y-spacing-md bg-destructive/5 rounded-premium border border-destructive/10 animate-fade-in">
+    <ShieldAlert className="w-12 h-12 mx-auto text-destructive/60" />
+    <div className="space-y-spacing-xs">
+      <h3 className="type-h3 text-destructive">Biblioteca Temporariamente Indisponível</h3>
+      <p className="type-body opacity-80 max-w-[50ch] mx-auto font-serif italic">
+        Não conseguimos conectar ao mosteiro. Verifique sua conexão ou tente novamente em instantes.
+      </p>
+    </div>
+    <Button 
+      variant="outline" 
+      onClick={onRetry}
+      className="rounded-premium-full gap-spacing-xs"
+    >
+      <RefreshCw className="w-4 h-4" />
+      Tentar Reconexão
+    </Button>
+  </div>
+);
 
 const AcervoHomePage: React.FC = () => {
   const { profile } = useAuth();
-  const { currentPope, todaySaint, liturgy, isLoading: loadingChurch } = useChurchContext();
+  const { currentPope, todaySaint, liturgy } = useChurchContext();
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [featured, setFeatured] = useState<LibraryItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isOffline, setIsOffline] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     let alive = true;
+    setLoading(true);
+    setIsOffline(false);
+
     Promise.all([countLibraryByKind(), fetchLibraryFeatured(6)])
       .then(([c, f]) => {
         if (!alive) return;
         setCounts(c);
         setFeatured(f);
       })
-      .catch((e) => console.error('[Acervo] load', e))
-      .finally(() => alive && setLoading(false));
-    return () => {
-      alive = false;
-    };
-  }, []);
+      .catch((e) => {
+        console.error('[Acervo] load error', e);
+        if (alive) setIsOffline(true);
+      })
+      .finally(() => {
+        if (alive) setLoading(false);
+      });
+
+    return () => { alive = false; };
+  }, [retryCount]);
+
+  const handleRetry = () => setRetryCount(prev => prev + 1);
+
 
   const firstName = profile?.name?.split(' ')[0] || 'Peregrino';
   const hour = new Date().getHours();
@@ -239,17 +269,24 @@ const AcervoHomePage: React.FC = () => {
           <h2 className="text-premium-small font-black uppercase tracking-[0.2em] text-primary">
             Sugerido pelo Nexus
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-md">
-            {!loading && featured.slice(0, 3).map(item => (
-              <Link key={item.id} to={item.href} className="group">
-                <EditorialCard density="dense" className="h-full">
-                  <EditorialCard.Eyebrow>Destaque Editorial</EditorialCard.Eyebrow>
-                  <EditorialCard.Title>{item.title}</EditorialCard.Title>
-                  <EditorialCard.Description>{item.author_label || 'Obra fundamental'}</EditorialCard.Description>
-                </EditorialCard>
-              </Link>
-            ))}
-          </div>
+          {isOffline ? (
+            <LibraryOfflineFallback onRetry={handleRetry} />
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-spacing-md">
+              {!loading && featured.slice(0, 3).map(item => (
+                <Link key={item.id} to={item.href} className="group">
+                  <EditorialCard density="dense" className="h-full">
+                    <EditorialCard.Eyebrow>Destaque Editorial</EditorialCard.Eyebrow>
+                    <EditorialCard.Title>{item.title}</EditorialCard.Title>
+                    <EditorialCard.Description>{item.author_label || 'Obra fundamental'}</EditorialCard.Description>
+                  </EditorialCard>
+                </Link>
+              ))}
+              {loading && Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="h-40 rounded-premium bg-primary/5 animate-pulse" />
+              ))}
+            </div>
+          )}
         </section>
       </main>
     </div>
