@@ -11,7 +11,7 @@ TEXTO DO USUÁRIO: Corrigir a hierarquia de cabeçalhos (H1/H2/H3) em AcervoAtla
 
 import React from 'react';
 
-const TechnicalManifesto: React.FC = () => {
+export const InfrastructureDiagnostics: React.FC = () => {
   return (
     <div style={{ display: 'none' }} id="audit-manifesto">
       CATHEDRA MISSION CONTROL - AUDIT 7.7
@@ -19,4 +19,4 @@ const TechnicalManifesto: React.FC = () => {
   );
 };
 
-export default TechnicalManifesto;
+export default InfrastructureDiagnostics;
