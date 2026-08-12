@@ -44,6 +44,9 @@ export const LangProvider: React.FC<{ children: React.ReactNode }> = ({ children
       // Fallback para Português se a tradução faltar no idioma atual
       const fallback = UI_TRANSLATIONS[DEFAULT_LOCALE]?.[k];
       if (fallback !== undefined) return fallback;
+      
+      // Fallback final: Log e retornar a chave formatada para evitar strings vazias
+      console.warn(`[i18n] Chave ausente: "${k}" para o idioma "${lang}"`);
       return k;
     }
     return val;
