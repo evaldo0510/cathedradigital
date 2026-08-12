@@ -65,8 +65,9 @@ export default function InfrastructureDiagnosticsPage() {
       .order('created_at', { ascending: false })
       .limit(10);
     
-    if (data) setHistory(data);
+    if (data) setHistory(data as any);
   };
+
 
   const runDiagnostics = async () => {
     setIsChecking(true);
