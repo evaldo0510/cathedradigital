@@ -6,7 +6,7 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: o previeew sumiu
+TEXTO DO USUÁRIO: a demorando para carregar o site +
 */
 
 import React from 'react';
