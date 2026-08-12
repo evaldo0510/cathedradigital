@@ -127,18 +127,29 @@ export default function Audit77Dashboard() {
   const [items, setItems] = useState<AuditItem[]>(initialAuditItems);
   const [isOffline, setIsOffline] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [isChecking, setIsChecking] = useState(false);
+
+  const checkStatus = async () => {
+    setIsChecking(true);
+    try {
+      const { error } = await supabase.from('app_feature_flags').select('count', { count: 'exact', head: true });
+      if (error && (error.message.includes('paused') || error.code === 'PGRST301')) {
+        setIsPaused(true);
+      } else {
+        const wasPaused = isPaused;
+        setIsPaused(false);
+        if (wasPaused) {
+          setItems(initialAuditItems);
+        }
+      }
+    } catch (e) {
+      console.error('Audit status check failed', e);
+    } finally {
+      setIsChecking(false);
+    }
+  };
 
   useEffect(() => {
-    const checkStatus = async () => {
-      try {
-        const { error } = await supabase.from('app_feature_flags').select('count', { count: 'exact', head: true });
-        if (error && (error.message.includes('paused') || error.code === 'PGRST301')) {
-          setIsPaused(true);
-        }
-      } catch (e) {
-        console.error('Audit status check failed', e);
-      }
-    };
     checkStatus();
   }, []);
 
