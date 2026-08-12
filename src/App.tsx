@@ -917,7 +917,8 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/editorial-closure-validator" element={<EditorialClosureValidator />} />
                       <Route path="/admin/editorial-closure-runs" element={<EditorialClosureRuns />} />
                       <Route path="/admin/instagram-gallery" element={<Suspense fallback={<LoadingFallback />}><InstagramGalleryPage /></Suspense>} />
-                      <Route path="/admin/site-health" element={<SiteHealthDashboard />} />
+                <Route path="/admin/site-health" element={<SiteHealthDashboard />} />
+                <Route path="/admin/diagnostics" element={<InfrastructureDiagnosticsPage />} />
                       <Route path="/admin/audit-logs" element={<Suspense fallback={<LoadingFallback />}><AuditLogsPage /></Suspense>} />
                       <Route path="/audit-logs" element={<Suspense fallback={<LoadingFallback />}><AuditLogsPage /></Suspense>} />
                       <Route path="/site-health" element={<SiteHealthDashboard />} />
