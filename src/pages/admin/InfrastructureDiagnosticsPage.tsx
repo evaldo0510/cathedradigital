@@ -199,7 +199,7 @@ export default function InfrastructureDiagnosticsPage() {
           </div>
           <div className="p-3 bg-white border rounded shadow-sm text-center">
             <div className="text-[10px] text-muted-foreground uppercase mb-1">Touch Targets</div>
-            <div className="text-sm font-bold text-emerald-600">PASS (>40px)</div>
+            <div className="text-sm font-bold text-emerald-600">PASS ({'>'}40px)</div>
           </div>
           <div className="p-3 bg-white border rounded shadow-sm text-center">
             <div className="text-[10px] text-muted-foreground uppercase mb-1">PWA Manifest</div>
