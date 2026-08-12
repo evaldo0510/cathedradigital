@@ -251,6 +251,7 @@ const NexusAuditPage = lazy(() => import('./pages/admin/NexusAudit'));
 const EditorialIntegrityPage = lazy(() => import('./pages/admin/EditorialIntegrity'));
 const EditorialAuditPage = lazy(() => import('./pages/admin/EditorialAudit'));
 const MissionControlPage = lazy(() => import('./pages/admin/MissionControl'));
+const Audit77Dashboard = lazy(() => import('./pages/admin/Audit77Dashboard'));
 const EditorialBulkPage = lazy(() => import('./pages/admin/EditorialBulk'));
 const NexusAdmin = lazy(() => import('./pages/admin/NexusAdmin'));
 const GlossaryAdmin = lazy(() => import('./pages/admin/GlossaryAdmin'));
@@ -897,6 +898,7 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/catechism-queue" element={<CatechismImportQueuePage />} />
                       <Route path="/admin/editorial-bulk" element={<EditorialBulkPage />} />
                       <Route path="/admin/mission-control" element={<MissionControlPage />} />
+                      <Route path="/admin/audit-7-7" element={<Audit77Dashboard />} />
 
                       <Route path="/admin/glossary" element={<GlossaryAdmin />} />
                       <Route path="/admin/glossario" element={<GlossaryAdmin />} />
