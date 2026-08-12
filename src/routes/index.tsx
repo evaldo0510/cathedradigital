@@ -6,7 +6,7 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Incluir um passo no GitHub Actions para rodar Lighthouse (mobile e desktop) nos fluxos principais e anexar o relatório ao PR junto com os testes Playwright.
+TEXTO DO USUÁRIO: o previeew sumiu
 */
 
 import React from 'react';
