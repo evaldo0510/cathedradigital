@@ -43,8 +43,7 @@ export default function InfrastructureDiagnosticsPage() {
   }, [filterLang, filterStatus]);
 
   const loadBackendErrors = async () => {
-    const { data, error } = await supabase
-      .from('backend_errors')
+    const { data, error } = await (supabase.from('backend_errors' as any))
       .select('*')
       .order('created_at', { ascending: false })
       .limit(10);
@@ -57,7 +56,7 @@ export default function InfrastructureDiagnosticsPage() {
   };
 
   const loadHistory = async () => {
-    let query = (supabase.from('infrastructure_audit_runs' as any) as any)
+    let query = (supabase.from('infrastructure_audit_runs' as any))
       .select('*')
       .order('created_at', { ascending: false });
     
@@ -172,6 +171,7 @@ export default function InfrastructureDiagnosticsPage() {
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
           <TabsTrigger value="history">Histórico e Filtros</TabsTrigger>
           <TabsTrigger value="report">Relatório de Multi-idioma</TabsTrigger>
+          <TabsTrigger value="backend">Erros Backend (Santos)</TabsTrigger>
           <TabsTrigger value="backend">Erros Backend (Santos)</TabsTrigger>
         </TabsList>
 
@@ -413,6 +413,47 @@ export default function InfrastructureDiagnosticsPage() {
                   ))}
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="backend" className="space-y-6 outline-none">
+          <Card className="premium-card">
+            <CardHeader>
+              <CardTitle className="text-premium-base font-black uppercase tracking-widest flex items-center gap-2">
+                <Icons.AlertTriangle className="w-5 h-5 text-amber-500" />
+                Captura de Erros Supabase — Santos
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-[400px] w-full">
+                <div className="space-y-4">
+                  {backendErrors.length > 0 ? (
+                    backendErrors.map((err) => (
+                      <div key={err.id} className="p-4 rounded-premium border border-border/40 bg-muted/20 space-y-2">
+                        <div className="flex justify-between items-start">
+                          <Badge variant="outline" className="font-mono text-[10px] uppercase text-amber-600">
+                            {err.module}
+                          </Badge>
+                          <span className="text-[10px] text-muted-foreground">
+                            {new Date(err.created_at).toLocaleString('pt-BR')}
+                          </span>
+                        </div>
+                        <p className="text-sm font-bold text-destructive">{err.error_message}</p>
+                        <div className="flex items-center gap-4">
+                           <Link to="/santos" className="text-[10px] text-primary hover:underline flex items-center gap-1">
+                              <Icons.ExternalLink className="w-3 h-3" /> Ver evidência (Santos)
+                           </Link>
+                           <Badge variant="outline" className="text-[9px] uppercase">BLOCKED — BACKEND</Badge>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-10 text-muted-foreground italic font-serif">
+                      Nenhum erro de backend registrado recentemente para Santos.
+                    </div>
+                  )}
+                </div>
+              </ScrollArea>
             </CardContent>
           </Card>
         </TabsContent>
