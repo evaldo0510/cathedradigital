@@ -14,7 +14,10 @@ import {
   Smartphone, 
   Monitor,
   Clock,
-  AlertCircle
+  AlertCircle,
+  Accessibility,
+  Activity,
+  Zap
 } from 'lucide-react';
 
 interface AuditItem {
@@ -24,6 +27,13 @@ interface AuditItem {
   p: 'P0' | 'P1' | 'P2';
   status: 'PASS' | 'FAIL' | 'BLOCKED';
   loadTime?: number;
+  ttfb?: number;
+  lcp?: number;
+  accessibility?: {
+    contrast: 'PASS' | 'FAIL';
+    keyboard: 'PASS' | 'FAIL';
+    labels: 'PASS' | 'FAIL';
+  };
   deviceStatus?: {
     mobile: 'PASS' | 'FAIL' | 'BLOCKED';
     desktop: 'PASS' | 'FAIL' | 'BLOCKED';
@@ -44,9 +54,12 @@ const initialAuditItems: AuditItem[] = [
     p: 'P0', 
     status: 'FAIL',
     loadTime: 850,
+    ttfb: 120,
+    lcp: 1400,
+    accessibility: { contrast: 'FAIL', keyboard: 'PASS', labels: 'PASS' },
     deviceStatus: { mobile: 'FAIL', desktop: 'FAIL' },
     evidence: {
-      message: 'Jornada interrompida: Nenhum item de catecismo encontrado na listagem (Content Gap/Connection).',
+      message: 'Jornada interrompida: Nenhum item de catecismo encontrado na listagem (Content Gap/Connection). Falha de contraste no Reader V2.',
       timestamp: new Date().toISOString()
     }
   },
@@ -57,6 +70,9 @@ const initialAuditItems: AuditItem[] = [
     p: 'P0', 
     status: 'FAIL', 
     loadTime: 1200,
+    ttfb: 250,
+    lcp: 2100,
+    accessibility: { contrast: 'PASS', keyboard: 'PASS', labels: 'PASS' },
     deviceStatus: { mobile: 'FAIL', desktop: 'PASS' },
     evidence: {
       message: 'Erro 409 em orações, falha na navegação de capítulos',
@@ -70,9 +86,12 @@ const initialAuditItems: AuditItem[] = [
     p: 'P0', 
     status: 'FAIL',
     loadTime: 410,
+    ttfb: 80,
+    lcp: 950,
+    accessibility: { contrast: 'PASS', keyboard: 'FAIL', labels: 'PASS' },
     deviceStatus: { mobile: 'FAIL', desktop: 'FAIL' },
     evidence: {
-      message: 'Jornada interrompida: Lista de santos vazia (Content Gap/Backend Connection).',
+      message: 'Jornada interrompida: Lista de santos vazia (Content Gap/Backend Connection). Navegação por teclado inacessível no grid.',
       timestamp: new Date().toISOString()
     }
   },
@@ -83,6 +102,9 @@ const initialAuditItems: AuditItem[] = [
     p: 'P1', 
     status: 'PASS',
     loadTime: 150,
+    ttfb: 45,
+    lcp: 600,
+    accessibility: { contrast: 'PASS', keyboard: 'PASS', labels: 'PASS' },
     deviceStatus: { mobile: 'PASS', desktop: 'PASS' }
   },
   { 
@@ -217,11 +239,19 @@ export default function Audit77Dashboard() {
                   </div>
                   
                   <div className="mt-3 flex flex-wrap gap-4 text-[11px] text-muted-foreground">
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1.5" title="Tempo de carregamento total">
                       <Clock className="h-3.5 w-3.5" />
                       {item.loadTime ? `${item.loadTime}ms` : '—'}
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1.5" title="TTFB (Time to First Byte)">
+                      <Activity className="h-3.5 w-3.5 text-blue-500" />
+                      {item.ttfb ? `${item.ttfb}ms` : '—'}
+                    </div>
+                    <div className="flex items-center gap-1.5" title="LCP (Largest Contentful Paint)">
+                      <Zap className="h-3.5 w-3.5 text-amber-500" />
+                      {item.lcp ? `${item.lcp}ms` : '—'}
+                    </div>
+                    <div className="flex items-center gap-3 border-x px-3">
                       <div className="flex items-center gap-1">
                         <Smartphone className="h-3.5 w-3.5" />
                         <StatusIcon status={item.deviceStatus?.mobile} />
@@ -231,6 +261,16 @@ export default function Audit77Dashboard() {
                         <StatusIcon status={item.deviceStatus?.desktop} />
                       </div>
                     </div>
+                    {item.accessibility && (
+                      <div className="flex items-center gap-3">
+                        <Accessibility className="h-3.5 w-3.5 text-indigo-500" />
+                        <div className="flex gap-2">
+                          <span className={item.accessibility.contrast === 'PASS' ? 'text-emerald-600' : 'text-red-600'}>Contraste</span>
+                          <span className={item.accessibility.keyboard === 'PASS' ? 'text-emerald-600' : 'text-red-600'}>Teclado</span>
+                          <span className={item.accessibility.labels === 'PASS' ? 'text-emerald-600' : 'text-red-600'}>Labels</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   {item.evidence && (
