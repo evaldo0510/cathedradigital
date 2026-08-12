@@ -203,7 +203,7 @@ const Bible: React.FC = () => {
   // Detecção e Correção Instantânea de Idioma (Auditoria em Tempo Real)
   useEffect(() => {
     const scanAndFix = async () => {
-      // 1. Invalidar Caches Antigos se versão incompatível
+      // 1. Invalidar Caches Antigos se versão incompatível - Audit Hierarchy
       const cacheKeys = Object.keys(localStorage).filter(k => k.startsWith('bible_cache_'));
       cacheKeys.forEach(key => {
         try {
