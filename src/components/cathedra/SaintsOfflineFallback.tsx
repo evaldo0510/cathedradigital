@@ -21,7 +21,7 @@ const SaintsOfflineFallback: React.FC<SaintsOfflineFallbackProps> = ({
       className="flex flex-col items-center justify-center p-spacing-2xl bg-card rounded-premium border border-border/50 text-center space-y-spacing-lg"
     >
       <div className="w-spacing-4xl h-spacing-4xl rounded-premium-full bg-primary/5 flex items-center justify-center text-primary/40 mb-spacing-md">
-        <Icons.CloudOff className="w-spacing-2xl h-spacing-2xl" />
+        <Icons.WifiOff className="w-spacing-2xl h-spacing-2xl" />
       </div>
       
       <div className="space-y-spacing-xs">
