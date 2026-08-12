@@ -29,6 +29,7 @@ import AdminGuard from './components/cathedra/AdminGuard';
 import GlossaryAdminGuard from './components/cathedra/GlossaryAdminGuard';
 import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
 import DebugRequestPanel from './components/cathedra/DebugRequestPanel';
+import { PreviewFallback } from './components/cathedra/PreviewFallback';
 import * as Sentry from "@sentry/react";
 import { toast } from 'sonner';
 
@@ -946,7 +947,14 @@ const AppLayout: React.FC = () => {
               {/* Preview isolado do Ambiente Átrio (Sprint 2.0.1). Rota / continua no 1.x até 2.0.6. */}
               <Route path="/prototype-2.0/atrium-v2" element={<Suspense fallback={<LoadingFallback />}><AtriumPageV2 /></Suspense>} />
 
-              <Route path="*" element={<NotFound />} />
+                    <Route
+                      path="*"
+                      element={
+                        <PreviewFallback>
+                          <NotFound />
+                        </PreviewFallback>
+                      }
+                    />
 
 
             </Routes>
