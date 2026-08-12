@@ -35,6 +35,7 @@
     "test:ci": "vitest run --coverage --reporter=default --passWithNoTests",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
+    "test:audit77": "playwright test tests/e2e/audit77/ --reporter=list,json",
     "test:header-mobile": "playwright test tests/e2e/header-mobile.spec.ts",
     "test:seo-audit": "playwright test tests/e2e/home-seo.spec.ts tests/e2e/seo-consistency.spec.ts",
     "test:visual": "playwright test tests/e2e/visual-regression.spec.ts",
