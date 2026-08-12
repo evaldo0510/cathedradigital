@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -17,7 +18,8 @@ import {
   AlertCircle,
   Accessibility,
   Activity,
-  Zap
+  Zap,
+  RefreshCw
 } from 'lucide-react';
 
 interface AuditItem {
@@ -124,6 +126,32 @@ const initialAuditItems: AuditItem[] = [
 export default function Audit77Dashboard() {
   const [items, setItems] = useState<AuditItem[]>(initialAuditItems);
   const [isOffline, setIsOffline] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+  const [isChecking, setIsChecking] = useState(false);
+
+  const checkStatus = async () => {
+    setIsChecking(true);
+    try {
+      const { error } = await supabase.from('app_feature_flags').select('count', { count: 'exact', head: true });
+      if (error && (error.message.includes('paused') || error.code === 'PGRST301')) {
+        setIsPaused(true);
+      } else {
+        const wasPaused = isPaused;
+        setIsPaused(false);
+        if (wasPaused) {
+          setItems(initialAuditItems);
+        }
+      }
+    } catch (e) {
+      console.error('Audit status check failed', e);
+    } finally {
+      setIsChecking(false);
+    }
+  };
+
+  useEffect(() => {
+    checkStatus();
+  }, []);
 
   useEffect(() => {
     const handleUnreachable = () => {
@@ -193,6 +221,9 @@ export default function Audit77Dashboard() {
           <p className="text-sm text-muted-foreground">Monitoramento de jornadas críticas do peregrino</p>
         </div>
         <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={checkStatus} disabled={isChecking}>
+            <RefreshCw className={`mr-2 h-4 w-4 ${isChecking ? 'animate-spin' : ''}`} /> Sincronizar
+          </Button>
           <Button variant="outline" size="sm" onClick={() => exportReport('json')}>
             <Download className="mr-2 h-4 w-4" /> JSON
           </Button>
@@ -202,7 +233,21 @@ export default function Audit77Dashboard() {
         </div>
       </div>
 
-      {isOffline && (
+      {isPaused && (
+        <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-center justify-between gap-3 text-amber-800">
+          <div className="flex items-center gap-3">
+            <ShieldAlert className="h-5 w-5" />
+            <div className="text-sm">
+              <span className="font-bold">Infraestrutura Pausada:</span> O projeto Supabase precisa ser reativado para prosseguir com a certificação real.
+            </div>
+          </div>
+          <Button variant="outline" size="sm" className="bg-white" asChild>
+            <a href="/admin/site-health">Ver Health Check</a>
+          </Button>
+        </div>
+      )}
+
+      {isOffline && !isPaused && (
         <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3 text-amber-800">
           <WifiOff className="h-5 w-5" />
           <div className="text-sm">

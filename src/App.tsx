@@ -29,6 +29,7 @@ import AdminGuard from './components/cathedra/AdminGuard';
 import GlossaryAdminGuard from './components/cathedra/GlossaryAdminGuard';
 import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
 import DebugRequestPanel from './components/cathedra/DebugRequestPanel';
+import { InfrastructureDiagnostics } from './routes/index';
 import { PreviewFallback } from './components/cathedra/PreviewFallback';
 import * as Sentry from "@sentry/react";
 import { toast } from 'sonner';
@@ -60,6 +61,7 @@ const A11ySettingsPanel = lazy(() => import('./components/cathedra/A11ySettingsP
 const ReadingPreferencesPanel = lazy(() => import('./components/cathedra/ReadingPreferencesPanel').then(m => ({ default: m.ReadingPreferencesPanel })));
 
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
+import { PausedBanner } from './components/cathedra/PausedBanner';
 import SplashScreen from './components/cathedra/SplashScreen';
 import { GlobalLogosAI } from './components/cathedra/GlobalLogosAI';
 import WelcomeFirstAccess from './components/cathedra/WelcomeFirstAccess';
@@ -545,6 +547,7 @@ const AppLayout: React.FC = () => {
 
   return (
     <MotionConfig reducedMotion={settings.reduceAnimations ? "always" : "never"}>
+      <PausedBanner />
       <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
         <a 
           href="#main-content" 
@@ -914,6 +917,7 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/editorial-closure-runs" element={<EditorialClosureRuns />} />
                       <Route path="/admin/instagram-gallery" element={<Suspense fallback={<LoadingFallback />}><InstagramGalleryPage /></Suspense>} />
                       <Route path="/admin/site-health" element={<SiteHealthDashboard />} />
+                      <Route path="/admin/audit-logs" element={<Suspense fallback={<LoadingFallback />}><AuditLogsPage /></Suspense>} />
                       <Route path="/audit-logs" element={<Suspense fallback={<LoadingFallback />}><AuditLogsPage /></Suspense>} />
                       <Route path="/site-health" element={<SiteHealthDashboard />} />
 
@@ -983,6 +987,7 @@ const AppLayout: React.FC = () => {
           />
           <CommandCenter />
           <PWAInstallPrompt />
+          <InfrastructureDiagnostics />
         </Suspense>
         <OfflineIndicator />
         <DebugRequestPanel />
