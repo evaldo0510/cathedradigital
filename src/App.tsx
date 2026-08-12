@@ -251,6 +251,7 @@ const NexusAuditPage = lazy(() => import('./pages/admin/NexusAudit'));
 const EditorialIntegrityPage = lazy(() => import('./pages/admin/EditorialIntegrity'));
 const EditorialAuditPage = lazy(() => import('./pages/admin/EditorialAudit'));
 const MissionControlPage = lazy(() => import('./pages/admin/MissionControl'));
+const Audit77Dashboard = lazy(() => import('./pages/admin/Audit77Dashboard'));
 const EditorialBulkPage = lazy(() => import('./pages/admin/EditorialBulk'));
 const NexusAdmin = lazy(() => import('./pages/admin/NexusAdmin'));
 const GlossaryAdmin = lazy(() => import('./pages/admin/GlossaryAdmin'));
