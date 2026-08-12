@@ -42,9 +42,13 @@ const initialAuditItems: AuditItem[] = [
     module: 'Catecismo', 
     route: '/catecismo',
     p: 'P0', 
-    status: 'PASS',
-    loadTime: 450,
-    deviceStatus: { mobile: 'PASS', desktop: 'PASS' }
+    status: 'FAIL',
+    loadTime: 850,
+    deviceStatus: { mobile: 'FAIL', desktop: 'FAIL' },
+    evidence: {
+      message: 'Jornada interrompida: Nenhum item de catecismo encontrado na listagem (Content Gap/Connection).',
+      timestamp: new Date().toISOString()
+    }
   },
   { 
     id: 'bible', 
