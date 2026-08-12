@@ -936,6 +936,7 @@ const AppLayout: React.FC = () => {
               )}
 
               {/* Cathedra 2.0 — Protótipo navegável (isolado, sem chrome do app 1.0) */}
+              <Route path="/preview" element={<Suspense fallback={<PreviewSkeleton />}><PrototypeIndex /></Suspense>} />
               <Route path="/prototype-2.0" element={<Suspense fallback={<PreviewSkeleton />}><PrototypeIndex /></Suspense>} />
               <Route path="/prototype-2.0/atrio" element={<Suspense fallback={<PreviewSkeleton />}><PrototypeAtrio /></Suspense>} />
               <Route path="/prototype-2.0/estudar" element={<Suspense fallback={<PreviewSkeleton />}><PrototypeBiblioteca /></Suspense>} />
