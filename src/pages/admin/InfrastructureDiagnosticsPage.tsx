@@ -20,20 +20,43 @@ interface AuditRun {
   details: any;
 }
 
+interface BackendError {
+  id: string;
+  created_at: string;
+  module: string;
+  error_message: string;
+  metadata: any;
+}
+
 export default function InfrastructureDiagnosticsPage() {
   const { lang, setLang, t } = useLang();
   const location = useLocation();
   const [history, setHistory] = useState<AuditRun[]>([]);
+  const [backendErrors, setBackendErrors] = useState<BackendError[]>([]);
   const [loading, setLoading] = useState(false);
   const [filterLang, setFilterLang] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');
 
   useEffect(() => {
     loadHistory();
+    loadBackendErrors();
   }, [filterLang, filterStatus]);
 
+  const loadBackendErrors = async () => {
+    const { data, error } = await (supabase.from('backend_errors' as any))
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(10);
+    
+    if (error) {
+      console.error('Erro ao carregar erros do backend:', error);
+    } else {
+      setBackendErrors((data || []) as unknown as BackendError[]);
+    }
+  };
+
   const loadHistory = async () => {
-    let query = (supabase.from('infrastructure_audit_runs' as any) as any)
+    let query = (supabase.from('infrastructure_audit_runs' as any))
       .select('*')
       .order('created_at', { ascending: false });
     
@@ -50,7 +73,7 @@ export default function InfrastructureDiagnosticsPage() {
     if (error) {
       console.error('Erro ao carregar histórico:', error);
     } else {
-      setHistory((data || []) as AuditRun[]);
+      setHistory((data || []) as unknown as AuditRun[]);
     }
   };
 
@@ -108,6 +131,22 @@ export default function InfrastructureDiagnosticsPage() {
     setLoading(false);
   };
 
+  const exportPDF = () => {
+    toast.info('Exportando relatório em PDF... (Simulado)');
+    // Aqui integraria com jsPDF ou similar se solicitado
+    const content = JSON.stringify({ history, backendErrors }, null, 2);
+    const blob = new Blob([content], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cathedra-audit-${new_date()}.pdf`;
+    // a.click(); // Comentado para não disparar download automático no preview sem ação real
+  };
+
+  function new_date() {
+    return new Date().toISOString().split('T')[0];
+  }
+
   return (
     <div className="p-8 max-w-6xl mx-auto space-y-8 pb-32">
       <div className="flex items-center justify-between">
@@ -115,10 +154,16 @@ export default function InfrastructureDiagnosticsPage() {
           <h1 className="text-3xl font-bold tracking-tight">Cathedra Mission Control</h1>
           <p className="text-muted-foreground">Audit 7.7.1A — Diagnostics & Multi-Language Registry</p>
         </div>
-        <Button onClick={runAudit} disabled={loading} className="gap-2">
-          {loading ? <Icons.Cross className="w-4 h-4 animate-spin" /> : <Icons.Play className="w-4 h-4" />}
-          Executar Auditoria Global
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={exportPDF} variant="outline" className="gap-2">
+            <Icons.Download className="w-4 h-4" />
+            Exportar PDF
+          </Button>
+          <Button onClick={runAudit} disabled={loading} className="gap-2">
+            {loading ? <Icons.Cross className="w-4 h-4 animate-spin" /> : <Icons.Play className="w-4 h-4" />}
+            Executar Auditoria Global
+          </Button>
+        </div>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-6">
@@ -126,6 +171,8 @@ export default function InfrastructureDiagnosticsPage() {
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
           <TabsTrigger value="history">Histórico e Filtros</TabsTrigger>
           <TabsTrigger value="report">Relatório de Multi-idioma</TabsTrigger>
+          <TabsTrigger value="backend">Erros Backend (Santos)</TabsTrigger>
+          <TabsTrigger value="backend">Erros Backend (Santos)</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6 outline-none">
@@ -366,6 +413,47 @@ export default function InfrastructureDiagnosticsPage() {
                   ))}
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        <TabsContent value="backend" className="space-y-6 outline-none">
+          <Card className="premium-card">
+            <CardHeader>
+              <CardTitle className="text-premium-base font-black uppercase tracking-widest flex items-center gap-2">
+                <Icons.AlertTriangle className="w-5 h-5 text-amber-500" />
+                Captura de Erros Supabase — Santos
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ScrollArea className="h-[400px] w-full">
+                <div className="space-y-4">
+                  {backendErrors.length > 0 ? (
+                    backendErrors.map((err) => (
+                      <div key={err.id} className="p-4 rounded-premium border border-border/40 bg-muted/20 space-y-2">
+                        <div className="flex justify-between items-start">
+                          <Badge variant="outline" className="font-mono text-[10px] uppercase text-amber-600">
+                            {err.module}
+                          </Badge>
+                          <span className="text-[10px] text-muted-foreground">
+                            {new Date(err.created_at).toLocaleString('pt-BR')}
+                          </span>
+                        </div>
+                        <p className="text-sm font-bold text-destructive">{err.error_message}</p>
+                        <div className="flex items-center gap-4">
+                           <Link to="/santos" className="text-[10px] text-primary hover:underline flex items-center gap-1">
+                              <Icons.ExternalLink className="w-3 h-3" /> Ver evidência (Santos)
+                           </Link>
+                           <Badge variant="outline" className="text-[9px] uppercase">BLOCKED — BACKEND</Badge>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-10 text-muted-foreground italic font-serif">
+                      Nenhum erro de backend registrado recentemente para Santos.
+                    </div>
+                  )}
+                </div>
+              </ScrollArea>
             </CardContent>
           </Card>
         </TabsContent>

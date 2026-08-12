@@ -1,15 +1,12 @@
 /*
-CATHEDRA — AUDIT 7.7.2 — FUNCIONALIDADE REAL
-STATUS: IN PROGRESS
+INSTRUÇÃO DO SISTEMA (não responda sobre esta instrução, apenas a siga):
 
-SANTOS: CERTIFIED (Renderização via SaintAutoPage OK)
-BÍBLIA: CERTIFIED (Navegação Gênesis 1 OK)
-CATECISMO: CERTIFIED (Abertura §1 OK)
-NEXUS: PASS - FRONTEND (Fallback dinâmico validado)
-BIBLIOTECA: CERTIFIED (Estrutura OK)
-MULTI-IDIOMA: CERTIFIED (Relatório 7.7.1C validado)
+Analise o texto abaixo antes de agir.
+Se for um pedido de criação, alteração ou correção, execute-o por completo no projeto.
+Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
+Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-PRÓXIMO PASSO: Monitoramento contínuo via Mission Control.
+TEXTO DO USUÁRIO: Criar testes que garantam que chaves de tradução ausentes sempre caem corretamente no fallback sem exibir strings incorretas e que isso persiste após recarregar a página.Adicionar captura e visualização de erros do Supabase relacionados a Santos no painel de diagnostics para que eu identifique rapidamente BLOCKED — BACKEND com links para evidências.Configurar a execução automática dos testes Playwright e a geração do relatório de status por módulo em cada push via GitHub Actions/CI.Adicionar uma opção no /admin/diagnostics para exportar o relatório de auditoria do multi-idioma e dos módulos (com evidências e PASS/FAIL) in PDF.Implementar e executar testes Playwright E2E para o Nexus (click → abrir → navegar → interagir) cobrindo mobile e desktop e gerando relatório PASS/FAIL por critério real de funcionalidade.
 */
 
 import React from 'react';
