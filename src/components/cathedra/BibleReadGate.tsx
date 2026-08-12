@@ -37,9 +37,9 @@ export const BibleReadGate: React.FC<{ children: React.ReactNode }> = ({ childre
           <div className="flex items-start gap-3">
             <ShieldAlert className={cn("h-6 w-6 shrink-0", isNetworkError ? "text-destructive" : "text-amber-600")} aria-hidden />
             <div className="space-y-2">
-              <h1 className="text-lg font-serif font-semibold">
+               <h2 className="text-lg font-serif font-semibold">
                 {isNetworkError ? 'Sem conexão com a Escritura' : 'Bíblia em manutenção'}
-              </h1>
+              </h2>
               <p className="text-sm text-muted-foreground font-serif italic">
                 {isNetworkError 
                   ? 'Não conseguimos carregar o cânon sagrado. Verifique sua conexão e tente novamente.' 
