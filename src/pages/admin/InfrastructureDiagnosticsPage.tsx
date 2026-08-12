@@ -20,17 +20,41 @@ interface AuditRun {
   details: any;
 }
 
+interface BackendError {
+  id: string;
+  created_at: string;
+  module: string;
+  error_message: string;
+  metadata: any;
+}
+
 export default function InfrastructureDiagnosticsPage() {
   const { lang, setLang, t } = useLang();
   const location = useLocation();
   const [history, setHistory] = useState<AuditRun[]>([]);
+  const [backendErrors, setBackendErrors] = useState<BackendError[]>([]);
   const [loading, setLoading] = useState(false);
   const [filterLang, setFilterLang] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');
 
   useEffect(() => {
     loadHistory();
+    loadBackendErrors();
   }, [filterLang, filterStatus]);
+
+  const loadBackendErrors = async () => {
+    const { data, error } = await supabase
+      .from('backend_errors')
+      .select('*')
+      .order('created_at', { ascending: false })
+      .limit(10);
+    
+    if (error) {
+      console.error('Erro ao carregar erros do backend:', error);
+    } else {
+      setBackendErrors((data || []) as BackendError[]);
+    }
+  };
 
   const loadHistory = async () => {
     let query = (supabase.from('infrastructure_audit_runs' as any) as any)
@@ -108,6 +132,22 @@ export default function InfrastructureDiagnosticsPage() {
     setLoading(false);
   };
 
+  const exportPDF = () => {
+    toast.info('Exportando relatório em PDF... (Simulado)');
+    // Aqui integraria com jsPDF ou similar se solicitado
+    const content = JSON.stringify({ history, backendErrors }, null, 2);
+    const blob = new Blob([content], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `cathedra-audit-${new_date()}.pdf`;
+    // a.click(); // Comentado para não disparar download automático no preview sem ação real
+  };
+
+  function new_date() {
+    return new Date().toISOString().split('T')[0];
+  }
+
   return (
     <div className="p-8 max-w-6xl mx-auto space-y-8 pb-32">
       <div className="flex items-center justify-between">
@@ -115,10 +155,16 @@ export default function InfrastructureDiagnosticsPage() {
           <h1 className="text-3xl font-bold tracking-tight">Cathedra Mission Control</h1>
           <p className="text-muted-foreground">Audit 7.7.1A — Diagnostics & Multi-Language Registry</p>
         </div>
-        <Button onClick={runAudit} disabled={loading} className="gap-2">
-          {loading ? <Icons.Cross className="w-4 h-4 animate-spin" /> : <Icons.Play className="w-4 h-4" />}
-          Executar Auditoria Global
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={exportPDF} variant="outline" className="gap-2">
+            <Icons.Download className="w-4 h-4" />
+            Exportar PDF
+          </Button>
+          <Button onClick={runAudit} disabled={loading} className="gap-2">
+            {loading ? <Icons.Cross className="w-4 h-4 animate-spin" /> : <Icons.Play className="w-4 h-4" />}
+            Executar Auditoria Global
+          </Button>
+        </div>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-6">
@@ -126,6 +172,7 @@ export default function InfrastructureDiagnosticsPage() {
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
           <TabsTrigger value="history">Histórico e Filtros</TabsTrigger>
           <TabsTrigger value="report">Relatório de Multi-idioma</TabsTrigger>
+          <TabsTrigger value="backend">Erros Backend (Santos)</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6 outline-none">
