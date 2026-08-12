@@ -70,15 +70,15 @@ const WelcomeFirstAccess: React.FC = () => {
           <X className="w-5 h-5" aria-hidden="true" />
         </button>
 
-        <p className="text-xs uppercase tracking-widest text-secondary mb-spacing-2xs">
+        <h2 className="text-xs uppercase tracking-widest text-secondary mb-spacing-2xs">
           Sanctuarium Digital
-        </p>
-        <h2
+        </h2>
+        <h1
           id="welcome-first-access-title"
           className="font-serif text-3xl md:text-4xl text-foreground mb-spacing-xs"
         >
           Bem-vindo à Cathedra
-        </h2>
+        </h1>
         <p className="text-muted-foreground mb-spacing-lg">
           Escolha por onde deseja começar. Você poderá navegar livremente entre todos os caminhos depois.
         </p>
@@ -95,12 +95,12 @@ const WelcomeFirstAccess: React.FC = () => {
                   <opt.Icon className="w-5 h-5" aria-hidden="true" />
                 </span>
                 <span className="flex-1">
-                  <span className="block font-serif text-lg text-foreground">
+                  <h2 className="block font-serif text-lg text-foreground">
                     {opt.label}
-                  </span>
-                  <span className="block text-xs uppercase tracking-widest text-secondary">
+                  </h2>
+                  <h3 className="block text-xs uppercase tracking-widest text-secondary">
                     {opt.latin}
-                  </span>
+                  </h3>
                   <span className="block text-sm text-muted-foreground mt-spacing-3xs">
                     {opt.hint}
                   </span>
