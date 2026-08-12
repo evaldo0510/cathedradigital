@@ -547,6 +547,7 @@ const AppLayout: React.FC = () => {
 
   return (
     <MotionConfig reducedMotion={settings.reduceAnimations ? "always" : "never"}>
+      <PausedBanner />
       <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
         <a 
           href="#main-content" 
@@ -985,6 +986,7 @@ const AppLayout: React.FC = () => {
           />
           <CommandCenter />
           <PWAInstallPrompt />
+          <InfrastructureDiagnostics />
         </Suspense>
         <OfflineIndicator />
         <DebugRequestPanel />
