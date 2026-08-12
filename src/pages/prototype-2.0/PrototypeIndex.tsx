@@ -30,9 +30,9 @@ const PrototypeIndex: React.FC = () => {
     <div className="min-h-dvh bg-background text-foreground font-sans max-w-3xl mx-auto px-6 py-10">
       <header className="mb-8">
         <p className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-2">
-          Cathedra 2.0 · Protótipo navegável
+          Cathedra 2.0 · Preview do Protótipo
         </p>
-        <h1 className="font-serif text-3xl mb-2">Índice do protótipo</h1>
+        <h1 className="font-serif text-3xl mb-2">Índice do Preview</h1>
         <p className="text-sm text-muted-foreground max-w-lg">
           Baixa fidelidade, propositalmente cru. O objetivo é validar estrutura, fluxos e nomenclatura
           — não estética final. Todas as jornadas J1–J6 são clicáveis. Nenhum backend é chamado.
