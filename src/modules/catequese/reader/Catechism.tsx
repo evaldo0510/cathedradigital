@@ -23,10 +23,7 @@ import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import ReadingControlPanel from '@/components/cathedra/ReadingControlPanel';
 import ReadingMarkComponent from '@/components/cathedra/ReadingMark';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
-import type { ReadingMark } from '@/hooks/useReadingMarks';
-
-
-
+import type { ReadingMark as ReadingMarkType } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { toast } from 'sonner';
 import ContemplativeLayout from '@/components/cathedra/ContemplativeLayout';
@@ -66,6 +63,7 @@ import {
   CatechismEditorialOpening,
   CatechismFurtherReading,
 } from '@/features/catechism/editorialEngine/CatechismEditorialFrame';
+
 
 
 
