@@ -46,7 +46,7 @@ export class PreviewFallback extends Component<Props, State> {
 
           <div className="space-y-2 max-w-md mx-auto">
             <h2 className="text-2xl font-display text-primary tracking-tight">
-              Ops! O Preview sumiu
+              Preview em Restauração
             </h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
               Não conseguimos carregar esta parte da experiência. Isso pode ser um problema temporário de conexão ou um erro inesperado.
