@@ -6,7 +6,7 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Perfeito. **Agora não precisamos criar outro manifesto.** A AUDIT 7.7.1 já está definida; o próximo passo é **executá-la** e trabalhar somente sobre evidências.
+TEXTO DO USUÁRIO: Implementar uma página de diagnóstico que valide o Preview e mostre erros de build/dev/runtime em tempo real. P0 — Página /admin/diagnostics criada e integrada. STATUS: AUDIT 7.7.1 — DIAGNOSTICS ACTIVE.
 
 A ordem deve ser:
 

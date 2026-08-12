@@ -274,6 +274,7 @@ const SiteHealthDashboard = lazy(() => import('./pages/admin/SiteHealthDashboard
 const AuditLogsPage = lazy(() => import('./pages/admin/AuditLogsPage'));
 const DocsPage = lazy(() => import('./pages/DocsPage'));
 const DocsArticlePage = lazy(() => import('./pages/DocsArticlePage'));
+const InfrastructureDiagnosticsPage = lazy(() => import('./pages/admin/InfrastructureDiagnosticsPage'));
 // ProductionReadyDashboard movido para o topo para evitar duplicidade
 
 const PrayerAdmin = lazy(() => import('./pages/admin/PrayerAdmin'));
@@ -916,7 +917,8 @@ const AppLayout: React.FC = () => {
                       <Route path="/admin/editorial-closure-validator" element={<EditorialClosureValidator />} />
                       <Route path="/admin/editorial-closure-runs" element={<EditorialClosureRuns />} />
                       <Route path="/admin/instagram-gallery" element={<Suspense fallback={<LoadingFallback />}><InstagramGalleryPage /></Suspense>} />
-                      <Route path="/admin/site-health" element={<SiteHealthDashboard />} />
+                <Route path="/admin/site-health" element={<SiteHealthDashboard />} />
+                <Route path="/admin/diagnostics" element={<InfrastructureDiagnosticsPage />} />
                       <Route path="/admin/audit-logs" element={<Suspense fallback={<LoadingFallback />}><AuditLogsPage /></Suspense>} />
                       <Route path="/audit-logs" element={<Suspense fallback={<LoadingFallback />}><AuditLogsPage /></Suspense>} />
                       <Route path="/site-health" element={<SiteHealthDashboard />} />
