@@ -68,9 +68,13 @@ const initialAuditItems: AuditItem[] = [
     module: 'Santos', 
     route: '/santos',
     p: 'P0', 
-    status: 'PASS',
-    loadTime: 320,
-    deviceStatus: { mobile: 'PASS', desktop: 'PASS' }
+    status: 'FAIL',
+    loadTime: 410,
+    deviceStatus: { mobile: 'FAIL', desktop: 'FAIL' },
+    evidence: {
+      message: 'Jornada interrompida: Lista de santos vazia (Content Gap/Backend Connection).',
+      timestamp: new Date().toISOString()
+    }
   },
   { 
     id: 'nexus', 
