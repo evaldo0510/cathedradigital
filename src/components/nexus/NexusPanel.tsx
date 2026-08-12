@@ -54,25 +54,22 @@ export const NexusPanel: React.FC<NexusPanelProps> = ({
     .filter((b) => (output.byBucket[b]?.length ?? 0) > 0);
 
   if (buckets.length === 0) {
-    if (isOffline) {
-      return (
-        <aside className={cn(
-          'w-full max-w-[68ch] mx-auto',
-          'rounded-premium border border-destructive/10 bg-destructive/5',
-          'p-spacing-lg space-y-spacing-sm',
-          className
-        )}>
-          <header className="flex items-center gap-spacing-sm text-destructive">
-            <Icons.WifiOff className="w-5 h-5" />
-            <h2 className="font-serif text-premium-base">Conexões Temporariamente Indisponíveis</h2>
-          </header>
-          <p className="text-premium-xs text-destructive/70 font-serif italic">
-            Não conseguimos conectar ao Nexus para mapear as raízes teológicas desta passagem.
-          </p>
-        </aside>
-      );
-    }
-    return null;
+    return (
+      <aside className={cn(
+        'w-full max-w-[68ch] mx-auto',
+        'rounded-premium border border-primary/10 bg-muted/5',
+        'p-spacing-lg space-y-spacing-sm opacity-60',
+        className
+      )}>
+        <header className="flex items-center gap-spacing-sm text-muted-foreground">
+          <Icons.Info className="w-5 h-5" />
+          <h2 className="font-serif text-premium-base italic">Nexus Theologicus em Processamento</h2>
+        </header>
+        <p className="text-premium-xs text-muted-foreground/70 font-serif italic">
+          O motor do Nexus está mapeando as conexões teológicas desta passagem. As referências aparecerão assim que a indexação for concluída.
+        </p>
+      </aside>
+    );
   }
 
 
