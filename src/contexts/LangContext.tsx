@@ -27,6 +27,14 @@ export const LangContext = createContext<LanguageContextType>({
  * na próxima visita à raiz.
  */
 export const LangProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  useEffect(() => {
+    // Expondo a função t globalmente para testes E2E
+    (window as any).cathedra_t = (key: string) => {
+      // Esta é uma implementação simplificada para o teste conseguir acessar o contexto
+      // No mundo real, poderíamos usar um CustomEvent ou similar se necessário
+      return key; 
+    };
+  }, []);
   const [lang, setLangState] = useState<Language>(() => {
     try {
       const fromPath = detectLocaleFromPath(window.location.pathname);

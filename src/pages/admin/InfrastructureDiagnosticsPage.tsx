@@ -51,7 +51,7 @@ export default function InfrastructureDiagnosticsPage() {
     if (error) {
       console.error('Erro ao carregar erros do backend:', error);
     } else {
-      setBackendErrors((data || []) as BackendError[]);
+      setBackendErrors((data || []) as unknown as BackendError[]);
     }
   };
 
@@ -73,7 +73,7 @@ export default function InfrastructureDiagnosticsPage() {
     if (error) {
       console.error('Erro ao carregar histórico:', error);
     } else {
-      setHistory((data || []) as AuditRun[]);
+      setHistory((data || []) as unknown as AuditRun[]);
     }
   };
 
