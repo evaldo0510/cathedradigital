@@ -21,8 +21,10 @@ import { CatechismParagraphSkeleton } from '@/components/cathedra/SacredSkeleton
 import CatechismOfflineFallback from '../components/CatechismOfflineFallback';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import ReadingControlPanel from '@/components/cathedra/ReadingControlPanel';
+import ReadingMark from '@/components/cathedra/ReadingMark';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
-import type { ReadingMark } from '@/hooks/useReadingMarks';
+import type { ReadingMark as ReadingMarkType } from '@/hooks/useReadingMarks';
+
 
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { toast } from 'sonner';
