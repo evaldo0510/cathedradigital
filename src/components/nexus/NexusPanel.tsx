@@ -63,7 +63,7 @@ export const NexusPanel: React.FC<NexusPanelProps> = ({
           className
         )}>
           <header className="flex items-center gap-spacing-sm text-destructive">
-            <Icons.ShieldAlert className="w-5 h-5" />
+            <Icons.WifiOff className="w-5 h-5" />
             <h2 className="font-serif text-premium-base">Conexões Temporariamente Indisponíveis</h2>
           </header>
           <p className="text-premium-xs text-destructive/70 font-serif italic">
