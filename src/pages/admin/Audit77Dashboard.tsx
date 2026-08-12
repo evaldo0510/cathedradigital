@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { Helmet } from 'react-helmet-async';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -129,7 +130,7 @@ export default function Audit77Dashboard() {
   useEffect(() => {
     const checkStatus = async () => {
       try {
-        const { error } = await supabase.from('bible_versions').select('count', { count: 'exact', head: true });
+        const { error } = await supabase.from('app_feature_flags').select('count', { count: 'exact', head: true });
         if (error && (error.message.includes('paused') || error.code === 'PGRST301')) {
           setIsPaused(true);
         }

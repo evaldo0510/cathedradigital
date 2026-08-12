@@ -15,8 +15,8 @@ export default function SiteHealthDashboard() {
     setStatus('checking');
     setErrorDetails(null);
     try {
-      // Test simple read from a public table or just the ping
-      const { data, error } = await supabase.from('bible_versions').select('count', { count: 'exact', head: true });
+      // Test simple read from a public table that exists
+      const { data, error } = await supabase.from('app_feature_flags').select('count', { count: 'exact', head: true });
       
       if (error) {
         if (error.message.includes('paused') || error.code === 'PGRST301') {
