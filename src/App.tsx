@@ -29,6 +29,7 @@ import AdminGuard from './components/cathedra/AdminGuard';
 import GlossaryAdminGuard from './components/cathedra/GlossaryAdminGuard';
 import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
 import DebugRequestPanel from './components/cathedra/DebugRequestPanel';
+import { InfrastructureDiagnostics } from './routes/index';
 import { PreviewFallback } from './components/cathedra/PreviewFallback';
 import * as Sentry from "@sentry/react";
 import { toast } from 'sonner';
@@ -60,6 +61,7 @@ const A11ySettingsPanel = lazy(() => import('./components/cathedra/A11ySettingsP
 const ReadingPreferencesPanel = lazy(() => import('./components/cathedra/ReadingPreferencesPanel').then(m => ({ default: m.ReadingPreferencesPanel })));
 
 import OfflineIndicator from './components/cathedra/OfflineIndicator';
+import { PausedBanner } from './components/cathedra/PausedBanner';
 import SplashScreen from './components/cathedra/SplashScreen';
 import { GlobalLogosAI } from './components/cathedra/GlobalLogosAI';
 import WelcomeFirstAccess from './components/cathedra/WelcomeFirstAccess';

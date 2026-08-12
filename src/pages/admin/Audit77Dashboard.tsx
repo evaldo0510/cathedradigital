@@ -18,7 +18,8 @@ import {
   AlertCircle,
   Accessibility,
   Activity,
-  Zap
+  Zap,
+  RefreshCw
 } from 'lucide-react';
 
 interface AuditItem {
@@ -209,6 +210,9 @@ export default function Audit77Dashboard() {
           <p className="text-sm text-muted-foreground">Monitoramento de jornadas críticas do peregrino</p>
         </div>
         <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={checkStatus} disabled={isChecking}>
+            <RefreshCw className={`mr-2 h-4 w-4 ${isChecking ? 'animate-spin' : ''}`} /> Sincronizar
+          </Button>
           <Button variant="outline" size="sm" onClick={() => exportReport('json')}>
             <Download className="mr-2 h-4 w-4" /> JSON
           </Button>
