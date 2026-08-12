@@ -33,6 +33,7 @@ export default function InfrastructureDiagnosticsPage() {
   const location = useLocation();
   const [history, setHistory] = useState<AuditRun[]>([]);
   const [backendErrors, setBackendErrors] = useState<BackendError[]>([]);
+  const [selectedAudit, setSelectedAudit] = useState<AuditRun | null>(null);
   const [loading, setLoading] = useState(false);
   const [filterLang, setFilterLang] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<string>('all');
@@ -98,10 +99,13 @@ export default function InfrastructureDiagnosticsPage() {
       };
     };
 
-    const areaResults = areas.map(area => ({
-      area,
-      ...checkArea(area)
-    }));
+    const areaResults = [
+      { area: 'Santos', route: '/santos', ...checkArea('Santos') },
+      { area: 'Catecismo', route: '/catecismo', ...checkArea('Catecismo') },
+      { area: 'Bíblia', route: '/biblia', ...checkArea('Bíblia') },
+      { area: 'Biblioteca', route: '/biblioteca', ...checkArea('Biblioteca') },
+      { area: 'Nexus', route: '/nexus', ...checkArea('Nexus') },
+    ];
 
     const results = {
       timestamp: new Date().toISOString(),
@@ -170,8 +174,8 @@ export default function InfrastructureDiagnosticsPage() {
         <TabsList className="bg-muted/50 p-1 rounded-premium-full">
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
           <TabsTrigger value="history">Histórico e Filtros</TabsTrigger>
+          <TabsTrigger value="details">Detalhes do Módulo</TabsTrigger>
           <TabsTrigger value="report">Relatório de Multi-idioma</TabsTrigger>
-          <TabsTrigger value="backend">Erros Backend (Santos)</TabsTrigger>
           <TabsTrigger value="backend">Erros Backend (Santos)</TabsTrigger>
         </TabsList>
 
@@ -275,7 +279,14 @@ export default function InfrastructureDiagnosticsPage() {
               <ScrollArea className="h-[500px]">
                 <div className="divide-y divide-border/40">
                   {history.map((run) => (
-                    <div key={run.id} className="p-4 hover:bg-muted/30 transition-colors">
+                    <div 
+                      key={run.id} 
+                      className={cn(
+                        "p-4 hover:bg-muted/30 transition-colors cursor-pointer",
+                        selectedAudit?.id === run.id && "bg-muted/50 border-l-4 border-l-primary"
+                      )}
+                      onClick={() => setSelectedAudit(run)}
+                    >
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-3">
                           <Badge variant={run.status === 'PASS' ? 'default' : 'destructive'} className="rounded-premium-full uppercase text-[9px] tracking-widest">
@@ -309,6 +320,67 @@ export default function InfrastructureDiagnosticsPage() {
               </ScrollArea>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="details" className="space-y-6 outline-none">
+          {selectedAudit ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="md:col-span-2 space-y-6">
+                <Card className="premium-card">
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      <span>Evidências e Logs</span>
+                      <Badge variant={selectedAudit.status === 'PASS' ? 'default' : 'destructive'}>
+                        {selectedAudit.status}
+                      </Badge>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ScrollArea className="h-[400px] w-full bg-black/5 rounded-premium p-4">
+                      <pre className="text-[10px] font-mono whitespace-pre-wrap">
+                        {JSON.stringify(selectedAudit.details, null, 2)}
+                      </pre>
+                    </ScrollArea>
+                  </CardContent>
+                </Card>
+              </div>
+              <div className="space-y-6">
+                <Card className="premium-card">
+                  <CardHeader>
+                    <CardTitle className="text-xs font-bold uppercase tracking-widest">Links Contextuais</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {selectedAudit.details?.areas?.map((area: any) => (
+                      <div key={area.area} className="flex flex-col gap-1">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm font-bold">{area.area}</span>
+                          <Badge variant={area.status === 'PASS' ? 'outline' : 'destructive'} className="text-[9px]">
+                            {area.status}
+                          </Badge>
+                        </div>
+                        {area.status !== 'PASS' && (
+                          <div className="text-[10px] text-destructive bg-destructive/5 p-2 rounded border border-destructive/20 mb-2">
+                            {area.cause}
+                          </div>
+                        )}
+                        <Button asChild size="sm" variant="outline" className="h-7 text-[10px] uppercase">
+                          <Link to={selectedAudit.details.areas.find((a: any) => a.area === area.area)?.route || '#'}>
+                            Ir para {area.area}
+                          </Link>
+                        </Button>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          ) : (
+            <Card className="premium-card py-20">
+              <CardContent className="text-center text-muted-foreground italic font-serif">
+                Selecione uma execução no histórico para ver os detalhes.
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
 
         <TabsContent value="report" className="space-y-6 outline-none">
