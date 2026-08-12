@@ -68,6 +68,7 @@ import { installSessionRenewal } from './lib/sessionRenewal';
 
 import SwipeNavigation from './components/cathedra/SwipeNavigation';
 import ContrastInspector from './components/dev/ContrastInspector';
+import { PreviewSkeleton } from './components/cathedra/PreviewSkeleton';
 
 const MagisterioLegacyRedirect = () => {
   const { id } = useParams<{ id: string }>();
@@ -935,23 +936,25 @@ const AppLayout: React.FC = () => {
               )}
 
               {/* Cathedra 2.0 — Protótipo navegável (isolado, sem chrome do app 1.0) */}
-              <Route path="/prototype-2.0" element={<Suspense fallback={<LoadingFallback />}><PrototypeIndex /></Suspense>} />
-              <Route path="/prototype-2.0/atrio" element={<Suspense fallback={<LoadingFallback />}><PrototypeAtrio /></Suspense>} />
-              <Route path="/prototype-2.0/estudar" element={<Suspense fallback={<LoadingFallback />}><PrototypeBiblioteca /></Suspense>} />
-              <Route path="/prototype-2.0/estudar/tema/:slug" element={<Suspense fallback={<LoadingFallback />}><PrototypeEstudoComposto /></Suspense>} />
-              <Route path="/prototype-2.0/leitor" element={<Suspense fallback={<LoadingFallback />}><PrototypeLeitor /></Suspense>} />
-              <Route path="/prototype-2.0/pesquisar" element={<Suspense fallback={<LoadingFallback />}><PrototypePesquisa /></Suspense>} />
-              <Route path="/prototype-2.0/formar-se" element={<Suspense fallback={<LoadingFallback />}><PrototypeFormacao /></Suspense>} />
-              <Route path="/prototype-2.0/rezar" element={<Suspense fallback={<LoadingFallback />}><PrototypeRezar /></Suspense>} />
-              <Route path="/prototype-2.0/minha-jornada" element={<Suspense fallback={<LoadingFallback />}><PrototypeMinhaJornada /></Suspense>} />
+              <Route path="/prototype-2.0" element={<Suspense fallback={<PreviewSkeleton />}><PrototypeIndex /></Suspense>} />
+              <Route path="/prototype-2.0/atrio" element={<Suspense fallback={<PreviewSkeleton />}><PrototypeAtrio /></Suspense>} />
+              <Route path="/prototype-2.0/estudar" element={<Suspense fallback={<PreviewSkeleton />}><PrototypeBiblioteca /></Suspense>} />
+              <Route path="/prototype-2.0/estudar/tema/:slug" element={<Suspense fallback={<PreviewSkeleton />}><PrototypeEstudoComposto /></Suspense>} />
+              <Route path="/prototype-2.0/leitor" element={<Suspense fallback={<PreviewSkeleton />}><PrototypeLeitor /></Suspense>} />
+              <Route path="/prototype-2.0/pesquisar" element={<Suspense fallback={<PreviewSkeleton />}><PrototypePesquisa /></Suspense>} />
+              <Route path="/prototype-2.0/formar-se" element={<Suspense fallback={<PreviewSkeleton />}><PrototypeFormacao /></Suspense>} />
+              <Route path="/prototype-2.0/rezar" element={<Suspense fallback={<PreviewSkeleton />}><PrototypeRezar /></Suspense>} />
+              <Route path="/prototype-2.0/minha-jornada" element={<Suspense fallback={<PreviewSkeleton />}><PrototypeMinhaJornada /></Suspense>} />
               {/* Preview isolado do Ambiente Átrio (Sprint 2.0.1). Rota / continua no 1.x até 2.0.6. */}
-              <Route path="/prototype-2.0/atrium-v2" element={<Suspense fallback={<LoadingFallback />}><AtriumPageV2 /></Suspense>} />
+              <Route path="/prototype-2.0/atrium-v2" element={<Suspense fallback={<PreviewSkeleton />}><AtriumPageV2 /></Suspense>} />
 
                     <Route
                       path="*"
                       element={
                         <PreviewFallback>
-                          <NotFound />
+                          <Suspense fallback={<PreviewSkeleton />}>
+                            <NotFound />
+                          </Suspense>
                         </PreviewFallback>
                       }
                     />
