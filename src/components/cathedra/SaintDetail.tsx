@@ -16,6 +16,7 @@ import { AppRoute } from '@/types';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
+import { useLang } from '@/hooks/useLang';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
 import BibleVersePopover from './BibleVersePopover';
 import CatechismPopover from './CatechismPopover';
@@ -63,6 +64,7 @@ const VIRTUE_TO_JOURNEY: Record<string, { id: string, name: string }> = {
 
 const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: boolean; legacy?: boolean }> = ({ saint, onClose, autoReflect = false, legacy = false }) => {
   const { isPremium } = useAuth();
+  const { t } = useLang();
   const navigate = useNavigate();
   const [viewingDoc, setViewingDoc] = useState<{ url: string; title: string } | null>(null);
 
@@ -182,15 +184,15 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
             const base = nextLegacy ? `/saints-legacy/${targetId}` : `/santos/${targetId}`;
             navigate(qs ? `${base}?${qs}` : base);
           }}
-          aria-label={legacy ? 'Ver versão nova do Reader' : 'Ver versão anterior do Reader'}
-          title={legacy ? 'Versão nova' : 'Versão anterior'}
+          aria-label={legacy ? t('version_new') : t('version_previous')}
+          title={legacy ? t('version_new') : t('version_previous')}
           className="h-spacing-2xl px-spacing-md rounded-premium-full bg-foreground/10 hover:bg-foreground/20 text-foreground font-stitch-body text-[11px] font-bold uppercase tracking-[0.18em] transition-all"
         >
-          {legacy ? 'Versão nova' : 'Versão anterior'}
+          {legacy ? t('version_new') : t('version_previous')}
         </button>
         <Button
           onClick={onClose}
-          aria-label="Fechar"
+          aria-label={t('close')}
           className="p-spacing-sm bg-foreground/10 hover:bg-foreground/20 rounded-premium-full text-foreground transition-all"
         >
           <Icons.X className="w-spacing-md h-spacing-md" aria-hidden="true" />
@@ -208,7 +210,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
       <div className="flex-1 overflow-y-auto no-scrollbar">
         {!legacy && (
           <ReaderToolbar
-            kicker={`Sanctorum · ${CATEGORY_LABELS[saint.category] || saint.category}`}
+            kicker={`${t('saint_reader_kicker')} · ${CATEGORY_LABELS[saint.category] || saint.category}`}
             title={saint.name}
             subtitle={saint.title}
             shareUrl={typeof window !== 'undefined' ? `${window.location.origin}/santos/${saint.id}` : undefined}
@@ -219,10 +221,10 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
 
         <EditorialReaderHeader
           className="pt-0"
-          kicker={`Sanctorum · ${CATEGORY_LABELS[saint.category] || saint.category}`}
+          kicker={`${t('saint_reader_kicker')} · ${CATEGORY_LABELS[saint.category] || saint.category}`}
           title={saint.name}
           subtitle={saint.title}
-          meta={[saint.feastDay && `Festa · ${saint.feastDay}`, saint.born, saint.died].filter(Boolean).join(' · ')}
+          meta={[saint.feastDay && `${t('feast_day')} · ${saint.feastDay}`, saint.born, saint.died].filter(Boolean).join(' · ')}
         />
         {saint.contentStatus && saint.contentStatus !== 'complete' && (
           <div className="-mt-spacing-lg">
@@ -238,7 +240,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               <Icons.Calendar className="w-spacing-md h-spacing-md" />
             </div>
             <div>
-              <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground block">Dia de Festa</span>
+              <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground block">{t('feast_day')}</span>
               <span className="text-premium-sm font-bold text-foreground">{saint.feastDay}</span>
             </div>
           </div>
@@ -249,7 +251,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
                 <Icons.User className="w-spacing-md h-spacing-md" />
               </div>
               <div>
-                <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground block">Nascimento</span>
+                <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground block">{t('born')}</span>
                 <span className="text-premium-sm font-bold text-foreground truncate max-w-[150px] inline-block">{saint.born}</span>
               </div>
             </div>
@@ -261,7 +263,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
                 <Icons.XCircle className="w-spacing-md h-spacing-md" />
               </div>
               <div>
-                <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground block">Falecimento</span>
+                <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground block">{t('died')}</span>
                 <span className="text-premium-sm font-bold text-foreground truncate max-w-[150px] inline-block">{saint.died}</span>
               </div>
             </div>
@@ -272,7 +274,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
               <Icons.Shield className="w-spacing-md h-spacing-md" />
             </div>
             <div>
-              <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground block">Virtude Principal</span>
+              <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground block">{t('main_virtue')}</span>
               <span className="text-premium-sm font-bold text-foreground">{saint.virtues?.[0] || 'Santidade'}</span>
             </div>
           </div>
@@ -280,7 +282,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           <div className="flex-1 flex justify-end items-center gap-spacing-sm">
             <AudioContentPlayer 
               text={`${saint.name}. ${saint.title}. ${saint.bio}. ${saint.fullBio || ''}. ${saint.quotes?.[0] || ''}.`}
-              title="Ouvir conteúdo"
+              title={t('listen_content')}
               className="h-spacing-xl"
             />
           </div>
@@ -293,7 +295,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
                 className="bg-foreground/5 hover:bg-foreground/10 text-foreground border-border/20 text-premium-xs font-black uppercase tracking-widest h-spacing-xl px-spacing-md rounded-premium-full flex items-center gap-spacing-xs transition-all"
               >
                 <Icons.Globe className="w-spacing-sm h-spacing-sm" />
-                Fonte Oficial
+                {t('official_source')}
               </Button>
             )}
             
@@ -358,7 +360,7 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
           <div className="space-y-spacing-md">
             <div className="flex items-center gap-spacing-xs text-primary">
               <Icons.Heart className="w-spacing-md h-spacing-md" />
-              <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Aplicação Prática</h3>
+              <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">{t('practical_application')}</h3>
             </div>
             <div className="bg-primary/5 p-spacing-xl rounded-[2rem] border border-primary/10 relative group hover:bg-primary/10 transition-all">
               <Icons.Lightbulb className="absolute top-spacing-md right-spacing-md w-spacing-2xl h-spacing-2xl text-primary/60 group-hover:scale-110 transition-all" />

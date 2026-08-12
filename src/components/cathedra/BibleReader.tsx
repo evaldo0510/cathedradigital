@@ -4,6 +4,7 @@ import { Icons } from '@/constants';
 import { cn } from '@/lib/utils';
 import { BibleBook } from '@/data/bible-books';
 import { Button } from '@/components/ui/button';
+import { useLang } from '@/hooks/useLang';
 import {
   ReaderShell,
   NexusPanel,
@@ -50,6 +51,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
   onConnectionClick,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { t } = useLang();
 
   const [visibleRange, setVisibleRange] = useState({ start: 0, end: 50 });
 
@@ -76,7 +78,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
   const paddingTop = verses.length > 100 ? visibleRange.start * 40 : 0;
   const paddingBottom = verses.length > 100 ? (verses.length - visibleRange.end) * 40 : 0;
 
-  const heroKicker = `Sagrada Escritura${book.category ? ` · ${book.category}` : ''}`;
+  const heroKicker = `${t('bible_reader_kicker')}${book.category ? ` · ${book.category}` : ''}`;
   const heroSubtitle = book.chapterTitles?.[chapter] || book.description;
   const heroMeta = book.author ? `${book.author}${book.date ? ` · ${book.date}` : ''}` : undefined;
 
@@ -89,11 +91,11 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
     <ReaderShell
       className="pb-32"
       contentMaxWidth="max-w-2xl"
-      ariaLabel={`Leitura bíblica — ${book.name} ${chapter}`}
+      ariaLabel={`${t('bible_reader_kicker')} — ${book.name} ${chapter}`}
       hero={
         <EditorialHero
           kicker={heroKicker}
-          title={`${book.name} · Capítulo ${chapter}`}
+          title={`${book.name} · ${t('bible_chapter_title')} ${chapter}`}
           subtitle={typeof heroSubtitle === 'string' ? heroSubtitle : undefined}
           meta={heroMeta}
         />
@@ -101,7 +103,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
       nexus={
         <NexusPanel
           output={nexus}
-          kicker={`Conexões de ${book.name} ${chapter}`}
+          kicker={`${t('connections_kicker')} ${book.name} ${chapter}`}
         />
       }
       continuation={
@@ -124,7 +126,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
         <div className="mb-spacing-2xl">
           <div className="p-6 rounded-2xl bg-primary/[0.02] border border-primary/5 text-left space-y-4">
             <h2 className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
-              Introdução ao livro
+              {t('intro_to_book')}
             </h2>
             {book.context && (
               <p className="text-sm font-serif italic leading-relaxed text-primary/70">
@@ -134,7 +136,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
             {book.themes && (
               <div className="pt-2 border-t border-primary/5">
                 <h3 className="text-[10px] uppercase tracking-[0.28em] text-primary/50 block mb-2">
-                  Temas principais
+                  {t('main_themes')}
                 </h3>
                 <div className="flex flex-wrap gap-2">
                   {book.themes.map(t => (
@@ -244,7 +246,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
             onClick={onPrevChapter}
             disabled={chapter === 1}
             className="w-12 h-12 rounded-full bg-background/80 backdrop-blur border border-primary/5 shadow-premium"
-            aria-label="Capítulo anterior"
+            aria-label={t('prev_chapter')}
           >
             <Icons.ChevronLeft className="w-6 h-6" />
           </Button>
@@ -254,7 +256,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
             onClick={onNextChapter}
             disabled={chapter >= book.chapters}
             className="w-12 h-12 rounded-full bg-background/80 backdrop-blur border border-primary/5 shadow-premium"
-            aria-label="Próximo capítulo"
+            aria-label={t('next_chapter')}
           >
             <Icons.ChevronRight className="w-6 h-6" />
           </Button>

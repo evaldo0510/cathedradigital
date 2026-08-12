@@ -38,7 +38,16 @@ export const LangProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   });
 
-  const t = useCallback((k: string) => UI_TRANSLATIONS[lang]?.[k] || k, [lang]);
+  const t = useCallback((k: string) => {
+    const val = UI_TRANSLATIONS[lang]?.[k];
+    if (val === undefined) {
+      // Fallback para Português se a tradução faltar no idioma atual
+      const fallback = UI_TRANSLATIONS[DEFAULT_LOCALE]?.[k];
+      if (fallback !== undefined) return fallback;
+      return k;
+    }
+    return val;
+  }, [lang]);
 
   useEffect(() => {
     try {
