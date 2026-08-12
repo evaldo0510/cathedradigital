@@ -333,12 +333,7 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
                       ? 'Nuvem'
                       : 'Buscar'}
                   </span>
-                  <span
-                    aria-hidden="true"
-                    className={`pointer-events-none absolute -bottom-[6px] left-1/2 h-[2px] -translate-x-1/2 bg-secondary transition-all duration-300 ${
-                      isActive ? 'w-full opacity-100' : 'w-0 opacity-0'
-                    }`}
-                  />
+                  <h2 className="pointer-events-none absolute -bottom-[6px] left-1/2 h-[2px] -translate-x-1/2 bg-secondary transition-all duration-300"></h2>
                 </button>
               );
             })}

@@ -64,7 +64,7 @@ const LeadCaptureForm = () => {
   return (
     <div className="w-full max-w-spacing-3xl mx-auto space-y-spacing-xl">
       <div className="text-center space-y-spacing-sm">
-        <h3 className="text-premium-2xl font-display font-bold">Junte-se ao Acervo Cathedra</h3>
+        <h2 className="text-premium-2xl font-display font-bold">Junte-se ao Acervo Cathedra</h2>
         <p className="text-muted-foreground text-premium-sm font-serif">
           Receba reflexões teológicas, notícias do Vaticano e atualizações exclusivas do projeto.
         </p>

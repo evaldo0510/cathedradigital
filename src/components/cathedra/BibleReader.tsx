@@ -123,7 +123,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
       {chapter === 1 && (book.context || book.themes) && (
         <div className="mb-spacing-2xl">
           <div className="p-6 rounded-2xl bg-primary/[0.02] border border-primary/5 text-left space-y-4">
-            <span className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
+            <h2 className="text-[10px] uppercase tracking-[0.32em] text-secondary font-medium">
               Introdução ao livro
             </span>
             {book.context && (
@@ -133,7 +133,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
             )}
             {book.themes && (
               <div className="pt-2 border-t border-primary/5">
-                <span className="text-[10px] uppercase tracking-[0.28em] text-primary/50 block mb-2">
+                <h3 className="text-[10px] uppercase tracking-[0.28em] text-primary/50 block mb-2">
                   Temas principais
                 </span>
                 <div className="flex flex-wrap gap-2">
@@ -219,7 +219,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
                             conn.color || (isEssential ? 'bg-secondary' : 'bg-primary/40'),
                           )} />
                           <div className="flex flex-col items-start leading-none">
-                            <span className="text-[8px] font-black uppercase tracking-widest">{conn.label}</span>
+                            <h4 className="text-[8px] font-black uppercase tracking-widest">{conn.label}</h4>
                             {conn.theological_theme && (
                               <span className="text-[6px] font-bold uppercase tracking-tight opacity-60">{conn.theological_theme}</span>
                             )}
