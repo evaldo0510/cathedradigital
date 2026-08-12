@@ -1,11 +1,15 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
 import { supabase } from '@/integrations/supabase/client';
+import Relatio from '@/components/cathedra/Relatio';
 import BibleVersePopover from '@/components/cathedra/BibleVersePopover';
 import MagisteriumPopover from '@/components/cathedra/MagisteriumPopover';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { getParagraphParam } from '@/lib/queryParams';
+import { isValidCatechismParagraph } from '@/lib/nexusNavigation';
+import { AppRoute } from '@/types';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useCatechismParagraph, usePrefetchCatechismParagraph } from '@/hooks/useCatechismParagraph';
 import { parseTheologicalReferences } from '@/lib/theologicalRefParser';
@@ -16,33 +20,48 @@ import CatechismPopover from '../components/CatechismPopover';
 import { CatechismParagraphSkeleton } from '@/components/cathedra/SacredSkeleton';
 import CatechismOfflineFallback from '../components/CatechismOfflineFallback';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
-import { useReadingMarks } from '@/hooks/useReadingMarks';
+import ReadingControlPanel from '@/components/cathedra/ReadingControlPanel';
+import { ReadingMark, useReadingMarks } from '@/hooks/useReadingMarks';
 import { useAutoFocus } from '@/hooks/useAutoFocus';
 import { toast } from 'sonner';
+import ContemplativeLayout from '@/components/cathedra/ContemplativeLayout';
 import useReadingAutoHide from '@/hooks/useReadingAutoHide';
 import { UserNote, useNotes } from '@/hooks/useNotes';
 import { cn } from '@/lib/utils';
 import PassageActions from '@/components/shared/PassageActions';
-import { useCatechismPending } from '@/contexts/CatechismPendingContext';
+import { CathedraCard } from '@/components/cathedra/CathedraCard';
+import CatechismDiagnosticPanel from '../components/CatechismDiagnosticPanel';
+import { CatechismPendingProvider, useCatechismPending } from '@/contexts/CatechismPendingContext';
+import CatechismPendingPanel from '../components/CatechismPendingPanel';
+import SEOHead from '@/components/SEOHead';
+import { CIC_SECTIONS } from '@/data/catechism';
 
 // Reader Template Master (COS §10) — única cadeia de leitura permitida.
 import {
   ReaderShell,
+  EditorialHero,
   NexusPanel,
   ReaderContinuation,
+  CatechesisContext,
+  EditorialClosure,
 } from '@/components/reader';
 import { useCatechismNexus } from '@/hooks/useCatechismNexus';
 import { EditorialDivider } from '@/components/editorial';
+import { resolveEditorialClosure } from '@/lib/editorial/resolveClosure';
+
+// Sprint 3 — motor editorial do Catecismo (dado puro + composição presentacional).
 import {
   resolveCatechismLocation,
 } from '@/features/catechism/editorialEngine/catechismStructure';
 import {
   resolveCatechismEditorial,
+  buildCatechismClosure,
 } from '@/features/catechism/editorialEngine/catechismEditorial';
 import {
   CatechismEditorialOpening,
   CatechismFurtherReading,
 } from '@/features/catechism/editorialEngine/CatechismEditorialFrame';
+
 
 
 
