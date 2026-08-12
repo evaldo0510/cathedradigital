@@ -13,6 +13,9 @@ import type { ReaderAutoNexusOutput, ReaderNexusBucket } from '@/core/knowledge/
 import { BUCKET_LABEL } from '@/core/knowledge/adapters/ReaderAutoNexus';
 import { NexusSourceBadge } from '@/components/nexus/NexusSourceBadge';
 import type { ResolvedNode } from '@/core/knowledge/types';
+import { cn } from '@/lib/utils';
+import { Icons } from '@/constants';
+
 
 export interface NexusPanelProps {
   /** Saída de qualquer `ReaderAutoNexus` (bible, catechism, glossary…). */
