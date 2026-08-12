@@ -21,9 +21,10 @@ import { CatechismParagraphSkeleton } from '@/components/cathedra/SacredSkeleton
 import CatechismOfflineFallback from '../components/CatechismOfflineFallback';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import ReadingControlPanel from '@/components/cathedra/ReadingControlPanel';
-import ReadingMark from '@/components/cathedra/ReadingMark';
+import ReadingMarkComponent from '@/components/cathedra/ReadingMark';
 import { useReadingMarks } from '@/hooks/useReadingMarks';
-import type { ReadingMark as ReadingMarkType } from '@/hooks/useReadingMarks';
+import type { ReadingMark } from '@/hooks/useReadingMarks';
+
 
 
 import { useAutoFocus } from '@/hooks/useAutoFocus';
@@ -435,7 +436,7 @@ const LazyParagraph: React.FC<{
             >
               <Icons.Sparkles className="w-spacing-sm h-spacing-sm" />
             </Button>
-            <ReadingMark contentType="catechism" contentId={`${p}`} label={`Catecismo §${p}`} paragraph={p} />
+            <ReadingMarkComponent contentType="catechism" contentId={`${p}`} label={`Catecismo §${p}`} paragraph={p} />
           </div>
         </div>
         <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.05] via-transparent to-transparent" />
