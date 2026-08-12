@@ -45,9 +45,9 @@ const CookieConsent = () => {
           className="fixed bottom-spacing-md left-spacing-md right-spacing-md md:left-auto md:right-spacing-xl md:w-[400px] z-[300] bg-background  border border-border p-spacing-lg rounded-premium-full shadow-premium-hover"
         >
           <div className="space-y-spacing-md">
-            <p className="text-premium-sm text-muted-foreground leading-relaxed">
+            <h2 className="text-premium-sm text-muted-foreground leading-relaxed">
               {t.message}
-            </p>
+            </h2>
             <div className="flex items-center gap-spacing-md">
               <Button 
                 onClick={handleAccept}

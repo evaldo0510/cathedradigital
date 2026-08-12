@@ -27,9 +27,9 @@ export const PausedBanner = () => {
     <div className="bg-amber-600 text-white py-2 px-4 flex items-center justify-between text-sm animate-in fade-in slide-in-from-top duration-300">
       <div className="flex items-center gap-3 mx-auto">
         <ShieldAlert className="h-4 w-4" />
-        <span className="font-medium">
+        <h2 className="font-medium">
           A infraestrutura (banco de dados) está pausada. Algumas funcionalidades podem estar limitadas.
-        </span>
+        </h2>
         <Button variant="link" className="text-white underline p-0 h-auto font-bold ml-2" asChild>
           <a href="/admin/site-health">Resolver Agora</a>
         </Button>

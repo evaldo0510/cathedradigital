@@ -30,7 +30,7 @@ export const BiblePartialCoverageBanner: React.FC = () => {
       <div className="container mx-auto flex items-start gap-3 px-4 py-2 text-sm text-amber-900 dark:text-amber-100">
         <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
         <div className="flex-1">
-          <p className="font-medium">Bíblia em reconstrução</p>
+          <h2 className="font-medium">Bíblia em reconstrução</h2>
           <p className="text-xs opacity-90">
             Estamos importando o cânon completo (73 livros). Apenas os livros
             já disponíveis podem ser lidos; os demais aparecerão conforme forem

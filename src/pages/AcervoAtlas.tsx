@@ -22,7 +22,7 @@ const AcervoAtlas: React.FC = () => {
            <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/paper-fibers.png')]"></div>
            <Icons.Globe className="w-16 h-16 text-gold/40 animate-pulse" />
            <div className="text-center space-y-2 z-10">
-             <h3 className="text-2xl font-serif font-bold italic">Cartografia da Tradição</h3>
+             <h2 className="text-2xl font-serif font-bold italic">Cartografia da Tradição</h2>
              <p className="text-muted-foreground text-sm max-w-md mx-auto">
                Em breve: Um mapa interativo conectando aparições, santos, concílios e basílicas ao Nexus teológico.
              </p>
@@ -63,7 +63,7 @@ const AcervoAtlas: React.FC = () => {
 const AtlasFeatureCard = ({ icon: Icon, title, desc }: any) => (
   <div className="bg-card border border-border p-6 rounded-premium space-y-3 hover:border-gold/30 transition-all group">
     <Icon className="w-6 h-6 text-primary/40 group-hover:text-gold transition-colors" />
-    <h4 className="font-serif font-bold">{title}</h4>
+    <h3 className="font-serif font-bold">{title}</h3>
     <p className="text-xs text-muted-foreground leading-relaxed">{desc}</p>
   </div>
 );

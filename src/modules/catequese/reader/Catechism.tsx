@@ -197,10 +197,10 @@ const CatechismContent: React.FC<{
           data-testid={`catechism-placeholder-${paragraph}`}
           className="reader-text bg-muted/30 border border-dashed border-primary/15 rounded-premium p-spacing-md font-serif text-premium-sm italic text-muted-foreground space-y-spacing-xs"
         >
-          <div className="flex items-center gap-spacing-xs not-italic font-display tracking-[0.1em] uppercase text-premium-xs text-primary/50">
+          <h2 className="flex items-center gap-spacing-xs not-italic font-display tracking-[0.1em] uppercase text-premium-xs text-primary/50">
             <Icons.Catechism className="w-spacing-sm h-spacing-sm" />
             Texto em preparação
-          </div>
+          </h2>
           <p>
             O parágrafo §{paragraph} ainda não foi importado para o banco oficial em português.
             Estamos preparando o texto soberano para que esteja disponível em breve.
@@ -290,10 +290,10 @@ const CatechismContent: React.FC<{
         data-testid={`catechism-importing-${paragraph}`}
         className="reader-text bg-muted/30 border border-dashed border-primary/20 rounded-premium p-spacing-md font-serif text-premium-sm italic text-muted-foreground space-y-spacing-xs"
       >
-        <div className="flex items-center gap-spacing-xs not-italic font-display tracking-[0.1em] uppercase text-premium-xs text-primary/60">
+        <h2 className="flex items-center gap-spacing-xs not-italic font-display tracking-[0.1em] uppercase text-premium-xs text-primary/60">
           <Icons.Catechism className="w-spacing-sm h-spacing-sm animate-pulse" />
           Importando §{paragraph}…
-        </div>
+        </h2>
         <p>
           Estamos buscando o texto oficial deste parágrafo no arquivo da Santa Sé.
           Ele aparecerá automaticamente em instantes.
@@ -414,7 +414,7 @@ const LazyParagraph: React.FC<{
     >
       <div className="flex items-center gap-spacing-md mb-spacing-lg">
         <div className="flex items-center gap-spacing-sm">
-          <span id={`heading-p${p}`} className="text-premium-base md:text-premium-lg font-display tracking-[0.18em] text-secondary/70 uppercase">§{p}</span>
+          <h2 id={`heading-p${p}`} className="text-premium-base md:text-premium-lg font-display tracking-[0.18em] text-secondary/70 uppercase">§{p}</h2>
           <div className="flex items-center gap-spacing-3xs opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
             <Button
               variant="ghost"

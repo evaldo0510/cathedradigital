@@ -79,7 +79,7 @@ export const PWAInstallPrompt = () => {
           <Icons.Download className="h-spacing-lg w-spacing-lg text-primary" />
         </div>
         <div>
-          <h3 className="text-premium-sm font-bold text-primary leading-none mb-spacing-2xs">Instalar Cathedra</h3>
+          <h2 className="text-premium-sm font-bold text-primary leading-none mb-spacing-2xs">Instalar Cathedra</h2>
           <p className="text-premium-xs text-muted-foreground mb-spacing-sm">
             Acesse a Bíblia e suas orações com um toque, mesmo offline.
           </p>

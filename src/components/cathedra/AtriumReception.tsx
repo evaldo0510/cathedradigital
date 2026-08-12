@@ -176,9 +176,9 @@ const AtriumReception: React.FC = () => {
     >
       {/* Saudação */}
       <div className="mb-spacing-lg">
-        <p className="mb-spacing-2xs text-xs font-semibold uppercase tracking-widest text-secondary">
+        <h2 className="mb-spacing-2xs text-xs font-semibold uppercase tracking-widest text-secondary">
           Sanctuarium Digital
-        </p>
+        </h2>
         <h1 className="font-serif text-3xl md:text-5xl leading-tight text-foreground">
           Paz e bem, {name}.
         </h1>
@@ -243,9 +243,9 @@ const AtriumReception: React.FC = () => {
       <div className="mt-spacing-lg grid grid-cols-1 gap-spacing-md lg:grid-cols-2">
         {lastActivity && (
           <article className="rounded-premium border border-border bg-card p-spacing-md">
-            <p className="mb-spacing-2xs text-[11px] font-semibold uppercase tracking-widest text-secondary">
+            <h2 className="mb-spacing-2xs text-[11px] font-semibold uppercase tracking-widest text-secondary">
               Sua última atividade
-            </p>
+            </h2>
             <div className="flex items-start gap-spacing-sm">
               <span className="mt-spacing-3xs shrink-0 rounded-premium bg-muted p-spacing-2xs text-secondary">
                 {React.createElement(lastActivityIcon, { className: 'h-5 w-5' })}
@@ -271,9 +271,9 @@ const AtriumReception: React.FC = () => {
         <article className="rounded-premium border border-border bg-card p-spacing-md">
           <div className="mb-spacing-sm flex items-center gap-spacing-xs text-secondary">
             <Flame className="h-4 w-4" aria-hidden="true" />
-            <span className="text-[11px] font-semibold uppercase tracking-widest">
+            <h2 className="text-[11px] font-semibold uppercase tracking-widest text-secondary">
               Sua caminhada
-            </span>
+            </h2>
           </div>
           <p className="font-serif text-3xl text-foreground leading-none">
             {memory.streakDays} {memory.streakDays === 1 ? 'dia' : 'dias'} consecutivos

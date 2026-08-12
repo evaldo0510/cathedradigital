@@ -128,9 +128,9 @@ const AtriumHome: React.FC = () => {
         {!authenticated && (
         <section className="text-center md:text-left">
           <div className="mb-8 hidden h-px w-full bg-gold-text/30 md:block" />
-          <p className="mb-3 font-reader text-[12px] font-bold uppercase tracking-[0.32em] text-gold-text">
+          <h2 className="mb-3 font-reader text-[12px] font-bold uppercase tracking-[0.32em] text-gold-text">
             {HERO_KICKER}
-          </p>
+          </h2>
           <h1 className="mb-3 font-display text-[32px] italic leading-[40px] text-primary md:text-[48px] md:leading-[56px] md:tracking-[-0.02em]">
             {HERO_TITLE}
           </h1>
@@ -192,12 +192,12 @@ const AtriumHome: React.FC = () => {
                 }}
               />
               <div className="relative z-10 text-left">
-                <span className="mb-4 block font-reader text-[12px] font-bold uppercase tracking-[0.2em] text-gold-text">
+                <h2 className="mb-4 block font-reader text-[12px] font-bold uppercase tracking-[0.2em] text-gold-text">
                   Symmetry of Truth
-                </span>
-                <h2 className="mb-4 font-display text-[32px] leading-[40px] text-primary">
-                  The Nexus Map
                 </h2>
+                <h3 className="mb-4 font-display text-[32px] leading-[40px] text-primary">
+                  The Nexus Map
+                </h3>
                 <p className="max-w-md font-reader text-[18px] leading-[28px] text-muted-foreground">
                   Visualize as conexões invisíveis entre a Patrística e o
                   Magistério contemporâneo através da nossa rede semântica
@@ -224,21 +224,21 @@ const AtriumHome: React.FC = () => {
             <article className="relative flex h-96 flex-col justify-between overflow-hidden border border-primary bg-primary p-8 text-primary-foreground md:col-span-4">
               <div className="relative z-10 text-left">
                 <div className="mb-6 flex items-start justify-between">
-                  <span className="font-reader text-[12px] font-bold uppercase tracking-[0.15em] text-gold-text-fixed">
+                  <h2 className="font-reader text-[12px] font-bold uppercase tracking-[0.15em] text-gold-text-fixed">
                     Liturgia Diária
-                  </span>
+                  </h2>
                   <span className="text-xs opacity-60">{today}</span>
                 </div>
-                <h2 className="mb-4 font-display text-[28px] italic leading-tight text-primary-foreground">
+                <h3 className="mb-4 font-display text-[28px] italic leading-tight text-primary-foreground">
                   {saintOfDay}
-                </h2>
+                </h3>
                 <p className="font-reader text-[16px] italic leading-relaxed text-primary-foreground/90">
                   {saintQuote}
                 </p>
                 {liturgy?.season && (
-                  <p className="mt-4 font-reader text-[11px] font-bold uppercase tracking-[0.15em] text-gold-text-fixed/80">
+                  <h2 className="mt-4 font-reader text-[11px] font-bold uppercase tracking-[0.15em] text-gold-text-fixed/80">
                     {liturgy.season} · {liturgy.weekday}
-                  </p>
+                  </h2>
                 )}
               </div>
               <div className="relative z-10">
@@ -284,9 +284,9 @@ const AtriumHome: React.FC = () => {
                     {String(i + 1).padStart(2, '0')}
                   </span>
                 </div>
-                <span className="font-reader text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                <h3 className="font-reader text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
                   {env.latin}
-                </span>
+                </h3>
                 <h3 className="mt-0.5 font-display text-[20px] leading-tight text-primary transition-colors group-hover:text-gold-text">
                   {env.label}
                 </h3>
@@ -333,9 +333,9 @@ const AtriumHome: React.FC = () => {
                       <h3 className="font-reader text-[14px] font-medium text-primary">
                         {item.label}
                       </h3>
-                      <p className="text-xs text-muted-foreground">
+                      <h4 className="text-xs text-muted-foreground">
                         {item.kind}
-                      </p>
+                      </h4>
                     </div>
                   </div>
                   <div className="mb-4 h-1 w-full bg-muted">
@@ -383,9 +383,9 @@ const AtriumHome: React.FC = () => {
                   to={r.targetPath}
                   className="group flex flex-col border border-border/20 bg-accentest p-6 transition-all hover:border-gold-text/40 hover:shadow-xl hover:shadow-black/[0.04]"
                 >
-                  <span className="font-reader text-[11px] font-bold uppercase tracking-[0.2em] text-gold-text">
+                  <h3 className="font-reader text-[11px] font-bold uppercase tracking-[0.2em] text-gold-text">
                     {r.kind}
-                  </span>
+                  </h3>
                   <h3 className="mt-2 font-display text-[20px] leading-tight text-primary transition-colors group-hover:text-gold-text">
                     {r.label}
                   </h3>

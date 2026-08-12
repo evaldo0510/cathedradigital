@@ -10,7 +10,7 @@ import { Navigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useIsAdmin } from '@/hooks/useIsAdmin';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Check, X, Loader2 } from 'lucide-react';
@@ -171,7 +171,7 @@ export default function BiblePhasesAdmin() {
             <Card key={tid}>
               <CardHeader className="flex flex-row items-start justify-between gap-4">
                 <div>
-                  <CardTitle className="text-xl">{head.translation_name}</CardTitle>
+                  <h2 className="text-xl">{head.translation_name}</h2>
                   <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
                     <code className="rounded bg-muted px-1.5 py-0.5">{head.translation_code}</code>
                     <span>·</span>

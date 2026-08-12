@@ -73,22 +73,22 @@ const SplashScreen = React.forwardRef<HTMLDivElement, { onComplete: () => void }
           transition={{ duration: 0.6, delay: 0.8 }}
           className="relative z-10 mt-spacing-xl text-center"
         >
-          <motion.h2
+          <motion.h1
             initial={{ opacity: 0, letterSpacing: '0.5em' }}
             animate={{ opacity: 1, letterSpacing: '0.3em' }}
             transition={{ duration: 1, delay: 0.9 }}
             className="text-premium-2xl md:text-premium-3xl font-display font-semibold text-primary uppercase tracking-[0.2em]"
           >
             Cathedra
-          </motion.h2>
-          <motion.p aria-hidden="true"
+          </motion.h1>
+          <motion.h2 aria-hidden="true"
             initial={{ opacity: 0 }}
             animate={{ opacity: 0.8 }}
             transition={{ duration: 0.8, delay: 1.3 }}
             className="text-[9px] md:text-[11px] font-bold uppercase tracking-[0.4em] text-gold mt-spacing-sm"
           >
             Mosteiro Digital
-          </motion.p>
+          </motion.h2>
         </motion.div>
 
         <motion.div className="absolute bottom-spacing-2xl w-spacing-4xl h-spacing-3xs bg-card/50 rounded-premium overflow-hidden">
