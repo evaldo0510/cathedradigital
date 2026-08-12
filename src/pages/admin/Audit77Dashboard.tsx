@@ -104,7 +104,21 @@ export default function Audit77Dashboard() {
   const [isOffline, setIsOffline] = useState(false);
 
   useEffect(() => {
-    const handleUnreachable = () => setIsOffline(true);
+    const handleUnreachable = () => {
+      setIsOffline(true);
+      setItems(prev => prev.map(item => ({
+        ...item,
+        status: item.status === 'PASS' ? 'BLOCKED' : item.status,
+        deviceStatus: item.deviceStatus ? {
+          mobile: item.deviceStatus.mobile === 'PASS' ? 'BLOCKED' : item.deviceStatus.mobile,
+          desktop: item.deviceStatus.desktop === 'PASS' ? 'BLOCKED' : item.deviceStatus.desktop,
+        } : undefined,
+        evidence: item.status === 'PASS' ? {
+          message: 'Backend inacessível. Certificação funcional impedida.',
+          timestamp: new Date().toISOString()
+        } : item.evidence
+      })));
+    };
     window.addEventListener('supabase-unreachable', handleUnreachable);
     return () => window.removeEventListener('supabase-unreachable', handleUnreachable);
   }, []);
