@@ -197,7 +197,7 @@ const AtriumHome: React.FC = () => {
                 </h2>
                 <h3 className="mb-4 font-display text-[32px] leading-[40px] text-primary">
                   The Nexus Map
-                </h2>
+                </h3>
                 <p className="max-w-md font-reader text-[18px] leading-[28px] text-muted-foreground">
                   Visualize as conexões invisíveis entre a Patrística e o
                   Magistério contemporâneo através da nossa rede semântica
@@ -231,7 +231,7 @@ const AtriumHome: React.FC = () => {
                 </div>
                 <h3 className="mb-4 font-display text-[28px] italic leading-tight text-primary-foreground">
                   {saintOfDay}
-                </h2>
+                </h3>
                 <p className="font-reader text-[16px] italic leading-relaxed text-primary-foreground/90">
                   {saintQuote}
                 </p>
