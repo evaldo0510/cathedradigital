@@ -1,0 +1,38 @@
+name: AUDIT 7.7 - Functional Certification
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  audit-7-7:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: oven-sh/setup-bun@v1
+    
+    - name: Install dependencies
+      run: bun install
+      
+    - name: Install Playwright Browsers
+      run: bun x playwright install --with-deps chromium
+      
+    - name: Run Audit 7.7 Suite
+      run: bun run test:audit77
+      env:
+        CI: true
+        
+    - name: Save Audit Report
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: audit-7-7-reports
+        path: |
+          test-results/
+          playwright-report/
+          *.json
+        retention-days: 7

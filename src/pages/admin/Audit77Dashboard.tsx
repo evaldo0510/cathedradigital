@@ -156,6 +156,16 @@ export default function Audit77Dashboard() {
       audit: '7.7',
       timestamp: new Date().toISOString(),
       summary: { totalItems, passItems, failItems, blockedItems, progress },
+      performance_metrics: items.map(i => ({
+        module: i.module,
+        loadTime: i.loadTime,
+        ttfb: i.ttfb,
+        lcp: i.lcp
+      })),
+      accessibility_results: items.map(i => ({
+        module: i.module,
+        accessibility: i.accessibility
+      })),
       items
     };
     
@@ -164,7 +174,7 @@ export default function Audit77Dashboard() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `audit-7-7-report-${new Date().getTime()}.json`;
+      a.download = `audit-7-7-full-report-${new Date().getTime()}.json`;
       a.click();
     } else {
       window.print();
