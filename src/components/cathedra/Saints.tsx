@@ -122,9 +122,17 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
     try {
       const lastId = localStorage.getItem('cathedra:saints:last-id');
       if (!lastId) return;
-      const pref = localStorage.getItem('cathedra:saints:reader-variant');
-      const base = pref === 'legacy' ? '/saints-legacy/' : '/santos/';
-      navigate(`${base}${lastId}`, { replace: true });
+      
+      // Valida se o ID existe antes de navegar (certificação funcional)
+      getSaintById(lastId).then(exists => {
+        if (!exists) {
+          localStorage.removeItem('cathedra:saints:last-id');
+          return;
+        }
+        const pref = localStorage.getItem('cathedra:saints:reader-variant');
+        const base = pref === 'legacy' ? '/saints-legacy/' : '/santos/';
+        navigate(`${base}${lastId}`, { replace: true });
+      });
     } catch { /* ignore */ }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
