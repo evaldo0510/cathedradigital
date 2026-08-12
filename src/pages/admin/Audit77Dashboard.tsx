@@ -124,6 +124,21 @@ const initialAuditItems: AuditItem[] = [
 export default function Audit77Dashboard() {
   const [items, setItems] = useState<AuditItem[]>(initialAuditItems);
   const [isOffline, setIsOffline] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    const checkStatus = async () => {
+      try {
+        const { error } = await supabase.from('bible_versions').select('count', { count: 'exact', head: true });
+        if (error && (error.message.includes('paused') || error.code === 'PGRST301')) {
+          setIsPaused(true);
+        }
+      } catch (e) {
+        console.error('Audit status check failed', e);
+      }
+    };
+    checkStatus();
+  }, []);
 
   useEffect(() => {
     const handleUnreachable = () => {
@@ -202,7 +217,21 @@ export default function Audit77Dashboard() {
         </div>
       </div>
 
-      {isOffline && (
+      {isPaused && (
+        <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-center justify-between gap-3 text-amber-800">
+          <div className="flex items-center gap-3">
+            <ShieldAlert className="h-5 w-5" />
+            <div className="text-sm">
+              <span className="font-bold">Infraestrutura Pausada:</span> O projeto Supabase precisa ser reativado para prosseguir com a certificação real.
+            </div>
+          </div>
+          <Button variant="outline" size="sm" className="bg-white" asChild>
+            <a href="/admin/site-health">Ver Health Check</a>
+          </Button>
+        </div>
+      )}
+
+      {isOffline && !isPaused && (
         <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3 text-amber-800">
           <WifiOff className="h-5 w-5" />
           <div className="text-sm">
