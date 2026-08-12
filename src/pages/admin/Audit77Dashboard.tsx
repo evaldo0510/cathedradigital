@@ -289,7 +289,7 @@ export default function Audit77Dashboard() {
                 <div className="flex-1">
                   <div className="flex items-center gap-3">
                     <Badge variant="secondary" className="text-[10px]">{item.p}</Badge>
-                    <h3 className="font-serif text-lg">{item.module}</h3>
+                    <h2 className="font-serif text-lg">{item.module}</h2>
                     <code className="text-[10px] bg-muted px-1.5 py-0.5 rounded text-muted-foreground">{item.route}</code>
                   </div>
                   
