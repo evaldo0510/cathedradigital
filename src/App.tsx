@@ -983,9 +983,17 @@ const AppLayout: React.FC = () => {
           </SwipeNavigation>
         </main>
 
-        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />}
+        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && (
+          <Suspense fallback={null}>
+            <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />
+          </Suspense>
+        )}
         </AppErrorBoundary>
-        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && <CathedralFooter />}
+        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && (
+          <Suspense fallback={null}>
+            <CathedralFooter />
+          </Suspense>
+        )}
 
         <Suspense fallback={null}>
           <A11ySettingsPanel 
