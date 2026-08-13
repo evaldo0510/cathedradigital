@@ -1056,7 +1056,11 @@ const App: React.FC = () => {
 
   return (
     <AppProviders>
-      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+      {showSplash && (
+        <Suspense fallback={null}>
+          <SplashScreen onComplete={handleSplashComplete} />
+        </Suspense>
+      )}
       <AppLayout />
       <ContrastInspector />
     </AppProviders>
