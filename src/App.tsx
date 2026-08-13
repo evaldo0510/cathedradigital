@@ -988,7 +988,7 @@ const AppLayout: React.FC = () => {
             <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />
           </Suspense>
         )}
-        </AppErrorBoundary>
+        </AppErrorBoundary></Suspense>
         {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && (
           <Suspense fallback={null}>
             <CathedralFooter />
