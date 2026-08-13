@@ -8,8 +8,8 @@ import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
-import ScrollToTop from './components/ScrollToTop';
-import RouteSeo from './components/RouteSeo';
+const ScrollToTop = lazy(() => import('./components/ScrollToTop'));
+const RouteSeo = lazy(() => import('./components/RouteSeo'));
 
 import { cn } from './lib/utils';
 import { AppRoute, Language } from './types';
