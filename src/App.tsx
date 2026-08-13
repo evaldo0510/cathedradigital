@@ -63,11 +63,11 @@ const PWAInstallPrompt = lazy(() => import('./components/cathedra/PWAInstallProm
 const A11ySettingsPanel = lazy(() => import('./components/cathedra/A11ySettingsPanel'));
 const ReadingPreferencesPanel = lazy(() => import('./components/cathedra/ReadingPreferencesPanel').then(m => ({ default: m.ReadingPreferencesPanel })));
 
-import OfflineIndicator from './components/cathedra/OfflineIndicator';
-import { PausedBanner } from './components/cathedra/PausedBanner';
-import SplashScreen from './components/cathedra/SplashScreen';
-import { GlobalLogosAI } from './components/cathedra/GlobalLogosAI';
-import WelcomeFirstAccess from './components/cathedra/WelcomeFirstAccess';
+const OfflineIndicator = lazy(() => import('./components/cathedra/OfflineIndicator'));
+const PausedBanner = lazy(() => import('./components/cathedra/PausedBanner').then(m => ({ default: m.PausedBanner })));
+const SplashScreen = lazy(() => import('./components/cathedra/SplashScreen'));
+const GlobalLogosAI = lazy(() => import('./components/cathedra/GlobalLogosAI').then(m => ({ default: m.GlobalLogosAI })));
+const WelcomeFirstAccess = lazy(() => import('./components/cathedra/WelcomeFirstAccess'));
 import { installSessionRenewal } from './lib/sessionRenewal';
 
 
