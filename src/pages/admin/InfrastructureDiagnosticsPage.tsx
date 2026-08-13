@@ -28,11 +28,21 @@ interface BackendError {
   metadata: any;
 }
 
+interface WebVitalMetric {
+  id: string;
+  name: string;
+  value: number;
+  rating: string;
+  path: string;
+  timestamp: string;
+}
+
 export default function InfrastructureDiagnosticsPage() {
   const { lang, setLang, t } = useLang();
   const location = useLocation();
   const [history, setHistory] = useState<AuditRun[]>([]);
   const [backendErrors, setBackendErrors] = useState<BackendError[]>([]);
+  const [webVitals, setWebVitals] = useState<WebVitalMetric[]>([]);
   const [selectedAudit, setSelectedAudit] = useState<AuditRun | null>(null);
   const [loading, setLoading] = useState(false);
   const [filterLang, setFilterLang] = useState<string>('all');
@@ -41,10 +51,25 @@ export default function InfrastructureDiagnosticsPage() {
   useEffect(() => {
     loadHistory();
     loadBackendErrors();
+    loadWebVitals();
   }, [filterLang, filterStatus]);
+
+  const loadWebVitals = async () => {
+    const { data, error } = await (supabase.from('web_vitals' as any))
+      .select('*')
+      .order('timestamp', { ascending: false })
+      .limit(50);
+    
+    if (error) {
+      console.error('Erro ao carregar Web Vitals:', error);
+    } else {
+      setWebVitals((data || []) as unknown as WebVitalMetric[]);
+    }
+  };
 
   const loadBackendErrors = async () => {
     const { data, error } = await (supabase.from('backend_errors' as any))
+
       .select('*')
       .order('created_at', { ascending: false })
       .limit(10);
