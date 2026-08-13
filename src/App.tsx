@@ -24,13 +24,13 @@ import { resolveRouterBasename } from '@/lib/i18n/locales';
 const ROUTER_BASENAME = resolveRouterBasename();
 
 import { supabase } from '@/integrations/supabase/client';
-import AuthGuard from './components/cathedra/AuthGuard';
-import AdminGuard from './components/cathedra/AdminGuard';
-import GlossaryAdminGuard from './components/cathedra/GlossaryAdminGuard';
-import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
-import DebugRequestPanel from './components/cathedra/DebugRequestPanel';
-import { InfrastructureDiagnostics } from './routes/index';
-import { PreviewFallback } from './components/cathedra/PreviewFallback';
+const AuthGuard = lazy(() => import('./components/cathedra/AuthGuard'));
+const AdminGuard = lazy(() => import('./components/cathedra/AdminGuard'));
+const GlossaryAdminGuard = lazy(() => import('./components/cathedra/GlossaryAdminGuard'));
+const AppErrorBoundary = lazy(() => import('./components/cathedra/AppErrorBoundary'));
+const DebugRequestPanel = lazy(() => import('./components/cathedra/DebugRequestPanel'));
+const InfrastructureDiagnostics = lazy(() => import('./routes/index').then(m => ({ default: m.InfrastructureDiagnostics })));
+const PreviewFallback = lazy(() => import('./components/cathedra/PreviewFallback').then(m => ({ default: m.PreviewFallback })));
 import * as Sentry from "@sentry/react";
 import { toast } from 'sonner';
 
