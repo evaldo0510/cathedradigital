@@ -199,9 +199,11 @@ export default function InfrastructureDiagnosticsPage() {
         <TabsList className="bg-muted/50 p-1 rounded-premium-full">
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
           <TabsTrigger value="history">Histórico e Filtros</TabsTrigger>
+          <TabsTrigger value="vitals">Web Vitals (Performance)</TabsTrigger>
           <TabsTrigger value="details">Detalhes do Módulo</TabsTrigger>
           <TabsTrigger value="report">Relatório de Multi-idioma</TabsTrigger>
           <TabsTrigger value="backend">Erros Backend (Santos)</TabsTrigger>
+
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6 outline-none">
