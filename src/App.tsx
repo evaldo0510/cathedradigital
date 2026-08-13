@@ -52,7 +52,9 @@ const NexusMetricsOverlay = lazy(() => import('@/components/nexus/NexusMetricsOv
 import { useRenderPerf } from './hooks/useRenderPerf';
 import { useA11yGuard } from './lib/a11y-guard';
 
-import { BibleSkeleton, CatechismSkeleton, LogosSkeleton } from './components/cathedra/RouteSkeletons';
+const BibleSkeleton = lazy(() => import('./components/cathedra/RouteSkeletons').then(m => ({ default: m.BibleSkeleton })));
+const CatechismSkeleton = lazy(() => import('./components/cathedra/RouteSkeletons').then(m => ({ default: m.CatechismSkeleton })));
+const LogosSkeleton = lazy(() => import('./components/cathedra/RouteSkeletons').then(m => ({ default: m.LogosSkeleton })));
 import BibleReadGate from './components/cathedra/BibleReadGate';
 
 const CommandCenter = lazy(() => import('./components/cathedra/CommandCenter'));
