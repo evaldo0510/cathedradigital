@@ -1062,7 +1062,7 @@ const App: React.FC = () => {
         </Suspense>
       )}
       <AppLayout />
-      <ContrastInspector />
+      <Suspense fallback={null}><ContrastInspector /></Suspense>
     </AppProviders>
   );
 };
