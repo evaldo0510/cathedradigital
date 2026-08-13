@@ -353,7 +353,7 @@ export default function InfrastructureDiagnosticsPage() {
           <Card className="premium-card">
             <CardHeader>
               <CardTitle className="text-premium-base font-black uppercase tracking-widest flex items-center gap-2">
-                <Icons.BarChart3 className="w-5 h-5 text-primary" />
+                <Icons.BarChart className="w-5 h-5 text-primary" />
                 Performance RUM (Real User Monitoring)
               </CardTitle>
             </CardHeader>
