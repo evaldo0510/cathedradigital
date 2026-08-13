@@ -562,7 +562,7 @@ const AppLayout: React.FC = () => {
 
 
         <Suspense fallback={null}><ScrollToTop /></Suspense>
-        <AppErrorBoundary>
+        <Suspense fallback={null}><AppErrorBoundary>
           {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && location.pathname !== '/atlas' && (
             <Suspense fallback={null}>
               <AppHeader 
