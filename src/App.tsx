@@ -564,16 +564,18 @@ const AppLayout: React.FC = () => {
         <ScrollToTop />
         <AppErrorBoundary>
           {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && location.pathname !== '/atlas' && (
-            <AppHeader 
-              user={authUserAdapter} 
-              isDark={isDark} 
-              onToggleDark={toggleDark}
-              lang={lang}
-              onChangeLang={setLang}
-              onSignOut={signOut}
-              onOpenSidebar={handleOpenSidebar}
-              isLanding={location.pathname === '/'}
-            />
+            <Suspense fallback={null}>
+              <AppHeader 
+                user={authUserAdapter} 
+                isDark={isDark} 
+                onToggleDark={toggleDark}
+                lang={lang}
+                onChangeLang={setLang}
+                onSignOut={signOut}
+                onOpenSidebar={handleOpenSidebar}
+                isLanding={location.pathname === '/'}
+              />
+            </Suspense>
           )}
         
         {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && (
