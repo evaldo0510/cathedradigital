@@ -579,23 +579,27 @@ const AppLayout: React.FC = () => {
           )}
         
         {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && (
-          <CathedralSidebar 
-            isOpen={isSidebarOpen}
-            user={authUserAdapter}
-            onClose={handleCloseSidebar}
-            isDark={isDark}
-            onToggleDark={toggleDark}
-            isHighContrast={isHighContrast}
-            onToggleHighContrast={toggleHighContrast}
-            isSpeaking={isSpeaking}
-            onToggleSpeak={toggleSpeak}
-            onOpenA11y={handleOpenA11y}
-            onSignOut={signOut}
-          />
+          <Suspense fallback={null}>
+            <CathedralSidebar 
+              isOpen={isSidebarOpen}
+              user={authUserAdapter}
+              onClose={handleCloseSidebar}
+              isDark={isDark}
+              onToggleDark={toggleDark}
+              isHighContrast={isHighContrast}
+              onToggleHighContrast={toggleHighContrast}
+              isSpeaking={isSpeaking}
+              onToggleSpeak={toggleSpeak}
+              onOpenA11y={handleOpenA11y}
+              onSignOut={signOut}
+            />
+          </Suspense>
         )}
         
-        <GlobalLogosAI />
-        <WelcomeFirstAccess />
+        <Suspense fallback={null}>
+          <GlobalLogosAI />
+          <WelcomeFirstAccess />
+        </Suspense>
 
         {/* Arquitetura estabilizada: Layout único, Card único, Navegação única e Tema único. */}
 
