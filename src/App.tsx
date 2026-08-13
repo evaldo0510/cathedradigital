@@ -1000,7 +1000,7 @@ const AppLayout: React.FC = () => {
           <PWAInstallPrompt />
           <InfrastructureDiagnostics />
         </Suspense>
-        <OfflineIndicator />
+        <Suspense fallback={null}><OfflineIndicator /></Suspense>
         <DebugRequestPanel />
       </div>
     </MotionConfig>
