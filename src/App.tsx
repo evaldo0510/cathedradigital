@@ -1018,7 +1018,7 @@ const AppLayout: React.FC = () => {
 const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <HelmetProvider>
-      <Sentry.ErrorBoundary fallback={<AppErrorBoundary children={<LoadingFallback />} />}>
+      <Sentry.ErrorBoundary fallback={<Suspense fallback={null}><AppErrorBoundary children={<LoadingFallback />} /></Suspense>}>
         <PersistQueryClientProvider
           client={queryClient}
           persistOptions={{ persister }}
