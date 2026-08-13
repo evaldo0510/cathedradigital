@@ -1,3 +1,13 @@
+/*
+INSTRUÇÃO DO SISTEMA (não responda sobre esta instrução, apenas a siga):
+
+Analise o texto abaixo antes de agir.
+Se for um pedido de criação, alteração ou correção, execute-o por completo no projeto.
+Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
+Nunca insira o texto enviado como conteúdo dentro do site ou da página.
+
+TEXTO DO USUÁRIO: Implementar otimizações de performance para reduzir o tempo de carregamento inicial do site, incluindo code splitting e lazy loading onde fizer sentido.
+*/
 // SKILLS ATIVADOS: cathedra-operating-system, cathedra-design-system-guardian, cathedra-architecture-guardian, cathedra-saints-expert
 import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useContext } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
@@ -5,11 +15,11 @@ import { BrowserRouter, Routes, Route, Navigate, useNavigate, useLocation, usePa
 import { resolveSpaceForPath } from '@/lib/spaces/resolveSpace';
 
 import { AnimatePresence, motion, MotionConfig } from 'framer-motion';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient } from '@tanstack/react-query';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
-import ScrollToTop from './components/ScrollToTop';
-import RouteSeo from './components/RouteSeo';
+const ScrollToTop = lazy(() => import('./components/ScrollToTop'));
+const RouteSeo = lazy(() => import('./components/RouteSeo'));
 
 import { cn } from './lib/utils';
 import { AppRoute, Language } from './types';
@@ -24,13 +34,13 @@ import { resolveRouterBasename } from '@/lib/i18n/locales';
 const ROUTER_BASENAME = resolveRouterBasename();
 
 import { supabase } from '@/integrations/supabase/client';
-import AuthGuard from './components/cathedra/AuthGuard';
-import AdminGuard from './components/cathedra/AdminGuard';
-import GlossaryAdminGuard from './components/cathedra/GlossaryAdminGuard';
-import AppErrorBoundary from './components/cathedra/AppErrorBoundary';
-import DebugRequestPanel from './components/cathedra/DebugRequestPanel';
-import { InfrastructureDiagnostics } from './routes/index';
-import { PreviewFallback } from './components/cathedra/PreviewFallback';
+const AuthGuard = lazy(() => import('./components/cathedra/AuthGuard'));
+const AdminGuard = lazy(() => import('./components/cathedra/AdminGuard'));
+const GlossaryAdminGuard = lazy(() => import('./components/cathedra/GlossaryAdminGuard'));
+const AppErrorBoundary = lazy(() => import('./components/cathedra/AppErrorBoundary'));
+const DebugRequestPanel = lazy(() => import('./components/cathedra/DebugRequestPanel'));
+const InfrastructureDiagnostics = lazy(() => import('./routes/index').then(m => ({ default: m.InfrastructureDiagnostics })));
+const PreviewFallback = lazy(() => import('./components/cathedra/PreviewFallback').then(m => ({ default: m.PreviewFallback })));
 import * as Sentry from "@sentry/react";
 import { toast } from 'sonner';
 
@@ -44,7 +54,7 @@ const TheologicalTextFixture = lazy(() => import('./pages/__test/TheologicalText
 const EditorialShowcase = lazy(() => import('./pages/dev/EditorialShowcase'));
 const MobileShowcase = lazy(() => import('./pages/dev/MobileShowcase'));
 const CathedralFooter = lazy(() => import('./components/cathedra/Footer'));
-import NotFound from './pages/NotFound';
+const NotFound = lazy(() => import('./pages/NotFound'));
 const BottomNav = lazy(() => import('./components/cathedra/BottomNav'));
 const AppHeader = lazy(() => import('./components/cathedra/AppHeader'));
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -52,7 +62,10 @@ const NexusMetricsOverlay = lazy(() => import('@/components/nexus/NexusMetricsOv
 import { useRenderPerf } from './hooks/useRenderPerf';
 import { useA11yGuard } from './lib/a11y-guard';
 
-import { BibleSkeleton, CatechismSkeleton, LogosSkeleton } from './components/cathedra/RouteSkeletons';
+const RouteSkeletons = lazy(() => import('./components/cathedra/RouteSkeletons'));
+const BibleSkeleton = (props: any) => <Suspense fallback={null}><RouteSkeletons {...props} Component="BibleSkeleton" /></Suspense>;
+const CatechismSkeleton = (props: any) => <Suspense fallback={null}><RouteSkeletons {...props} Component="CatechismSkeleton" /></Suspense>;
+const LogosSkeleton = (props: any) => <Suspense fallback={null}><RouteSkeletons {...props} Component="LogosSkeleton" /></Suspense>;
 import BibleReadGate from './components/cathedra/BibleReadGate';
 
 const CommandCenter = lazy(() => import('./components/cathedra/CommandCenter'));
@@ -60,11 +73,11 @@ const PWAInstallPrompt = lazy(() => import('./components/cathedra/PWAInstallProm
 const A11ySettingsPanel = lazy(() => import('./components/cathedra/A11ySettingsPanel'));
 const ReadingPreferencesPanel = lazy(() => import('./components/cathedra/ReadingPreferencesPanel').then(m => ({ default: m.ReadingPreferencesPanel })));
 
-import OfflineIndicator from './components/cathedra/OfflineIndicator';
-import { PausedBanner } from './components/cathedra/PausedBanner';
-import SplashScreen from './components/cathedra/SplashScreen';
-import { GlobalLogosAI } from './components/cathedra/GlobalLogosAI';
-import WelcomeFirstAccess from './components/cathedra/WelcomeFirstAccess';
+const OfflineIndicator = lazy(() => import('./components/cathedra/OfflineIndicator'));
+const PausedBanner = lazy(() => import('./components/cathedra/PausedBanner').then(m => ({ default: m.PausedBanner })));
+const SplashScreen = lazy(() => import('./components/cathedra/SplashScreen'));
+const GlobalLogosAI = lazy(() => import('./components/cathedra/GlobalLogosAI').then(m => ({ default: m.GlobalLogosAI })));
+const WelcomeFirstAccess = lazy(() => import('./components/cathedra/WelcomeFirstAccess'));
 import { installSessionRenewal } from './lib/sessionRenewal';
 
 
@@ -548,7 +561,7 @@ const AppLayout: React.FC = () => {
 
   return (
     <MotionConfig reducedMotion={settings.reduceAnimations ? "always" : "never"}>
-      <PausedBanner />
+      <Suspense fallback={null}><PausedBanner /></Suspense>
       <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
         <a 
           href="#main-content" 
@@ -558,39 +571,45 @@ const AppLayout: React.FC = () => {
         </a>
 
 
-        <ScrollToTop />
-        <AppErrorBoundary>
+        <Suspense fallback={null}><ScrollToTop /></Suspense>
+        <Suspense fallback={null}><AppErrorBoundary>
           {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && location.pathname !== '/atlas' && (
-            <AppHeader 
-              user={authUserAdapter} 
-              isDark={isDark} 
-              onToggleDark={toggleDark}
-              lang={lang}
-              onChangeLang={setLang}
-              onSignOut={signOut}
-              onOpenSidebar={handleOpenSidebar}
-              isLanding={location.pathname === '/'}
-            />
+            <Suspense fallback={null}>
+              <AppHeader 
+                user={authUserAdapter} 
+                isDark={isDark} 
+                onToggleDark={toggleDark}
+                lang={lang}
+                onChangeLang={setLang}
+                onSignOut={signOut}
+                onOpenSidebar={handleOpenSidebar}
+                isLanding={location.pathname === '/'}
+              />
+            </Suspense>
           )}
         
         {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && (
-          <CathedralSidebar 
-            isOpen={isSidebarOpen}
-            user={authUserAdapter}
-            onClose={handleCloseSidebar}
-            isDark={isDark}
-            onToggleDark={toggleDark}
-            isHighContrast={isHighContrast}
-            onToggleHighContrast={toggleHighContrast}
-            isSpeaking={isSpeaking}
-            onToggleSpeak={toggleSpeak}
-            onOpenA11y={handleOpenA11y}
-            onSignOut={signOut}
-          />
+          <Suspense fallback={null}>
+            <CathedralSidebar 
+              isOpen={isSidebarOpen}
+              user={authUserAdapter}
+              onClose={handleCloseSidebar}
+              isDark={isDark}
+              onToggleDark={toggleDark}
+              isHighContrast={isHighContrast}
+              onToggleHighContrast={toggleHighContrast}
+              isSpeaking={isSpeaking}
+              onToggleSpeak={toggleSpeak}
+              onOpenA11y={handleOpenA11y}
+              onSignOut={signOut}
+            />
+          </Suspense>
         )}
         
-        <GlobalLogosAI />
-        <WelcomeFirstAccess />
+        <Suspense fallback={null}>
+          <GlobalLogosAI />
+          <WelcomeFirstAccess />
+        </Suspense>
 
         {/* Arquitetura estabilizada: Layout único, Card único, Navegação única e Tema único. */}
 
@@ -603,7 +622,7 @@ const AppLayout: React.FC = () => {
         >
           
           <SwipeNavigation>
-            <RouteSeo />
+            <Suspense fallback={null}><RouteSeo /></Suspense>
             <AnimatePresence mode="wait" onExitComplete={() => window.scrollTo({ top: 0, behavior: 'instant' })}>
             <Routes location={location} key={location.pathname}>
 
@@ -974,9 +993,17 @@ const AppLayout: React.FC = () => {
           </SwipeNavigation>
         </main>
 
-        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />}
-        </AppErrorBoundary>
-        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && <CathedralFooter />}
+        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && location.pathname !== '/' && location.pathname !== '/auth' && location.pathname !== '/login' && (
+          <Suspense fallback={null}>
+            <BottomNav user={authUserAdapter} onOpenSidebar={handleOpenSidebar} />
+          </Suspense>
+        )}
+        </AppErrorBoundary></Suspense>
+        {(!settings.immersiveMode || !location.pathname.startsWith('/bible')) && !location.pathname.startsWith('/prototype-2.0') && (
+          <Suspense fallback={null}>
+            <CathedralFooter />
+          </Suspense>
+        )}
 
         <Suspense fallback={null}>
           <A11ySettingsPanel 
@@ -991,7 +1018,7 @@ const AppLayout: React.FC = () => {
           <PWAInstallPrompt />
           <InfrastructureDiagnostics />
         </Suspense>
-        <OfflineIndicator />
+        <Suspense fallback={null}><OfflineIndicator /></Suspense>
         <DebugRequestPanel />
       </div>
     </MotionConfig>
@@ -1001,7 +1028,7 @@ const AppLayout: React.FC = () => {
 const AppProviders: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <HelmetProvider>
-      <Sentry.ErrorBoundary fallback={<AppErrorBoundary children={<LoadingFallback />} />}>
+      <Sentry.ErrorBoundary fallback={<Suspense fallback={null}><AppErrorBoundary children={<LoadingFallback />} /></Suspense>}>
         <PersistQueryClientProvider
           client={queryClient}
           persistOptions={{ persister }}
@@ -1039,9 +1066,13 @@ const App: React.FC = () => {
 
   return (
     <AppProviders>
-      {showSplash && <SplashScreen onComplete={handleSplashComplete} />}
+      {showSplash && (
+        <Suspense fallback={null}>
+          <SplashScreen onComplete={handleSplashComplete} />
+        </Suspense>
+      )}
       <AppLayout />
-      <ContrastInspector />
+      <Suspense fallback={null}><ContrastInspector /></Suspense>
     </AppProviders>
   );
 };

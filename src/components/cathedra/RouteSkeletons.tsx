@@ -7,6 +7,16 @@ import { ContentSkeleton } from './primitives';
  * Todos consomem a primitiva unificada `ContentSkeleton`.
  */
 
+const RouteSkeletons = ({ Component, ...props }: { Component: string }) => {
+  if (Component === 'BibleSkeleton') return <BibleSkeleton {...props} />;
+  if (Component === 'CatechismSkeleton') return <CatechismSkeleton {...props} />;
+  if (Component === 'LogosSkeleton') return <LogosSkeleton {...props} />;
+  return null;
+};
+
+export default RouteSkeletons;
+
+
 export const BibleSkeleton = () => (
   <div
     role="status"

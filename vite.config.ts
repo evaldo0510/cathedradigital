@@ -137,6 +137,7 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks(id) {
+          // Core vendors
           if (id.includes('node_modules/react-dom') || id.includes('node_modules/react/') || id.includes('node_modules/react-router')) return 'vendor-react';
           if (id.includes('node_modules/@supabase')) return 'vendor-supabase';
           if (id.includes('node_modules/framer-motion')) return 'vendor-motion';
@@ -150,22 +151,39 @@ export default defineConfig(({ mode }) => ({
           if (id.includes('node_modules/@tanstack/react-query')) return 'vendor-query';
           if (id.includes('node_modules/date-fns')) return 'vendor-date-utils';
           
-          // Consolidated Feature: Saints
+          // Feature: Biblical & Catechetical (Heavy Text/Logic)
+          if (id.includes('src/components/cathedra/Bible') || 
+              id.includes('src/components/cathedra/Catechism') ||
+              id.includes('src/modules/catequese')) {
+            return 'feature-sacra';
+          }
+
+          // Feature: Saints (Visual & Editorial Engine)
           if (id.includes('src/components/cathedra/Saints') || 
               id.includes('src/components/cathedra/SaintDetail') ||
-              id.includes('src/components/cathedra/SanctorumHero') ||
-              id.includes('src/components/cathedra/SacredImage') ||
-              id.includes('src/services/saintsService.ts') ||
-              id.includes('src/hooks/useSaints.ts')) {
+              id.includes('src/features/saints') ||
+              id.includes('src/services/saintsService.ts')) {
             return 'feature-saints';
           }
 
-          // Shared UI components that are too small to be separate chunks
+          // Feature: Liturgy & Prayers
+          if (id.includes('src/components/cathedra/Liturgia') || 
+              id.includes('src/components/cathedra/Prayer') ||
+              id.includes('src/components/cathedra/Rosary')) {
+            return 'feature-devotio';
+          }
+
+          // Feature: Nexus & AI
+          if (id.includes('src/components/nexus') || 
+              id.includes('src/components/cathedra/LogosAI')) {
+            return 'feature-nexus';
+          }
+
+          // Shared UI components
           if (id.includes('src/components/ui/')) return 'shared-ui';
           
-          // Isolate heavy data files
-          if (id.includes('src/data/apparitions')) return 'data-apparitions';
-          if (id.includes('src/data/cross-references')) return 'data-cross-refs';
+          // Data isolation
+          if (id.includes('src/data/')) return 'feature-data';
         },
       },
     },
