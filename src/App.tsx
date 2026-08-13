@@ -44,7 +44,7 @@ const TheologicalTextFixture = lazy(() => import('./pages/__test/TheologicalText
 const EditorialShowcase = lazy(() => import('./pages/dev/EditorialShowcase'));
 const MobileShowcase = lazy(() => import('./pages/dev/MobileShowcase'));
 const CathedralFooter = lazy(() => import('./components/cathedra/Footer'));
-import NotFound from './pages/NotFound';
+const NotFound = lazy(() => import('./pages/NotFound'));
 const BottomNav = lazy(() => import('./components/cathedra/BottomNav'));
 const AppHeader = lazy(() => import('./components/cathedra/AppHeader'));
 import { TooltipProvider } from '@/components/ui/tooltip';
