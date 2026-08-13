@@ -349,7 +349,65 @@ export default function InfrastructureDiagnosticsPage() {
           </Card>
         </TabsContent>
 
+        <TabsContent value="vitals" className="space-y-6 outline-none">
+          <Card className="premium-card">
+            <CardHeader>
+              <CardTitle className="text-premium-base font-black uppercase tracking-widest flex items-center gap-2">
+                <Icons.BarChart3 className="w-5 h-5 text-primary" />
+                Performance RUM (Real User Monitoring)
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                {['LCP', 'FID', 'CLS'].map(metric => {
+                  const values = webVitals.filter(v => v.name === metric).map(v => v.value);
+                  const avg = values.length > 0 ? (values.reduce((a, b) => a + b, 0) / values.length).toFixed(2) : 'N/A';
+                  return (
+                    <Card key={metric} className="bg-muted/10 border-border/20">
+                      <CardContent className="pt-6">
+                        <div className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground mb-1">{metric} (AVG)</div>
+                        <div className="text-2xl font-bold">{avg}{metric === 'CLS' ? '' : 'ms'}</div>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
+
+              <ScrollArea className="h-[400px] w-full">
+                <div className="space-y-2">
+                  {webVitals.length > 0 ? (
+                    webVitals.map((v) => (
+                      <div key={v.id} className="p-3 rounded-premium border border-border/40 bg-muted/20 flex items-center justify-between text-xs">
+                        <div className="flex items-center gap-3">
+                          <Badge variant="outline" className="font-mono uppercase text-[9px]">
+                            {v.name}
+                          </Badge>
+                          <span className="font-bold">{v.value.toFixed(2)}{v.name === 'CLS' ? '' : 'ms'}</span>
+                          <span className="text-muted-foreground truncate max-w-[150px]">{v.path}</span>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <Badge variant={v.rating === 'good' ? 'default' : v.rating === 'needs-improvement' ? 'secondary' : 'destructive'} className="text-[8px] uppercase">
+                            {v.rating}
+                          </Badge>
+                          <span className="text-[9px] text-muted-foreground">
+                            {new Date(v.timestamp).toLocaleTimeString()}
+                          </span>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-center py-10 text-muted-foreground italic font-serif">
+                      Nenhuma métrica de performance capturada ainda.
+                    </div>
+                  )}
+                </div>
+              </ScrollArea>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         <TabsContent value="details" className="space-y-6 outline-none">
+
           {selectedAudit ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="md:col-span-2 space-y-6">
