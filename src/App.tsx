@@ -551,7 +551,7 @@ const AppLayout: React.FC = () => {
 
   return (
     <MotionConfig reducedMotion={settings.reduceAnimations ? "always" : "never"}>
-      <PausedBanner />
+      <Suspense fallback={null}><PausedBanner /></Suspense>
       <div className="min-h-screen bg-background text-foreground transition-colors duration-500">
         <a 
           href="#main-content" 
