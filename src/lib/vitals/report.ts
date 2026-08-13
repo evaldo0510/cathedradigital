@@ -1,4 +1,4 @@
-import { onCLS, onFID, onLCP, onFCP, onTTFB, onINP, Metric } from 'web-vitals';
+import { onCLS, onLCP, onFCP, onTTFB, onINP, Metric } from 'web-vitals';
 import { supabase } from '@/integrations/supabase/client';
 
 const sendToAnalytics = async (metric: Metric) => {
@@ -7,19 +7,18 @@ const sendToAnalytics = async (metric: Metric) => {
     value: metric.value,
     rating: metric.rating,
     delta: metric.delta,
-    id: metric.id,
-    navigationType: metric.navigationType,
+    metric_id: metric.id,
+    navigation_type: metric.navigationType,
     path: window.location.pathname,
     timestamp: new Date().toISOString()
   };
 
   try {
-    const { error } = await supabase
-      .from('web_vitals')
+    // Usando any para ignorar temporariamente os erros de tipo até que a tabela seja reconhecida
+    const { error } = await (supabase.from('web_vitals' as any) as any)
       .insert([body]);
       
     if (error) {
-      // Falha silenciosa em produção, log em dev
       if (import.meta.env.DEV) console.error('Error reporting vitals:', error);
     }
   } catch (e) {
@@ -29,7 +28,6 @@ const sendToAnalytics = async (metric: Metric) => {
 
 export const reportWebVitals = () => {
   onCLS(sendToAnalytics);
-  onFID(sendToAnalytics);
   onLCP(sendToAnalytics);
   onFCP(sendToAnalytics);
   onTTFB(sendToAnalytics);
