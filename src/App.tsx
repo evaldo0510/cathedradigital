@@ -6,7 +6,7 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Implementar otimizações de performance para reduzir o tempo de carregamento inicial do site, incluindo code splitting e lazy loading onde fizer sentido.
+TEXTO DO USUÁRIO: Otimizar o carregamento de imagens e fontes do site com formatos modernos (AVIF/WebP), lazy loading, preloading de fontes e compressão para reduzir ainda mais o LCP.Implemente a coleta e envio de Web Vitals (LCP, FID/INP, CLS) para um endpoint/analytics e exiba um resumo no dashboard do admin.
 */
 // SKILLS ATIVADOS: cathedra-operating-system, cathedra-design-system-guardian, cathedra-architecture-guardian, cathedra-saints-expert
 import React, { useState, useEffect, useCallback, useMemo, lazy, Suspense, useContext } from 'react';

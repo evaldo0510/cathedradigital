@@ -10,6 +10,7 @@ import { registerSW } from 'virtual:pwa-register';
 import { initSentry } from "./lib/sentry";
 import { initRuntimeErrorLogger } from "./lib/runtimeErrorLogger";
 import { initActionLogger } from "./lib/observability/logAction";
+import { reportWebVitals } from "./lib/vitals/report";
 // Auto-registra todos os ReaderAutoNexus (Bíblia, CIC, Magistério, Santo,
 // Liturgia, Oração, Glossário, Jornada) no ReaderAutoNexusRegistry.
 import "./core/knowledge/adapters/registry";
@@ -23,6 +24,7 @@ initLiturgicalPrefetchGuard();
 initSentry();
 initRuntimeErrorLogger();
 initActionLogger();
+reportWebVitals();
 
 if (import.meta.env.DEV) {
   const inIframe = (() => { try { return window.self !== window.top; } catch { return true; } })();
