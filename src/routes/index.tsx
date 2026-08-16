@@ -208,7 +208,7 @@ export const InfrastructureDiagnostics: React.FC = () => {
   );
 };
 
-const AuditTable: React.FC<{ title: string; status: string; rows: { label: string; res: string; pass: bool }[] }> = ({ title, status, rows }) => (
+const AuditTable: React.FC<{ title: string; status: string; rows: { label: string; res: string; pass: boolean }[] }> = ({ title, status, rows }) => (
   <section className="border border-gold-text/20 p-6 bg-accentest rounded-premium shadow-sm">
     <h3 className="text-xl font-display text-primary mb-4 flex items-center justify-between">
       {title}
