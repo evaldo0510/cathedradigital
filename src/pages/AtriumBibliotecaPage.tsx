@@ -74,36 +74,25 @@ const AtriumBibliotecaPage: React.FC = () => {
 
       <MobileTopBar kicker="Cathedra" title="Biblioteca" transparent />
 
-      <section className="mx-auto w-full max-w-[1120px] px-5 pb-[calc(var(--stitch-mobile-bottomnav-h)+var(--stitch-mobile-safe-bottom)+2rem)] pt-6 md:px-16 md:pt-14 md:pb-16 animate-fade-in">
-        {/* ─── Hero editorial ─────────────────────────────────────────── */}
-        <section className="border-b border-stitch-secondary/10 pb-8">
-          <div className="max-w-2xl">
-            <span className="mb-2 block font-stitch-body text-[12px] font-bold uppercase tracking-[0.32em] text-stitch-secondary">
-              Archival Collection
-            </span>
-            <h1 className="font-stitch-display text-[32px] italic leading-[40px] text-stitch-primary md:text-[48px] md:leading-[56px] md:tracking-[-0.02em]">
-              Biblioteca
-            </h1>
-            <p className="mt-4 font-stitch-body text-[20px] leading-[32px] text-stitch-on-surface-variant">
-              Navegue pelos ecos sagrados de dois milênios. Dos Padres
-              Apostólicos ao Magistério contemporâneo, explore a sabedoria
-              curada da Igreja.
-            </p>
-          </div>
-        </section>
+      <SpaceLayout>
+        {/* ─── 1+2. Título e descrição ─────────────────────────────── */}
+        <SpaceHeader
+          kicker="Archival Collection"
+          title="Biblioteca"
+          description="Navegue pelos ecos sagrados de dois milênios. Dos Padres Apostólicos ao Magistério contemporâneo, explore a sabedoria curada da Igreja."
+        />
 
-        {/* ─── Busca Unificada (B.1.3) ─────────────────────────────── */}
-        <section className="pt-8">
+        {/* ─── 3. Entrada (busca unificada) ────────────────────────── */}
+        <SpaceEntrance>
           <LibrarySearchPanel />
-        </section>
+        </SpaceEntrance>
 
         {/* ─── Descobrir por tema (B.1.3) ──────────────────────────── */}
         <section className="pt-12">
-          <h2 className="mb-4 font-stitch-display text-[24px] font-semibold leading-[32px] text-stitch-primary">
-            Descobrir por tema
-          </h2>
+          <SpaceSectionTitle title="Descobrir por tema" />
           <LibraryThemesBlock />
         </section>
+
 
 
 
