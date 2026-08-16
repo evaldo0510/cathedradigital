@@ -86,19 +86,15 @@ const PrayerLibraryPage: React.FC = () => {
 
 
       <section className="mx-auto w-full max-w-[880px] px-4 pb-24 pt-8 md:px-8 md:pt-12">
-        {/* Hero editorial breve */}
-        <header className="mb-10 text-center">
-          <p className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
-            Cathedra · Orações
-          </p>
-          <h1 className="mt-3 font-stitch-display text-4xl md:text-5xl leading-tight text-stitch-on-surface">
-            Livro de Orações
-          </h1>
-          <p className="mx-auto mt-4 max-w-[52ch] font-stitch-body text-base text-stitch-on-surface-variant">
-            Um único lugar para as orações vivas da Igreja — organizadas por categoria,
-            com meditação, referências e continuidade para a Escritura e o Catecismo.
-          </p>
-        </header>
+        {/* 1+2. Título e descrição — padrão de espaço */}
+        <SpaceHeader
+          align="center"
+          kicker="Cathedra · Orações"
+          title="Livro de Orações"
+          description="Um único lugar para as orações vivas da Igreja — organizadas por categoria, com meditação, referências e continuidade para a Escritura e o Catecismo."
+          className="mb-10"
+        />
+
 
         {/* Busca */}
         <div className="mb-6">
