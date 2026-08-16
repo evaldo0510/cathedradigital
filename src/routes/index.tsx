@@ -6,7 +6,7 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Audite Biblioteca, Capelas e Claustro no painel de diagnósticos e corrija os PASS/FAIL que não estiverem certos.Padronize o layout de cada espaço: título, descrição, entrada, portas e footer, mantendo o mesmo estilo do Átrio.
+TEXTO DO USUÁRIO: Abra o leitor da Bíblia no mobile e no desktop e confirme abertura, navegação e leitura completa.Confira leitura completa de uma oração, uma prece e o Rosário no mobile e no desktop.
 */
 
 import React from 'react';
