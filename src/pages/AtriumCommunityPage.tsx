@@ -157,21 +157,16 @@ const AtriumCommunityPage: React.FC = () => {
       </Helmet>
 
       <section className="min-h-screen bg-background text-foreground">
-        {/* Hero editorial */}
-        <section className="border-b border-border/40">
-          <div className="max-w-4xl mx-auto px-6 py-12 md:py-16 text-center space-y-4">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-[10px] uppercase tracking-[0.3em] text-primary font-semibold">
-              <Users className="w-3.5 h-3.5" />
-              Communitas Fidelium
-            </div>
-            <h1 className="font-serif text-4xl md:text-6xl leading-[1.05] tracking-tight">
-              Comunidade
-            </h1>
-            <p className="text-muted-foreground font-serif italic text-base md:text-lg max-w-2xl mx-auto">
-              Um lugar para partilhar a caminhada — testemunhos, dúvidas e leituras entre irmãos na fé.
-            </p>
-          </div>
-        </section>
+        {/* 1+2. Título e descrição — padrão de espaço */}
+        <div className="max-w-4xl mx-auto px-6 pt-12 md:pt-16">
+          <SpaceHeader
+            align="center"
+            kicker="Communitas Fidelium"
+            title="Comunidade"
+            description="Um lugar para partilhar a caminhada — testemunhos, dúvidas e leituras entre irmãos na fé."
+          />
+        </div>
+
 
         {/* Barra de ações */}
         <section className="max-w-4xl mx-auto px-6 pt-8 flex flex-wrap items-center gap-3">
