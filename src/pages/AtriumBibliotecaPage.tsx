@@ -26,6 +26,14 @@ import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import { LibrarySearchPanel, LibraryThemesBlock } from '@/modules/biblioteca';
 import { SafeImage } from '@/components/library/SafeImage';
 import { LIBRARY_ACERVOS } from '@/config/libraryAcervos';
+import {
+  SpaceLayout,
+  SpaceHeader,
+  SpaceEntrance,
+  SpaceSectionTitle,
+  SpaceFooter,
+} from '@/components/cathedra/space/SpaceLayout';
+
 
 type Collection = {
   title: string;
