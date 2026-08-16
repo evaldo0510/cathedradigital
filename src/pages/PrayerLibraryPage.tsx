@@ -18,6 +18,8 @@ import {
   type Prayer,
 } from '@/hooks/usePrayers';
 import { cn } from '@/lib/utils';
+import { SpaceHeader, SpaceFooter } from '@/components/cathedra/space/SpaceLayout';
+
 
 function formatDuration(sec: number): string {
   if (sec < 60) return `${sec}s`;
@@ -86,19 +88,15 @@ const PrayerLibraryPage: React.FC = () => {
 
 
       <section className="mx-auto w-full max-w-[880px] px-4 pb-24 pt-8 md:px-8 md:pt-12">
-        {/* Hero editorial breve */}
-        <header className="mb-10 text-center">
-          <p className="font-stitch-body text-[11px] font-bold uppercase tracking-[0.28em] text-stitch-secondary">
-            Cathedra · Orações
-          </p>
-          <h1 className="mt-3 font-stitch-display text-4xl md:text-5xl leading-tight text-stitch-on-surface">
-            Livro de Orações
-          </h1>
-          <p className="mx-auto mt-4 max-w-[52ch] font-stitch-body text-base text-stitch-on-surface-variant">
-            Um único lugar para as orações vivas da Igreja — organizadas por categoria,
-            com meditação, referências e continuidade para a Escritura e o Catecismo.
-          </p>
-        </header>
+        {/* 1+2. Título e descrição — padrão de espaço */}
+        <SpaceHeader
+          align="center"
+          kicker="Cathedra · Orações"
+          title="Livro de Orações"
+          description="Um único lugar para as orações vivas da Igreja — organizadas por categoria, com meditação, referências e continuidade para a Escritura e o Catecismo."
+          className="mb-10"
+        />
+
 
         {/* Busca */}
         <div className="mb-6">
@@ -222,7 +220,18 @@ const PrayerLibraryPage: React.FC = () => {
             </ul>
           )
         )}
+
+        {/* 5. Footer do espaço */}
+        <SpaceFooter
+          note="Toda oração conduz de volta à Palavra e à vida da Igreja."
+          links={[
+            { label: 'Átrio', to: '/', hint: 'Voltar à entrada do Mosteiro' },
+            { label: 'Biblioteca', to: '/biblioteca', hint: 'Ler a Escritura e os Padres' },
+            { label: 'Rosário', to: '/oracao/rosario', hint: 'Contemplar os mistérios' },
+          ]}
+        />
       </section>
+
 
       <MobileBottomNav />
     </>
