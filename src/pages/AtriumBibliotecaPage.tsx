@@ -281,7 +281,17 @@ const AtriumBibliotecaPage: React.FC = () => {
             </div>
           </div>
         </section>
-      </section>
+        {/* ─── 5. Footer do espaço ─────────────────────────────────── */}
+        <SpaceFooter
+          note="A leitura amadurece quando volta à oração e à vida da Igreja."
+          links={[
+            { label: 'Átrio', to: '/', hint: 'Voltar à entrada do Mosteiro' },
+            { label: 'Rezar', to: '/oracao', hint: 'Levar a leitura à oração' },
+            { label: 'Acervo completo', to: '/acervo', hint: 'Todas as estantes' },
+          ]}
+        />
+      </SpaceLayout>
+
 
       <MobileBottomNav />
     </div>
