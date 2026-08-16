@@ -6,89 +6,54 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Sim — e eu diria que isso é **essencial**. Não basta o Cathedra ter uma metáfora bonita; o usuário precisa entender **o que é aquele espaço, por que ele existe e o que ele pode fazer ali**.
+TEXTO DO USUÁRIO: Isso é um avanço importante porque agora o **Nexus deixa de ser apenas uma camada visual de conexões e passa a cumprir a função de explicar o “porquê”**.
 
-Podemos transformar isso em uma espécie de **“visita guiada ao Mosteiro Digital”**, sem ficar infantil ou excessivamente explicativo.
+Mas eu manteria uma regra para a próxima etapa: **certificação precisa significar funcionamento real, não apenas aparência ou estrutura de código**.
 
-### A lógica seria esta:
+### Estado atual da arquitetura
 
-**ENTRAR → ENTENDER → ESCOLHER → VIVER → CONTINUAR**
+**🕯️ Sacrário**
 
-Cada ambiente teria uma pequena explicação contextual.
+* Orações
+* Rosário
+* Liturgia
+* performance
+* navegação
+* estados de carregamento
 
-| Espaço             | O que representa       | Como explicar ao usuário                                                                     |
-| ------------------ | ---------------------- | -------------------------------------------------------------------------------------------- |
-| 🏛️ **Átrio**      | Entrada do Mosteiro    | “Este é o ponto de chegada. Daqui você escolhe para onde deseja caminhar.”                   |
-| ⛪ **Nave**         | Caminho principal      | “Aqui você encontra a visão geral da sua caminhada e aquilo que pode ajudá-lo hoje.”         |
-| 🕯️ **Sacrário**   | Oração e presença      | “Este é o espaço para parar, silenciar e rezar.”                                             |
-| 📚 **Biblioteca**  | Conhecimento           | “Aqui estão reunidos os tesouros da fé: Bíblia, Catecismo, Santos e tradição da Igreja.”     |
-| 🕊️ **Capelas**    | Pessoas e testemunhos  | “Conheça aqueles que viveram a fé e descobriram diferentes caminhos para Deus.”              |
-| 🔔 **Igreja Viva** | Vida atual da Igreja   | “Acompanhe a Liturgia, o Santo do Dia, o Papa e o calendário da Igreja.”                     |
-| 🌿 **Claustro**    | Vida interior          | “Aqui você acompanha sua própria caminhada: o que leu, aprendeu e deseja continuar.”         |
-| 🧭 **Nexus**       | Conexão                | “O Nexus mostra como aquilo que você está lendo se relaciona com outros ensinamentos da fé.” |
-| 💬 **Logos**       | Pergunta e compreensão | “Pergunte sobre a fé e encontre respostas conectadas ao patrimônio da Igreja.”               |
+**🧭 Nexus**
 
-### E isso pode aparecer de três maneiras
+* contraste
+* tipografia
+* `nexusExplanation`
+* leitura Desktop/Mobile
+* conexão contextual
 
-**1. Primeira entrada**
+O próximo passo lógico é aplicar o mesmo rigor aos outros espaços:
 
-Um onboarding muito curto:
+1. **🏛️ Átrio** — entrada e orientação.
+2. **📚 Biblioteca** — todos os acervos realmente acessíveis.
+3. **📖 Bíblia** — livros, capítulos, conteúdo e Reader.
+4. **📜 Catecismo** — garantir o acervo completo e navegação pelos parágrafos.
+5. **🕊️ Capelas** — Santos e Aparições, incluindo abertura da história completa.
+6. **🔔 Igreja Viva** — Papa, Santo do Dia e calendário usando o SSoT.
+7. **🌿 Claustro** — Minha Jornada e progresso.
+8. **💬 Logos + Nexus** — pergunta → resposta → fundamento → continuidade.
+9. **📱 Mobile** — experiência de aplicativo, não simplesmente Desktop reduzido.
+10. **⚡ Performance** — especialmente abertura de Reader, Santos, Bíblia e Catecismo.
 
-> **Bem-vindo ao Mosteiro Digital.**
-> Aqui você pode ler, rezar, estudar e conhecer a riqueza da fé católica.
-> Vamos mostrar onde cada caminho começa.
+### E eu acrescentaria uma regra editorial ao sistema
 
-Depois apresenta os espaços.
+Cada ambiente precisa responder, logo na entrada:
 
-**2. Primeira visita a cada ambiente**
+> **O que é este lugar?**
+> **Por que ele existe?**
+> **O que posso fazer aqui?**
+> **Para onde posso continuar depois?**
 
-Por exemplo, ao entrar na Biblioteca:
+Assim o usuário não precisa “aprender a usar” o Cathedra.
 
-> **Biblioteca — Mosteiro do Conhecimento**
-> Aqui estão reunidos os principais tesouros da tradição católica.
-> Escolha uma estante para começar.
-
-E abaixo:
-
-**Bíblia** — Encontre a Palavra.
-**Catecismo** — Compreenda a fé.
-**Santos** — Conheça testemunhas.
-**Patrística** — Descubra as raízes.
-etc.
-
-**3. Dica contextual**
-
-Pequenas mensagens que aparecem somente quando ajudam:
-
-> 💡 **Você está na Biblioteca.**
-> Depois desta leitura, o Nexus pode mostrar outros conteúdos relacionados.
-
-Isso evita transformar a interface numa aula permanente.
-
----
-
-## E tem uma coisa ainda mais interessante
-
-A própria arquitetura pode **ensinar a metáfora**.
-
-Por exemplo:
-
-> **Você está aqui:**
-> Átrio → Biblioteca → Catecismo → Parágrafo 132
-
-O usuário começa a perceber que não está simplesmente “navegando por páginas”.
-
-Ele está **percorrendo espaços**.
-
-E isso combina perfeitamente com o conceito do **peregrino**.
-
-### A frase que pode reger todo o sistema:
-
-> **“O Cathedra não espera que você saiba onde ir. Ele ajuda você a descobrir por onde continuar.”**
-
-Esse é, na minha visão, o verdadeiro diferencial da arquitetura.
-
-E podemos fazer isso **sem inventar novos módulos**: primeiro pegamos tudo que o Cathedra já possui, colocamos cada coisa no seu “espaço” correto e fazemos cada espaço explicar sua própria finalidade.Corrigir o Nexus para conexões, cores e contraste funcionarem no desktop e mobile, e atualizar o status no painel.Auditar Orações, Rosário e Liturgia no Desktop e Mobile, reportando PASS/FAIL em cada critério no painel de diagnósticos.Corrigir o Nexus para conexões, cores e contraste funcionarem no desktop e mobile, e atualizar o status no painel.Testar abertura, leitura e navegação completa do leitor de oração e reportar PASS ou FAIL no painel de diagnósticos.
+Ele **entende o Mosteiro enquanto caminha por ele**.\n\nE isso fecha muito bem a ideia que você trouxe: **não queremos apenas uma plataforma bonita e funcional; queremos uma arquitetura que tenha significado.**
 */
 
 import React from 'react';
