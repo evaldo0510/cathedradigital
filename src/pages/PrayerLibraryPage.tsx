@@ -18,6 +18,8 @@ import {
   type Prayer,
 } from '@/hooks/usePrayers';
 import { cn } from '@/lib/utils';
+import { SpaceHeader, SpaceFooter } from '@/components/cathedra/space/SpaceLayout';
+
 
 function formatDuration(sec: number): string {
   if (sec < 60) return `${sec}s`;
