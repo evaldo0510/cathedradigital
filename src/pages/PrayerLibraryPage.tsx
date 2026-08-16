@@ -218,7 +218,18 @@ const PrayerLibraryPage: React.FC = () => {
             </ul>
           )
         )}
+
+        {/* 5. Footer do espaço */}
+        <SpaceFooter
+          note="Toda oração conduz de volta à Palavra e à vida da Igreja."
+          links={[
+            { label: 'Átrio', to: '/', hint: 'Voltar à entrada do Mosteiro' },
+            { label: 'Biblioteca', to: '/biblioteca', hint: 'Ler a Escritura e os Padres' },
+            { label: 'Rosário', to: '/oracao/rosario', hint: 'Contemplar os mistérios' },
+          ]}
+        />
       </section>
+
 
       <MobileBottomNav />
     </>
