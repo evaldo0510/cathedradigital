@@ -6,54 +6,7 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Isso é um avanço importante porque agora o **Nexus deixa de ser apenas uma camada visual de conexões e passa a cumprir a função de explicar o “porquê”**.
-
-Mas eu manteria uma regra para a próxima etapa: **certificação precisa significar funcionamento real, não apenas aparência ou estrutura de código**.
-
-### Estado atual da arquitetura
-
-**🕯️ Sacrário**
-
-* Orações
-* Rosário
-* Liturgia
-* performance
-* navegação
-* estados de carregamento
-
-**🧭 Nexus**
-
-* contraste
-* tipografia
-* `nexusExplanation`
-* leitura Desktop/Mobile
-* conexão contextual
-
-O próximo passo lógico é aplicar o mesmo rigor aos outros espaços:
-
-1. **🏛️ Átrio** — entrada e orientação.
-2. **📚 Biblioteca** — todos os acervos realmente acessíveis.
-3. **📖 Bíblia** — livros, capítulos, conteúdo e Reader.
-4. **📜 Catecismo** — garantir o acervo completo e navegação pelos parágrafos.
-5. **🕊️ Capelas** — Santos e Aparições, incluindo abertura da história completa.
-6. **🔔 Igreja Viva** — Papa, Santo do Dia e calendário usando o SSoT.
-7. **🌿 Claustro** — Minha Jornada e progresso.
-8. **💬 Logos + Nexus** — pergunta → resposta → fundamento → continuidade.
-9. **📱 Mobile** — experiência de aplicativo, não simplesmente Desktop reduzido.
-10. **⚡ Performance** — especialmente abertura de Reader, Santos, Bíblia e Catecismo.
-
-### E eu acrescentaria uma regra editorial ao sistema
-
-Cada ambiente precisa responder, logo na entrada:
-
-> **O que é este lugar?**
-> **Por que ele existe?**
-> **O que posso fazer aqui?**
-> **Para onde posso continuar depois?**
-
-Assim o usuário não precisa “aprender a usar” o Cathedra.
-
-Ele **entende o Mosteiro enquanto caminha por ele**.\n\nE isso fecha muito bem a ideia que você trouxe: **não queremos apenas uma plataforma bonita e funcional; queremos uma arquitetura que tenha significado.**
+TEXTO DO USUÁRIO: Abra o Cathedra no mobile e confira Home, Orações, Rosário, Liturgia e Biblioteca; anote o que faltar ou quebrar.Abra o painel de diagnósticos e confirme que os 11 critérios do Átrio aparecem com PASS ou FAIL, com screenshots do Playwright.Abra o Cathedra no mobile e confira Home, Orações, Rosário, Liturgia e Biblioteca; anote o que faltar ou quebrar.
 */
 
 import React from 'react';
