@@ -137,17 +137,17 @@ const NexusItem: React.FC<NexusItemProps> = ({ node, bucket }) => {
   const body = (
     <>
       <div className="flex flex-col gap-spacing-2xs">
-        <span className="font-medium text-foreground group-hover:text-primary transition-colors">
+        <span className="font-semibold text-primary/90 group-hover:text-primary transition-colors">
           {label}
         </span>
         {nexusExplanation && (
-          <p className="text-[9px] font-serif italic text-gold leading-relaxed border-l border-gold/20 pl-spacing-sm py-spacing-xs bg-gold/5 rounded-r-sm">
+          <p className="text-[10px] md:text-[11px] font-reader italic text-primary/80 leading-relaxed border-l-2 border-gold-text/40 pl-spacing-sm py-spacing-xs bg-gold/5 rounded-r-premium shadow-sm transition-all group-hover:bg-gold/10">
             {nexusExplanation}
           </p>
         )}
       </div>
       {summary && (
-        <p className="mt-spacing-xs text-premium-xs text-muted-foreground leading-relaxed">
+        <p className="mt-spacing-xs text-premium-xs text-muted-foreground/80 leading-relaxed font-reader">
           {summary}
         </p>
       )}
