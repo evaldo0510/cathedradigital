@@ -1,30 +1,45 @@
-import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React from 'react';
+import { useParams, Navigate } from 'react-router-dom';
 import { Icons } from '@/constants';
 import SacredImage from './SacredImage';
 import { ReaderShell, EditorialHero, NexusPanel, ReaderContinuation, ReaderToolbar } from '@/components/reader';
 import { useLang } from '@/hooks/useLang';
-import { cn } from '@/lib/utils';
 
 // Mock ou busca de dados do Papa (em produção viria do serviço)
-const GET_POPE_BY_ID = (id: string) => ({
-  id,
-  name: id === 'peter' ? 'São Pedro' : 'Bento XVI',
-  title: id === 'peter' ? 'O Primeiro Papa' : 'O Papa da Razão',
-  image: 'https://images.unsplash.com/photo-1548625361-195feee1c4ce?q=80&w=2000&auto=format&fit=crop',
-  bio: 'Biografia detalhada do Santo Padre...',
-  category: 'papa'
-});
+const GET_POPE_BY_ID = (id: string) => {
+  const popes: Record<string, any> = {
+    'peter': {
+      id: 'peter',
+      name: 'São Pedro',
+      title: 'O Primeiro Papa',
+      image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/San_Pietro_di_Arnolfo_di_Cambio.jpg/440px-San_Pietro_di_Arnolfo_di_Cambio.jpg',
+      bio: 'Pescador da Galileia, escolhido por Jesus como a rocha sobre a qual a Igreja seria construída. O Príncipe dos Apóstolos.',
+      category: 'papa'
+    },
+    'benedict-xvi': {
+      id: 'benedict-xvi',
+      name: 'Bento XVI',
+      title: 'O Papa da Razão',
+      image: 'https://images.unsplash.com/photo-1548625361-195feee1c4ce?q=80&w=2000&auto=format&fit=crop',
+      bio: 'Joseph Ratzinger, um dos maiores teólogos do século XX, serviu a Igreja com humildade e profundidade intelectual.',
+      category: 'papa'
+    }
+  };
+  return popes[id];
+};
 
 const PopeDetailPage: React.FC = () => {
   const { id } = useParams();
   const { t } = useLang();
-  const navigate = useNavigate();
-  const pope = GET_POPE_BY_ID(id || 'peter');
+  const pope = id ? GET_POPE_BY_ID(id) : null;
+
+  if (!pope) {
+    return <Navigate to="/papas" replace />;
+  }
 
   return (
-    <div className="flex flex-col md:flex-row w-full min-h-screen">
-      {/* Desktop Sidebar: Sacred Visuals */}
+    <div className="flex flex-col md:flex-row w-full min-h-screen bg-background">
+      {/* Desktop Sidebar: Sacred Visuals (Synced with Mobile Nav Icons) */}
       <div className="hidden md:flex md:w-[40%] sticky top-0 h-screen overflow-hidden bg-primary/5 border-r border-primary/5">
         <SacredImage 
           src={pope.image} 
