@@ -361,5 +361,3 @@ const LiturgiaPage: React.FC = () => {
 };
 
 export default LiturgiaPage;
-
-export default LiturgiaPage;
