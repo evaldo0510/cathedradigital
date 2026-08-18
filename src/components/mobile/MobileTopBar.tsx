@@ -98,6 +98,7 @@ export function MobileTopBar({
         >
           <Search className="h-5 w-5" />
         </Link>
+        {actions && <div className="flex items-center">{actions}</div>}
         <button
           type="button"
           aria-label="Menu"

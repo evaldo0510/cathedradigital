@@ -77,7 +77,7 @@ export const ReaderShell: React.FC<ReaderShellProps> = ({
       <div
         data-reader-slot="content"
         className={cn(
-          'w-full mx-auto',
+          'w-full mx-auto flex-1',
           contentMaxWidth,
           'px-[var(--stitch-margin-mobile)] md:px-0',
           'py-spacing-lg md:py-spacing-2xl',
