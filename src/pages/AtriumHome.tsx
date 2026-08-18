@@ -41,7 +41,7 @@ import { SpaceDoors, type SpaceDoor } from '@/components/cathedra/space/SpaceLay
 
 // ─── Copy oficial ────────────────────────────────────────────────────────────
 const HERO_KICKER = 'Sanctuarium Digital';
-const HERO_TITLE = 'Cathedra Digital — Entrai no Silêncio';
+const HERO_TITLE = 'Seu companheiro espiritual para a vida interior.';
 const HERO_SUBTITLE =
   'Leia, reze, estude e descubra a riqueza da fé católica.';
 
@@ -162,7 +162,7 @@ const AtriumHome: React.FC = () => {
             {HERO_KICKER}
           </h2>
           <h1 className="mb-3 font-display text-[32px] italic leading-[40px] text-primary md:text-[56px] md:leading-[64px] md:tracking-[-0.02em]">
-            Seu companheiro espiritual para a vida interior.
+            {HERO_TITLE}
           </h1>
           <p className="mb-8 max-w-2xl font-reader text-[20px] leading-[32px] text-muted-foreground md:mx-0 mx-auto">
             {HERO_SUBTITLE}
