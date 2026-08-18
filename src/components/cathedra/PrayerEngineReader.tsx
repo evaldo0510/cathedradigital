@@ -25,7 +25,15 @@ import {
   Focus,
   X,
   PlayCircle,
+  Heart, // Use Heart as a placeholder if HandsPraying is not available
 } from 'lucide-react';
+import SacredImage from './SacredImage';
+
+const Icons = {
+  BookOpen,
+  Church,
+  Prayer: Heart,
+};
 import ContemplativeSettingsDialog from '@/components/prayer/rosary/ContemplativeSettingsDialog';
 import { useContemplativeRhythm } from '@/hooks/useContemplativeRhythm';
 import { cn } from '@/lib/utils';
@@ -99,6 +107,7 @@ interface Props {
   initialBlockId?: string | null;
   /** Estilo aplicado ao wrapper editorial — usado para tipografia/densidade. */
   contentStyle?: React.CSSProperties;
+  sacredImage?: string;
 }
 
 const KIND_LABEL: Record<string, string> = {
@@ -150,6 +159,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
   contextKey,
   initialBlockId,
   contentStyle,
+  sacredImage,
 }) => {
   const session = usePrayerEngineSession(prayer.id);
   const { rhythm } = useContemplativeRhythm();
@@ -1108,55 +1118,80 @@ export const PrayerEngineReader: React.FC<Props> = ({
   }
 
   return (
-    <>
-      <ReaderShell
-        hero={
-          <EditorialHero
-            kicker={chromeKicker}
-            title={prayer.title}
-            subtitle={prayer.subtitle ?? undefined}
-            align="center"
-            size="md"
+    <div className="flex flex-col md:flex-row w-full min-h-screen">
+      {/* Desktop Sidebar: Sacred Visuals for Prayer */}
+      {!focus && (
+        <div className="hidden md:flex md:w-[40%] sticky top-0 h-screen overflow-hidden bg-primary/5 border-r border-primary/5">
+          <SacredImage 
+            src={sacredImage || (currentMystery ? resolveMysteryImage(readMysteryMeta(currentMystery).image_slug, readMysteryMeta(currentMystery).image_collection) : undefined)} 
+            className="w-full h-full object-cover opacity-60 mix-blend-multiply" 
+            alt={prayer.title} 
           />
-        }
-        headerContext={
-          <PrayerContext
-            category={prayer.category ?? undefined}
-            station={
-              currentMystery
-                ? `${activeSection?.title ? activeSection.title + ' · ' : ''}${currentMystery.title}`
-                : undefined
-            }
-            step={
-              !isSimple
-                ? `${cursorIndex + 1} de ${blocks.length}`
-                : undefined
-            }
-          />
-        }
-        contentMaxWidth="max-w-[720px]"
-        ariaLabel={prayer.title}
-        nexus={<NexusPanel output={prayerNexus} />}
-        continuation={
-          isLastOverall && prayerNexus.suggestions.length > 0 ? (
-            <ReaderContinuation
-              context={{
-                kind: 'prayer',
-                id: prayer.slug,
-                graphNodeId: prayerNexus.selfId ?? undefined,
-                meta: { prayerCategory: prayer.category },
-              }}
-              suggestions={prayerNexus.suggestions}
+          <div className="absolute inset-0 bg-gradient-to-l from-background via-transparent to-transparent" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center p-spacing-xl text-center space-y-spacing-lg">
+             <div className="w-spacing-4xl h-spacing-4xl mx-auto rounded-full bg-secondary/10 flex items-center justify-center border border-secondary/20 shadow-premium">
+               <Icons.Prayer className="w-spacing-xl h-spacing-xl text-secondary" />
+             </div>
+             <div className="space-y-spacing-xs">
+               <h2 className="font-display text-4xl text-primary/40 tracking-widest uppercase italic">{prayer.title}</h2>
+               {activeSection && (
+                 <p className="text-[10px] uppercase tracking-[0.4em] text-secondary/60 font-bold">{activeSection.title}</p>
+               )}
+             </div>
+          </div>
+        </div>
+      )}
+
+      <div className="flex-1 overflow-y-auto">
+        <ReaderShell
+          hero={
+            <EditorialHero
+              kicker={chromeKicker}
+              title={prayer.title}
+              subtitle={prayer.subtitle ?? undefined}
+              align="center"
+              size="md"
             />
-          ) : undefined
-        }
-      >
-        {content}
-      </ReaderShell>
+          }
+          headerContext={
+            <PrayerContext
+              category={prayer.category ?? undefined}
+              station={
+                currentMystery
+                  ? `${activeSection?.title ? activeSection.title + ' · ' : ''}${currentMystery.title}`
+                  : undefined
+              }
+              step={
+                !isSimple
+                  ? `${cursorIndex + 1} de ${blocks.length}`
+                  : undefined
+              }
+            />
+          }
+          contentMaxWidth="max-w-[720px]"
+          ariaLabel={prayer.title}
+          nexus={<NexusPanel output={prayerNexus} />}
+          continuation={
+            isLastOverall && prayerNexus.suggestions.length > 0 ? (
+              <ReaderContinuation
+                context={{
+                  kind: 'prayer',
+                  id: prayer.slug,
+                  graphNodeId: prayerNexus.selfId ?? undefined,
+                  meta: { prayerCategory: prayer.category },
+                }}
+                suggestions={prayerNexus.suggestions}
+              />
+            ) : undefined
+          }
+        >
+          {content}
+        </ReaderShell>
+      </div>
       <div ref={prefetchSentinelRef} aria-hidden className="h-px w-full" />
 
       <ResetDialog open={confirmReset} onOpenChange={setConfirmReset} onConfirm={handleReset} />
-    </>
+    </div>
   );
 };
 

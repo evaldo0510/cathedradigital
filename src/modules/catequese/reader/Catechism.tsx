@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
+import SacredImage from '@/components/cathedra/SacredImage';
 import { useRenderPerf } from '@/hooks/useRenderPerf';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
@@ -612,7 +613,27 @@ const Catechism: React.FC = memo(() => {
 
     return (
       <CatechismPendingProvider>
-        <ContemplativeLayout>
+        <div className="flex flex-col md:flex-row w-full min-h-screen">
+          {/* Desktop Sidebar: Sacred Visuals */}
+          <div className="hidden md:flex md:w-[40%] sticky top-0 h-screen overflow-hidden bg-primary/5 border-r border-primary/5">
+            <SacredImage 
+              src={undefined} // Generic sacred visual for Catechism
+              className="w-full h-full object-cover opacity-40 mix-blend-multiply" 
+              alt="Catecismo da Igreja Católica" 
+            />
+            <div className="absolute inset-0 bg-gradient-to-l from-background via-transparent to-transparent" />
+            <div className="absolute inset-0 flex items-center justify-center p-spacing-xl">
+               <div className="text-center space-y-spacing-md">
+                 <div className="w-spacing-4xl h-spacing-4xl mx-auto rounded-full bg-secondary/10 flex items-center justify-center border border-secondary/20 shadow-premium">
+                   <Icons.BookOpen className="w-spacing-xl h-spacing-xl text-secondary" />
+                 </div>
+                 <h2 className="font-display text-4xl text-primary/40 tracking-widest uppercase italic">Catechismus</h2>
+                 <p className="text-[10px] uppercase tracking-[0.4em] text-secondary/60 font-bold">Ecclesiae Catholicae</p>
+               </div>
+            </div>
+          </div>
+
+          <div className="flex-1">
           <ReaderShell
             ariaLabel={`Catecismo — ${selectedSection.title}`}
             contentMaxWidth="max-w-4xl"
@@ -623,6 +644,7 @@ const Catechism: React.FC = memo(() => {
                 subtitle={`${selectedPart.title} · §${startPara} — §${endPara}`}
                 size="md"
                 parchment
+                align="left"
               />
             }
             headerContext={
@@ -713,9 +735,10 @@ const Catechism: React.FC = memo(() => {
               </div>
 
             </div>
-          </ReaderShell>
-          <CatechismDiagnosticPanel />
-        </ContemplativeLayout>
+            </ReaderShell>
+          </div>
+        </div>
+        <CatechismDiagnosticPanel />
       </CatechismPendingProvider>
     );
   }

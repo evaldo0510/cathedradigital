@@ -23,8 +23,32 @@ export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery,
   const lastRead = React.useMemo(() => lastReadRaw ? JSON.parse(lastReadRaw) : null, [lastReadRaw]);
 
   return (
-    <div className="space-y-8 pb-12 max-w-lg mx-auto px-4">
-      {/* CAT-SP4 · Onda B.1 — Hero universal (Harmony) */}
+    <div className="flex flex-col md:flex-row w-full min-h-screen bg-background">
+      {/* Desktop Sidebar: Sacred Visuals */}
+      <div className="hidden md:flex md:w-[40%] sticky top-0 h-screen overflow-hidden bg-primary/5 border-r border-primary/5">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504052434569-70ad5836ab65?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-20 mix-blend-overlay" />
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-transparent to-background" />
+        
+        <div className="relative z-10 w-full flex flex-col items-center justify-center p-spacing-2xl text-center space-y-spacing-xl">
+          <div className="w-24 h-24 rounded-full bg-secondary/10 flex items-center justify-center border border-secondary/20 shadow-premium backdrop-blur-sm">
+            <Icons.Book className="w-10 h-10 text-secondary" />
+          </div>
+          <div className="space-y-spacing-xs">
+            <h2 className="font-display text-5xl text-primary tracking-tight leading-none italic">Sacra Scriptura</h2>
+            <p className="text-xs uppercase tracking-[0.4em] text-secondary font-bold">Verbum Domini</p>
+          </div>
+          <div className="max-w-xs mx-auto">
+            <div className="h-px w-12 bg-secondary/30 mx-auto mb-spacing-md" />
+            <p className="text-sm font-serif italic text-primary/60 leading-relaxed">
+              "Toda a Escritura é inspirada por Deus e útil para ensinar, para repreender, para corrigir e para formar na justiça."
+            </p>
+            <p className="mt-2 text-[10px] uppercase tracking-widest text-primary/40 font-bold">2 Timóteo 3, 16</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto pt-spacing-xl md:pt-spacing-3xl">
+        <div className="max-w-lg mx-auto px-4 space-y-8 pb-24">
       <EditorialHero align="center" density="balanced" rule={false}>
         <EditorialHero.Eyebrow>Sacra Scriptura</EditorialHero.Eyebrow>
         <EditorialHero.Title>Bíblia</EditorialHero.Title>
@@ -95,6 +119,8 @@ export const BibleHome: React.FC<BibleHomeProps> = ({ onSelectBook, searchQuery,
         </div>
         
         {/* Books List handled by the parent component but we can add placeholders here if needed */}
+      </div>
+        </div>
       </div>
     </div>
   );
