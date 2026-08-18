@@ -471,12 +471,12 @@ const AtriumHome: React.FC = () => {
             { label: 'Capelas', to: '/santos', hint: 'Vidas dos santos' },
           ]}
         />
-        </section>
-      </div>
+      </section>
+    </div>
 
-      <MobileBottomNav />
-    </SpaceLayout>
-  );
+    <MobileBottomNav />
+  </SpaceLayout>
+);
 };
 
 export default AtriumHome;
