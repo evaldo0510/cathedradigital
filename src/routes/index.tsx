@@ -410,8 +410,9 @@ export const InfrastructureDiagnostics: React.FC = () => {
       </section>
 
       <footer className="pt-8 border-t border-gold-text/10 space-y-2 text-sm text-muted-foreground italic">
-        <p>* Navegação e Readers validados via auditoria detalhada em 18/08/2026.</p>
-        <p>** Reader de oração e Bíblia validados via navegação manual e audit mobile (Agosto 2026).</p>
+        <p>* Navegação validada via auditoria em 18/08/2026. Alvos móveis (/bible, /oracao, /community, /acervo, /conta) confirmados.</p>
+        <p>** Reader de oração padronizado com Nexus e Bíblia/Catecismo validados em profundidade (Agosto 2026).</p>
+
 
         <p>*** Auditoria de Perfil, Orações, Liturgia, Claustro e Favoritos validada em 18/08/2026 via iPhone 12 Emulation.</p>
 
