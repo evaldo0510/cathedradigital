@@ -6,7 +6,289 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Abra o leitor da Bíblia no mobile e no desktop e confirme abertura, navegação e leitura completa.Confira leitura completa de uma oração, uma prece e o Rosário no mobile e no desktop.
+TEXTO DO USUÁRIO: 11. MOBILE
+==================================================
+
+ATENÇÃO:
+
+Mobile NÃO deve ser Desktop reduzido.
+
+Criar experiência própria de aplicativo.
+
+A referência visual mostra:
+
+- telas verticais;
+- cards compactos;
+- navegação inferior;
+- ícones;
+- ações rápidas;
+- Reader em tela quase completa.
+
+Bottom Navigation:
+
+LER
+ORAR
+IGREJA
+BIBLIOTECA
+PERFIL
+
+A Biblioteca deve funcionar como uma estante visual.
+
+Exemplo:
+
+[BÍBLIA] [CATECISMO]
+
+[SANTOS] [ORAÇÕES]
+
+[PATRÍSTICA] [MAGISTÉRIO]
+
+[APARIÇÕES] [LITURGIA]
+
+Cada item deve abrir diretamente sua função.
+
+==================================================
+12. MOBILE — HEADER
+==================================================
+
+Usar o Monograma Cathedra.
+
+Estrutura simples:
+
+MONOGRAMA
+Título
+Busca
+
+Não comprimir o Header Desktop.
+
+==================================================
+13. MOBILE — READER
+==================================================
+
+O conteúdo deve ocupar a maior parte da tela.
+
+Prioridade:
+
+CONTEÚDO
+↓
+PROGRESSO
+↓
+NEXUS
+↓
+AÇÕES
+↓
+CONTINUAÇÃO
+
+Informações secundárias podem utilizar bottom sheet.
+
+==================================================
+14. IDENTIDADE VISUAL
+==================================================
+
+Usar o Design System Cathedra existente.
+
+Não criar uma nova paleta arbitrariamente.
+
+Direção visual:
+
+- azul profundo / tons escuros institucionais;
+- marfim;
+- dourado Cathedra;
+- tons de pergaminho;
+- contraste elevado;
+- tipografia editorial;
+- elementos discretos inspirados na arquitetura sacra.
+
+O resultado deve ser sofisticado.
+
+Evitar aparência de:
+
+- dashboard corporativo;
+- aplicativo genérico;
+- template SaaS;
+- excesso de gradientes;
+- excesso de sombras;
+- excesso de bordas.
+
+==================================================
+15. PERFORMANCE
+==================================================
+
+A experiência precisa abrir rapidamente.
+
+Priorizar:
+
+1. Shell
+2. navegação
+3. conteúdo principal
+4. dados
+5. elementos secundários
+
+Aplicar lazy loading somente onde já fizer sentido na arquitetura.
+
+Não carregar todos os módulos da plataforma na Home.
+
+Não carregar imagens pesadas desnecessariamente.
+
+==================================================
+16. BACKEND INDISPONÍVEL
+==================================================
+
+O Frontend deve permanecer navegável mesmo com Supabase indisponível.
+
+Usar os estados offline/degraded já implementados.
+
+Nunca apresentar:
+
+"Failed to fetch"
+
+"undefined"
+
+"null"
+
+tela branca.
+
+Mostrar mensagens humanas:
+
+"Este conteúdo está temporariamente indisponível."
+
+IMPORTANTE:
+
+Não inventar conteúdo para mascarar falha do backend.
+
+==================================================
+17. REGRAS DE IMPLEMENTAÇÃO
+==================================================
+
+ANTES DE CRIAR:
+
+procurar componente existente.
+
+ANTES DE CRIAR HOOK:
+
+procurar hook existente.
+
+ANTES DE CRIAR ROTA:
+
+procurar rota existente.
+
+ANTES DE CRIAR CARD:
+
+usar primitiva existente do Design System.
+
+ANTES DE CRIAR DADOS:
+
+verificar fonte oficial.
+
+Preservar:
+
+- Reader V2;
+- Nexus;
+- Logos;
+- Church Context;
+- navegação;
+- SSoT;
+- componentes existentes;
+- conteúdo existente.
+
+==================================================
+18. CERTIFICAÇÃO
+==================================================
+
+Não declarar CERTIFIED apenas porque o código compila.
+
+Cada módulo precisa ser testado funcionalmente:
+
+CLIQUE
+↓
+ABERTURA
+↓
+CONTEÚDO
+↓
+AÇÃO
+↓
+CONTINUIDADE
+
+Testar Desktop e Mobile.
+
+Prioridade P0:
+
+1. Home
+2. Biblioteca
+3. Bíblia
+4. Catecismo
+5. Orações
+6. Santos
+7. Liturgia
+8. Papa
+9. Minha Jornada
+10. Nexus
+
+==================================================
+19. PERFORMANCE REAL
+==================================================
+
+Executar auditoria de carregamento.
+
+Identificar:
+
+- componentes pesados;
+- imagens pesadas;
+- chamadas duplicadas;
+- renders desnecessários;
+- bundles grandes;
+- carregamento bloqueante;
+- consultas repetidas.
+
+Não fazer otimizações especulativas.
+
+Corrigir somente problemas comprovados.
+
+==================================================
+20. REGRA FINAL
+
+O objetivo não é simplesmente deixar o Cathedra mais bonito.
+
+O objetivo é fazer o usuário compreender:
+
+"ESTOU EM UM MOSTEIRO DIGITAL."
+
+E saber imediatamente:
+
+ONDE ESTOU
+O QUE POSSO FAZER
+POR QUE ESTOU AQUI
+PARA ONDE POSSO IR
+
+A experiência deve ser:
+
+SIMPLES
+RÁPIDA
+CONTEMPLATIVA
+FUNCIONAL
+CONECTADA
+
+EXECUTAR EM ORDEM:
+
+1. AUDITAR
+2. MAPEAR COMPONENTES EXISTENTES
+3. IMPLEMENTAR LAYOUT
+4. VALIDAR DESKTOP
+5. VALIDAR MOBILE
+6. TESTAR CLIQUES E ROTAS
+7. TESTAR ESTADOS OFFLINE
+8. TESTAR PERFORMANCE
+9. CORRIGIR REGRESSÕES
+10. SOMENTE ENTÃO CERTIFICAR
+
+NÃO alterar o backend.
+
+NÃO inventar conteúdo.
+
+NÃO criar módulos duplicados.
+
+NÃO remover funcionalidades existentes.
+
+NÃO declarar sucesso sem teste funcional real.
 */
 
 import React from 'react';

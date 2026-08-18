@@ -221,36 +221,30 @@ const AcervoHomePage: React.FC = () => {
 
         <EditorialDivider variant="gold-fade" className="max-w-2xl mx-auto opacity-30" />
 
-        {/* Estantes do Conhecimento (Acervo Monástico 3.0) */}
+        {/* Estantes do Conhecimento (Acervo Monástico 3.0) — Mobile: Estante Visual App-like */}
         <section className="space-y-spacing-xl">
             <h2 className="text-premium-small font-black uppercase tracking-[0.2em] text-gold text-center">
                Estantes do Mosteiro
             </h2>
            
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-spacing-md">
-              {MONASTERY_SHELVES.map((shelf) => (
-                <div key={shelf.id} className="bg-card/40 border border-primary/5 p-spacing-lg rounded-premium space-y-spacing-md shadow-premium-sm flex flex-col">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-gold">{shelf.title}</h3>
-                    <shelf.icon className="w-4 h-4 text-gold/40" />
+           <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-spacing-md">
+              {[
+                { label: 'BÍBLIA', to: '/bible', icon: Icons.Book, desc: 'Sagrada Escritura' },
+                { label: 'CATECISMO', to: '/catechism', icon: Icons.Church, desc: 'Doutrina da Fé' },
+                { label: 'SANTOS', to: '/santos', icon: Icons.Sparkles, desc: 'Vidas exemplares' },
+                { label: 'ORAÇÕES', to: '/oracao', icon: Icons.Flame, desc: 'Livro de Preces' },
+                { label: 'PATRÍSTICA', to: '/biblioteca/acervo/padres', icon: Icons.Library, desc: 'Santos Padres' },
+                { label: 'MAGISTÉRIO', to: '/papas', icon: Icons.Scroll, desc: 'Voz da Igreja' },
+                { label: 'APARIÇÕES', to: '/aparicoes', icon: Icons.Sun, desc: 'Relatos Marianos' },
+                { label: 'LITURGIA', to: '/liturgia', icon: Icons.Calendar, desc: 'Tempo Sagrado' },
+              ].map((item) => (
+                <Link key={item.label} to={item.to} className="group flex flex-col">
+                  <div className="p-spacing-lg rounded-premium border border-primary/10 bg-card/40 hover:bg-primary/[0.02] hover:border-gold/30 transition-all text-center space-y-3 h-full flex flex-col items-center justify-center relative shadow-sm">
+                     <item.icon className="w-8 h-8 mx-auto text-secondary/60 group-hover:text-gold transition-colors" />
+                     <h3 className="text-[12px] font-black uppercase tracking-widest text-primary group-hover:text-secondary">{item.label}</h3>
+                     <p className="text-[9px] text-muted-foreground/60 uppercase tracking-tighter">{item.desc}</p>
                   </div>
-                  <div className="grid grid-cols-2 gap-spacing-sm flex-1">
-                    {shelf.items.map(item => (
-                      <Link key={item.label} to={item.to} className="group flex flex-col">
-                        <div className="p-spacing-md rounded-premium border border-primary/5 bg-background/50 hover:bg-primary/[0.02] hover:border-gold/30 transition-all text-center space-y-2 h-full flex flex-col items-center justify-center relative">
-                           {item.badge && (
-                             <span className="absolute top-1 right-1 text-[6px] font-black bg-gold/10 text-gold px-1 rounded-full uppercase tracking-tighter">
-                               {item.badge}
-                             </span>
-                           )}
-                           <item.icon className="w-7 h-7 mx-auto text-primary/20 group-hover:text-gold transition-colors" />
-                           <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground group-hover:text-gold-light line-clamp-1">{item.label}</h4>
-                           <p className="text-[7px] text-muted-foreground/50 uppercase tracking-tighter">{item.desc} {item.count ? `· ${item.count}` : ''}</p>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
+                </Link>
               ))}
            </div>
         </section>

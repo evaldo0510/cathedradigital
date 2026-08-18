@@ -72,12 +72,6 @@ export const ReaderShell: React.FC<ReaderShellProps> = ({
       aria-label={ariaLabel}
       data-reader-shell
     >
-      <header data-reader-slot="hero">{hero}</header>
-
-      {headerContext}
-
-
-
       <div
         data-reader-slot="content"
         className={cn(
@@ -91,6 +85,12 @@ export const ReaderShell: React.FC<ReaderShellProps> = ({
         {children}
       </div>
 
+      {headerContext && (
+        <div className="w-full px-[var(--stitch-margin-mobile)] md:px-0 py-spacing-md border-t border-border/10">
+           {headerContext}
+        </div>
+      )}
+
       {nexus && (
         <section
           data-reader-slot="nexus"
@@ -100,6 +100,8 @@ export const ReaderShell: React.FC<ReaderShellProps> = ({
           {nexus}
         </section>
       )}
+
+      <header data-reader-slot="hero" className="order-first">{hero}</header>
 
       {continuation && (
         <footer

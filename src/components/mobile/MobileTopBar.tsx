@@ -1,5 +1,5 @@
-import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { ArrowLeft, Search } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 
@@ -54,37 +54,11 @@ export function MobileTopBar({
         paddingTop: "var(--stitch-mobile-safe-top)",
       }}
     >
-      {showBack && (
-        <button
-          type="button"
-          onClick={handleBack}
-          aria-label="Voltar"
-          className={cn(
-            "inline-flex items-center justify-center rounded-full",
-            "text-stitch-on-surface hover:bg-stitch-surface-container",
-            "transition-colors focus-visible:outline-none focus-visible:ring-2",
-            "focus-visible:ring-stitch-secondary",
-          )}
-          style={{
-            width: "var(--stitch-mobile-touch-min)",
-            height: "var(--stitch-mobile-touch-min)",
-          }}
-        >
-          <ArrowLeft className="h-5 w-5" />
-        </button>
-      )}
+      <Link to="/" className="shrink-0">
+        <img src="/monograma-cathedra.svg" alt="Cathedra" className="h-8 w-8" />
+      </Link>
 
       <div className="min-w-0 flex-1">
-        {kicker && (
-          <p
-            className={cn(
-              "font-[var(--font-stitch-label)] text-[11px] font-bold uppercase",
-              "tracking-[0.08em] text-stitch-secondary truncate",
-            )}
-          >
-            {kicker}
-          </p>
-        )}
         {title && (
           <p
             className={cn(
@@ -96,6 +70,14 @@ export function MobileTopBar({
           </p>
         )}
       </div>
+
+      <Link
+        to="/buscar"
+        aria-label="Busca"
+        className="inline-flex h-10 w-10 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+      >
+        <Search className="h-5 w-5" />
+      </Link>
 
       {actions && (
         <div className="flex shrink-0 items-center gap-1">{actions}</div>
