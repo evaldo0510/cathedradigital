@@ -10,7 +10,7 @@ import {
   NexusPanel,
   ReaderContinuation,
   EditorialHero,
-  StudyContext,
+  CatechesisContext,
 } from '@/components/reader';
 import { resolveBibleAutoNexus } from '@/core/knowledge/adapters/bibleAutoNexus';
 
