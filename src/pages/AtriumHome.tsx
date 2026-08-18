@@ -60,7 +60,7 @@ const MAIN_DOORS: SpaceDoor[] = [
     key: 'orar', 
     label: 'ORAR', 
     overline: 'Oratio', 
-    to: '/rezar', 
+    to: '/oracao', 
     Icon: Heart, 
     hint: 'Um espaço para silenciar e rezar.' 
   },
@@ -223,15 +223,13 @@ const AtriumHome: React.FC = () => {
               />
               <div className="relative z-10 text-left">
                 <h2 className="mb-4 block font-reader text-[12px] font-bold uppercase tracking-[0.2em] text-gold-text">
-                  Symmetry of Truth
+                  NEXUS
                 </h2>
                 <h3 className="mb-4 font-display text-[32px] leading-[40px] text-primary">
-                  The Nexus Map
+                  "Por que isso está conectado?"
                 </h3>
                 <p className="max-w-md font-reader text-[18px] leading-[28px] text-muted-foreground">
-                  Visualize as conexões invisíveis entre a Patrística e o
-                  Magistério contemporâneo através da nossa rede semântica
-                  inteligente.
+                  O que está conectado, por que está conectado e para onde pode continuar.
                 </p>
               </div>
               <div className="relative z-10 flex justify-end">
@@ -274,10 +272,10 @@ const AtriumHome: React.FC = () => {
               <div className="relative z-10">
                 <div className="mb-6 h-px w-full bg-card/10" />
                 <Link
-                  to="/rezar"
+                  to="/liturgia"
                   className="flex items-center justify-between font-reader text-[14px] font-medium uppercase tracking-[0.05em] transition-colors hover:text-gold-text-fixed"
                 >
-                  <span>Ver leituras</span>
+                  <span>Ver Evangelho</span>
                   <ArrowForward className="h-5 w-5" />
                 </Link>
               </div>
@@ -355,7 +353,7 @@ const AtriumHome: React.FC = () => {
 
             {/* Nova meditação — sempre presente */}
             <Link
-              to="/rezar"
+              to="/oracao"
               className="group flex cursor-pointer flex-col items-center justify-center border border-dashed border-gold-text/35 p-6 text-center transition-colors hover:bg-accent"
             >
               <AddCircle className="mb-2 h-8 w-8 text-muted-foreground/40 transition-colors group-hover:text-gold-text" />
