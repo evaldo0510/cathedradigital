@@ -612,7 +612,7 @@ const Catechism: React.FC = memo(() => {
 
     return (
       <CatechismPendingProvider>
-        <ContemplativeLayout>
+        <div className="w-full">
           <ReaderShell
             ariaLabel={`Catecismo — ${selectedSection.title}`}
             contentMaxWidth="max-w-4xl"
@@ -623,6 +623,7 @@ const Catechism: React.FC = memo(() => {
                 subtitle={`${selectedPart.title} · §${startPara} — §${endPara}`}
                 size="md"
                 parchment
+                align="left"
               />
             }
             headerContext={
@@ -715,7 +716,7 @@ const Catechism: React.FC = memo(() => {
             </div>
           </ReaderShell>
           <CatechismDiagnosticPanel />
-        </ContemplativeLayout>
+        </div>
       </CatechismPendingProvider>
     );
   }
