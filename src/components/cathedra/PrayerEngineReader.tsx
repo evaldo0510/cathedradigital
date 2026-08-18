@@ -150,6 +150,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
   contextKey,
   initialBlockId,
   contentStyle,
+  sacredImage,
 }) => {
   const session = usePrayerEngineSession(prayer.id);
   const { rhythm } = useContemplativeRhythm();
