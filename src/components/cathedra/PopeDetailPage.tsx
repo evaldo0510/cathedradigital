@@ -53,22 +53,24 @@ const PopeDetailPage: React.FC = () => {
         
         <ReaderShell
           ariaLabel={pope.name}
-          nexus={<NexusPanel output={{ selfId: pope.id, suggestions: [] } as any} />}
-          continuation={
-            <ReaderContinuation
-              currentTitle={pope.name}
-              currentSlug={`/papas/${pope.id}`}
-              nextTitle="Próximo Papa"
-              nextSlug="/papas"
-            />
-          }
-        >
-          <div className="p-spacing-lg md:p-spacing-2xl space-y-spacing-2xl">
+          hero={
             <EditorialHero 
               title={pope.name}
               subtitle={pope.title}
               align="left"
             />
+          }
+          nexus={<NexusPanel output={{ selfId: pope.id, suggestions: [] } as any} />}
+          continuation={
+            <ReaderContinuation
+              context={{
+                kind: 'magisterium',
+                id: pope.id,
+              }}
+            />
+          }
+        >
+          <div className="space-y-spacing-2xl">
             <article className="prose prose-stone max-w-none">
               <p className="font-reader text-lg leading-relaxed text-foreground/90">
                 {pope.bio}
