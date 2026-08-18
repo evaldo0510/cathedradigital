@@ -6,6 +6,8 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
+TEXTO DO USUÁRIO: Teste na Home e no leitor da Bíblia as telas verticais mobile e a navegação inferior no celular.Audite Home, Biblioteca e Mobile no painel de diagnósticos e corrija os PASS/FAIL que não estiverem certos.
+
 TEXTO DO USUÁRIO: 11. MOBILE
 ==================================================
 
