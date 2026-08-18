@@ -54,6 +54,25 @@ export function MobileTopBar({
         paddingTop: "var(--stitch-mobile-safe-top)",
       }}
     >
+      {showBack && (
+        <button
+          type="button"
+          onClick={handleBack}
+          aria-label="Voltar"
+          className={cn(
+            "inline-flex items-center justify-center rounded-full mr-1",
+            "text-stitch-on-surface hover:bg-stitch-surface-container",
+            "transition-colors focus-visible:outline-none focus-visible:ring-2",
+            "focus-visible:ring-stitch-secondary",
+          )}
+          style={{
+            width: "var(--stitch-mobile-touch-min)",
+            height: "var(--stitch-mobile-touch-min)",
+          }}
+        >
+          <ArrowLeft className="h-5 w-5" />
+        </button>
+      )}
       <Link to="/" className="shrink-0">
         <img src="/monograma-cathedra.svg" alt="Cathedra" className="h-8 w-8" />
       </Link>
