@@ -300,6 +300,7 @@ const AcervoHomePage: React.FC = () => {
             { label: 'Comunidade', to: '/community', hint: 'Partilhar o conhecimento' },
           ]}
         />
+      </div>
       </SpaceLayout>
     </div>
   );
