@@ -15,7 +15,7 @@ import {
   BookOpen as MenuBook,
   BookMarked as AutoStories,
   PlusCircle as AddCircle,
-  Sparkles as AutoAwesome,
+  Sparkles,
   Search as SearchIcon,
   Compass,
   Heart,
@@ -37,7 +37,7 @@ import type { ResumeItem } from '@/modules/atrium/types';
 import { useAuth } from '@/hooks/useAuth';
 import AtriumReception from '@/components/cathedra/AtriumReception';
 import { SpaceDoors, type SpaceDoor } from '@/components/cathedra/space/SpaceLayout';
-import { Heart, GraduationCap, Compass, Search as SearchIcon, Route as RouteIcon } from 'lucide-react';
+
 
 // ─── Copy oficial ────────────────────────────────────────────────────────────
 const HERO_KICKER = 'Sanctuarium Digital';
@@ -281,7 +281,7 @@ const AtriumHome: React.FC = () => {
                   <ArrowForward className="h-5 w-5" />
                 </Link>
               </div>
-              <AutoAwesome className="pointer-events-none absolute -bottom-16 -right-16 h-56 w-56 rotate-12 opacity-10" />
+              <Sparkles className="pointer-events-none absolute -bottom-16 -right-16 h-56 w-56 rotate-12 opacity-10" />
             </article>
           </div>
         </section>
