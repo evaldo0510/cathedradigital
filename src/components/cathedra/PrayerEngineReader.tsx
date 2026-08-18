@@ -1130,7 +1130,7 @@ export const PrayerEngineReader: React.FC<Props> = ({
           <div className="absolute inset-0 bg-gradient-to-l from-background via-transparent to-transparent" />
           <div className="absolute inset-0 flex flex-col items-center justify-center p-spacing-xl text-center space-y-spacing-lg">
              <div className="w-spacing-4xl h-spacing-4xl mx-auto rounded-full bg-secondary/10 flex items-center justify-center border border-secondary/20 shadow-premium">
-               <Icons.Church className="w-spacing-xl h-spacing-xl text-secondary" />
+               <Icons.Prayer className="w-spacing-xl h-spacing-xl text-secondary" />
              </div>
              <div className="space-y-spacing-xs">
                <h2 className="font-display text-4xl text-primary/40 tracking-widest uppercase italic">{prayer.title}</h2>
