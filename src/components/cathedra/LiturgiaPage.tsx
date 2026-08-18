@@ -16,7 +16,13 @@ import { toIsoDateKey } from '@/core/liturgy/LiturgyProvider';
 import { LiturgiaSkeleton } from './LiturgiaSkeleton';
 import SacredImage from './SacredImage';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
-import ContemplativeLayout from './ContemplativeLayout';
+import {
+  ReaderShell,
+  EditorialHero,
+  LiturgicalContext,
+  NexusPanel,
+  ReaderContinuation,
+} from '@/components/reader';
 import {
   LiturgyDateNav,
   LiturgyDayHeader,
@@ -33,7 +39,6 @@ import {
   LiturgyMeditationFallbackNotice,
 } from './primitives/liturgy';
 import { useLiturgyMeditation } from '@/hooks/useLiturgyMeditation';
-import ReaderContinuation from '@/components/shared/ReaderContinuation';
 import { resolveLiturgyAutoNexus } from '@/core/knowledge/adapters/liturgyAutoNexus';
 
 const MissalPage = lazy(() => import('./MissalPage'));
@@ -90,8 +95,6 @@ const LiturgiaPage: React.FC = () => {
   const saint = church.todaySaint;
   const { liturgy: readings, isLoading, isOfflineData } = useDailyLiturgy(selectedDate);
 
-
-
   const { meditation, isLoading: isMeditationLoading, isFetching: isMeditationFetching, retry: retryMeditation } = useLiturgyMeditation(
     selectedIso,
     readings ?? null,
@@ -135,13 +138,23 @@ const LiturgiaPage: React.FC = () => {
     year: 'numeric',
   });
 
+  const liturgyHero = readings ? (
+    <EditorialHero
+      kicker="Liturgia"
+      title={readings.liturgia || readings.dia || 'Liturgia do Dia'}
+      subtitle={formattedDate}
+      align="center"
+      size="md"
+    />
+  ) : null;
+
   return (
-    <ContemplativeLayout
-      title="Liturgia"
-      subtitle="Lex Orandi, Lex Credendi"
-      icon={Icons.Liturgy}
-      headerActions={
-        <div className="bg-muted/40 p-spacing-2xs rounded-[2.5rem] border border-border/40 flex gap-spacing-2xs max-w-full shadow-premium-md" role="tablist" aria-label="Navegação da Liturgia">
+    <div className="w-full">
+      <SEOHead title="Liturgia do Dia" description="Leituras do dia." path="/liturgia" keywords="liturgia" />
+      
+      {/* Header Fixo com Abas */}
+      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-md border-b border-border/40 py-spacing-sm px-spacing-md flex justify-center">
+        <div className="bg-muted/40 p-spacing-2xs rounded-[2.5rem] border border-border/40 flex gap-spacing-2xs w-full max-w-lg shadow-premium-md" role="tablist" aria-label="Navegação da Liturgia">
           {[
             { id: 'liturgia', label: 'Liturgia', icon: <Icons.Liturgy className="w-spacing-md h-spacing-md" /> },
             { id: 'missal', label: 'Missal', icon: <Icons.Cross className="w-spacing-md h-spacing-md" /> },
@@ -150,200 +163,204 @@ const LiturgiaPage: React.FC = () => {
             <Button
               key={tab.id}
               variant="ghost"
-              {...getTabProps(`tab-${tab.id}`, `panel-${tab.id}`, activeTab === tab.id, `flex-1 sm:flex-none flex items-center justify-center gap-spacing-2xs sm:gap-spacing-xs px-spacing-xs sm:px-spacing-xl py-spacing-sm rounded-premium-full text-[10px] sm:text-premium-sm font-black uppercase tracking-wider sm:tracking-widest transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none min-w-0 ${
-                activeTab === tab.id ? 'bg-background shadow-premium-hover text-primary sm:scale-105 hover:bg-background' : 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted/60'
+              {...getTabProps(`tab-${tab.id}`, `panel-${tab.id}`, activeTab === tab.id, `flex-1 flex items-center justify-center gap-spacing-2xs px-spacing-xs py-spacing-sm rounded-premium-full text-[10px] sm:text-premium-sm font-black uppercase tracking-wider transition-all focus-visible:ring-2 focus-visible:ring-primary outline-none min-w-0 ${
+                activeTab === tab.id ? 'bg-background shadow-premium-hover text-primary hover:bg-background' : 'bg-transparent text-muted-foreground hover:text-foreground hover:bg-muted/60'
               }`)}
               onClick={() => setSearchParams({ tab: tab.id })}
               onKeyDown={(e) => handleTabKeyDown(e, idx, 3, (newIdx) => setSearchParams({ tab: tabList[newIdx] }), 'tab-')}
             >
-              {tab.icon} <span>{tab.label}</span>
+              {tab.icon} <span className="hidden sm:inline">{tab.label}</span>
             </Button>
           ))}
         </div>
-      }
-    >
-      <SEOHead title="Liturgia do Dia" description="Leituras do dia." path="/liturgia" keywords="liturgia" />
+      </div>
+
       <div className="w-full">
-        <div className="desktop-main">
         <Suspense fallback={<div className="flex justify-center py-spacing-3xl"><Icons.Loader2 className="w-spacing-xl h-spacing-xl text-secondary animate-spin" /></div>}>
           {activeTab === 'liturgia' && (
-            <div {...getTabPanelProps('panel-liturgia', 'tab-liturgia', activeTab === 'liturgia', "w-full space-y-spacing-xl animate-in fade-in duration-500 outline-none")}>
-              <div className="space-y-spacing-md">
-                <LiturgyDateNav
-                  date={selectedDate}
-                  onChange={setSelectedDate}
-                  isToday={isToday}
+            <ReaderShell
+              hero={liturgyHero}
+              headerContext={readings ? (
+                <LiturgicalContext
+                  date={formattedDate}
+                  color={readings.colorToken}
+                  season={readings.season ?? undefined}
                 />
-                {readings && (
-                  <LiturgyDayHeader
-                    formattedDate={formattedDate}
-                    isToday={isToday}
-                    liturgia={readings.liturgia}
-                    dia={readings.dia}
-                    season={readings.season ?? null}
-                    colorToken={readings.colorToken}
-                  />
-                )}
-                {isOfflineData && (
-                  <div className="flex items-center justify-center gap-spacing-xs text-premium-xs font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-premium px-spacing-md py-spacing-xs mx-auto w-fit">
-                    <Icons.WifiOff className="w-spacing-sm h-spacing-sm" /> <span>Modo Offline</span>
-                  </div>
-                )}
-              </div>
-
-              {profile?.diocese && (
-                <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-secondary/5 border border-secondary/20 rounded-premium p-spacing-md flex items-center justify-between group">
-                  <div className="flex items-center gap-spacing-sm">
-                    <div className="p-spacing-xs rounded-premium bg-secondary/10 text-secondary"><Icons.Church className="w-spacing-md h-spacing-md" /></div>
-                    <div><p className="text-premium-xs font-black uppercase tracking-widest text-secondary/60">Sua Diocese</p><h3 className="text-premium-sm font-bold text-primary">{profile.diocese}</h3></div>
-                  </div>
-                  <div className="text-right"><p className="text-premium-xs font-medium text-muted-foreground uppercase tracking-widest">Estado</p><p className="text-premium-xs font-bold text-primary">{profile.estado}</p></div>
-                </motion.div>
-              )}
-
-              {isLoading && <LiturgiaSkeleton />}
-              {readings && (
-                <div className="space-y-spacing-xl">
-                  {readings.primeiraLeitura && (
-                    <LiturgyReadingCard
-                      kind="first"
-                      reference={readings.primeiraLeitura.referencia}
-                      text={readings.primeiraLeitura.texto}
-                      onOpenBible={() => navigate(parseRefToRoute(readings.primeiraLeitura!.referencia))}
-                      onOpenLectio={() => navigateToLectio(readings.primeiraLeitura!.referencia)}
-                      delay={0.1}
-                    />
-                  )}
-                  {readings.salmo && (
-                    <LiturgyPsalmCard
-                      reference={readings.salmo.referencia}
-                      refrain={readings.salmo.refrao}
-                      text={readings.salmo.texto}
-                      onOpenBible={() => navigate(AppRoute.BIBLE)}
-                      onOpenLectio={() => navigateToLectio(readings.salmo!.referencia)}
-                      delay={0.2}
-                    />
-                  )}
-                  {readings.segundaLeitura && (
-                    <LiturgyReadingCard
-                      kind="second"
-                      reference={readings.segundaLeitura.referencia}
-                      text={readings.segundaLeitura.texto}
-                      onOpenBible={() => navigate(parseRefToRoute(readings.segundaLeitura!.referencia))}
-                      onOpenLectio={() => navigateToLectio(readings.segundaLeitura!.referencia)}
-                      delay={0.3}
-                    />
-                  )}
-                  {readings.evangelho && (
-                    <LiturgyReadingCard
-                      kind="gospel"
-                      reference={readings.evangelho.referencia}
-                      text={readings.evangelho.texto}
-                      onOpenBible={() => navigate(parseRefToRoute(readings.evangelho!.referencia))}
-                      onOpenLectio={() => navigateToLectio(readings.evangelho!.referencia)}
-                      delay={0.4}
-                    />
-                  )}
-                </div>
-              )}
-
-              {/* ── Centro de Meditação Litúrgica ─────────────── */}
-              {isMeditationLoading && !meditation && <LiturgyMeditationSkeleton />}
-              {meditation && (
-                <div className="space-y-spacing-xl">
-                  {meditation.fallback && (
-                    <LiturgyMeditationFallbackNotice
-                      message={meditation.fallback_message}
-                      code={meditation.fallback_code}
-                      source={meditation.fallback_source}
-                      retryAt={meditation.fallback_retry_at}
-                      onRetry={retryMeditation}
-                      isRetrying={isMeditationFetching}
-                    />
-                  )}
-                  {meditation.theme && <LiturgyThemeCard theme={meditation.theme} />}
-                  {meditation.reading_key && (
-                    <LiturgyReadingKeyCard text={meditation.reading_key} />
-                  )}
-                  <LiturgyTraditionCard
-                    fathers={meditation.fathers ?? []}
-                    catechism={meditation.catechism ?? []}
-                    magisterium={meditation.magisterium ?? []}
-                  />
-                  {meditation.logos && <LiturgyLogosCard logos={meditation.logos} />}
-                  {meditation.final_prayer && (
-                    <LiturgyFinalPrayerCard text={meditation.final_prayer} />
-                  )}
-                  {meditation.church_history && (
-                    <LiturgyChurchHistoryCard history={meditation.church_history} />
-                  )}
-                  {meditation.action_of_day && (
-                    <LiturgyActionCard text={meditation.action_of_day} />
-                  )}
-                </div>
-              )}
-
-
-              {saint && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="bg-muted/30 border border-border rounded-[2rem] p-spacing-xl flex flex-col items-center text-center space-y-spacing-md">
-                  <div className="w-spacing-3xl h-spacing-3xl rounded-premium-full overflow-hidden border-2 border-secondary p-spacing-2xs shadow-premium shadow-secondary/10">
-                    <SacredImage src={saint.image} alt={saint.name} category={(saint as any).category} className="w-full h-full object-cover rounded-premium-full" />
-                  </div>
-                  <div className="space-y-spacing-2xs">
-                    <p className="text-premium-xs font-black uppercase tracking-[0.3em] text-secondary">Santo do Dia</p>
-                    <h3 className="text-premium-xl font-display font-black text-primary">{saint.name}</h3>
-                    {saint.title && <p className="text-premium-sm font-serif italic text-muted-foreground">{saint.title}</p>}
-                  </div>
-                  <Button variant="ghost" size="sm" className="text-muted-foreground hover:bg-primary/5 h-spacing-xl" onClick={() => navigate(saint.slug ? `${AppRoute.SAINTS}/${saint.slug}` : AppRoute.SAINTS)}>
-                    Conhecer História <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-xs" />
-                  </Button>
-                </motion.div>
-              )}
-
-
-              {prayerOfDay && (
-                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="premium-card p-spacing-xl space-y-spacing-md relative overflow-hidden group">
-                  <div className="absolute top-0 right-0 p-spacing-xl opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none"><Icons.Church className="w-spacing-3xl h-spacing-3xl" /></div>
-                  <div className="flex items-center gap-spacing-sm relative z-10">
-                    <div className="p-spacing-xs rounded-premium bg-secondary/10 text-secondary"><Icons.Church className="w-spacing-md h-spacing-md" /></div>
-                    <div>
-                      <p className="text-premium-xs font-black uppercase tracking-[0.3em] text-secondary/70">Oração do Dia</p>
-                      {prayerOfDay.kicker && <p className="text-premium-xs font-medium text-muted-foreground mt-spacing-3xs">{prayerOfDay.kicker}</p>}
-                    </div>
-                  </div>
-                  <div className="relative z-10">
-                    <h3 className="text-premium-xl md:text-premium-2xl font-display font-black text-primary">{prayerOfDay.title}</h3>
-                    {prayerOfDay.subtitle && <p className="text-premium-sm font-serif italic text-muted-foreground mt-spacing-2xs">{prayerOfDay.subtitle}</p>}
-                  </div>
-                  <div className="flex items-center justify-between pt-spacing-md border-t border-border/40 relative z-10">
-                    {prayerOfDay.estimated_seconds ? (
-                      <span className="text-premium-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-spacing-2xs"><Icons.Clock className="w-spacing-sm h-spacing-sm" /> {Math.max(1, Math.round(prayerOfDay.estimated_seconds / 60))} min</span>
-                    ) : <span />}
-                    <Button variant="secondary" size="sm" className="rounded-premium-full h-spacing-xl px-spacing-xl bg-secondary/10 border-none hover:bg-secondary/20 text-primary shadow-premium-md" onClick={() => navigate(`/oracao/${prayerOfDay.slug}?from=liturgia`)}>
-                      Rezar agora <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-xs" />
-                    </Button>
-                  </div>
-                </motion.div>
-              )}
-              {nexus && readings && (
+              ) : undefined}
+              nexus={nexus ? <NexusPanel output={nexus} kicker={`Conexões de ${formattedDate}`} /> : undefined}
+              continuation={readings && readings.evangelho ? (
                 <div className="mt-spacing-xl">
                   <ReaderContinuation
                     context={{
                       kind: 'bible',
-                      id: readings.evangelho?.referencia,
-                      graphNodeId: nexus.selfId ?? undefined,
+                      id: readings.evangelho.referencia,
+                      graphNodeId: nexus?.selfId ?? undefined,
                     }}
-                    suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
+                    suggestions={nexus?.suggestions.length && nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
                   />
                 </div>
-              )}
-            </div>
+              ) : undefined}
+              ariaLabel="Liturgia do Dia"
+              contentMaxWidth="max-w-4xl"
+            >
+              <div {...getTabPanelProps('panel-liturgia', 'tab-liturgia', activeTab === 'liturgia', "w-full space-y-spacing-xl animate-in fade-in duration-500 outline-none")}>
+                <div className="space-y-spacing-md">
+                  <LiturgyDateNav
+                    date={selectedDate}
+                    onChange={setSelectedDate}
+                    isToday={isToday}
+                  />
+                  {isOfflineData && (
+                    <div className="flex items-center justify-center gap-spacing-xs text-premium-xs font-black uppercase tracking-widest text-muted-foreground bg-muted/50 rounded-premium px-spacing-md py-spacing-xs mx-auto w-fit">
+                      <Icons.WifiOff className="w-spacing-sm h-spacing-sm" /> <span>Modo Offline</span>
+                    </div>
+                  )}
+                </div>
+
+                {profile?.diocese && (
+                  <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="bg-secondary/5 border border-secondary/20 rounded-premium p-spacing-md flex items-center justify-between group">
+                    <div className="flex items-center gap-spacing-sm">
+                      <div className="p-spacing-xs rounded-premium bg-secondary/10 text-secondary"><Icons.Church className="w-spacing-md h-spacing-md" /></div>
+                      <div><p className="text-premium-xs font-black uppercase tracking-widest text-secondary/60">Sua Diocese</p><h3 className="text-premium-sm font-bold text-primary">{profile.diocese}</h3></div>
+                    </div>
+                    <div className="text-right"><p className="text-premium-xs font-medium text-muted-foreground uppercase tracking-widest">Estado</p><p className="text-premium-xs font-bold text-primary">{profile.estado}</p></div>
+                  </motion.div>
+                )}
+
+                {isLoading && <LiturgiaSkeleton />}
+                {readings && (
+                  <div className="space-y-spacing-xl">
+                    {readings.primeiraLeitura && (
+                      <LiturgyReadingCard
+                        kind="first"
+                        reference={readings.primeiraLeitura.referencia}
+                        text={readings.primeiraLeitura.texto}
+                        onOpenBible={() => navigate(parseRefToRoute(readings.primeiraLeitura!.referencia))}
+                        onOpenLectio={() => navigateToLectio(readings.primeiraLeitura!.referencia)}
+                        delay={0.1}
+                      />
+                    )}
+                    {readings.salmo && (
+                      <LiturgyPsalmCard
+                        reference={readings.salmo.referencia}
+                        refrain={readings.salmo.refrao}
+                        text={readings.salmo.texto}
+                        onOpenBible={() => navigate(AppRoute.BIBLE)}
+                        onOpenLectio={() => navigateToLectio(readings.salmo!.referencia)}
+                        delay={0.2}
+                      />
+                    )}
+                    {readings.segundaLeitura && (
+                      <LiturgyReadingCard
+                        kind="second"
+                        reference={readings.segundaLeitura.referencia}
+                        text={readings.segundaLeitura.texto}
+                        onOpenBible={() => navigate(parseRefToRoute(readings.segundaLeitura!.referencia))}
+                        onOpenLectio={() => navigateToLectio(readings.segundaLeitura!.referencia)}
+                        delay={0.3}
+                      />
+                    )}
+                    {readings.evangelho && (
+                      <LiturgyReadingCard
+                        kind="gospel"
+                        reference={readings.evangelho.referencia}
+                        text={readings.evangelho.texto}
+                        onOpenBible={() => navigate(parseRefToRoute(readings.evangelho!.referencia))}
+                        onOpenLectio={() => navigateToLectio(readings.evangelho!.referencia)}
+                        delay={0.4}
+                      />
+                    )}
+                  </div>
+                )}
+
+                {/* ── Centro de Meditação Litúrgica ─────────────── */}
+                {isMeditationLoading && !meditation && <LiturgyMeditationSkeleton />}
+                {meditation && (
+                  <div className="space-y-spacing-xl">
+                    {meditation.fallback && (
+                      <LiturgyMeditationFallbackNotice
+                        message={meditation.fallback_message}
+                        code={meditation.fallback_code}
+                        source={meditation.fallback_source}
+                        retryAt={meditation.fallback_retry_at}
+                        onRetry={retryMeditation}
+                        isRetrying={isMeditationFetching}
+                      />
+                    )}
+                    {meditation.theme && <LiturgyThemeCard theme={meditation.theme} />}
+                    {meditation.reading_key && (
+                      <LiturgyReadingKeyCard text={meditation.reading_key} />
+                    )}
+                    <LiturgyTraditionCard
+                      fathers={meditation.fathers ?? []}
+                      catechism={meditation.catechism ?? []}
+                      magisterium={meditation.magisterium ?? []}
+                    />
+                    {meditation.logos && <LiturgyLogosCard logos={meditation.logos} />}
+                    {meditation.final_prayer && (
+                      <LiturgyFinalPrayerCard text={meditation.final_prayer} />
+                    )}
+                    {meditation.church_history && (
+                      <LiturgyChurchHistoryCard history={meditation.church_history} />
+                    )}
+                    {meditation.action_of_day && (
+                      <LiturgyActionCard text={meditation.action_of_day} />
+                    )}
+                  </div>
+                )}
+
+                {saint && (
+                  <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="bg-muted/30 border border-border rounded-[2rem] p-spacing-xl flex flex-col items-center text-center space-y-spacing-md">
+                    <div className="w-spacing-3xl h-spacing-3xl rounded-premium-full overflow-hidden border-2 border-secondary p-spacing-2xs shadow-premium shadow-secondary/10">
+                      <SacredImage src={saint.image} alt={saint.name} category={(saint as any).category} className="w-full h-full object-cover rounded-premium-full" />
+                    </div>
+                    <div className="space-y-spacing-2xs">
+                      <p className="text-premium-xs font-black uppercase tracking-[0.3em] text-secondary">Santo do Dia</p>
+                      <h3 className="text-premium-xl font-display font-black text-primary">{saint.name}</h3>
+                      {saint.title && <p className="text-premium-sm font-serif italic text-muted-foreground">{saint.title}</p>}
+                    </div>
+                    <Button variant="ghost" size="sm" className="text-muted-foreground hover:bg-primary/5 h-spacing-xl" onClick={() => navigate(saint.slug ? `${AppRoute.SAINTS}/${saint.slug}` : AppRoute.SAINTS)}>
+                      Conhecer História <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-xs" />
+                    </Button>
+                  </motion.div>
+                )}
+
+                {prayerOfDay && (
+                  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.7 }} className="premium-card p-spacing-xl space-y-spacing-md relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-spacing-xl opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none"><Icons.Church className="w-spacing-3xl h-spacing-3xl" /></div>
+                    <div className="flex items-center gap-spacing-sm relative z-10">
+                      <div className="p-spacing-xs rounded-premium bg-secondary/10 text-secondary"><Icons.Church className="w-spacing-md h-spacing-md" /></div>
+                      <div>
+                        <p className="text-premium-xs font-black uppercase tracking-[0.3em] text-secondary/70">Oração do Dia</p>
+                        {prayerOfDay.kicker && <p className="text-premium-xs font-medium text-muted-foreground mt-spacing-3xs">{prayerOfDay.kicker}</p>}
+                      </div>
+                    </div>
+                    <div className="relative z-10">
+                      <h3 className="text-premium-xl md:text-premium-2xl font-display font-black text-primary">{prayerOfDay.title}</h3>
+                      {prayerOfDay.subtitle && <p className="text-premium-sm font-serif italic text-muted-foreground mt-spacing-2xs">{prayerOfDay.subtitle}</p>}
+                    </div>
+                    <div className="flex items-center justify-between pt-spacing-md border-t border-border/40 relative z-10">
+                      {prayerOfDay.estimated_seconds ? (
+                        <span className="text-premium-xs font-bold uppercase tracking-widest text-muted-foreground flex items-center gap-spacing-2xs"><Icons.Clock className="w-spacing-sm h-spacing-sm" /> {Math.max(1, Math.round(prayerOfDay.estimated_seconds / 60))} min</span>
+                      ) : <span />}
+                      <Button variant="secondary" size="sm" className="rounded-premium-full h-spacing-xl px-spacing-xl bg-secondary/10 border-none hover:bg-secondary/20 text-primary shadow-premium-md" onClick={() => navigate(`/oracao/${prayerOfDay.slug}?from=liturgia`)}>
+                        Rezar agora <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-xs" />
+                      </Button>
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+            </ReaderShell>
           )}
-          {activeTab === 'missal' && <div id="panel-missal" role="tabpanel" aria-labelledby="tab-missal" className="animate-in fade-in slide-in-from-bottom-spacing-md duration-500 outline-none" tabIndex={0}><MissalPage /></div>}
-          {activeTab === 'calendario' && <div id="panel-calendario" role="tabpanel" aria-labelledby="tab-calendario" className="animate-in fade-in slide-in-from-bottom-spacing-md duration-500 outline-none" tabIndex={0}><LiturgicalCalendarPage /></div>}
+          {activeTab === 'missal' && <div id="panel-missal" role="tabpanel" aria-labelledby="tab-missal" className="animate-in fade-in slide-in-from-bottom-spacing-md duration-500 outline-none pt-spacing-xl max-w-5xl mx-auto" tabIndex={0}><MissalPage /></div>}
+          {activeTab === 'calendario' && <div id="panel-calendario" role="tabpanel" aria-labelledby="tab-calendario" className="animate-in fade-in slide-in-from-bottom-spacing-md duration-500 outline-none pt-spacing-xl max-w-5xl mx-auto" tabIndex={0}><LiturgicalCalendarPage /></div>}
         </Suspense>
-        </div>
       </div>
+    </div>
+  );
+};
+
+export default LiturgiaPage;
         
     </ContemplativeLayout>
   );
