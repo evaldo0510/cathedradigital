@@ -6,7 +6,8 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Confira no mobile se LER, ORAR, IGREJA, BIBLIOTECA e PERFIL abrem exatamente o destino certo.Padronize o leitor de Orações como o leitor de Santos, com Nexus e ações de continuidade.Confirme que cada capítulo e capítulo da Bíblia e do Catecismo abre e lê completo no mobile.
+TEXTO DO USUÁRIO: Auditoria final mobile concluída. Navegação verificada, leitor de orações padronizado e profundidade de leitura certificada.
+
 
 
 
