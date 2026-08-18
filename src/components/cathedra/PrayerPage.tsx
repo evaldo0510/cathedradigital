@@ -302,11 +302,17 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
           )}
 
           {phase === 'closing' && (
-            <div className="space-y-spacing-xl animate-in fade-in duration-500">
-              <div className="text-center space-y-spacing-sm">
-                <Icons.Sparkles className="w-spacing-2xl h-spacing-2xl text-secondary mx-auto" />
-                <h3 className="text-premium-3xl font-serif font-bold text-secondary">Salve Rainha</h3>
-                <p className="text-premium-lg text-secondary/70 font-serif leading-relaxed italic">{PRAYERS.salveRainha}</p>
+            <div className="space-y-spacing-xl animate-in fade-in zoom-in-95 duration-700">
+              <h3 className="text-premium-2xl font-serif font-bold text-secondary text-center">Oração Final</h3>
+              
+              <div className="bg-white/[0.04] rounded-premium p-spacing-lg cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === 'salve' ? null : 'salve')}>
+                <div className="flex items-center justify-between">
+                  <p className="font-bold text-premium-sm text-secondary/90">Salve Rainha</p>
+                  <Icons.ChevronRight className={`w-spacing-md h-spacing-md text-secondary/30 transition-transform ${expandedPrayer === 'salve' ? 'rotate-90' : ''}`} />
+                </div>
+                {expandedPrayer === 'salve' && (
+                  <p className="text-premium-lg text-secondary/60 mt-spacing-md font-serif leading-relaxed italic animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS.salveRainha}</p>
+                )}
               </div>
 
               {/* Nexus & Continuity - Adicionados para padronização com Leitor de Santos */}
@@ -329,11 +335,23 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                 />
               </div>
 
-              <Button onClick={onClose} className="w-full py-spacing-md bg-white/10 text-white rounded-premium-full font-black uppercase text-premium-xs tracking-widest hover:bg-white/20 transition-all">
-                Concluir
+              <div className="text-center space-y-spacing-md py-spacing-xl">
+                <div className="relative inline-block font-serif">
+                  <Icons.Heart className="w-spacing-3xl h-spacing-3xl text-secondary/20 mx-auto" />
+                  <Icons.Sparkles className="absolute -top-spacing-2xs -right-spacing-2xs w-spacing-lg h-spacing-lg text-secondary/40 animate-pulse" />
+                </div>
+                <div className="space-y-spacing-xs">
+                  <p className="text-secondary font-serif font-bold text-premium-2xl">Rosário Completo!</p>
+                  <p className="text-premium-base text-secondary/40 font-serif italic max-w-[280px] mx-auto leading-relaxed">Que Nossa Senhora interceda por vós e por todas as vossas intenções.</p>
+                </div>
+              </div>
+
+              <Button onClick={onClose} className="w-full py-spacing-md bg-secondary text-primary rounded-premium-full font-black uppercase text-premium-xs tracking-[0.2em] hover:bg-secondary transition-all shadow-premium-hover shadow-secondary/20">
+                <Icons.Cross className="w-spacing-md h-spacing-md inline mr-spacing-xs" /> Amém — Finalizar
               </Button>
             </div>
           )}
+
 
 
         </div>
