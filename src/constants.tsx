@@ -463,14 +463,15 @@ export const Icons = {
   Glossary: IconsInternal.BookMarked,
   AZ: IconsInternal.Languages,
   Themes: IconsInternal.Layers,
-  Liturgy: IconsInternal.Wine,
+  Liturgy: IconsInternal.Church, // Atualizado para paridade com BottomNav
   DailyLiturgy: IconsInternal.Sun,
   Chalice: IconsInternal.Wine,
   Lectio: IconsInternal.Flame,
   PrayingHands: IconsInternal.Hand,
+  Prayer: IconsInternal.Hand, // Alias para padronização
   Rosary: IconsInternal.Orbit,
   ViaCrucis: IconsInternal.Cross,
-  Church: IconsInternal.Home,
+  Church: IconsInternal.Church, // Atualizado de Home para Church
   LiturgicalCalendar: IconsInternal.Calendar,
   Oracao: IconsInternal.Hand,
   Journeys: IconsInternal.Route,
