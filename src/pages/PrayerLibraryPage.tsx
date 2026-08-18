@@ -91,10 +91,10 @@ const PrayerLibraryPage: React.FC = () => {
         {/* 1+2. Título e descrição — padrão de espaço */}
         <SpaceHeader
           align="center"
-          kicker="Cathedra · Orações"
-          title="Livro de Orações"
-          description="Um único lugar para as orações vivas da Igreja — organizadas por categoria, com meditação, referências e continuidade para a Escritura e o Catecismo."
-          className="mb-10"
+          kicker="Um espaço para parar, silenciar e rezar."
+          title="Sacrário"
+          description=""
+          className="mb-14"
         />
 
 
@@ -123,22 +123,25 @@ const PrayerLibraryPage: React.FC = () => {
         <div
           role="tablist"
           aria-label="Categorias de orações"
-          className="mb-10 flex flex-wrap gap-2"
+          className="mb-14 flex flex-wrap justify-center gap-3"
         >
           <CategoryChip
             active={selectedCat === 'all'}
             label="Todas"
             onClick={() => setSelectedCat('all')}
           />
-          {PRAYER_CATEGORY_ORDER.map((cat) => {
-            const n = grouped.get(cat)?.length ?? 0;
-            if (n === 0) return null;
+          {['devocional', 'rosario', 'liturgia'].map((cat) => {
+            const labelMap: Record<string, string> = {
+              'devocional': 'Orações',
+              'rosario': 'Rosário',
+              'liturgia': 'Liturgia'
+            };
             return (
               <CategoryChip
                 key={cat}
-                active={selectedCat === cat}
-                label={`${PRAYER_CATEGORY_LABEL[cat]} · ${n}`}
-                onClick={() => setSelectedCat(cat)}
+                active={selectedCat === (cat as PrayerCategory)}
+                label={labelMap[cat] || cat}
+                onClick={() => setSelectedCat(cat as PrayerCategory)}
               />
             );
           })}
