@@ -9,8 +9,11 @@ import { createPortal } from 'react-dom';
 import { Icons } from '../../constants';
 import DeepContentSection from './DeepContentSection';
 import { useDevotionalFavorites } from '@/hooks/useDevotionalFavorites';
+import { NexusPanel } from '@/components/reader';
+import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 
 import PrayerAudioPlayer from './PrayerAudioPlayer';
+
 
 type MysteryKey = 'gozosos' | 'dolorosos' | 'gloriosos' | 'luminosos';
 
