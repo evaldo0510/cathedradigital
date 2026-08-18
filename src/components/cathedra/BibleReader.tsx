@@ -13,6 +13,7 @@ import {
   CatechesisContext,
 } from '@/components/reader';
 import { resolveBibleAutoNexus } from '@/core/knowledge/adapters/bibleAutoNexus';
+import SacredImage from './SacredImage';
 
 interface Verse {
   number: number;
