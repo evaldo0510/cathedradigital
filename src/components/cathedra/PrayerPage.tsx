@@ -295,8 +295,8 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                 } else {
                   setPhase('closing');
                 }
-              }} className="w-full py-spacing-md bg-secondary/20 text-secondary border border-secondary/20 rounded-premium-full font-black uppercase text-premium-xs tracking-widest hover:bg-secondary/30 transition-all shadow-premium shadow-primary/20">
-                {currentMystery < 4 ? 'Próximo Mistério' : 'Concluir Rosário'}
+              }} className="w-full py-spacing-md bg-secondary text-secondary-foreground rounded-premium-full font-black uppercase text-premium-xs tracking-widest hover:bg-secondary/90 transition-all shadow-premium">
+                {currentMystery < 4 ? 'Próximo Mistério' : 'Finalizar Rosário'}
               </Button>
             </div>
           )}
@@ -304,6 +304,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
           {phase === 'closing' && (
             <div className="space-y-spacing-xl animate-in fade-in zoom-in-95 duration-700">
               <h3 className="text-premium-2xl font-serif font-bold text-secondary text-center">Oração Final</h3>
+              
               <div className="bg-white/[0.04] rounded-premium p-spacing-lg cursor-pointer border border-white/[0.06] hover:bg-white/[0.07] transition-all" onClick={() => setExpandedPrayer(expandedPrayer === 'salve' ? null : 'salve')}>
                 <div className="flex items-center justify-between">
                   <p className="font-bold text-premium-sm text-secondary/90">Salve Rainha</p>
@@ -334,8 +335,6 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                 />
               </div>
 
-
-
               <div className="text-center space-y-spacing-md py-spacing-xl">
                 <div className="relative inline-block font-serif">
                   <Icons.Heart className="w-spacing-3xl h-spacing-3xl text-secondary/20 mx-auto" />
@@ -346,11 +345,14 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                   <p className="text-premium-base text-secondary/40 font-serif italic max-w-[280px] mx-auto leading-relaxed">Que Nossa Senhora interceda por vós e por todas as vossas intenções.</p>
                 </div>
               </div>
+
               <Button onClick={onClose} className="w-full py-spacing-md bg-secondary text-primary rounded-premium-full font-black uppercase text-premium-xs tracking-[0.2em] hover:bg-secondary transition-all shadow-premium-hover shadow-secondary/20">
                 <Icons.Cross className="w-spacing-md h-spacing-md inline mr-spacing-xs" /> Amém — Finalizar
               </Button>
             </div>
           )}
+
+
 
         </div>
       </div>

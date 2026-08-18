@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { Home, BookOpen, Sparkles, GraduationCap, Search, Heart, Users, Library, User } from "lucide-react";
+import { Icons } from "@/constants";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 
@@ -12,11 +12,11 @@ interface MobileNavItem {
 }
 
 const DEFAULT_ITEMS: MobileNavItem[] = [
-  { to: "/bible", label: "LER", icon: BookOpen, matches: /^\/(bible|catechism|magisterium)/ },
-  { to: "/oracao", label: "ORAR", icon: Heart, matches: /^\/oracao/ },
-  { to: "/community", label: "IGREJA", icon: Users, matches: /^\/(community|igreja)/ },
-  { to: "/acervo", label: "BIBLIOTECA", icon: Library, matches: /^\/(acervo|biblioteca)/ },
-  { to: "/conta", label: "PERFIL", icon: User, matches: /^\/conta/ },
+  { to: "/bible", label: "LER", icon: Icons.BookOpen, matches: /^\/(bible|catechism|magisterium)/ },
+  { to: "/oracao", label: "ORAR", icon: Icons.Hand, matches: /^\/oracao/ },
+  { to: "/community", label: "IGREJA", icon: Icons.Church, matches: /^\/(community|igreja)/ },
+  { to: "/acervo", label: "BIBLIOTECA", icon: Icons.Library, matches: /^\/(acervo|biblioteca)/ },
+  { to: "/conta", label: "PERFIL", icon: Icons.User, matches: /^\/conta/ },
 ];
 
 interface MobileBottomNavProps {
