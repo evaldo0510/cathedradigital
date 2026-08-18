@@ -159,10 +159,10 @@ const AtriumHome: React.FC = () => {
         <section className="text-center md:text-left">
           <div className="mb-8 hidden h-px w-full bg-gold-text/30 md:block" />
           <h2 className="mb-3 font-reader text-[12px] font-bold uppercase tracking-[0.32em] text-gold-text">
-            {HERO_KICKER}
+            Pergunte sobre a fé.
           </h2>
           <h1 className="mb-3 font-display text-[32px] italic leading-[40px] text-primary md:text-[56px] md:leading-[64px] md:tracking-[-0.02em]">
-            {HERO_TITLE}
+            Seu companheiro espiritual para a vida interior.
           </h1>
           <p className="mb-8 max-w-2xl font-reader text-[20px] leading-[32px] text-muted-foreground md:mx-0 mx-auto">
             {HERO_SUBTITLE}
@@ -181,7 +181,7 @@ const AtriumHome: React.FC = () => {
               type="search"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="O que buscais nesta hora?"
+              placeholder="Digite sua pergunta..."
               aria-label="Pesquisa universal"
               className="w-full bg-transparent font-display text-[18px] italic text-primary placeholder:text-muted-foreground/60 focus:outline-none md:text-[22px]"
             />
@@ -198,13 +198,13 @@ const AtriumHome: React.FC = () => {
               <span className="font-reader text-[11px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
                 Sugestões
               </span>
-              {suggestions.map((s) => (
+              {["O que a Igreja ensina sobre...?", "Encontre na Bíblia...", "Explique este parágrafo...", "Quem foi este santo?"].map((s, idx) => (
                 <button
-                  key={s.id}
-                  onClick={() => submitSearch(s.label)}
+                  key={idx}
+                  onClick={() => submitSearch(s)}
                   className="rounded-full border border-border/40 bg-accent px-3 py-1 font-reader text-[12px] text-muted-foreground transition-colors hover:border-gold-text hover:text-primary"
                 >
-                  {s.label}
+                  {s}
                 </button>
               ))}
             </div>
