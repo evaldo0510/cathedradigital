@@ -319,10 +319,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                 <NexusPanel 
                   output={{
                     selfId: `prayer:${prayer?.slug || 'rosario'}`,
-                    suggestions: [
-                      { label: 'Bíblia', eyebrow: 'Fundamento', intent: 'bible', target: { url: '/bible' } },
-                      { label: 'Catecismo', eyebrow: 'Doutrina', intent: 'catechism', target: { url: '/catechism' } }
-                    ]
+                    suggestions: []
                   }} 
                   kicker="Por que rezamos o Rosário?" 
                 />
@@ -334,6 +331,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                   }} 
                 />
               </div>
+
 
               <div className="text-center space-y-spacing-md py-spacing-xl">
                 <div className="relative inline-block font-serif">
