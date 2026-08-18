@@ -387,10 +387,16 @@ const PrayerPage: React.FC = () => {
 
   if (prayingMystery) {
     return createPortal(
-      <PrayerMode mysteryKey={prayingMystery} intention={intention} onClose={() => setPrayingMystery(null)} />,
+      <PrayerMode 
+        mysteryKey={prayingMystery} 
+        intention={intention} 
+        onClose={() => setPrayingMystery(null)} 
+        prayer={{ slug: prayingMystery, title: MYSTERY_DATA[prayingMystery].title }}
+      />,
       document.body
     );
   }
+
 
   return (
     <motion.div 
