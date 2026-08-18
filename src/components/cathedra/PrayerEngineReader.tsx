@@ -26,6 +26,7 @@ import {
   X,
   PlayCircle,
 } from 'lucide-react';
+import SacredImage from './SacredImage';
 import ContemplativeSettingsDialog from '@/components/prayer/rosary/ContemplativeSettingsDialog';
 import { useContemplativeRhythm } from '@/hooks/useContemplativeRhythm';
 import { cn } from '@/lib/utils';
