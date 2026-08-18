@@ -1,4 +1,4 @@
-import { ArrowLeft, Search } from "lucide-react";
+import { ArrowLeft, Search, Menu } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
@@ -90,17 +90,23 @@ export function MobileTopBar({
         )}
       </div>
 
-      <Link
-        to="/buscar"
-        aria-label="Busca"
-        className="inline-flex h-10 w-10 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
-      >
-        <Search className="h-5 w-5" />
-      </Link>
+      <div className="flex shrink-0 items-center gap-1">
+        <Link
+          to="/buscar"
+          aria-label="Busca"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+        >
+          <Search className="h-5 w-5" />
+        </Link>
+        <button
+          type="button"
+          aria-label="Menu"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+      </div>
 
-      {actions && (
-        <div className="flex shrink-0 items-center gap-1">{actions}</div>
-      )}
     </header>
   );
 }
