@@ -15,7 +15,6 @@ import { toIsoDateKey } from '@/core/liturgy/LiturgyProvider';
 
 import { LiturgiaSkeleton } from './LiturgiaSkeleton';
 import SacredImage from './SacredImage';
-import { resolveLiturgyHeroImage } from '@/core/liturgy/liturgyVisuals';
 import { getTabProps, getTabPanelProps, useTabNavigation } from './TabUtils';
 import {
   ReaderShell,
