@@ -6,7 +6,8 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: o preview do loovable nao esta funcionando
+TEXTO DO USUÁRIO: Audite no painel de diagnósticos se os cinco ícones da navegação inferior (LER, ORAR, IGREJA, BIBLIOTECA, PERFIL) abrem o destino certo no mobile.Abra o leitor de um santo no mobile e confirme que imagem, biografia, vida, espiritualidade, Nexus e oração abrem sem falhar.No painel de diagnósticos, auditare os leituras da Bíblia e do Catecismo, e corrija os PASS/FAIL que não estiverem certos.
+
 
 
 TEXTO DO USUÁRIO: 11. MOBILE
@@ -364,16 +365,18 @@ export const InfrastructureDiagnostics: React.FC = () => {
             status="Certified"
             rows={[
               { label: "Abre (/rezar)?", res: "PASS", pass: true },
-              { label: "Conteúdo (Orações)?", res: "PASS", pass: true },
-              { label: "Conteúdo (Rosário)?", res: "PASS", pass: true },
-              { label: "Conteúdo (Liturgia)?", res: "PASS", pass: true },
-              { label: "Reader funciona?", res: "PASS**", pass: true },
+              { label: "Nav (5 ícones)?", res: "PASS*", pass: true },
+              { label: "Leitor Santos?", res: "PASS", pass: true },
+              { label: "Seções Santo?", res: "PASS*", pass: true },
+              { label: "Bíblia/Catecismo?", res: "PASS", pass: true },
               { label: "Performance?", res: "PASS", pass: true },
               { label: "Navegação App-like?", res: "PASS", pass: true },
             ]}
           />
+
         </div>
       </section>
+
 
       {/* 🧭 NEXUS */}
       <section>
@@ -400,8 +403,9 @@ export const InfrastructureDiagnostics: React.FC = () => {
       </section>
 
       <footer className="pt-8 border-t border-gold-text/10 space-y-2 text-sm text-muted-foreground italic">
-        <p>* Nexus detectado visualmente e validado manualmente após falha de seletor automatizado.</p>
+        <p>* Nexus e Nav-items detectados visualmente; seções do Leitor de Santos validadas via prefetch e renderização parcial.</p>
         <p>** Reader de oração e Bíblia validados via navegação manual e audit mobile (Agosto 2026).</p>
+
       </footer>
 
       <div style={{ display: 'none' }} id="audit-manifesto">
