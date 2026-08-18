@@ -90,7 +90,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
   return (
     <ReaderShell
       className="pb-32"
-      contentMaxWidth="max-w-2xl"
+      contentMaxWidth="max-w-3xl"
       ariaLabel={`${t('bible_reader_kicker')} — ${book.name} ${chapter}`}
       hero={
         <EditorialHero
@@ -98,6 +98,16 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
           title={`${book.name} · ${t('bible_chapter_title')} ${chapter}`}
           subtitle={typeof heroSubtitle === 'string' ? heroSubtitle : undefined}
           meta={heroMeta}
+          align="left"
+          size="lg"
+        />
+      }
+      headerContext={
+        <StudyContext
+          moduleTitle="Bíblia Sagrada"
+          part={book.category || undefined}
+          section={book.name}
+          chapter={String(chapter)}
         />
       }
       nexus={
