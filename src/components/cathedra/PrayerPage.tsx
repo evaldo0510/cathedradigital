@@ -310,6 +310,28 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                   <p className="text-premium-lg text-secondary/60 mt-spacing-md font-serif leading-relaxed italic animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS.salveRainha}</p>
                 )}
               </div>
+
+              {/* Nexus & Continuity - Adicionados para padronização com Leitor de Santos */}
+              <div className="pt-spacing-xl border-t border-white/10 space-y-spacing-xl">
+                <NexusPanel 
+                  output={{
+                    selfId: `prayer:${prayer?.slug || 'rosario'}`,
+                    suggestions: [
+                      { label: 'Bíblia', eyebrow: 'Fundamento', intent: 'bible', target: { url: '/bible' } },
+                      { label: 'Catecismo', eyebrow: 'Doutrina', intent: 'catechism', target: { url: '/catechism' } }
+                    ]
+                  }} 
+                  kicker="Por que rezamos o Rosário?" 
+                />
+                <ReaderContinuation 
+                  context={{ 
+                    kind: 'prayer', 
+                    id: prayer?.slug || 'rosario',
+                    meta: { prayerCategory: 'rosario' }
+                  }} 
+                />
+              </div>
+
               <div className="text-center space-y-spacing-md py-spacing-xl">
                 <div className="relative inline-block font-serif">
                   <Icons.Heart className="w-spacing-3xl h-spacing-3xl text-secondary/20 mx-auto" />
@@ -325,6 +347,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
               </Button>
             </div>
           )}
+
         </div>
       </div>
     </div>
