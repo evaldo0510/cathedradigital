@@ -361,9 +361,5 @@ const LiturgiaPage: React.FC = () => {
 };
 
 export default LiturgiaPage;
-        
-    </ContemplativeLayout>
-  );
-};
 
 export default LiturgiaPage;
