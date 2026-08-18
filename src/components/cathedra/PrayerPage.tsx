@@ -134,7 +134,7 @@ function getDayName(): string {
 }
 
 // ---------- Prayer Mode ----------
-const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose: () => void }> = ({ mysteryKey, intention, onClose }) => {
+const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose: () => void; prayer?: any }> = ({ mysteryKey, intention, onClose, prayer }) => {
   const data = MYSTERY_DATA[mysteryKey];
   const [currentMystery, setCurrentMystery] = useState(0);
   const [phase, setPhase] = useState<'intro' | 'mystery' | 'decade' | 'closing'>('intro');
@@ -146,6 +146,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
   return (
     <div className="fixed inset-0 z-[200] flex flex-col overflow-y-auto"
       style={{ background: 'linear-gradient(180deg, #0B1F3A 0%, #050D19 50%, #0B1F3A 100%)' }}>
+
       {/* Header — minimal */}
       <div className="flex items-center justify-between p-spacing-md sticky top-spacing-0 z-10 bg-inherit/80 ">
         <Button onClick={onClose} className="p-spacing-xs rounded-premium-full bg-card/50 border border-white/10 hover:bg-white/10 transition-all">
