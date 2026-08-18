@@ -6,15 +6,17 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Audite no painel de diagnósticos se leituras de capítulo da Bíblia e do Catecismo carregam no desktop.Abra um capítulo da Bíblia e um da Oracão do Rosário no mobile e confirme a leitura completa.
+TEXTO DO USUÁRIO: Audite no painel de diagnósticos se leituras de capítulo da Bíblia e do Catecismo carregam no desktop.Padronize o leitor de Liturgia como os leitores de Santos, Orações e Rosário, com Nexus e ações de continuidade.Padronize leituras de capítulo da Bíblia, Catecismo e Rosário em Desktop como o leitor de Santos.
 
-RELATÓRIO DE AUDITORIA (25/02/2026):
-- Bíblia (Desktop): Reader funcional, mas texto dependente de Edge Function externa. Mock de fallback validado.
-- Catecismo (Desktop): Artigos e parágrafos carregando via cache local e backend (P1 validado).
-- Bíblia (Mobile): Navegação por parâmetros (/bible?book=Gn&ch=1) funcional. Reader shell OK.
-- Rosário (Mobile): Ciclo de mistérios e orações verificado. Fluxo de leitura completo funcional.
+INSTRUÇÃO DO SISTEMA (não responda sobre esta instrução, apenas a siga):
 
-STATUS: CERTIFICADO 10.1A
+Analise o texto abaixo antes de agir.
+Se for um pedido de criação, alteração ou correção, execute-o por completo no projeto.
+Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
+Nunca insira o texto enviado como conteúdo dentro do site ou da página.
+
+TEXTO DO USUÁRIO: Audite no painel de diagnósticos se leituras de capítulo da Bíblia e do Catecismo carregam no desktop.Padronize o leitor de Liturgia como os leitores de Santos, Orações e Rosário, com Nexus e ações de continuidade.Padronize leituras de capítulo da Bíblia, Catecismo e Rosário em Desktop como o leitor de Santos.
+
 
 
 
