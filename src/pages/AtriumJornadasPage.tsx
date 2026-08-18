@@ -26,6 +26,7 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
+import { SpaceLayout, SpaceHeader, SpaceDoors, type SpaceDoor, SpaceFooter } from '@/components/cathedra/space/SpaceLayout';
 
 type JourneyRow = {
   id: string;
@@ -117,7 +118,7 @@ const AtriumJornadasPage: React.FC = () => {
 
   return (
     <div
-      className="min-h-screen w-full bg-stitch-background text-stitch-on-background"
+      className="min-h-screen w-full bg-background text-foreground"
       style={{
         backgroundImage:
           'url("https://www.transparenttextures.com/patterns/p6.png")',
@@ -132,22 +133,13 @@ const AtriumJornadasPage: React.FC = () => {
         <meta property="og:title" content="Cathedra — Formação" />
       </Helmet>
 
-      <section className="mx-auto w-full max-w-[1120px] px-5 pb-16 pt-10 md:px-16 md:pt-14 animate-fade-in">
+      <SpaceLayout>
         {/* ─── Hero editorial ─────────────────────────────────────────── */}
-        <section className="border-b border-stitch-secondary/10 pb-10">
-          <div className="max-w-3xl">
-            <span className="mb-2 block font-stitch-body text-[12px] font-bold uppercase tracking-[0.32em] text-stitch-secondary">
-              Itinerarium Mentis
-            </span>
-            <h1 className="font-stitch-display text-[32px] italic leading-[40px] text-stitch-primary md:text-[56px] md:leading-[64px] md:tracking-[-0.02em]">
-              Formação.
-            </h1>
-            <p className="mt-4 font-stitch-body text-[20px] leading-[32px] text-stitch-on-surface-variant">
-              Trilhas guiadas para caminhar da inquietação à contemplação. Um
-              passo por vez, um dia por vez — na cadência do silêncio.
-            </p>
-          </div>
-        </section>
+        <SpaceHeader 
+          kicker="Itinerarium Mentis"
+          title="Claustro"
+          description="Trilhas guiadas para caminhar da inquietação à contemplação. Um passo por vez, um dia por vez — na cadência do silêncio."
+        />
 
         {/* ─── Continuar jornada ─────────────────────────────────────── */}
         {inProgress.length > 0 && (
@@ -340,11 +332,16 @@ const AtriumJornadasPage: React.FC = () => {
             </Link>
           </div>
 
-          <p className="mt-12 border-t border-stitch-secondary/10 pt-6 text-center font-stitch-body text-[13px] italic text-stitch-on-surface-variant">
-            "Ensina-me, Senhor, o teu caminho, e guia-me por vereda plana." — Sl 27,11
-          </p>
+          <SpaceFooter 
+            note='"Ensina-me, Senhor, o teu caminho, e guia-me por vereda plana." — Sl 27,11'
+            links={[
+              { label: 'Átrio', to: '/', hint: 'Voltar à entrada do Mosteiro' },
+              { label: 'Biblioteca', to: '/biblioteca', hint: 'Estudar a Tradição' },
+              { label: 'Rezar', to: '/rezar', hint: 'Levar a formação à oração' },
+            ]}
+          />
         </section>
-      </section>
+      </SpaceLayout>
     </div>
   );
 };
