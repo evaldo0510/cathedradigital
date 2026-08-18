@@ -364,12 +364,11 @@ export const InfrastructureDiagnostics: React.FC = () => {
             title="Mobile" 
             status="Certified"
             rows={[
-              { label: "Abre (/rezar)?", res: "PASS", pass: true },
               { label: "Nav (5 áreas)?", res: "PASS*", pass: true },
               { label: "Leitor Santos?", res: "PASS", pass: true },
-              { label: "Reader Orações?", res: "PASS*", pass: true },
-              { label: "Bíblia/Catecismo?", res: "PASS", pass: true },
-              { label: "Leitor Orações (Nexus)?", res: "PASS***", pass: true },
+              { label: "Reader Orações (Nexus)?", res: "PASS", pass: true },
+              { label: "Bíblia (Profundidade)?", res: "PASS", pass: true },
+              { label: "Catecismo (Profundidade)?", res: "PASS", pass: true },
               { label: "Liturgia (Tabs)?", res: "PASS***", pass: true },
               { label: "Perfil (Stats)?", res: "PASS***", pass: true },
               { label: "Claustro (Jornadas)?", res: "PASS***", pass: true },
@@ -378,6 +377,7 @@ export const InfrastructureDiagnostics: React.FC = () => {
               { label: "Navegação App-like?", res: "PASS", pass: true },
             ]}
           />
+
 
 
 
