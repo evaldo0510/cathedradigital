@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { EditorialHero, EditorialCard, EditorialDivider, EditorialKicker } from '@/components/editorial/harmony';
+import { SpaceLayout, SpaceHeader, SpaceEntrance, SpaceSectionTitle, SpaceFooter } from '@/components/cathedra/space/SpaceLayout';
 import { Button } from '@/components/ui/button';
 import { Icons } from '@/constants';
 import { ShieldAlert, RefreshCw } from 'lucide-react';
@@ -86,20 +87,23 @@ const AcervoHomePage: React.FC = () => {
         <link rel="canonical" href="https://cathedradigital.com.br/acervo" />
       </Helmet>
 
-      {/* HERO — Estilo Mosteiro Digital */}
-      <EditorialHero align="center" density="expanded" className="bg-primary/[0.02] border-b border-primary/5">
-        <EditorialHero.Meta>Ecossistema Vivo · Átrio do Conhecimento</EditorialHero.Meta>
-        <EditorialHero.Eyebrow>{greeting}, {firstName}</EditorialHero.Eyebrow>
-        <EditorialHero.Title>Biblioteca do Cathedra</EditorialHero.Title>
-        <EditorialHero.Subtitle>Toda a riqueza da fé católica em um ambiente onde tudo se conecta.</EditorialHero.Subtitle>
-        <EditorialHero.Actions>
-           <div className="w-full max-w-2xl mx-auto mt-spacing-md">
+      <SpaceLayout>
+        {/* HERO — Estilo Mosteiro Digital */}
+        <SpaceHeader 
+          align="center"
+          kicker="Ecossistema Vivo · Átrio do Conhecimento"
+          title="Biblioteca do Cathedra"
+          description="Toda a riqueza da fé católica em um ambiente onde tudo se conecta."
+        />
+
+        <SpaceEntrance>
+          <div className="w-full max-w-2xl mx-auto">
             <div className="rounded-premium-full p-spacing-xs border border-primary/15 bg-card/60 backdrop-blur-md shadow-premium-sm flex items-center group/search focus-within:ring-2 focus-within:ring-primary/20 transition-all">
               <Icons.Search className="ml-spacing-md w-5 h-5 text-primary/30 group-focus-within/search:text-primary transition-colors" />
               <input 
                 type="text"
                 placeholder="Pesquisar qualquer tema (Bíblia, Santos, Doutrina...)"
-                className="flex-1 bg-transparent border-none focus:ring-0 text-premium-md font-serif italic px-spacing-md py-spacing-sm placeholder:text-muted-foreground/40"
+                className="flex-1 bg-transparent border-none focus:ring-0 font-reader italic px-spacing-md py-spacing-sm placeholder:text-muted-foreground/40"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     const query = (e.target as HTMLInputElement).value.trim();
@@ -109,10 +113,9 @@ const AcervoHomePage: React.FC = () => {
               />
             </div>
           </div>
-        </EditorialHero.Actions>
-      </EditorialHero>
+        </SpaceEntrance>
 
-      <main className="max-w-[1400px] mx-auto px-spacing-md py-spacing-xl space-y-spacing-3xl">
+      <div className="py-spacing-xl space-y-spacing-3xl">
         {/* Seção Principal — Grid de Duas Colunas no Desktop */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-spacing-xl">
           
@@ -288,7 +291,16 @@ const AcervoHomePage: React.FC = () => {
             </div>
           )}
         </section>
-      </main>
+
+        <SpaceFooter 
+          note="A busca pela Verdade termina no encontro com o Logos."
+          links={[
+            { label: 'Átrio', to: '/', hint: 'Voltar ao início' },
+            { label: 'Rezar', to: '/rezar', hint: 'Transformar estudo em oração' },
+            { label: 'Comunidade', to: '/community', hint: 'Partilhar o conhecimento' },
+          ]}
+        />
+      </SpaceLayout>
     </div>
   );
 };
