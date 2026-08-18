@@ -104,7 +104,7 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
         />
       }
       headerContext={
-        <StudyContext
+        <CatechesisContext
           moduleTitle="Bíblia Sagrada"
           part={book.category || undefined}
           section={book.name}
