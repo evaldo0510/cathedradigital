@@ -9,8 +9,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
-import { MessageCircle, Plus, Heart, Sparkles, Users, ArrowRight } from 'lucide-react';
-import { SpaceHeader } from '@/components/cathedra/space/SpaceLayout';
+import { MessageCircle, Plus, Heart, Sparkles, Users, ArrowRight, User, Calendar, BookOpen } from 'lucide-react';
+import { SpaceLayout, SpaceHeader, SpaceFooter } from '@/components/cathedra/space/SpaceLayout';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
@@ -157,16 +157,36 @@ const AtriumCommunityPage: React.FC = () => {
         <link rel="canonical" href="https://cathedradigital.com.br/community" />
       </Helmet>
 
-      <section className="min-h-screen bg-background text-foreground">
+      <SpaceLayout>
         {/* 1+2. Título e descrição — padrão de espaço */}
-        <div className="max-w-4xl mx-auto px-6 pt-12 md:pt-16">
-          <SpaceHeader
-            align="center"
-            kicker="Communitas Fidelium"
-            title="Comunidade"
-            description="Um lugar para partilhar a caminhada — testemunhos, dúvidas e leituras entre irmãos na fé."
-          />
-        </div>
+        <SpaceHeader
+          align="center"
+          kicker="Communitas Fidelium"
+          title="Igreja Viva"
+          description="Um lugar para partilhar a caminhada — testemunhos, dúvidas e leituras entre irmãos na fé."
+        />
+
+        {/* ─── IGREJA VIVA: SSoT Grouping ─── */}
+        <section className="mt-8 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="p-4 border border-border/20 bg-accent rounded-premium text-center">
+              <span className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-gold-text mb-2"><Sparkles className="w-3 h-3" /> SANTO DO DIA</span>
+              <p className="font-display text-sm italic text-primary">São João Batista</p>
+            </div>
+            <div className="p-4 border border-border/20 bg-accent rounded-premium text-center">
+              <span className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-gold-text mb-2"><User className="w-3 h-3" /> PAPA ATUAL</span>
+              <p className="font-display text-sm italic text-primary">Francisco</p>
+            </div>
+            <div className="p-4 border border-border/20 bg-accent rounded-premium text-center">
+              <span className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-gold-text mb-2"><BookOpen className="w-3 h-3" /> LITURGIA</span>
+              <p className="font-display text-sm italic text-primary">Féria da Semana</p>
+            </div>
+            <div className="p-4 border border-border/20 bg-accent rounded-premium text-center">
+              <span className="flex items-center justify-center gap-2 text-[10px] font-black uppercase tracking-widest text-gold-text mb-2"><Calendar className="w-3 h-3" /> CALENDÁRIO</span>
+              <p className="font-display text-sm italic text-primary">24 Jun 2026</p>
+            </div>
+          </div>
+        </section>
 
 
         {/* Barra de ações */}
@@ -346,7 +366,16 @@ const AtriumCommunityPage: React.FC = () => {
             </ul>
           )}
         </section>
-      </section>
+
+        <SpaceFooter 
+          note="Onde dois ou três estiverem reunidos em meu nome, eu estarei no meio deles."
+          links={[
+            { label: 'Átrio', to: '/', hint: 'Entrada do Mosteiro' },
+            { label: 'Biblioteca', to: '/biblioteca', hint: 'Mosteiro do Conhecimento' },
+            { label: 'Sacrário', to: '/oracao', hint: 'Silenciar e rezar' },
+          ]}
+        />
+      </SpaceLayout>
     </>
   );
 };

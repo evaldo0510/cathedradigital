@@ -207,313 +207,189 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
 
 
       {/* Content Area */}
-      <div className="flex-1 overflow-y-auto no-scrollbar">
-        {!legacy && (
-          <ReaderToolbar
-            kicker={`${t('saint_reader_kicker')} · ${CATEGORY_LABELS[saint.category] || saint.category}`}
-            title={saint.name}
-            subtitle={saint.title}
-            shareUrl={typeof window !== 'undefined' ? `${window.location.origin}/santos/${saint.id}` : undefined}
-          />
-        )}
-
-        <div className="p-spacing-lg md:p-spacing-2xl space-y-spacing-xl">
-
-        <EditorialReaderHeader
-          className="pt-0"
-          kicker={`${t('saint_reader_kicker')} · ${CATEGORY_LABELS[saint.category] || saint.category}`}
-          title={saint.name}
-          subtitle={saint.title}
-          meta={[saint.feastDay && `${t('feast_day')} · ${saint.feastDay}`, saint.born, saint.died].filter(Boolean).join(' · ')}
-        />
-        {saint.contentStatus && saint.contentStatus !== 'complete' && (
-          <div className="-mt-spacing-lg">
-            <SanctumCurationBadge status={saint.contentStatus} />
-          </div>
-        )}
-
-
-        {/* Top Icons.Info Strip */}
-        <div className="flex flex-wrap items-center gap-spacing-lg">
-          <div className="flex items-center gap-spacing-sm">
-            <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
-              <Icons.Calendar className="w-spacing-md h-spacing-md" />
-            </div>
-            <div>
-              <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground block">{t('feast_day')}</span>
-              <span className="text-premium-sm font-bold text-foreground">{saint.feastDay}</span>
-            </div>
-          </div>
-
-          {saint.born && (
-            <div className="flex items-center gap-spacing-sm">
-              <div className="w-spacing-xl h-spacing-xl rounded-premium bg-secondary/30 flex items-center justify-center text-primary">
-                <Icons.User className="w-spacing-md h-spacing-md" />
-              </div>
-              <div>
-                <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground block">{t('born')}</span>
-                <span className="text-premium-sm font-bold text-foreground truncate max-w-[150px] inline-block">{saint.born}</span>
-              </div>
-            </div>
-          )}
-
-          {saint.died && (
-            <div className="flex items-center gap-spacing-sm">
-              <div className="w-spacing-xl h-spacing-xl rounded-premium bg-destructive/10 flex items-center justify-center text-destructive">
-                <Icons.XCircle className="w-spacing-md h-spacing-md" />
-              </div>
-              <div>
-                <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground block">{t('died')}</span>
-                <span className="text-premium-sm font-bold text-foreground truncate max-w-[150px] inline-block">{saint.died}</span>
-              </div>
-            </div>
-          )}
-
-          <div className="flex items-center gap-spacing-sm">
-            <div className="w-spacing-xl h-spacing-xl rounded-premium bg-secondary flex items-center justify-center text-secondary-foreground">
-              <Icons.Shield className="w-spacing-md h-spacing-md" />
-            </div>
-            <div>
-              <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground block">{t('main_virtue')}</span>
-              <span className="text-premium-sm font-bold text-foreground">{saint.virtues?.[0] || 'Santidade'}</span>
-            </div>
-          </div>
-
-          <div className="flex-1 flex justify-end items-center gap-spacing-sm">
-            <AudioContentPlayer 
-              text={`${saint.name}. ${saint.title}. ${saint.bio}. ${saint.fullBio || ''}. ${saint.quotes?.[0] || ''}.`}
-              title={t('listen_content')}
-              className="h-spacing-xl"
-            />
-          </div>
-
-          <div className="flex-1 flex justify-end items-center gap-spacing-xs">
-            {(saint as any).url && (
-              <Button 
-                onClick={() => window.open((saint as any).url, '_blank')}
-                variant="outline"
-                className="bg-foreground/5 hover:bg-foreground/10 text-foreground border-border/20 text-premium-xs font-black uppercase tracking-widest h-spacing-xl px-spacing-md rounded-premium-full flex items-center gap-spacing-xs transition-all"
-              >
-                <Icons.Globe className="w-spacing-sm h-spacing-sm" />
-                {t('official_source')}
-              </Button>
-            )}
-            
-            <PassageActions
-              text={saint.quotes?.[0] || saint.bio}
-              reference={`${saint.name} — ${saint.title}`}
+        <div className="flex flex-col">
+          {!legacy && (
+            <ReaderToolbar
+              kicker={`${t('saint_reader_kicker')} · ${CATEGORY_LABELS[saint.category] || saint.category}`}
               title={saint.name}
-              url={typeof window !== 'undefined' ? window.location.href : ''}
-              size="sm"
+              subtitle={saint.title}
+              shareUrl={typeof window !== 'undefined' ? `${window.location.origin}/santos/${saint.id}` : undefined}
+            />
+          )}
+
+          <div className="p-spacing-lg md:p-spacing-2xl space-y-spacing-2xl">
+            {/* 1. Nome & Título (Cabeçalho Editorial) */}
+            <EditorialReaderHeader
+              className="pt-0"
+              kicker={`${t('saint_reader_kicker')} · ${CATEGORY_LABELS[saint.category] || saint.category}`}
+              title={saint.name}
+              subtitle={saint.title}
+              meta={[saint.feastDay && `${t('feast_day')} · ${saint.feastDay}`, saint.born, saint.died].filter(Boolean).join(' · ')}
+            />
+
+            {/* 2. Biografia (Resumo e Status) */}
+            <section className="space-y-spacing-lg">
+              {saint.contentStatus && saint.contentStatus !== 'complete' && (
+                <SanctumCurationBadge status={saint.contentStatus} />
+              )}
+              
+              <div className="flex flex-wrap items-center gap-spacing-lg py-spacing-md border-y border-border/10">
+                <div className="flex items-center gap-spacing-sm">
+                  <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
+                    <Icons.Calendar className="w-spacing-md h-spacing-md" />
+                  </div>
+                  <div>
+                    <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground block">{t('feast_day')}</span>
+                    <span className="text-premium-sm font-bold text-foreground">{saint.feastDay}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-spacing-sm">
+                  <div className="w-spacing-xl h-spacing-xl rounded-premium bg-secondary flex items-center justify-center text-secondary-foreground">
+                    <Icons.Shield className="w-spacing-md h-spacing-md" />
+                  </div>
+                  <div>
+                    <span className="text-premium-xs font-black uppercase tracking-widest text-muted-foreground block">{t('main_virtue')}</span>
+                    <span className="text-premium-sm font-bold text-foreground">{saint.virtues?.[0] || 'Santidade'}</span>
+                  </div>
+                </div>
+                <div className="flex-1 flex justify-end">
+                  <AudioContentPlayer 
+                    text={`${saint.name}. ${saint.title}. ${saint.bio}. ${saint.fullBio || ''}.`}
+                    title={t('listen_content')}
+                  />
+                </div>
+              </div>
+
+              <div className="prose prose-premium max-w-none">
+                <p className="text-premium-lg font-serif leading-relaxed text-foreground/90">
+                  {saint.bio}
+                </p>
+              </div>
+            </section>
+
+            {/* 3. Vida & História (Timeline e Detalhes) */}
+            <EditorialDivider variant="gold-fade" />
+            <section className="space-y-spacing-xl">
+              <div className="flex items-center gap-spacing-xs text-primary">
+                <Icons.User className="w-spacing-md h-spacing-md" />
+                <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Trajetória de Santidade</h3>
+              </div>
+              
+              <Suspense fallback={<div className="h-40 animate-pulse bg-muted/20 rounded-premium" />}>
+                <SaintDetailTabs
+                  saint={saint}
+                  autoReflect={autoReflect}
+                  onReflect={() => {
+                    const targetId = (saint as any).slug || saint.id;
+                    navigate(`/logos?about=${encodeURIComponent(`saint:${targetId}`)}`);
+                    onClose();
+                  }}
+                />
+              </Suspense>
+
+              <SanctumEditorial saint={saint} />
+            </section>
+
+            {/* 4. Espiritualidade & Ensinamentos */}
+            <EditorialDivider variant="gold-fade" />
+            <div className="grid md:grid-cols-2 gap-spacing-xl">
+              <div className="space-y-spacing-md">
+                <div className="flex items-center gap-spacing-xs text-primary">
+                  <Icons.Quote className="w-spacing-md h-spacing-md" />
+                  <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Palavra do Santo</h3>
+                </div>
+                <div className="bg-secondary/30 p-spacing-xl rounded-[2rem] border border-border relative group hover:border-primary/20 transition-all min-h-[160px]">
+                  <p className="text-premium-xl font-serif italic text-foreground relative z-10 leading-relaxed">
+                    "{saint.quotes?.[0] || "Tudo para a maior glória de Deus."}"
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-spacing-md">
+                <div className="flex items-center gap-spacing-xs text-primary">
+                  <Icons.Heart className="w-spacing-md h-spacing-md" />
+                  <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Prática Diária</h3>
+                </div>
+                <div className="bg-primary/5 p-spacing-xl rounded-[2rem] border border-primary/10 relative group hover:bg-primary/10 transition-all min-h-[160px]">
+                  <p className="text-premium-sm font-medium text-foreground relative z-10 leading-relaxed italic">
+                    {saint.aplicacaoPratica || "Procure imitar a humildade deste santo em suas tarefas ordinárias."}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* 5. Nexus (Justificativa Teológica) */}
+            <EditorialDivider variant="gold-fade" />
+            {(() => {
+              const saintSlug = (saint as any).slug || (saint as any).id;
+              const nexus = resolveSaintAutoNexus({
+                slug: String(saintSlug ?? ''),
+                name: saint.name ?? saint.title ?? '',
+                virtues: saint.virtues ?? [],
+              });
+              return (
+                <div className="space-y-spacing-xl">
+                  <div className="flex items-center gap-spacing-xs text-primary">
+                    <Icons.Activity className="w-spacing-md h-spacing-md" />
+                    <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Nexus Teológico</h3>
+                  </div>
+                  <NexusPanel output={nexus} kicker={`Por que isso está conectado? · ${saint.name}`} />
+                  
+                  <SaintCuratedConnections
+                    saintId={String(saintSlug ?? '')}
+                    saintName={saint.name ?? saint.title ?? ''}
+                  />
+                </div>
+              );
+            })()}
+
+            {/* 6. Oração / Reflexão Final */}
+            <section className="bg-primary/5 rounded-[2.5rem] p-spacing-xl md:p-spacing-2xl border border-primary/10">
+              <div className="max-w-2xl mx-auto text-center space-y-spacing-lg">
+                <Icons.Sparkles className="w-spacing-2xl h-spacing-2xl text-gold-text mx-auto" />
+                <h3 className="text-premium-xl font-serif italic text-primary">Oração</h3>
+                <p className="text-premium-md font-serif leading-relaxed text-foreground/80 italic">
+                  {saint.spiritualPractice?.prayer || "Senhor, pela intercessão de Vosso santo, concedei-nos a graça de seguir Vossos caminhos com fidelidade."}
+                </p>
+              </div>
+            </section>
+
+            {/* 7. Próximo Conteúdo (Jornada) */}
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="bg-accent rounded-[2rem] p-spacing-xl border border-border flex flex-col md:flex-row items-center justify-between gap-spacing-lg group transition-all"
+            >
+              <div className="flex items-center gap-spacing-md">
+                <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/20 flex items-center justify-center text-primary">
+                  <Icons.Route className="w-spacing-lg h-spacing-lg" />
+                </div>
+                <div>
+                  <p className="text-premium-xs font-black uppercase tracking-widest text-primary/60 mb-spacing-2xs">Continuar Caminhada</p>
+                  <h4 className="text-premium-lg font-bold text-foreground font-serif">Jornada {suggestedJourney.name}</h4>
+                </div>
+              </div>
+              <Button 
+                onClick={() => {
+                  navigate(`/jornadas/${suggestedJourney.id}`);
+                  onClose();
+                }}
+                className="h-spacing-2xl px-spacing-xl bg-primary text-primary-foreground font-black uppercase text-premium-xs tracking-[0.2em] rounded-premium-full shadow-premium"
+              >
+                Começar Jornada <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-xs" />
+              </Button>
+            </motion.div>
+
+            {/* Obras & Créditos */}
+            <SaintWorksSection saintId={saint.id} saintSlug={(saint as any).slug} />
+            
+            <SourceAttribution
+              source={(saint as any).source_name || (saint as any).source}
+              sourceUrl={(saint as any).source_url || (saint as any).sourceUrl || (saint as any).url}
             />
           </div>
-
         </div>
-
-        {/* Abas: História · Virtude · Padroeiro(a) · Refletir com Logos */}
-        <Suspense fallback={<div className="h-40 animate-pulse bg-muted/20 rounded-premium" />}>
-          <SaintDetailTabs
-            saint={saint}
-            autoReflect={autoReflect}
-            onReflect={() => {
-              const targetId = (saint as any).slug || saint.id;
-              navigate(`/logos?about=${encodeURIComponent(`saint:${targetId}`)}`);
-              onClose();
-            }}
-          />
-        </Suspense>
-
-        {/* Sanctorum 2.0 — capítulos editoriais, timeline, iconografia, vida espiritual */}
-        <SanctumEditorial saint={saint} />
-
-        {/* Aprenda com este Santo — reflexão IA cacheada */}
-        <SaintAILearn saint={saint} />
-
-        {/* Deep Content - Textos e Livros */}
-        <DeepContentSection 
-          content={saint as any} 
-          title="Meditação e Aprofundamento" 
-        />
-
-
-        {/* Icons.Quote & Practical Application */}
-        <div className="grid md:grid-cols-2 gap-spacing-xl">
-          {/* Icons.Quote Section */}
-          <div className="space-y-spacing-md">
-            <div className="flex items-center gap-spacing-xs text-primary">
-              <Icons.Quote className="w-spacing-md h-spacing-md" />
-              <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Frase Marcante</h3>
-            </div>
-            <div className="bg-secondary/30 p-spacing-xl rounded-[2rem] border border-border relative group hover:border-primary/20 transition-all">
-              <Icons.Quote className="absolute top-spacing-md right-spacing-md w-spacing-2xl h-spacing-2xl text-primary/5 group-hover:text-primary/60 transition-colors" />
-              <p className="text-premium-xl font-serif italic text-foreground relative z-10 leading-relaxed">
-                {parseTheologicalReferences(saint.quotes?.[0] || "Tudo para a maior glória de Deus.").map((seg, i) => {
-                  if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
-                  if (seg.type === 'catechismRef') return <CatechismPopover key={i} paragraph={seg.paragraph!} />;
-                  return <span key={i}>{seg.value}</span>;
-                })}
-              </p>
-            </div>
-          </div>
-
-          {/* Practical Application */}
-          <div className="space-y-spacing-md">
-            <div className="flex items-center gap-spacing-xs text-primary">
-              <Icons.Heart className="w-spacing-md h-spacing-md" />
-              <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">{t('practical_application')}</h3>
-            </div>
-            <div className="bg-primary/5 p-spacing-xl rounded-[2rem] border border-primary/10 relative group hover:bg-primary/10 transition-all">
-              <Icons.Lightbulb className="absolute top-spacing-md right-spacing-md w-spacing-2xl h-spacing-2xl text-primary/60 group-hover:scale-110 transition-all" />
-              <p className="text-premium-sm font-medium text-foreground relative z-10 leading-relaxed italic">
-                {parseTheologicalReferences(saint.aplicacaoPratica || "Hoje, procure imitar a humildade deste santo em suas tarefas ordinárias, oferecendo cada pequeno gesto ao Senhor com amor.").map((seg, i) => {
-                  if (seg.type === 'bibleRef') return <BibleVersePopover key={i} abbr={seg.abbr!} chapter={seg.chapter!} verse={seg.verse} label={seg.value} />;
-                  if (seg.type === 'catechismRef') return <CatechismPopover key={i} paragraph={seg.paragraph!} />;
-                  return <span key={i}>{seg.value}</span>;
-                })}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Writings Section */}
-        {saint.works && saint.works.length > 0 && (
-          <section className="space-y-spacing-md">
-            <div className="flex items-center gap-spacing-xs text-primary">
-              <Icons.BookOpen className="w-spacing-md h-spacing-md" />
-              <h3 className="text-premium-small font-black uppercase tracking-[0.2em]">Escritos e Obras</h3>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-md">
-              {saint.works.map((work, idx) => (
-                <div key={idx} className="p-spacing-md bg-card border border-border rounded-premium flex items-center justify-between group hover:border-primary/30 transition-all">
-                  <div className="flex items-center gap-spacing-sm">
-                    <div className="w-spacing-xl h-spacing-xl rounded-premium bg-primary/10 flex items-center justify-center text-primary">
-                      <Icons.Book className="w-spacing-md h-spacing-md" />
-                    </div>
-                    <div>
-                      <p className="text-premium-sm font-bold text-foreground">{work.title}</p>
-                      {work.year && <p className="text-premium-xs text-muted-foreground uppercase">{work.year}</p>}
-                    </div>
-                  </div>
-                  {work.url && (
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
-                      onClick={() => setViewingDoc({ url: work.url!, title: work.title })}
-                      className="text-primary hover:bg-primary/10"
-                    >
-                      Ler <Icons.ArrowRight className="w-spacing-sm h-spacing-sm ml-spacing-2xs" />
-                    </Button>
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* Sprint E1 — Biblioteca Patrística (leitor completo via saint_works) */}
-        <SaintWorksSection saintId={saint.id} saintSlug={(saint as any).slug} />
-
-
-
-        {/* Relatio: Intelligent Contextual Connections */}
-        <EditorialDivider variant="gold-fade" />
-        <Relatio 
-          context={{
-            type: 'saint',
-            id: saint.id,
-            tags: [...(saint.virtues || []), ...(saint.patronOf || []), saint.name, 'Saints', 'Espiritualidade']
-          }}
-          onNavigateToBible={(abbr, ch) => {
-            navigate(`/bible?book=${abbr}&chapter=${ch}`);
-            onClose();
-          }}
-          onNavigateToCIC={(p) => {
-            navigate(`/catechism?p=${p}`);
-            onClose();
-          }}
-          onNavigateToDoc={(docId) => {
-            navigate(`/magisterium/${docId}`);
-            onClose();
-          }}
-        />
-
-        {/* Suggested Journey */}
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="bg-primary/5 rounded-[2rem] p-spacing-lg md:p-spacing-xl border border-primary/10 flex flex-col md:flex-row items-center justify-between gap-spacing-lg group hover:bg-primary/10 transition-all shadow-premium-md"
-        >
-          <div className="flex items-center gap-spacing-md">
-            <div className="w-spacing-2xl h-spacing-2xl rounded-premium bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform shadow-premium-md">
-              <Icons.Route className="w-spacing-lg h-spacing-lg" />
-            </div>
-            <div>
-              <p className="text-premium-xs font-black uppercase tracking-widest text-primary/60 mb-spacing-2xs">Transformar Inspiração em Prática</p>
-              <h4 className="text-premium-lg font-bold text-foreground font-serif leading-tight">Jornada {suggestedJourney.name}</h4>
-              <p className="text-premium-xs text-muted-foreground font-serif italic max-w-spacing-sm">
-                Inspirada pela virtude de <span className="text-primary font-bold not-italic">{saint.virtues?.[0] || 'Santidade'}</span>.
-              </p>
-            </div>
-          </div>
-          <Button 
-            onClick={() => {
-              navigate(`/jornadas/${suggestedJourney.id}`);
-              onClose();
-            }}
-            className="h-spacing-2xl px-spacing-xl bg-primary hover:bg-primary/90 text-primary-foreground font-black uppercase text-premium-xs tracking-[0.2em] rounded-premium-full shadow-premium shadow-primary/20 group/btn transition-all"
-          >
-            Começar Jornada <Icons.ChevronRight className="w-spacing-md h-spacing-md ml-spacing-xs group-hover/btn:translate-x-1 transition-transform" />
-          </Button>
-        </motion.div>
-
-        <SourceAttribution
-          source={(saint as any).source_name || (saint as any).source}
-          sourceUrl={(saint as any).source_url || (saint as any).sourceUrl || (saint as any).url}
-          bioSourceUrl={(saint as any).bio_source_url || (saint as any).bioSourceUrl}
-          prayerSourceUrl={(saint as any).prayer_source_url || (saint as any).prayerSourceUrl}
-          lastScrapedAt={(saint as any).last_scraped_at || (saint as any).lastScrapedAt}
-        />
-
-        {(() => {
-          const saintSlug = (saint as any).slug || (saint as any).id;
-          const nexus = resolveSaintAutoNexus({
-            slug: String(saintSlug ?? ''),
-            name: saint.name ?? saint.title ?? '',
-            virtues: saint.virtues ?? [],
-          });
-          return (
-            <>
-              <SaintCuratedConnections
-                saintId={String(saintSlug ?? '')}
-                saintName={saint.name ?? saint.title ?? ''}
-              />
-              <div className="mb-spacing-lg">
-                <NexusPanel output={nexus} kicker={`Conexões · ${saint.name ?? saint.title ?? ''}`} />
-              </div>
-              {(() => {
-                const closure = resolveEditorialClosure(saint as unknown as { editorial_closure?: unknown });
-                return closure ? (
-                  <div className="mb-spacing-2xl">
-                    <EditorialClosure {...closure} />
-                  </div>
-                ) : null;
-              })()}
-              <ReaderContinuation
-                context={{
-                  kind: 'saint',
-                  id: saintSlug,
-                  graphNodeId: nexus.selfId ?? undefined,
-                  meta: { theme: saint.virtues?.[0] },
-                }}
-                suggestions={nexus.suggestions.length > 0 ? nexus.suggestions : undefined}
-              />
-            </>
-          );
-        })()}
-
-        </div>
-      </div>
     </motion.div>
   </motion.div>
   

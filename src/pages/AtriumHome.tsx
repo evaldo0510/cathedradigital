@@ -36,12 +36,12 @@ import {
 import type { ResumeItem } from '@/modules/atrium/types';
 import { useAuth } from '@/hooks/useAuth';
 import AtriumReception from '@/components/cathedra/AtriumReception';
-import { SpaceDoors, type SpaceDoor } from '@/components/cathedra/space/SpaceLayout';
+import { SpaceDoors, type SpaceDoor, SpaceLayout, SpaceFooter } from '@/components/cathedra/space/SpaceLayout';
 
 
 // ─── Copy oficial ────────────────────────────────────────────────────────────
 const HERO_KICKER = 'Sanctuarium Digital';
-const HERO_TITLE = 'Cathedra Digital — Entrai no Silêncio';
+const HERO_TITLE = 'Seu companheiro espiritual para a vida interior.';
 const HERO_SUBTITLE =
   'Leia, reze, estude e descubra a riqueza da fé católica.';
 
@@ -60,7 +60,7 @@ const MAIN_DOORS: SpaceDoor[] = [
     key: 'orar', 
     label: 'ORAR', 
     overline: 'Oratio', 
-    to: '/rezar', 
+    to: '/oracao', 
     Icon: Heart, 
     hint: 'Um espaço para silenciar e rezar.' 
   },
@@ -127,13 +127,14 @@ const AtriumHome: React.FC = () => {
   };
 
   return (
-    <div
-      className="min-h-screen w-full bg-background text-foreground"
-      style={{
-        backgroundImage:
-          'url("https://www.transparenttextures.com/patterns/p6.png")',
-      }}
-    >
+    <SpaceLayout>
+      <div
+        className="w-full bg-background text-foreground"
+        style={{
+          backgroundImage:
+            'url("https://www.transparenttextures.com/patterns/p6.png")',
+        }}
+      >
       <Helmet>
         <title>Cathedra — Átrio</title>
         <meta
@@ -159,7 +160,7 @@ const AtriumHome: React.FC = () => {
         <section className="text-center md:text-left">
           <div className="mb-8 hidden h-px w-full bg-gold-text/30 md:block" />
           <h2 className="mb-3 font-reader text-[12px] font-bold uppercase tracking-[0.32em] text-gold-text">
-            {HERO_KICKER}
+            Pergunte sobre a fé.
           </h2>
           <h1 className="mb-3 font-display text-[32px] italic leading-[40px] text-primary md:text-[56px] md:leading-[64px] md:tracking-[-0.02em]">
             Seu companheiro espiritual para a vida interior.
@@ -181,7 +182,7 @@ const AtriumHome: React.FC = () => {
               type="search"
               value={q}
               onChange={(e) => setQ(e.target.value)}
-              placeholder="O que buscais nesta hora?"
+              placeholder="Digite sua pergunta..."
               aria-label="Pesquisa universal"
               className="w-full bg-transparent font-display text-[18px] italic text-primary placeholder:text-muted-foreground/60 focus:outline-none md:text-[22px]"
             />
@@ -198,13 +199,13 @@ const AtriumHome: React.FC = () => {
               <span className="font-reader text-[11px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
                 Sugestões
               </span>
-              {suggestions.map((s) => (
+              {["O que a Igreja ensina sobre...?", "Encontre na Bíblia...", "Explique este parágrafo...", "Quem foi este santo?"].map((s, idx) => (
                 <button
-                  key={s.id}
-                  onClick={() => submitSearch(s.label)}
+                  key={idx}
+                  onClick={() => submitSearch(s)}
                   className="rounded-full border border-border/40 bg-accent px-3 py-1 font-reader text-[12px] text-muted-foreground transition-colors hover:border-gold-text hover:text-primary"
                 >
-                  {s.label}
+                  {s}
                 </button>
               ))}
             </div>
@@ -223,15 +224,13 @@ const AtriumHome: React.FC = () => {
               />
               <div className="relative z-10 text-left">
                 <h2 className="mb-4 block font-reader text-[12px] font-bold uppercase tracking-[0.2em] text-gold-text">
-                  Symmetry of Truth
+                  NEXUS
                 </h2>
                 <h3 className="mb-4 font-display text-[32px] leading-[40px] text-primary">
-                  The Nexus Map
+                  "Por que isso está conectado?"
                 </h3>
                 <p className="max-w-md font-reader text-[18px] leading-[28px] text-muted-foreground">
-                  Visualize as conexões invisíveis entre a Patrística e o
-                  Magistério contemporâneo através da nossa rede semântica
-                  inteligente.
+                  O que está conectado, por que está conectado e para onde pode continuar.
                 </p>
               </div>
               <div className="relative z-10 flex justify-end">
@@ -274,10 +273,10 @@ const AtriumHome: React.FC = () => {
               <div className="relative z-10">
                 <div className="mb-6 h-px w-full bg-card/10" />
                 <Link
-                  to="/rezar"
+                  to="/liturgia"
                   className="flex items-center justify-between font-reader text-[14px] font-medium uppercase tracking-[0.05em] transition-colors hover:text-gold-text-fixed"
                 >
-                  <span>Ver leituras</span>
+                  <span>Ver Evangelho</span>
                   <ArrowForward className="h-5 w-5" />
                 </Link>
               </div>
@@ -355,7 +354,7 @@ const AtriumHome: React.FC = () => {
 
             {/* Nova meditação — sempre presente */}
             <Link
-              to="/rezar"
+              to="/oracao"
               className="group flex cursor-pointer flex-col items-center justify-center border border-dashed border-gold-text/35 p-6 text-center transition-colors hover:bg-accent"
             >
               <AddCircle className="mb-2 h-8 w-8 text-muted-foreground/40 transition-colors group-hover:text-gold-text" />
@@ -437,44 +436,47 @@ const AtriumHome: React.FC = () => {
           </section>
         )}
 
-        {/* ─── Avisos (P6) ────────────────────────────────────────────── */}
-        {announcements.length > 0 && (
-          <section className="mt-16">
-            <div className="mb-6 flex items-center gap-4">
-              <Megaphone className="h-5 w-5 text-gold-text" />
-              <h2 className="font-display text-[24px] font-semibold leading-[32px] text-primary">
-                Avisos Recentes
-              </h2>
-              <div className="h-px flex-1 bg-gold-text/20" />
+        <section className="mt-16">
+          <div className="flex items-center gap-spacing-lg mb-8">
+            <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-primary/40 whitespace-nowrap">
+              IGREJA VIVA
+            </h2>
+            <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.08] to-transparent" />
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="p-6 border border-border/20 bg-accent rounded-premium text-center">
+              <span className="text-[10px] font-black uppercase tracking-widest text-gold-text block mb-2">SANTO DO DIA</span>
+              <p className="font-display text-lg italic text-primary">{saintOfDay}</p>
             </div>
-            <ul className="divide-y divide-border/20 border-y border-border/20">
-              {announcements.map((a) => (
-                <li key={a.id} className="flex items-center justify-between py-4">
-                  <span className="font-reader text-[15px] text-primary">
-                    {a.label}
-                  </span>
-                  <span className="shrink-0 font-reader text-[11px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
-                    {new Date(a.publishedAt).toLocaleDateString('pt-BR', {
-                      day: '2-digit',
-                      month: 'short',
-                    })}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+            <div className="p-6 border border-border/20 bg-accent rounded-premium text-center">
+              <span className="text-[10px] font-black uppercase tracking-widest text-gold-text block mb-2">PAPA ATUAL</span>
+              <p className="font-display text-lg italic text-primary">Francisco</p>
+            </div>
+            <div className="p-6 border border-border/20 bg-accent rounded-premium text-center">
+              <span className="text-[10px] font-black uppercase tracking-widest text-gold-text block mb-2">LITURGIA</span>
+              <p className="font-display text-lg italic text-primary">{liturgy?.weekday || 'Féria'}</p>
+            </div>
+            <div className="p-6 border border-border/20 bg-accent rounded-premium text-center">
+              <span className="text-[10px] font-black uppercase tracking-widest text-gold-text block mb-2">CALENDÁRIO</span>
+              <p className="font-display text-lg italic text-primary">{today}</p>
+            </div>
+          </div>
+        </section>
 
-        {/* ─── Verso de encerramento ──────────────────────────────────── */}
-        <p className="mt-16 border-t border-gold-text/10 pt-8 text-center font-reader text-[14px] italic text-muted-foreground">
-          "Uma coisa peço ao Senhor, e a buscarei: habitar na Casa do Senhor
-          todos os dias da minha vida." — Sl 27,4
-        </p>
+        <SpaceFooter 
+          note="O Mosteiro é um organismo vivo onde cada pedra conta uma história de santidade."
+          links={[
+            { label: 'Biblioteca', to: '/biblioteca', hint: 'Mosteiro do Conhecimento' },
+            { label: 'Sacrário', to: '/oracao', hint: 'Silenciar e rezar' },
+            { label: 'Capelas', to: '/santos', hint: 'Vidas dos santos' },
+          ]}
+        />
       </section>
-
-      <MobileBottomNav />
     </div>
-  );
+
+    <MobileBottomNav />
+  </SpaceLayout>
+);
 };
 
 export default AtriumHome;

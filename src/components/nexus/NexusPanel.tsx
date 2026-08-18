@@ -86,12 +86,12 @@ export const NexusPanel: React.FC<NexusPanelProps> = ({
       <header className="space-y-spacing-2xs">
         {kicker && (
           <p className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-secondary">
-            {kicker}
+            NEXUS
           </p>
         )}
         {title && (
           <h2 className="font-serif text-premium-lg text-foreground">
-            {title}
+            "Por que isso está conectado?"
           </h2>
         )}
         <span className="block h-[1px] w-spacing-3xl bg-gradient-to-r from-secondary/60 to-transparent" />
@@ -108,7 +108,7 @@ export const NexusPanel: React.FC<NexusPanelProps> = ({
               className="space-y-spacing-xs"
             >
               <h3 className="font-stitch-label text-stitch-label-sm uppercase tracking-[0.24em] text-secondary">
-                {label}
+                CONEXÕES RELACIONADAS
               </h3>
               <ul className="space-y-spacing-xs">
                 {nodes.map((r) => (

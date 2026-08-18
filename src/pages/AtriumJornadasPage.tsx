@@ -141,12 +141,12 @@ const AtriumJornadasPage: React.FC = () => {
           description="Trilhas guiadas para caminhar da inquietação à contemplação. Um passo por vez, um dia por vez — na cadência do silêncio."
         />
 
-        {/* ─── Continuar jornada ─────────────────────────────────────── */}
+        {/* ─── Claustro: Prioridade de continuidade ─── */}
         {inProgress.length > 0 && (
           <section className="pt-12">
             <div className="mb-6 flex items-center justify-between">
               <h2 className="font-stitch-display text-[24px] font-semibold leading-[32px] text-stitch-primary">
-                Continuar Jornada
+                CONTINUAR
               </h2>
               <span className="font-stitch-body text-[12px] font-bold uppercase tracking-[0.15em] text-stitch-on-surface-variant">
                 {inProgress.length} em curso
@@ -190,6 +190,16 @@ const AtriumJornadasPage: React.FC = () => {
             </div>
           </section>
         )}
+
+        {/* ─── Outras áreas ─── */}
+        <div className="mt-8 space-y-12 opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all">
+          <div className="flex flex-wrap gap-8 py-6 border-y border-border/10 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+            <span className="flex items-center gap-2"><BookOpen className="w-3 h-3" /> Leituras recentes</span>
+            <span className="flex items-center gap-2"><Compass className="w-3 h-3" /> Progresso</span>
+            <span className="flex items-center gap-2"><Heart className="w-3 h-3" /> Favoritos</span>
+            <span className="flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Recomendações Nexus</span>
+          </div>
+        </div>
 
         {/* ─── Jornada em destaque ───────────────────────────────────── */}
         {featured && (
@@ -236,7 +246,7 @@ const AtriumJornadasPage: React.FC = () => {
         <section className="pt-16">
           <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
             <h2 className="font-stitch-display text-[24px] font-semibold leading-[32px] text-stitch-primary">
-              Trilhas
+              Recomendações
             </h2>
             <div className="flex flex-wrap gap-2">
               {categories.map((c) => {
