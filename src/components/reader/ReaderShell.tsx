@@ -66,7 +66,7 @@ export const ReaderShell: React.FC<ReaderShellProps> = ({
     <article
       className={cn(
         'relative w-full bg-transparent text-foreground',
-        'flex flex-col',
+        'flex flex-col min-h-screen',
         className,
       )}
       aria-label={ariaLabel}
@@ -91,7 +91,6 @@ export const ReaderShell: React.FC<ReaderShellProps> = ({
         data-reader-slot="progress"
         className="w-full px-[var(--stitch-margin-mobile)] md:px-0 py-spacing-md border-t border-border/10"
       >
-        {/* Slot para progresso se fornecido via context ou children */}
         {headerContext}
       </section>
 
