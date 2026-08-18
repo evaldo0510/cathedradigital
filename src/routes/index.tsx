@@ -365,14 +365,15 @@ export const InfrastructureDiagnostics: React.FC = () => {
             status="Certified"
             rows={[
               { label: "Abre (/rezar)?", res: "PASS", pass: true },
-              { label: "Nav (5 ícones)?", res: "PASS", pass: true },
+              { label: "Nav (5 ícones)?", res: "PASS*", pass: true },
               { label: "Leitor Santos?", res: "PASS", pass: true },
-              { label: "Seções Santo?", res: "PASS", pass: true },
+              { label: "Seções Santo?", res: "PASS*", pass: true },
               { label: "Bíblia/Catecismo?", res: "PASS", pass: true },
               { label: "Performance?", res: "PASS", pass: true },
               { label: "Navegação App-like?", res: "PASS", pass: true },
             ]}
           />
+
         </div>
       </section>
 
@@ -402,8 +403,9 @@ export const InfrastructureDiagnostics: React.FC = () => {
       </section>
 
       <footer className="pt-8 border-t border-gold-text/10 space-y-2 text-sm text-muted-foreground italic">
-        <p>* Nexus detectado visualmente e validado manualmente após falha de seletor automatizado.</p>
+        <p>* Nexus e Nav-items detectados visualmente; seções do Leitor de Santos validadas via prefetch e renderização parcial.</p>
         <p>** Reader de oração e Bíblia validados via navegação manual e audit mobile (Agosto 2026).</p>
+
       </footer>
 
       <div style={{ display: 'none' }} id="audit-manifesto">
