@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect, useTransition, useDeferredValue } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icons } from '@/constants';
 import SEOHead from '@/components/SEOHead';
