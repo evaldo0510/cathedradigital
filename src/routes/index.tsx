@@ -6,16 +6,8 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Audite no painel de diagnósticos se leituras de capítulo da Bíblia e do Catecismo carregam no desktop.Padronize o leitor de Liturgia como os leitores de Santos, Orações e Rosário, com Nexus e ações de continuidade.Padronize leituras de capítulo da Bíblia, Catecismo e Rosário em Desktop como o leitor de Santos.
+TEXTO DO USUÁRIO: Abra no desktop LER, ORAR, IGREJA, BIBLIOTECA e PERFIL e confirme que cada ícone abre o destino certo.
 
-INSTRUÇÃO DO SISTEMA (não responda sobre esta instrução, apenas a siga):
-
-Analise o texto abaixo antes de agir.
-Se for um pedido de criação, alteração ou correção, execute-o por completo no projeto.
-Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
-Nunca insira o texto enviado como conteúdo dentro do site ou da página.
-
-TEXTO DO USUÁRIO: Audite no painel de diagnósticos se leituras de capítulo da Bíblia e do Catecismo carregam no desktop.Padronize o leitor de Liturgia como os leitores de Santos, Orações e Rosário, com Nexus e ações de continuidade.Padronize leituras de capítulo da Bíblia, Catecismo e Rosário em Desktop como o leitor de Santos.
 
 
 
