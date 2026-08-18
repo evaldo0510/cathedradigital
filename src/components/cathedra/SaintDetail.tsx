@@ -199,15 +199,23 @@ const SaintDetail: React.FC<{ saint: Saint; onClose: () => void; autoReflect?: b
         </Button>
       </div>
 
-      {/* Icons.Image Sidebar */}
-      <div className="w-full md:w-2/5 h-spacing-4xl md:h-auto relative overflow-hidden flex-shrink-0">
-        <SacredImage src={saint.image} className="w-full h-full object-cover" alt={saint.name} />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+      {/* Sidebar Visual: Sacred visual matched to Mobile Nav */}
+      <div className="hidden md:flex md:w-[40%] sticky top-0 h-screen overflow-hidden bg-primary/5 border-r border-primary/5">
+        <SacredImage src={saint.image} className="w-full h-full object-cover opacity-60 mix-blend-multiply" alt={saint.name} />
+        <div className="absolute inset-0 bg-gradient-to-l from-background via-transparent to-transparent" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-spacing-xl text-center space-y-spacing-lg">
+           <div className="w-spacing-4xl h-spacing-4xl mx-auto rounded-full bg-secondary/10 flex items-center justify-center border border-secondary/20 shadow-premium">
+             <Icons.BookOpen className="w-spacing-xl h-spacing-xl text-secondary" />
+           </div>
+           <div className="space-y-spacing-xs">
+             <h2 className="font-display text-4xl text-primary/40 tracking-widest uppercase italic">{saint.name}</h2>
+             <p className="text-[10px] uppercase tracking-[0.4em] text-secondary/60 font-bold">{saint.title}</p>
+           </div>
+        </div>
       </div>
 
-
       {/* Content Area */}
-        <div className="flex flex-col">
+      <div className="flex-1 overflow-y-auto flex flex-col">
           {!legacy && (
             <ReaderToolbar
               kicker={`${t('saint_reader_kicker')} · ${CATEGORY_LABELS[saint.category] || saint.category}`}

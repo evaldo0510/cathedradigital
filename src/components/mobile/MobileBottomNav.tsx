@@ -12,11 +12,11 @@ interface MobileNavItem {
 }
 
 const DEFAULT_ITEMS: MobileNavItem[] = [
-  { to: "/bible", label: "LER", icon: Icons.BookOpen, matches: /^\/(bible|catechism|magisterium)/ },
-  { to: "/oracao", label: "ORAR", icon: Icons.Hand, matches: /^\/oracao/ },
+  { to: "/bible", label: "LER", icon: Icons.BookOpen, matches: /^\/(bible|catechism|magisterium|santos)/ },
+  { to: "/oracao", label: "ORAR", icon: Icons.Prayer, matches: /^\/oracao/ },
   { to: "/community", label: "IGREJA", icon: Icons.Church, matches: /^\/(community|igreja)/ },
-  { to: "/acervo", label: "BIBLIOTECA", icon: Icons.Library, matches: /^\/(acervo|biblioteca)/ },
-  { to: "/conta", label: "PERFIL", icon: Icons.User, matches: /^\/conta/ },
+  { to: "/biblioteca", label: "BIBLIOTECA", icon: Icons.Library, matches: /^\/(acervo|biblioteca)/ },
+  { to: "/conta", label: "PERFIL", icon: Icons.User, matches: /^\/conta|perfil/ },
 ];
 
 interface MobileBottomNavProps {
