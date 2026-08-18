@@ -485,7 +485,8 @@ const PopesPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1 }}
           >
-            <Card className="overflow-hidden bg-card border-border hover:border-primary/30 transition-all h-full group">
+            <Link to={`/papas/${pope.id}`} className="block h-full focus-visible:outline-none">
+            <Card className="overflow-hidden bg-card border-border hover:border-primary/30 transition-all h-full group cursor-pointer focus-within:ring-2 focus-within:ring-primary/20">
               <div className="flex flex-col h-full">
                 <div className="relative h-spacing-4xl overflow-hidden">
                   <SacredImage 
@@ -537,6 +538,7 @@ const PopesPage: React.FC = () => {
                 </CardContent>
               </div>
             </Card>
+            </Link>
           </motion.div>
           ))
         )}
