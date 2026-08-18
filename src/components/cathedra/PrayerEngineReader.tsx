@@ -25,14 +25,14 @@ import {
   Focus,
   X,
   PlayCircle,
-  HandsPraying as PrayingHands, // Use local alias for Lucide icons
+  Heart, // Use Heart as a placeholder if HandsPraying is not available
 } from 'lucide-react';
 import SacredImage from './SacredImage';
 
 const Icons = {
   BookOpen,
   Church,
-  PrayingHands,
+  Prayer: Heart,
 };
 import ContemplativeSettingsDialog from '@/components/prayer/rosary/ContemplativeSettingsDialog';
 import { useContemplativeRhythm } from '@/hooks/useContemplativeRhythm';
