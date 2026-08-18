@@ -414,8 +414,22 @@ const AtriumHome: React.FC = () => {
                 <Link
                   key={theme.slug}
                   to={`/buscar?tema=${encodeURIComponent(theme.slug)}`}
+                  className="group min-w-[320px] shrink-0 snap-start cursor-pointer"
                 >
-                  {/* ... contents would be here but I'm just closing the structure correctly for now */}
+                  <div className="relative mb-4 flex h-80 w-full items-center justify-center overflow-hidden bg-stitch-surface-container-high">
+                    <span className="font-display text-[96px] italic text-primary/20">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                    <div className="absolute inset-0 bg-primary/10 transition-colors group-hover:bg-transparent" />
+                  </div>
+                  <h3 className="mb-1 font-display text-[24px] font-semibold leading-[32px] text-primary">
+                    {theme.label}
+                  </h3>
+                  {theme.short && (
+                    <p className="font-reader text-[12px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
+                      {theme.short}
+                    </p>
+                  )}
                 </Link>
               ))}
             </div>
@@ -457,69 +471,10 @@ const AtriumHome: React.FC = () => {
             { label: 'Capelas', to: '/santos', hint: 'Vidas dos santos' },
           ]}
         />
-      </div>
-    </SpaceLayout>
-  );
-};
-                  className="group min-w-[320px] shrink-0 snap-start cursor-pointer"
-                >
-                  <div className="relative mb-4 flex h-80 w-full items-center justify-center overflow-hidden bg-stitch-surface-container-high">
-                    <span className="font-display text-[96px] italic text-primary/20">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <div className="absolute inset-0 bg-primary/10 transition-colors group-hover:bg-transparent" />
-                  </div>
-                  <h3 className="mb-1 font-display text-[24px] font-semibold leading-[32px] text-primary">
-                    {theme.label}
-                  </h3>
-                  {theme.short && (
-                    <p className="font-reader text-[12px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
-                      {theme.short}
-                    </p>
-                  )}
-                </Link>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {/* ─── Avisos (P6) ────────────────────────────────────────────── */}
-        {announcements.length > 0 && (
-          <section className="mt-16">
-            <div className="mb-6 flex items-center gap-4">
-              <Megaphone className="h-5 w-5 text-gold-text" />
-              <h2 className="font-display text-[24px] font-semibold leading-[32px] text-primary">
-                Avisos Recentes
-              </h2>
-              <div className="h-px flex-1 bg-gold-text/20" />
-            </div>
-            <ul className="divide-y divide-border/20 border-y border-border/20">
-              {announcements.map((a) => (
-                <li key={a.id} className="flex items-center justify-between py-4">
-                  <span className="font-reader text-[15px] text-primary">
-                    {a.label}
-                  </span>
-                  <span className="shrink-0 font-reader text-[11px] font-bold uppercase tracking-[0.15em] text-muted-foreground">
-                    {new Date(a.publishedAt).toLocaleDateString('pt-BR', {
-                      day: '2-digit',
-                      month: 'short',
-                    })}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        {/* ─── Verso de encerramento ──────────────────────────────────── */}
-        <p className="mt-16 border-t border-gold-text/10 pt-8 text-center font-reader text-[14px] italic text-muted-foreground">
-          "Uma coisa peço ao Senhor, e a buscarei: habitar na Casa do Senhor
-          todos os dias da minha vida." — Sl 27,4
-        </p>
       </section>
 
       <MobileBottomNav />
-    </div>
+    </SpaceLayout>
   );
 };
 
