@@ -193,11 +193,11 @@ const AtriumJornadasPage: React.FC = () => {
 
         {/* ─── Outras áreas ─── */}
         <div className="mt-8 space-y-12 opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all">
-          <div className="flex flex-wrap gap-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">
-            <span>Leituras recentes</span>
-            <span>Progresso</span>
-            <span>Favoritos</span>
-            <span>Anotações</span>
+          <div className="flex flex-wrap gap-8 py-6 border-y border-border/10 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+            <span className="flex items-center gap-2"><BookOpen className="w-3 h-3" /> Leituras recentes</span>
+            <span className="flex items-center gap-2"><Compass className="w-3 h-3" /> Progresso</span>
+            <span className="flex items-center gap-2"><Heart className="w-3 h-3" /> Favoritos</span>
+            <span className="flex items-center gap-2"><ArrowRight className="w-3 h-3" /> Recomendações Nexus</span>
           </div>
         </div>
 
