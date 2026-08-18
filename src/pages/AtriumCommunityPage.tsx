@@ -366,7 +366,16 @@ const AtriumCommunityPage: React.FC = () => {
             </ul>
           )}
         </section>
-      </section>
+
+        <SpaceFooter 
+          note="Onde dois ou três estiverem reunidos em meu nome, eu estarei no meio deles."
+          links={[
+            { label: 'Átrio', to: '/', hint: 'Entrada do Mosteiro' },
+            { label: 'Biblioteca', to: '/biblioteca', hint: 'Mosteiro do Conhecimento' },
+            { label: 'Sacrário', to: '/oracao', hint: 'Silenciar e rezar' },
+          ]}
+        />
+      </SpaceLayout>
     </>
   );
 };
