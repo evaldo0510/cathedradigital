@@ -6,7 +6,8 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Auditoria final mobile concluída. Navegação verificada, leitor de orações padronizado e profundidade de leitura certificada.
+TEXTO DO USUÁRIO: Abra a Bíblia e o Catecismo no mobile e confirme que cada capítulo abre e lê completo.Padronize os ícones da navegação inferior com o mesmo estilo dos outros ícones do Cathedra, em uma única fonte.Padronize também o leitor de Rosário como o leitor de Santos, com Nexus e ações de continuidade.
+
 
 
 

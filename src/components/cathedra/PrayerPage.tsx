@@ -295,6 +295,50 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                 } else {
                   setPhase('closing');
                 }
+              }} className="w-full py-spacing-md bg-secondary text-secondary-foreground rounded-premium-full font-black uppercase text-premium-xs tracking-widest hover:bg-secondary/90 transition-all shadow-premium">
+                {currentMystery < 4 ? 'Próximo Mistério' : 'Finalizar Rosário'}
+              </Button>
+            </div>
+          )}
+
+          {phase === 'closing' && (
+            <div className="space-y-spacing-xl animate-in fade-in duration-500">
+              <div className="text-center space-y-spacing-sm">
+                <Icons.Sparkles className="w-spacing-2xl h-spacing-2xl text-secondary mx-auto" />
+                <h3 className="text-premium-3xl font-serif font-bold text-secondary">Salve Rainha</h3>
+                <p className="text-premium-lg text-secondary/70 font-serif leading-relaxed italic">{PRAYERS.salveRainha}</p>
+              </div>
+
+              {/* Nexus & Continuity - Adicionados para padronização com Leitor de Santos */}
+              <div className="pt-spacing-xl border-t border-white/10 space-y-spacing-xl">
+                <NexusPanel 
+                  output={{
+                    selfId: `prayer:${prayer?.slug || 'rosario'}`,
+                    suggestions: [],
+                    byBucket: {},
+                    labels: {}
+                  }} 
+                  kicker="Por que rezamos o Rosário?" 
+                />
+                <ReaderContinuation 
+                  context={{ 
+                    kind: 'prayer', 
+                    id: prayer?.slug || 'rosario',
+                    meta: { prayerCategory: 'rosario' }
+                  }} 
+                />
+              </div>
+
+              <Button onClick={onClose} className="w-full py-spacing-md bg-white/10 text-white rounded-premium-full font-black uppercase text-premium-xs tracking-widest hover:bg-white/20 transition-all">
+                Concluir
+              </Button>
+            </div>
+          )}
+
+                  setPhase('mystery');
+                } else {
+                  setPhase('closing');
+                }
               }} className="w-full py-spacing-md bg-secondary/20 text-secondary border border-secondary/20 rounded-premium-full font-black uppercase text-premium-xs tracking-widest hover:bg-secondary/30 transition-all shadow-premium shadow-primary/20">
                 {currentMystery < 4 ? 'Próximo Mistério' : 'Concluir Rosário'}
               </Button>
