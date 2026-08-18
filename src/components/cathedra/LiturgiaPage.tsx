@@ -169,8 +169,8 @@ const LiturgiaPage: React.FC = () => {
            
            {readings?.colorToken && (
              <div className="flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs rounded-full border border-primary/10 bg-background/50 backdrop-blur-sm">
-                <div className={cn("w-3 h-3 rounded-full shadow-sm", readings.colorToken === 'green' ? 'bg-green-600' : readings.colorToken === 'red' ? 'bg-red-600' : readings.colorToken === 'white' ? 'bg-stone-200' : readings.colorToken === 'violet' ? 'bg-violet-700' : 'bg-secondary')} />
-                <span className="text-[9px] font-black uppercase tracking-widest text-primary/60">{readings.color}</span>
+                <div className={cn("w-3 h-3 rounded-full shadow-sm", String(readings.colorToken) === 'green' ? 'bg-green-600' : String(readings.colorToken) === 'red' ? 'bg-red-600' : String(readings.colorToken) === 'white' ? 'bg-stone-200' : String(readings.colorToken) === 'violet' ? 'bg-violet-700' : 'bg-secondary')} />
+                <span className="text-[9px] font-black uppercase tracking-widest text-primary/60">{readings.cor || readings.colorToken}</span>
              </div>
            )}
         </div>
