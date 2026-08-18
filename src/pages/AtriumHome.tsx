@@ -36,12 +36,14 @@ import {
 import type { ResumeItem } from '@/modules/atrium/types';
 import { useAuth } from '@/hooks/useAuth';
 import AtriumReception from '@/components/cathedra/AtriumReception';
+import { SpaceDoors, type SpaceDoor } from '@/components/cathedra/space/SpaceLayout';
+import { Heart, GraduationCap, Compass, Search as SearchIcon, Route as RouteIcon } from 'lucide-react';
 
 // ─── Copy oficial ────────────────────────────────────────────────────────────
 const HERO_KICKER = 'Sanctuarium Digital';
 const HERO_TITLE = 'Cathedra Digital — Entrai no Silêncio';
 const HERO_SUBTITLE =
-  'A biblioteca viva da Tradição. Um espaço sagrado para contemplar a Verdade através dos séculos.';
+  'Leia, reze, estude e descubra a riqueza da fé católica.';
 
 const RESUME_ICON: Record<ResumeItem['kind'], React.ComponentType<{ className?: string }>> = {
   reading: MenuBook,
@@ -53,19 +55,47 @@ const RESUME_ICON: Record<ResumeItem['kind'], React.ComponentType<{ className?: 
 };
 
 // ─── 5 Ambientes (P4) — navegação canônica ──────────────────────────────────
-const ENVIRONMENTS: {
-  key: string;
-  label: string;
-  latin: string;
-  to: string;
-  Icon: React.ComponentType<{ className?: string }>;
-  hint: string;
-}[] = [
-  { key: 'estudar', label: 'Estudar', latin: 'Studium', to: '/biblioteca', Icon: MenuBook, hint: 'Escritura, Catecismo, Magistério' },
-  { key: 'rezar', label: 'Rezar', latin: 'Oratio', to: '/rezar', Icon: Heart, hint: 'Liturgia, Lectio, oração diária' },
-  { key: 'formar-se', label: 'Formar-se', latin: 'Formatio', to: '/jornadas', Icon: GraduationCap, hint: 'Trilhas guiadas de formação' },
-  { key: 'pesquisar', label: 'Pesquisar', latin: 'Quaerere', to: '/buscar', Icon: SearchIcon, hint: 'Busca universal no acervo' },
-  { key: 'minha-jornada', label: 'Minha Jornada', latin: 'Iter Meum', to: '/minha-jornada', Icon: RouteIcon, hint: 'Progresso, favoritos, notas' },
+const MAIN_DOORS: SpaceDoor[] = [
+  { 
+    key: 'orar', 
+    label: 'ORAR', 
+    overline: 'Oratio', 
+    to: '/rezar', 
+    Icon: Heart, 
+    hint: 'Um espaço para silenciar e rezar.' 
+  },
+  { 
+    key: 'estudar', 
+    label: 'ESTUDAR', 
+    overline: 'Studium', 
+    to: '/biblioteca', 
+    Icon: MenuBook, 
+    hint: 'Conheça os tesouros da fé.' 
+  },
+  { 
+    key: 'conhecer', 
+    label: 'CONHECER', 
+    overline: 'Cognoscere', 
+    to: '/santos', 
+    Icon: Sparkles, 
+    hint: 'Descubra testemunhas da fé e da Igreja.' 
+  },
+  { 
+    key: 'igreja', 
+    label: 'IGREJA', 
+    overline: 'Ecclesia', 
+    to: '/igreja', 
+    Icon: GraduationCap, 
+    hint: 'Acompanhe a vida da Igreja.' 
+  },
+  { 
+    key: 'minha-jornada', 
+    label: 'MINHA JORNADA', 
+    overline: 'Iter Meum', 
+    to: '/minha-jornada', 
+    Icon: RouteIcon, 
+    hint: 'Veja por onde você passou e continue.' 
+  },
 ];
 
 const AtriumHome: React.FC = () => {
@@ -131,8 +161,8 @@ const AtriumHome: React.FC = () => {
           <h2 className="mb-3 font-reader text-[12px] font-bold uppercase tracking-[0.32em] text-gold-text">
             {HERO_KICKER}
           </h2>
-          <h1 className="mb-3 font-display text-[32px] italic leading-[40px] text-primary md:text-[48px] md:leading-[56px] md:tracking-[-0.02em]">
-            {HERO_TITLE}
+          <h1 className="mb-3 font-display text-[32px] italic leading-[40px] text-primary md:text-[56px] md:leading-[64px] md:tracking-[-0.02em]">
+            Seu companheiro espiritual para a vida interior.
           </h1>
           <p className="mb-8 max-w-2xl font-reader text-[20px] leading-[32px] text-muted-foreground md:mx-0 mx-auto">
             {HERO_SUBTITLE}
@@ -257,45 +287,14 @@ const AtriumHome: React.FC = () => {
         </section>
         )}
 
-        {/* ─── Cinco Ambientes (P4) ──────────────────────────────────── */}
+        {/* ─── Cinco Ambientes (Portas Principais) ────────────────────── */}
         <section className="mt-16">
-          <div className="mb-8 flex items-center gap-4">
-            <Compass className="h-5 w-5 text-gold-text" />
-            <h2 className="font-display text-[24px] font-semibold leading-[32px] text-primary">
-              Cinco Ambientes
-            </h2>
-            <div className="h-px flex-1 bg-gold-text/20" />
-            <span className="hidden font-reader text-[12px] font-bold uppercase tracking-[0.15em] text-muted-foreground md:inline">
-              Quinque Loca
-            </span>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-5 md:gap-6">
-            {ENVIRONMENTS.map((env, i) => (
-              <Link
-                key={env.key}
-                to={env.to}
-                className="group relative flex flex-col border border-border/20 bg-accentest p-5 transition-all hover:border-gold-text/40 hover:shadow-lg hover:shadow-black/[0.05]"
-              >
-                <div className="absolute left-0 top-0 h-full w-1 origin-top scale-y-0 bg-gold-text transition-transform group-hover:scale-y-100" />
-                <div className="mb-4 flex items-center justify-between">
-                  <env.Icon className="h-6 w-6 text-gold-text" />
-                  <span className="font-display text-[24px] italic text-gold-text/75">
-                    {String(i + 1).padStart(2, '0')}
-                  </span>
-                </div>
-                <h3 className="font-reader text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-                  {env.latin}
-                </h3>
-                <h3 className="mt-0.5 font-display text-[20px] leading-tight text-primary transition-colors group-hover:text-gold-text">
-                  {env.label}
-                </h3>
-                <p className="mt-2 font-reader text-[12px] leading-snug text-muted-foreground">
-                  {env.hint}
-                </p>
-              </Link>
-            ))}
-          </div>
+          <SpaceDoors 
+            title="ONDE VOCÊ QUER CAMINHAR HOJE?" 
+            aside="Quinque Loca"
+            doors={MAIN_DOORS}
+            columns={5}
+          />
         </section>
 
         {/* ─── Continuar Caminhada ────────────────────────────────────── */}
