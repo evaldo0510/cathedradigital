@@ -9,8 +9,11 @@ import { createPortal } from 'react-dom';
 import { Icons } from '../../constants';
 import DeepContentSection from './DeepContentSection';
 import { useDevotionalFavorites } from '@/hooks/useDevotionalFavorites';
+import { NexusPanel } from '@/components/reader';
+import { ReaderContinuation } from '@/components/shared/ReaderContinuation';
 
 import PrayerAudioPlayer from './PrayerAudioPlayer';
+
 
 type MysteryKey = 'gozosos' | 'dolorosos' | 'gloriosos' | 'luminosos';
 
@@ -134,7 +137,7 @@ function getDayName(): string {
 }
 
 // ---------- Prayer Mode ----------
-const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose: () => void }> = ({ mysteryKey, intention, onClose }) => {
+const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose: () => void; prayer?: any }> = ({ mysteryKey, intention, onClose, prayer }) => {
   const data = MYSTERY_DATA[mysteryKey];
   const [currentMystery, setCurrentMystery] = useState(0);
   const [phase, setPhase] = useState<'intro' | 'mystery' | 'decade' | 'closing'>('intro');
@@ -146,6 +149,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
   return (
     <div className="fixed inset-0 z-[200] flex flex-col overflow-y-auto"
       style={{ background: 'linear-gradient(180deg, #0B1F3A 0%, #050D19 50%, #0B1F3A 100%)' }}>
+
       {/* Header — minimal */}
       <div className="flex items-center justify-between p-spacing-md sticky top-spacing-0 z-10 bg-inherit/80 ">
         <Button onClick={onClose} className="p-spacing-xs rounded-premium-full bg-card/50 border border-white/10 hover:bg-white/10 transition-all">
@@ -309,6 +313,29 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
                   <p className="text-premium-lg text-secondary/60 mt-spacing-md font-serif leading-relaxed italic animate-in fade-in slide-in-from-top-spacing-xs duration-300">{PRAYERS.salveRainha}</p>
                 )}
               </div>
+
+              {/* Nexus & Continuity - Adicionados para padronização com Leitor de Santos */}
+              <div className="pt-spacing-xl border-t border-white/10 space-y-spacing-xl">
+                <NexusPanel 
+                  output={{
+                    selfId: `prayer:${prayer?.slug || 'rosario'}`,
+                    suggestions: [],
+                    byBucket: {},
+                    labels: {}
+                  }} 
+                  kicker="Por que rezamos o Rosário?" 
+                />
+                <ReaderContinuation 
+                  context={{ 
+                    kind: 'prayer', 
+                    id: prayer?.slug || 'rosario',
+                    meta: { prayerCategory: 'rosario' }
+                  }} 
+                />
+              </div>
+
+
+
               <div className="text-center space-y-spacing-md py-spacing-xl">
                 <div className="relative inline-block font-serif">
                   <Icons.Heart className="w-spacing-3xl h-spacing-3xl text-secondary/20 mx-auto" />
@@ -324,6 +351,7 @@ const PrayerMode: React.FC<{ mysteryKey: MysteryKey; intention: string; onClose:
               </Button>
             </div>
           )}
+
         </div>
       </div>
     </div>
@@ -359,10 +387,16 @@ const PrayerPage: React.FC = () => {
 
   if (prayingMystery) {
     return createPortal(
-      <PrayerMode mysteryKey={prayingMystery} intention={intention} onClose={() => setPrayingMystery(null)} />,
+      <PrayerMode 
+        mysteryKey={prayingMystery} 
+        intention={intention} 
+        onClose={() => setPrayingMystery(null)} 
+        prayer={{ slug: prayingMystery, title: MYSTERY_DATA[prayingMystery].title }}
+      />,
       document.body
     );
   }
+
 
   return (
     <motion.div 
