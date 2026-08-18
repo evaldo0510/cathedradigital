@@ -99,6 +99,7 @@ interface Props {
   initialBlockId?: string | null;
   /** Estilo aplicado ao wrapper editorial — usado para tipografia/densidade. */
   contentStyle?: React.CSSProperties;
+  sacredImage?: string;
 }
 
 const KIND_LABEL: Record<string, string> = {
