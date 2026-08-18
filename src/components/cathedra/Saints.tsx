@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect, lazy, Suspense } from 'react';
+import { SpaceLayout, SpaceHeader, SpaceFooter } from './space/SpaceLayout';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
 import { useOfficialSaint } from '@/hooks/useSaints';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -266,7 +267,7 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
   const displaySaints = viewMode === 'daily' ? saintsForSelectedDate : modeSaints;
 
   return (
-    <>
+    <SpaceLayout>
       <SEOHead 
         title="Santo do Dia - Calendário de Santos" 
         description="Conheça o santo do dia, sua história, virtudes e ensinamentos. Um calendário completo de santidade para cada dia do ano." 
@@ -288,12 +289,11 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
       </script>
 
       <div ref={ref} className="space-y-spacing-xl pb-spacing-3xl">
-        <SanctorumHero
-          variant={viewMode === 'daily' ? 'saintOfDay' : viewMode === 'popes' ? 'category' : viewMode === 'writers' ? 'category' : 'page'}
-          kind={viewMode === 'popes' ? 'pope' : viewMode === 'writers' ? 'doctor' : undefined}
-          date={viewMode === 'daily' ? selectedDate : undefined}
-          title="Vidas dos Santos"
-          subtitle={'"Sede santos, porque eu, o Senhor vosso Deus, sou santo." — Levítico 19,2'}
+        <SpaceHeader 
+          align="center"
+          kicker="Capellae"
+          title="Capelas"
+          description='"Sede santos, porque eu, o Senhor vosso Deus, sou santo." — Levítico 19,2'
         />
 
 
@@ -685,7 +685,15 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
           )}
         </AnimatePresence>
       </div>
-    </>
+      <SpaceFooter 
+        note="A santidade é a meta de todo mosteiro interior."
+        links={[
+          { label: 'Átrio', to: '/', hint: 'Voltar ao início' },
+          { label: 'Acervo', to: '/acervo', hint: 'Estudar a tradição' },
+          { label: 'Rezar', to: '/rezar', hint: 'Pedir a intercessão' },
+        ]}
+      />
+    </SpaceLayout>
   );
 });
 
