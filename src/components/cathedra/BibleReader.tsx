@@ -293,7 +293,8 @@ export const BibleReader: React.FC<BibleReaderProps> = ({
           </Button>
         </div>
       </div>
-    </ReaderShell>
+        </ReaderShell>
+      </div>
     </div>
   );
 };
