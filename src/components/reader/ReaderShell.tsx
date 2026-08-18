@@ -66,22 +66,18 @@ export const ReaderShell: React.FC<ReaderShellProps> = ({
     <article
       className={cn(
         'relative w-full bg-transparent text-foreground',
-        'flex flex-col',
+        'flex flex-col min-h-screen',
         className,
       )}
       aria-label={ariaLabel}
       data-reader-shell
     >
-      <header data-reader-slot="hero">{hero}</header>
-
-      {headerContext}
-
-
+      <header data-reader-slot="hero" className="order-first">{hero}</header>
 
       <div
         data-reader-slot="content"
         className={cn(
-          'w-full mx-auto',
+          'w-full mx-auto flex-1',
           contentMaxWidth,
           'px-[var(--stitch-margin-mobile)] md:px-0',
           'py-spacing-lg md:py-spacing-2xl',
@@ -90,6 +86,13 @@ export const ReaderShell: React.FC<ReaderShellProps> = ({
       >
         {children}
       </div>
+
+      <section
+        data-reader-slot="progress"
+        className="w-full px-[var(--stitch-margin-mobile)] md:px-0 py-spacing-md border-t border-border/10"
+      >
+        {headerContext}
+      </section>
 
       {nexus && (
         <section

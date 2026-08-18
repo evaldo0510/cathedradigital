@@ -42,8 +42,7 @@ export function MobileReaderChrome({
     <header
       className={cn(
         "sticky top-0 z-30 w-full md:hidden",
-        "border-b border-stitch-outline-variant/70",
-        "bg-stitch-surface/90 backdrop-blur-md",
+        "bg-stitch-surface",
         className,
       )}
       style={{ paddingTop: "var(--stitch-mobile-safe-top)" }}
@@ -52,37 +51,21 @@ export function MobileReaderChrome({
         className="flex items-center gap-2 px-[var(--stitch-margin-mobile)]"
         style={{ height: "var(--stitch-mobile-topbar-h)" }}
       >
-        <ChromeIconButton onClick={handleBack} label="Voltar">
-          <ArrowLeft className="h-5 w-5" />
-        </ChromeIconButton>
-
-        <div className="min-w-0 flex-1 text-center">
-          {kicker && (
+        <div className="flex shrink-0 items-center gap-1">
+          <img src="/monograma-cathedra.svg" alt="Cathedra" className="h-7 w-7" />
+          {title && (
             <p
               className={cn(
-                "font-[var(--font-stitch-label)] text-[10px] font-bold uppercase",
-                "tracking-[0.1em] text-stitch-secondary truncate",
+                "font-[var(--font-stitch-display)] text-[16px] leading-tight",
+                "text-stitch-on-surface truncate max-w-[120px]",
               )}
             >
-              {kicker}
-            </p>
-          )}
-          <p
-            className={cn(
-              "font-[var(--font-stitch-display)] text-[15px] leading-tight",
-              "text-stitch-on-surface truncate",
-            )}
-          >
-            {title}
-          </p>
-          {meta && (
-            <p className="font-[var(--font-stitch-label)] text-[10px] text-stitch-on-surface-variant/80 truncate">
-              {meta}
+              {title}
             </p>
           )}
         </div>
 
-        <div className="flex shrink-0 items-center gap-0.5">
+        <div className="flex flex-1 items-center justify-end gap-0.5">
           {onOpenTypography && (
             <ChromeIconButton onClick={onOpenTypography} label="Tipografia">
               <Type className="h-5 w-5" />

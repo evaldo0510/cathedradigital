@@ -1,5 +1,5 @@
-import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { ArrowLeft, Search, Menu } from "lucide-react";
+import { useNavigate, Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
 
@@ -60,7 +60,7 @@ export function MobileTopBar({
           onClick={handleBack}
           aria-label="Voltar"
           className={cn(
-            "inline-flex items-center justify-center rounded-full",
+            "inline-flex items-center justify-center rounded-full mr-1",
             "text-stitch-on-surface hover:bg-stitch-surface-container",
             "transition-colors focus-visible:outline-none focus-visible:ring-2",
             "focus-visible:ring-stitch-secondary",
@@ -73,18 +73,11 @@ export function MobileTopBar({
           <ArrowLeft className="h-5 w-5" />
         </button>
       )}
+      <Link to="/" className="shrink-0">
+        <img src="/monograma-cathedra.svg" alt="Cathedra" className="h-8 w-8" />
+      </Link>
 
       <div className="min-w-0 flex-1">
-        {kicker && (
-          <p
-            className={cn(
-              "font-[var(--font-stitch-label)] text-[11px] font-bold uppercase",
-              "tracking-[0.08em] text-stitch-secondary truncate",
-            )}
-          >
-            {kicker}
-          </p>
-        )}
         {title && (
           <p
             className={cn(
@@ -97,9 +90,24 @@ export function MobileTopBar({
         )}
       </div>
 
-      {actions && (
-        <div className="flex shrink-0 items-center gap-1">{actions}</div>
-      )}
+      <div className="flex shrink-0 items-center gap-1">
+        <Link
+          to="/buscar"
+          aria-label="Busca"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+        >
+          <Search className="h-5 w-5" />
+        </Link>
+        {actions && <div className="flex items-center">{actions}</div>}
+        <button
+          type="button"
+          aria-label="Menu"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-full text-stitch-on-surface hover:bg-stitch-surface-container"
+        >
+          <Menu className="h-5 w-5" />
+        </button>
+      </div>
+
     </header>
   );
 }
