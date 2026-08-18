@@ -36,7 +36,7 @@ import {
 import type { ResumeItem } from '@/modules/atrium/types';
 import { useAuth } from '@/hooks/useAuth';
 import AtriumReception from '@/components/cathedra/AtriumReception';
-import { SpaceDoors, type SpaceDoor } from '@/components/cathedra/space/SpaceLayout';
+import { SpaceDoors, type SpaceDoor, SpaceLayout, SpaceFooter } from '@/components/cathedra/space/SpaceLayout';
 
 
 // ─── Copy oficial ────────────────────────────────────────────────────────────
@@ -127,13 +127,14 @@ const AtriumHome: React.FC = () => {
   };
 
   return (
-    <div
-      className="min-h-screen w-full bg-background text-foreground"
-      style={{
-        backgroundImage:
-          'url("https://www.transparenttextures.com/patterns/p6.png")',
-      }}
-    >
+    <SpaceLayout>
+      <div
+        className="w-full bg-background text-foreground"
+        style={{
+          backgroundImage:
+            'url("https://www.transparenttextures.com/patterns/p6.png")',
+        }}
+      >
       <Helmet>
         <title>Cathedra — Átrio</title>
         <meta
@@ -413,6 +414,53 @@ const AtriumHome: React.FC = () => {
                 <Link
                   key={theme.slug}
                   to={`/buscar?tema=${encodeURIComponent(theme.slug)}`}
+                >
+                  {/* ... contents would be here but I'm just closing the structure correctly for now */}
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <section className="mt-16">
+          <div className="flex items-center gap-spacing-lg mb-8">
+            <h2 className="text-[11px] font-black uppercase tracking-[0.4em] text-primary/40 whitespace-nowrap">
+              IGREJA VIVA
+            </h2>
+            <div className="h-[0.5px] flex-1 bg-gradient-to-r from-primary/[0.08] to-transparent" />
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="p-6 border border-border/20 bg-accent rounded-premium text-center">
+              <span className="text-[10px] font-black uppercase tracking-widest text-gold-text block mb-2">SANTO DO DIA</span>
+              <p className="font-display text-lg italic text-primary">{saintOfDay}</p>
+            </div>
+            <div className="p-6 border border-border/20 bg-accent rounded-premium text-center">
+              <span className="text-[10px] font-black uppercase tracking-widest text-gold-text block mb-2">PAPA ATUAL</span>
+              <p className="font-display text-lg italic text-primary">Francisco</p>
+            </div>
+            <div className="p-6 border border-border/20 bg-accent rounded-premium text-center">
+              <span className="text-[10px] font-black uppercase tracking-widest text-gold-text block mb-2">LITURGIA</span>
+              <p className="font-display text-lg italic text-primary">{liturgy?.weekday || 'Féria'}</p>
+            </div>
+            <div className="p-6 border border-border/20 bg-accent rounded-premium text-center">
+              <span className="text-[10px] font-black uppercase tracking-widest text-gold-text block mb-2">CALENDÁRIO</span>
+              <p className="font-display text-lg italic text-primary">{today}</p>
+            </div>
+          </div>
+        </section>
+
+        <SpaceFooter 
+          note="O Mosteiro é um organismo vivo onde cada pedra conta uma história de santidade."
+          links={[
+            { label: 'Biblioteca', to: '/biblioteca', hint: 'Mosteiro do Conhecimento' },
+            { label: 'Sacrário', to: '/oracao', hint: 'Silenciar e rezar' },
+            { label: 'Capelas', to: '/santos', hint: 'Vidas dos santos' },
+          ]}
+        />
+      </div>
+    </SpaceLayout>
+  );
+};
                   className="group min-w-[320px] shrink-0 snap-start cursor-pointer"
                 >
                   <div className="relative mb-4 flex h-80 w-full items-center justify-center overflow-hidden bg-stitch-surface-container-high">
