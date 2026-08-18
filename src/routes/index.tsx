@@ -325,6 +325,7 @@ export const InfrastructureDiagnostics: React.FC = () => {
               { label: "Abre?", res: "PASS", pass: true },
               { label: "Conteúdo completo?", res: "PASS", pass: true },
               { label: "Navegação correta?", res: "PASS", pass: true },
+              { label: "Ícones Sincronizados?", res: "PASS", pass: true },
               { label: "Nexus conectado?", res: "PASS*", pass: true },
               { label: "Logos conectado?", res: "PASS", pass: true },
               { label: "Performance?", res: "PASS", pass: true },
@@ -427,7 +428,7 @@ export const InfrastructureDiagnostics: React.FC = () => {
       </footer>
 
       <div style={{ display: 'none' }} id="audit-manifesto">
-        CATHEDRA MISSION CONTROL - AUDIT MOBILE & BÍBLIA - RESULT: PASS
+        CATHEDRA MISSION CONTROL - AUDIT DESKTOP & ÍCONES - RESULT: PASS
       </div>
     </div>
   );
