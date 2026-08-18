@@ -149,7 +149,34 @@ const LiturgiaPage: React.FC = () => {
   ) : null;
 
   return (
-    <div className="w-full">
+    <div className="flex flex-col md:flex-row w-full min-h-screen">
+      {/* Desktop Sidebar: Liturgical Sacred Image */}
+      <div className="hidden md:flex md:w-[40%] sticky top-0 h-screen overflow-hidden bg-primary/5 border-r border-primary/5">
+        <SacredImage 
+          src={undefined} // Will use default sacred visuals if none provided
+          className="w-full h-full object-cover opacity-60 mix-blend-multiply" 
+          alt={readings?.liturgia || "Liturgia"} 
+        />
+        <div className="absolute inset-0 bg-gradient-to-l from-background via-transparent to-transparent" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-spacing-xl text-center space-y-spacing-lg">
+           <div className="w-spacing-4xl h-spacing-4xl mx-auto rounded-full bg-secondary/10 flex items-center justify-center border border-secondary/20 shadow-premium">
+             <Icons.Liturgy className="w-spacing-xl h-spacing-xl text-secondary" />
+           </div>
+           <div className="space-y-spacing-xs">
+             <h2 className="font-display text-4xl text-primary/40 tracking-widest uppercase italic">Liturgia</h2>
+             <p className="text-[10px] uppercase tracking-[0.4em] text-secondary/60 font-bold">Verbum Domini</p>
+           </div>
+           
+           {readings?.colorToken && (
+             <div className="flex items-center gap-spacing-xs px-spacing-md py-spacing-2xs rounded-full border border-primary/10 bg-background/50 backdrop-blur-sm">
+                <div className={cn("w-3 h-3 rounded-full shadow-sm", readings.colorToken === 'green' ? 'bg-green-600' : readings.colorToken === 'red' ? 'bg-red-600' : readings.colorToken === 'white' ? 'bg-stone-200' : readings.colorToken === 'violet' ? 'bg-violet-700' : 'bg-secondary')} />
+                <span className="text-[9px] font-black uppercase tracking-widest text-primary/60">{readings.color}</span>
+             </div>
+           )}
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-y-auto">
       <SEOHead title="Liturgia do Dia" description="Leituras do dia." path="/liturgia" keywords="liturgia" />
       
       {/* Header Fixo com Abas */}
