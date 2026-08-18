@@ -715,9 +715,10 @@ const Catechism: React.FC = memo(() => {
               </div>
 
             </div>
-          </ReaderShell>
-          <CatechismDiagnosticPanel />
+            </ReaderShell>
+          </div>
         </div>
+        <CatechismDiagnosticPanel />
       </CatechismPendingProvider>
     );
   }
