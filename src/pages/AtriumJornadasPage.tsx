@@ -189,6 +189,8 @@ const AtriumJornadasPage: React.FC = () => {
               })}
             </div>
           </section>
+        )}
+
         {/* ─── Outras áreas ─── */}
         <div className="mt-8 space-y-12 opacity-60 grayscale hover:opacity-100 hover:grayscale-0 transition-all">
           <div className="flex flex-wrap gap-4 text-xs font-bold uppercase tracking-widest text-muted-foreground">
