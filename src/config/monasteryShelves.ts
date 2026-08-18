@@ -34,7 +34,7 @@ export interface LibraryShelf {
 export const MONASTERY_SHELVES: LibraryShelf[] = [
   {
     id: 'formation',
-    title: '📖 Formação',
+    title: 'FORMAÇÃO',
     icon: BookOpen,
     items: [
       { label: 'Bíblia', to: '/bible', icon: Icons.Bible, desc: 'Escrituras' },
@@ -45,7 +45,7 @@ export const MONASTERY_SHELVES: LibraryShelf[] = [
   },
   {
     id: 'spirituality',
-    title: '🙏 Espiritualidade',
+    title: 'ESPIRITUALIDADE',
     icon: Heart,
     items: [
       { label: 'Santos', to: '/saints', icon: User, desc: 'Capelas' },
@@ -56,7 +56,7 @@ export const MONASTERY_SHELVES: LibraryShelf[] = [
   },
   {
     id: 'church',
-    title: '🏛 Igreja',
+    title: 'IGREJA',
     icon: Church,
     items: [
       { label: 'Patrística', to: '/biblioteca?filter=patristica', icon: Library, desc: 'Padres' },
