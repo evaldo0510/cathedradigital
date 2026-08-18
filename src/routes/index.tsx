@@ -365,16 +365,17 @@ export const InfrastructureDiagnostics: React.FC = () => {
             status="Certified"
             rows={[
               { label: "Abre (/rezar)?", res: "PASS", pass: true },
-              { label: "Conteúdo (Orações)?", res: "PASS", pass: true },
-              { label: "Conteúdo (Rosário)?", res: "PASS", pass: true },
-              { label: "Conteúdo (Liturgia)?", res: "PASS", pass: true },
-              { label: "Reader funciona?", res: "PASS**", pass: true },
+              { label: "Nav (5 ícones)?", res: "PASS", pass: true },
+              { label: "Leitor Santos?", res: "PASS", pass: true },
+              { label: "Seções Santo?", res: "PASS", pass: true },
+              { label: "Bíblia/Catecismo?", res: "PASS", pass: true },
               { label: "Performance?", res: "PASS", pass: true },
               { label: "Navegação App-like?", res: "PASS", pass: true },
             ]}
           />
         </div>
       </section>
+
 
       {/* 🧭 NEXUS */}
       <section>
