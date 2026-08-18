@@ -6,7 +6,8 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Abra no desktop LER, ORAR, IGREJA, BIBLIOTECA e PERFIL e confirme que cada ícone abre o destino certo.
+TEXTO DO USUÁRIO: Padronize os ícones dos leitores de santos, orações, Rosário e Liturgia como os dos ícones da navegação inferior.Audite a Home mobile e a navegação inferior e corrija os PASS/FAIL que não estiverem certos.Padronize o leitor de Papa como os leitores de Santos, com Nexus e ações de continuidade.
+
 
 
 
