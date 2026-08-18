@@ -685,7 +685,15 @@ const Saints = React.forwardRef<HTMLDivElement, { legacyReader?: boolean }>((pro
           )}
         </AnimatePresence>
       </div>
-    </>
+      <SpaceFooter 
+        note="A santidade é a meta de todo mosteiro interior."
+        links={[
+          { label: 'Átrio', to: '/', hint: 'Voltar ao início' },
+          { label: 'Acervo', to: '/acervo', hint: 'Estudar a tradição' },
+          { label: 'Rezar', to: '/rezar', hint: 'Pedir a intercessão' },
+        ]}
+      />
+    </SpaceLayout>
   );
 });
 
