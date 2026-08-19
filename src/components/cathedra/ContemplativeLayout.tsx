@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
 import { useAuth } from '@/hooks/useAuth';
-import { ProfessionalCard } from '@/components/professional/ProfessionalCard';
+
 import { useAvatarUrl } from '@/lib/avatar';
 
 interface ContemplativeLayoutProps {
@@ -33,7 +33,7 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   const { profile } = useAuth();
   const avatarDisplay = useAvatarUrl(profile?.avatar_url || null, 160);
   
-  const showProfessionalCard = profile?.show_professional_card && profile?.professional_name;
+  
   
   return (
     <div 
