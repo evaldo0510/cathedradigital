@@ -23,6 +23,7 @@ import {
   Zap,
   Flame,
 } from 'lucide-react';
+import { EditorialHero } from '@/components/editorial/harmony';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';

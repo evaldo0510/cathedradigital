@@ -9,6 +9,7 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Clock, ChevronRight, Loader2 } from 'lucide-react';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
+import { EditorialHero } from '@/components/editorial/harmony';
 
 import {
   usePrayers,

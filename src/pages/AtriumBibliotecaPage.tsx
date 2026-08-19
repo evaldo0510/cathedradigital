@@ -24,6 +24,7 @@ import { useBibliotecaRecents } from '@/hooks/useBibliotecaState';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import { LibrarySearchPanel, LibraryThemesBlock } from '@/modules/biblioteca';
+import { EditorialHero } from '@/components/editorial/harmony';
 import { SafeImage } from '@/components/library/SafeImage';
 import { LIBRARY_ACERVOS } from '@/config/libraryAcervos';
 import {
