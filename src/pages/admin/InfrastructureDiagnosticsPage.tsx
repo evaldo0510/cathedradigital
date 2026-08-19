@@ -180,7 +180,7 @@ export default function InfrastructureDiagnosticsPage() {
     <div className="p-8 max-w-6xl mx-auto space-y-8 pb-32">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Cathedra Mission Control</h1>
+          <h1 className="text-3xl font-bold tracking-tight" id="main-title">Cathedra Mission Control</h1>
           <p className="text-muted-foreground">Audit 7.7.1A — Diagnostics & Multi-Language Registry</p>
         </div>
         <div className="flex gap-2">
@@ -518,7 +518,7 @@ export default function InfrastructureDiagnosticsPage() {
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground px-1">Status por Área (Real-Time)</h3>
+                <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground px-1">Status por Área (Real-Time)</h2>
                 <div className="grid grid-cols-1 gap-2">
                   {[
                     { area: 'Santos', status: 'PASS', route: '/santos', action: 'Navegação editorial ativa' },
