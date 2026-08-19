@@ -42,7 +42,7 @@ import {
 } from '@/modules/atrium/hooks';
 import { useSpiritualJourney } from '@/hooks/useSpiritualJourney';
 import { useAuth } from '@/hooks/useAuth';
-import { ProfessionalCard } from '@/components/professional/ProfessionalCard';
+
 import { useAvatarUrl } from '@/lib/avatar';
 import type { ResumeItem } from '@/modules/atrium/types';
 
@@ -115,7 +115,7 @@ const HomeUnified: React.FC = () => {
   // Primeiro tema como destaque; fallback silencioso se lista vazia.
   const featured = themes[0];
   
-  const showProfessionalCard = authenticated && profile?.show_professional_card && profile?.professional_name;
+  
 
 
 
@@ -160,16 +160,6 @@ const HomeUnified: React.FC = () => {
             CATHEDRA
           </h1>
 
-          {showProfessionalCard && (
-            <div data-rise="1.5" className="mb-8 w-full max-w-2xl mx-auto px-4">
-              <ProfessionalCard 
-                name={profile.professional_name}
-                bio={profile.bio}
-                avatarUrl={avatarDisplay || undefined}
-                instagramUrl={profile.instagram_url}
-              />
-            </div>
-          )}
 
           <p
             data-rise="2"

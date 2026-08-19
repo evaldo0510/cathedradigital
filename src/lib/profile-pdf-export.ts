@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import QRCode from 'qrcode';
+
 
 export interface DonationRow {
   created_at: string | null;
@@ -23,8 +23,6 @@ interface ExportInput {
   userEmail: string;
   donations: DonationRow[];
   audit: AuditRow[];
-  instagramUrl?: string;
-  professionalName?: string;
 }
 
 const fmtDate = (iso: string | null) =>
@@ -33,7 +31,7 @@ const fmtDate = (iso: string | null) =>
 const fmtBRL = (v: number) =>
   new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v / 100);
 
-export async function exportProfilePdf({ userName, userEmail, donations, audit, instagramUrl, professionalName }: ExportInput) {
+export async function exportProfilePdf({ userName, userEmail, donations, audit }: ExportInput) {
   const doc = new jsPDF({ unit: 'pt', format: 'a4' });
   const now = new Date().toLocaleString('pt-BR');
 
@@ -44,28 +42,11 @@ export async function exportProfilePdf({ userName, userEmail, donations, audit, 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(10);
   doc.text(`Usuário: ${userName || '—'}  ·  ${userEmail}`, 40, 68);
-  if (professionalName) {
-    doc.text(`Profissional: ${professionalName}`, 40, 82);
-    doc.text(`Gerado em: ${now}`, 40, 96);
-  } else {
-    doc.text(`Gerado em: ${now}`, 40, 82);
-  }
+  doc.text(`Gerado em: ${now}`, 40, 82);
 
-  // QR Code do Instagram
-  if (instagramUrl) {
-    try {
-      const qrDataUrl = await QRCode.toDataURL(instagramUrl, { margin: 2, width: 80 });
-      doc.addImage(qrDataUrl, 'PNG', 480, 40, 60, 60);
-      doc.setFontSize(8);
-      doc.text('Acesse meu Instagram', 475, 110);
-      doc.link(475, 100, 100, 20, { url: instagramUrl });
-    } catch (err) {
-      console.error('QR Code generation failed', err);
-    }
-  }
 
   // Doações
-  const donationsStartY = professionalName ? 126 : 120;
+  const donationsStartY = 120;
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(13);
   doc.text('Histórico de Doações & Apoio', 40, donationsStartY - 8);
