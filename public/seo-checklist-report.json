@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-08-19T15:33:44.364Z",
+  "generated_at": "2026-08-19T21:44:43.659Z",
   "project_domain": "https://www.cathedradigital.com.br",
   "summary": {
-    "pass": 9,
-    "warn": 2,
-    "fail": 3
+    "pass": 12,
+    "warn": 1,
+    "fail": 1
   },
   "checks": [
     {
@@ -52,26 +52,26 @@
     {
       "id": "meta_title",
       "label": "<title> definido e não genérico",
-      "status": "fail",
-      "detail": "ausente"
+      "status": "pass",
+      "detail": "Cathedra Digital — Bíblia, Catecismo e Tradição Católica"
     },
     {
       "id": "meta_description",
       "label": "meta description definida",
-      "status": "fail",
-      "detail": "ausente"
+      "status": "warn",
+      "detail": "165 caracteres"
     },
     {
       "id": "meta_canonical",
       "label": "canonical aponta para o domínio",
-      "status": "warn",
-      "detail": "ausente"
+      "status": "pass",
+      "detail": "https://www.cathedradigital.com.br"
     },
     {
       "id": "meta_og",
       "label": "Open Graph (og:title, og:url) presentes",
-      "status": "warn",
-      "detail": "og:title=false, og:url=false"
+      "status": "pass",
+      "detail": "og:title=true, og:url=true"
     },
     {
       "id": "gsc_meta",
