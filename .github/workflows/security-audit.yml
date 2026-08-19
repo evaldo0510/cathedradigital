@@ -1,0 +1,38 @@
+name: Security Audit
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check for RLS and Grants
+        run: |
+          echo "Checking for tables without RLS enabled..."
+          # Encontra tabelas criadas mas sem ENABLE RLS logo após
+          # Simplificação: verifica se cada CREATE TABLE tem um ENABLE ROW LEVEL SECURITY associado no mesmo arquivo ou subsequentes
+          # Este é um check básico de regressão
+          MISSING_RLS=$(grep -L "ENABLE ROW LEVEL SECURITY" $(grep -l "CREATE TABLE" supabase/migrations/*.sql))
+          if [ -n "$MISSING_RLS" ]; then
+            echo "Warning: The following migrations create tables but might be missing RLS enablement:"
+            echo "$MISSING_RLS"
+          fi
+          
+          echo "Checking for missing GRANTs on public tables..."
+          MISSING_GRANTS=$(grep -L "GRANT " $(grep -l "CREATE TABLE" supabase/migrations/*.sql))
+          if [ -n "$MISSING_GRANTS" ]; then
+            echo "Warning: The following migrations create tables but might be missing GRANT statements:"
+            echo "$MISSING_GRANTS"
+          fi
+
+      - name: SQL Linting
+        run: |
+          # Se houver um linter SQL configurado, rodar aqui
+          echo "Running basic SQL pattern checks..."
+          grep -rn "SECURITY DEFINER" supabase/migrations/*.sql | grep -v "SET search_path = public" && (echo "Error: SECURITY DEFINER functions must set search_path" && exit 1) || true

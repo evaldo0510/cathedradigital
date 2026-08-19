@@ -6,7 +6,7 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Audite também no desktop os ícones da navegação inferior e os leitores de Santos, Orações, Rosário e Liturgia.
+TEXTO DO USUÁRIO: Audit and document my Supabase RLS policies and role permissions to ensure profile updates and post moderation are enforced correctly.Implement automated security checks in CI so new commits are scanned for Supabase policy and permission regressions.Run a full security re-scan to verify there are no remaining findings and catch any new issues.
 
 
 
