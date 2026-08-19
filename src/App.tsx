@@ -298,6 +298,7 @@ const LiturgyMeditationFallbackPanel = lazy(() => import('./pages/admin/LiturgyM
 const BibleAbbrValidatePage = lazy(() => import('./pages/BibleAbbrValidatePage'));
 const SEOVerificationPage = lazy(() => import('./pages/SEOVerificationPage'));
 const A11yAuditPage = lazy(() => import('./components/cathedra/A11yAuditPage'));
+const SobrePassaportePage = lazy(() => import('./pages/SobrePassaporte'));
 const VisualAuditPage = lazy(() => import('./components/cathedra/VisualAuditPage'));
 const TelemetryDashboard = lazy(() => import('./components/cathedra/TelemetryDashboard'));
 const NavigationErrorInspector = lazy(() => import('./components/cathedra/NavigationErrorInspector'));
@@ -819,6 +820,7 @@ const AppLayout: React.FC = () => {
               <Route path="/offline" element={<Suspense fallback={<LoadingFallback />}><OfflinePage /></Suspense>} />
               <Route path="/cache-manager" element={<Suspense fallback={<LoadingFallback />}><CacheManager /></Suspense>} />
               <Route path="/bible-recovery" element={<Suspense fallback={<LoadingFallback />}><BibleRecoveryPanel /></Suspense>} />
+              <Route path="/sobre-passaporte" element={<Suspense fallback={<LoadingFallback />}><SobrePassaportePage /></Suspense>} />
 
               {/* Aliases para navegação legada (mantém botões da Sidebar/BottomNav/CommandCenter funcionando) */}
               <Route path="/library" element={<Navigate to="/biblioteca" replace />} />
