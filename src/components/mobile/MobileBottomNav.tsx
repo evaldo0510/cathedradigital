@@ -45,8 +45,8 @@ export function MobileBottomNav({
       className={cn(
         "fixed bottom-0 left-0 right-0 z-40 md:hidden",
         "flex items-stretch justify-around",
-        "border-t border-stitch-outline-variant/60",
-        "bg-stitch-surface/95 backdrop-blur-md",
+        "border-t border-gold-text/20",
+        "bg-[#FDF8F3]/95 backdrop-blur-md",
         className,
       )}
       style={{
@@ -77,8 +77,8 @@ export function MobileBottomNav({
               className={cn(
                 "inline-flex items-center justify-center rounded-full px-3 py-1 transition-colors",
                 isActive
-                  ? "bg-stitch-secondary-container text-stitch-secondary-on-container"
-                  : "text-stitch-on-surface-variant group-hover:text-stitch-primary",
+                  ? "bg-gold/20 text-primary"
+                  : "text-primary/60 group-hover:text-primary",
               )}
             >
               <Icon
@@ -91,8 +91,8 @@ export function MobileBottomNav({
               className={cn(
                 "font-[var(--font-stitch-label)] text-[11px] font-bold uppercase tracking-[0.08em]",
                 isActive
-                  ? "text-stitch-primary"
-                  : "text-stitch-on-surface-variant",
+                  ? "text-primary font-black"
+                  : "text-primary/60",
               )}
             >
               {item.label}

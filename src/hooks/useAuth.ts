@@ -17,6 +17,7 @@ export interface SensitiveData {
 export interface Profile {
   id: string;
   name: string;
+  bio?: string;
   is_premium: boolean;
   role: 'user' | 'admin' | string | null;
   premium_status?: string | null;
@@ -35,6 +36,10 @@ export interface Profile {
   diocese?: string;
   paroquia?: string;
   movimento_pastoral?: string;
+  professional_name?: string;
+  professional_brand_url?: string;
+  instagram_url?: string;
+  show_professional_card?: boolean;
   reading_settings?: Record<string, any>;
   journey_reminder_time?: string;
   weekly_goal?: number;

@@ -7,7 +7,7 @@
     /* --- Core Visual Tokens: Cathedra Premium System --- */
     
     /* 1. Colors (HSL) */
-    --background: 220 15% 96%; /* Ajustado de 45 40% 98% (#FDF8F3) para um tom mais sóbrio e menos amarelado */
+    --background: 45 40% 98%; /* #FDF8F3 - Retornando ao marfim/paper original conforme pedido */
 
     --foreground: 220 25% 15%; /* Aumentado de 10% para 15% para suavizar mas manter contraste */
 
@@ -15,8 +15,8 @@
     --card: 45 35% 99.4%;
     --card-foreground: 220 25% 10%;
     
-    --primary: 220 30% 12%; /* Escurecido levemente para maior profundidade */
-    --primary-foreground: 45 40% 99%;
+    --primary: 220 30% 12%; 
+    --primary-foreground: 45 40% 98%;
     
     --secondary: 42 30% 35%; /* Escurecido de 45% para 35% para melhor contraste no mobile */
     --secondary-foreground: 45 40% 98%;
@@ -65,8 +65,8 @@
     --radius-md: 1rem;
     --radius-lg: 2rem;
     --radius-xl: 2.5rem;
-    --radius-premium: var(--radius-xl);
-    --radius: var(--radius-lg);
+    --radius-premium: 0.25rem; /* Botões mais angulares inspirados no Instagram, fugindo do arredondado excessivo */
+    --radius: 0.5rem;
     
     --border-thin: 1px;
     --border-medium: 2px;

@@ -41,6 +41,9 @@ import {
   useSearchSuggestions,
 } from '@/modules/atrium/hooks';
 import { useSpiritualJourney } from '@/hooks/useSpiritualJourney';
+import { useAuth } from '@/hooks/useAuth';
+import { ProfessionalCard } from '@/components/professional/ProfessionalCard';
+import { useAvatarUrl } from '@/lib/avatar';
 import type { ResumeItem } from '@/modules/atrium/types';
 
 // ─── Ícones dos 5 ambientes ──────────────────────────────────────────────────
@@ -105,10 +108,14 @@ const HomeUnified: React.FC = () => {
   const news = useAnnouncements();
   const themes = useFeaturedThemes();
   const suggestions = useSearchSuggestions();
-  const { lastRead, dailySteps, profile } = useSpiritualJourney();
+  const { lastRead, dailySteps } = useSpiritualJourney();
+  const { profile, authenticated } = useAuth();
+  const avatarDisplay = useAvatarUrl(profile?.avatar_url || null, 160);
 
   // Primeiro tema como destaque; fallback silencioso se lista vazia.
   const featured = themes[0];
+  
+  const showProfessionalCard = authenticated && profile?.show_professional_card && profile?.professional_name;
 
 
 
@@ -152,6 +159,17 @@ const HomeUnified: React.FC = () => {
           >
             CATHEDRA
           </h1>
+
+          {showProfessionalCard && (
+            <div data-rise="1.5" className="mb-8 w-full max-w-2xl mx-auto px-4">
+              <ProfessionalCard 
+                name={profile.professional_name}
+                bio={profile.bio}
+                avatarUrl={avatarDisplay || undefined}
+                instagramUrl={profile.instagram_url}
+              />
+            </div>
+          )}
 
           <p
             data-rise="2"
