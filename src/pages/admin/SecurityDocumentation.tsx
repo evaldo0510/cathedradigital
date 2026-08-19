@@ -1,5 +1,5 @@
 import React from 'react';
-import ReaderShell from '@/components/cathedra/ReaderShell';
+import ReaderShell from '@/components/reader/ReaderShell';
 
 const SecurityDocumentation = () => {
   return (
