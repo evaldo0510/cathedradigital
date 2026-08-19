@@ -2,6 +2,9 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useReadingSettings } from '@/contexts/ReadingSettingsContext';
+import { useAuth } from '@/hooks/useAuth';
+import { ProfessionalCard } from '@/components/professional/ProfessionalCard';
+import { useAvatarUrl } from '@/lib/avatar';
 
 interface ContemplativeLayoutProps {
   children: React.ReactNode;
@@ -27,6 +30,10 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
   showPadding = true
 }) => {
   const { settings } = useReadingSettings();
+  const { profile } = useAuth();
+  const avatarDisplay = useAvatarUrl(profile?.avatar_url || null, 160);
+  
+  const showProfessionalCard = profile?.show_professional_card && profile?.professional_name;
   
   return (
     <div 
@@ -67,6 +74,17 @@ const ContemplativeLayout: React.FC<ContemplativeLayoutProps> = ({
           {headerActions && (
             <div className="mt-spacing-md md:mt-spacing-xl w-full flex justify-center">
               {headerActions}
+            </div>
+          )}
+          
+          {showProfessionalCard && (
+            <div className="mt-spacing-xl w-full max-w-2xl mx-auto px-spacing-md">
+              <ProfessionalCard 
+                name={profile.professional_name}
+                bio={profile.bio}
+                avatarUrl={avatarDisplay || undefined}
+                instagramUrl={profile.instagram_url}
+              />
             </div>
           )}
         </header>

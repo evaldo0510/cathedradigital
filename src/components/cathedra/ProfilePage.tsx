@@ -122,6 +122,10 @@ const ProfilePage: React.FC = () => {
   const { subscribe, unsubscribe } = usePushNotifications();
   const [name, setName] = useState('');
   const [bio, setBio] = useState('');
+  const [professionalName, setProfessionalName] = useState('');
+  const [professionalBrandUrl, setProfessionalBrandUrl] = useState('');
+  const [instagramUrl, setInstagramUrl] = useState('');
+  const [showProfessionalCard, setShowProfessionalCard] = useState(true);
   const [whatsappNumber, setWhatsappNumber] = useState('');
   const [whatsappEnabled, setWhatsappEnabled] = useState(false);
   const [pushEnabled, setPushEnabled] = useState(true);
@@ -161,13 +165,17 @@ const ProfilePage: React.FC = () => {
       setPushEnabled((profile as any).push_enabled ?? true);
       setReminderTime((profile as any).ritual_reminder_time || '08:00');
       setWeeklyGoal((profile as any).weekly_goal || 7);
-      supabase.from('profiles').select('bio, estado, diocese, paroquia, movimento_pastoral').eq('id', profile.id).single()
+      supabase.from('profiles').select('bio, estado, diocese, paroquia, movimento_pastoral, professional_name, professional_brand_url, instagram_url, show_professional_card').eq('id', profile.id).single()
         .then(({ data }) => {
           setBio((data as any)?.bio || '');
           setEstado((data as any)?.estado || '');
           setDiocese((data as any)?.diocese || '');
           setParoquia((data as any)?.paroquia || '');
           setMovimentoPastoral((data as any)?.movimento_pastoral || '');
+          setProfessionalName((data as any)?.professional_name || '');
+          setProfessionalBrandUrl((data as any)?.professional_brand_url || '');
+          setInstagramUrl((data as any)?.instagram_url || '');
+          setShowProfessionalCard((data as any)?.show_professional_card ?? true);
         });
     }
   }, [profile]);
@@ -296,6 +304,10 @@ const ProfilePage: React.FC = () => {
         diocese: diocese || null,
         paroquia: paroquia || null,
         movimento_pastoral: movimentoPastoral || null,
+        professional_name: professionalName || null,
+        professional_brand_url: professionalBrandUrl || null,
+        instagram_url: instagramUrl || null,
+        show_professional_card: showProfessionalCard,
       } as any).eq('id', user.id);
       if (error) throw error;
       toast.success('Perfil atualizado com sucesso!', { id: toastId });
@@ -311,11 +323,13 @@ const ProfilePage: React.FC = () => {
     if (!user || exportingPdf) return;
     setExportingPdf(true);
     try {
-      exportProfilePdf({
+      await exportProfilePdf({
         userName: profile?.name || '',
         userEmail: user.email || '',
         donations,
         audit: auditRows,
+        instagramUrl: (profile as any).instagram_url,
+        professionalName: (profile as any).professional_name
       });
       toast.success('Relatório PDF gerado!');
     } catch (err: any) {
@@ -833,6 +847,41 @@ const ProfilePage: React.FC = () => {
                     value={bio} onChange={e => setBio(e.target.value)} rows={3} disabled={saving}
                     className="w-full bg-background border border-border rounded-premium p-spacing-sm text-premium-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none disabled:opacity-60"
                   />
+                </div>
+
+                <div className="border-t border-border pt-spacing-md space-y-spacing-md">
+                  <div className="flex items-center gap-spacing-xs">
+                    <Icons.Settings className="w-spacing-md h-spacing-md text-primary" />
+                    <h3 className="text-premium-xs font-black uppercase tracking-widest text-foreground/75">Personalização Profissional</h3>
+                  </div>
+                  <p className="text-[10px] text-foreground/70 -mt-spacing-xs">Personalize como você aparece nos relatórios e passaporte.</p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-spacing-md">
+                    <div className="space-y-spacing-xs">
+                      <label className="text-premium-xs font-bold text-foreground">Nome Profissional</label>
+                      <input
+                        type="text" value={professionalName} onChange={e => setProfessionalName(e.target.value)} disabled={saving}
+                        className="w-full bg-background border border-border rounded-premium-full p-spacing-sm text-premium-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-60"
+                        placeholder="Ex: Dra. Maria Silva"
+                      />
+                    </div>
+                    <div className="space-y-spacing-xs">
+                      <label className="text-premium-xs font-bold text-foreground">Instagram (URL completa)</label>
+                      <input
+                        type="url" value={instagramUrl} onChange={e => setInstagramUrl(e.target.value)} disabled={saving}
+                        className="w-full bg-background border border-border rounded-premium-full p-spacing-sm text-premium-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 disabled:opacity-60"
+                        placeholder="https://instagram.com/seu.perfil"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between p-spacing-sm bg-muted/30 rounded-premium border border-border/50">
+                    <div className="space-y-spacing-2xs">
+                      <p className="text-premium-sm font-bold text-foreground">Exibir Cartão Profissional</p>
+                      <p className="text-[10px] text-foreground/70">Mostra sua bio e link no topo das páginas principais.</p>
+                    </div>
+                    <Switch checked={showProfessionalCard} onCheckedChange={setShowProfessionalCard} disabled={saving} />
+                  </div>
                 </div>
 
                 <div className="border-t border-border pt-spacing-md space-y-spacing-md">
