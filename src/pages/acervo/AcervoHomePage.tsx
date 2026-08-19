@@ -88,13 +88,13 @@ const AcervoHomePage: React.FC = () => {
       </Helmet>
 
       <SpaceLayout>
-        {/* HERO — Estilo Mosteiro Digital */}
-        <SpaceHeader 
-          align="center"
+        <EditorialHero 
+          density="balanced"
           kicker="Ecossistema Vivo · Átrio do Conhecimento"
           title="Biblioteca do Cathedra"
           description="Toda a riqueza da fé católica em um ambiente onde tudo se conecta."
         />
+
 
         <SpaceEntrance>
           <div className="w-full max-w-2xl mx-auto">
