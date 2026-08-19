@@ -197,11 +197,11 @@ export default function InfrastructureDiagnosticsPage() {
 
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList className="bg-muted/50 p-1 rounded-premium-full">
-        <TabsTrigger value="seo">SEO & Checklist</TabsTrigger>
-        <TabsTrigger value="history">Histórico de Alterações</TabsTrigger>
-        <TabsTrigger value="vitals">Web Vitals</TabsTrigger>
+          <TabsTrigger value="overview">Visão Geral</TabsTrigger>
+          <TabsTrigger value="seo">SEO & Checklist</TabsTrigger>
+          <TabsTrigger value="history">Histórico</TabsTrigger>
+          <TabsTrigger value="vitals">Web Vitals</TabsTrigger>
           <TabsTrigger value="details">Módulos</TabsTrigger>
-          <TabsTrigger value="report">i18n Report</TabsTrigger>
           <TabsTrigger value="backend">Erros Backend</TabsTrigger>
         </TabsList>
 
