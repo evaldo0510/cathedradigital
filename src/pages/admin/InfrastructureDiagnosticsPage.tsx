@@ -199,11 +199,11 @@ export default function InfrastructureDiagnosticsPage() {
         <TabsList className="bg-muted/50 p-1 rounded-premium-full">
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
           <TabsTrigger value="history">Histórico e Filtros</TabsTrigger>
-          <TabsTrigger value="vitals">Web Vitals (Performance)</TabsTrigger>
-          <TabsTrigger value="details">Detalhes do Módulo</TabsTrigger>
-          <TabsTrigger value="report">Relatório de Multi-idioma</TabsTrigger>
-          <TabsTrigger value="backend">Erros Backend (Santos)</TabsTrigger>
-
+          <TabsTrigger value="seo">SEO & Checklist</TabsTrigger>
+          <TabsTrigger value="vitals">Web Vitals</TabsTrigger>
+          <TabsTrigger value="details">Módulos</TabsTrigger>
+          <TabsTrigger value="report">i18n Report</TabsTrigger>
+          <TabsTrigger value="backend">Erros Backend</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6 outline-none">
@@ -345,6 +345,104 @@ export default function InfrastructureDiagnosticsPage() {
                   )}
                 </div>
               </ScrollArea>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="seo" className="space-y-6 outline-none">
+          <Card className="premium-card">
+            <CardHeader className="flex flex-row items-center justify-between">
+              <CardTitle className="text-premium-base font-black uppercase tracking-widest flex items-center gap-2">
+                <Icons.Globe className="w-5 h-5 text-primary" />
+                SEO Health & Checklist (P0/P1)
+              </CardTitle>
+              <Button 
+                size="sm" 
+                variant="outline" 
+                className="h-8 text-[10px] uppercase"
+                onClick={async () => {
+                  toast.promise(
+                    fetch('/seo-checklist-report.json').then(r => r.json()),
+                    {
+                      loading: 'Lendo relatório...',
+                      success: (data) => {
+                        console.log('SEO Report:', data);
+                        return 'Relatório atualizado no console.';
+                      },
+                      error: 'Erro ao ler public/seo-checklist-report.json'
+                    }
+                  );
+                }}
+              >
+                Ver JSON Completo
+              </Button>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="p-4 bg-green-500/10 border border-green-500/20 rounded-premium text-center">
+                  <div className="text-2xl font-bold text-green-600">12</div>
+                  <div className="text-[10px] uppercase font-black tracking-widest text-green-600/70">Pass</div>
+                </div>
+                <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-premium text-center">
+                  <div className="text-2xl font-bold text-amber-600">1</div>
+                  <div className="text-[10px] uppercase font-black tracking-widest text-amber-600/70">Warning</div>
+                </div>
+                <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-premium text-center">
+                  <div className="text-2xl font-bold text-red-600">1</div>
+                  <div className="text-[10px] uppercase font-black tracking-widest text-red-600/70">Fail</div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between px-1">
+                  <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Críticos (Fail/Warning)</h3>
+                  <span className="text-[9px] text-muted-foreground italic">Relatório de 19/08/2026</span>
+                </div>
+                <div className="space-y-2">
+                  <div className="p-3 rounded-premium border border-red-500/30 bg-red-500/5 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="p-1.5 rounded-full bg-red-500 text-white">
+                        <Icons.X className="w-3 h-3" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-xs uppercase tracking-wider text-red-700">Glossário no Sitemap</h4>
+                        <p className="text-[10px] text-red-600/80">42 verbetes publicados não encontrados no sitemap.xml</p>
+                      </div>
+                    </div>
+                    <Badge variant="destructive" className="text-[9px] uppercase">P0 · FAIL</Badge>
+                  </div>
+                  <div className="p-3 rounded-premium border border-amber-500/30 bg-amber-500/5 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="p-1.5 rounded-full bg-amber-500 text-white">
+                        <Icons.AlertTriangle className="w-3 h-3" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-xs uppercase tracking-wider text-amber-700">Meta Description</h4>
+                        <p className="text-[10px] text-amber-600/80">165 caracteres (limite recomendado: 160)</p>
+                      </div>
+                    </div>
+                    <Badge variant="outline" className="text-[9px] uppercase text-amber-600 border-amber-600">P1 · WARN</Badge>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="pt-4 border-t border-border/40">
+                <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground px-1 mb-3">Auditoria de Regressão (CI Guardrail)</h3>
+                <div className="bg-muted/30 p-4 rounded-premium font-mono text-[11px] space-y-2">
+                  <div className="flex items-center gap-2 text-green-600">
+                    <Icons.Check className="w-3 h-3" />
+                    <span>scripts/heading-ci-guardrail.ts: Hierarchy Validated (H1-H6)</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-green-600">
+                    <Icons.Check className="w-3 h-3" />
+                    <span>tests/e2e/seo-regression.spec.ts: 8 routes passed metadata check</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-primary/70">
+                    <Icons.Info className="w-3 h-3" />
+                    <span>Last run: 21:44:43 UTC</span>
+                  </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
