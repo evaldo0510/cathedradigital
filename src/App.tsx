@@ -270,6 +270,7 @@ const MissionControlPage = lazy(() => import('./pages/admin/MissionControl'));
 const Audit77Dashboard = lazy(() => import('./pages/admin/Audit77Dashboard'));
 const EditorialBulkPage = lazy(() => import('./pages/admin/EditorialBulk'));
 const NexusAdmin = lazy(() => import('./pages/admin/NexusAdmin'));
+const SecurityDocumentation = lazy(() => import('./pages/admin/SecurityDocumentation'));
 const GlossaryAdmin = lazy(() => import('./pages/admin/GlossaryAdmin'));
 const PartnersAdmin = lazy(() => import('./pages/admin/PartnersAdmin'));
 const CatechismImportQueuePage = lazy(() =>
