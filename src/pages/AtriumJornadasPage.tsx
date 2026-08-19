@@ -23,6 +23,7 @@ import {
   Zap,
   Flame,
 } from 'lucide-react';
+import { EditorialHero } from '@/components/editorial/harmony';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { AppRoute } from '@/types';
@@ -134,12 +135,11 @@ const AtriumJornadasPage: React.FC = () => {
       </Helmet>
 
       <SpaceLayout>
-        {/* ─── Hero editorial ─────────────────────────────────────────── */}
-        <SpaceHeader 
-          kicker="Itinerarium Mentis"
-          title="Claustro"
-          description="Trilhas guiadas para caminhar da inquietação à contemplação. Um passo por vez, um dia por vez — na cadência do silêncio."
-        />
+        <EditorialHero density="minimal">
+          <EditorialHero.Eyebrow>Itinerarium Mentis</EditorialHero.Eyebrow>
+          <EditorialHero.Title>Claustro</EditorialHero.Title>
+          <EditorialHero.Subtitle>Trilhas guiadas para caminhar da inquietação à contemplação. Um passo por vez, um dia por vez — na cadência do silêncio.</EditorialHero.Subtitle>
+        </EditorialHero>
 
         {/* ─── Claustro: Prioridade de continuidade ─── */}
         {inProgress.length > 0 && (

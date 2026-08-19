@@ -37,6 +37,11 @@ export default function SEOStatusPage() {
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const json: Report = await res.json();
       setReport(json);
+      
+      // Auto-refresh after 5s if still on page (development only)
+      if (import.meta.env.DEV) {
+        setTimeout(load, 5000);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Falha ao carregar relatório");
     } finally {

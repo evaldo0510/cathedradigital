@@ -24,6 +24,7 @@ import { useBibliotecaRecents } from '@/hooks/useBibliotecaState';
 import { MobileTopBar } from '@/components/mobile/MobileTopBar';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
 import { LibrarySearchPanel, LibraryThemesBlock } from '@/modules/biblioteca';
+import { EditorialHero } from '@/components/editorial/harmony';
 import { SafeImage } from '@/components/library/SafeImage';
 import { LIBRARY_ACERVOS } from '@/config/libraryAcervos';
 import {
@@ -83,12 +84,11 @@ const AtriumBibliotecaPage: React.FC = () => {
       <MobileTopBar kicker="Cathedra" title="Biblioteca" transparent />
 
       <SpaceLayout>
-        {/* ─── 1+2. Título e descrição ─────────────────────────────── */}
-        <SpaceHeader
-          kicker="Archival Collection"
-          title="Biblioteca"
-          description="Navegue pelos ecos sagrados de dois milênios. Dos Padres Apostólicos ao Magistério contemporâneo, explore a sabedoria curada da Igreja."
-        />
+        <EditorialHero density="minimal">
+          <EditorialHero.Eyebrow>Archival Collection</EditorialHero.Eyebrow>
+          <EditorialHero.Title>Biblioteca</EditorialHero.Title>
+          <EditorialHero.Subtitle>Navegue pelos ecos sagrados de dois milênios. Dos Padres Apostólicos ao Magistério contemporâneo, explore a sabedoria curada da Igreja.</EditorialHero.Subtitle>
+        </EditorialHero>
 
         {/* ─── 3. Entrada (busca unificada) ────────────────────────── */}
         <SpaceEntrance>

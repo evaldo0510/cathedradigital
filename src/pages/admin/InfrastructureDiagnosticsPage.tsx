@@ -181,7 +181,7 @@ export default function InfrastructureDiagnosticsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight" id="main-title">Cathedra Mission Control</h1>
-          <p className="text-muted-foreground">Audit 7.7.1A — Diagnostics & Multi-Language Registry</p>
+          <h2 className="text-muted-foreground">Audit 7.7.1A — Diagnostics & Multi-Language Registry</h2>
         </div>
         <div className="flex gap-2">
           <Button onClick={exportPDF} variant="outline" className="gap-2">
@@ -354,7 +354,7 @@ export default function InfrastructureDiagnosticsPage() {
             <CardHeader>
               <CardTitle className="text-premium-base font-black uppercase tracking-widest flex items-center gap-2">
                 <Icons.BarChart className="w-5 h-5 text-primary" />
-                Performance RUM (Real User Monitoring)
+                <h2 className="inline text-inherit">Performance RUM (Real User Monitoring)</h2>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -518,7 +518,7 @@ export default function InfrastructureDiagnosticsPage() {
               </div>
 
               <div className="space-y-4">
-                <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground px-1">Status por Área (Real-Time)</h2>
+                <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground px-1" id="status-area-title">Status por Área (Real-Time)</h3>
                 <div className="grid grid-cols-1 gap-2">
                   {[
                     { area: 'Santos', status: 'PASS', route: '/santos', action: 'Navegação editorial ativa' },

@@ -9,6 +9,7 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Clock, ChevronRight, Loader2 } from 'lucide-react';
 import { MobileBottomNav } from '@/components/mobile/MobileBottomNav';
+import { EditorialHero } from '@/components/editorial/harmony';
 
 import {
   usePrayers,
@@ -88,14 +89,11 @@ const PrayerLibraryPage: React.FC = () => {
 
 
       <section className="mx-auto w-full max-w-[880px] px-4 pb-24 pt-8 md:px-8 md:pt-12">
-        {/* 1+2. Título e descrição — padrão de espaço */}
-        <SpaceHeader
-          align="center"
-          kicker="Um espaço para parar, silenciar e rezar."
-          title="Sacrário"
-          description=""
-          className="mb-14"
-        />
+        <EditorialHero density="minimal" align="center">
+          <EditorialHero.Eyebrow>Um espaço para parar, silenciar e rezar.</EditorialHero.Eyebrow>
+          <EditorialHero.Title>Sacrário</EditorialHero.Title>
+          <EditorialHero.Subtitle>Livro de Orações e Liturgia</EditorialHero.Subtitle>
+        </EditorialHero>
 
 
         {/* Busca */}

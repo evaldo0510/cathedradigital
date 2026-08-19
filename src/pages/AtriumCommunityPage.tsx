@@ -10,6 +10,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import { MessageCircle, Plus, Heart, Sparkles, Users, ArrowRight, User, Calendar, BookOpen } from 'lucide-react';
+import { EditorialHero } from '@/components/editorial/harmony';
 import { SpaceLayout, SpaceHeader, SpaceFooter } from '@/components/cathedra/space/SpaceLayout';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -158,13 +159,11 @@ const AtriumCommunityPage: React.FC = () => {
       </Helmet>
 
       <SpaceLayout>
-        {/* 1+2. Título e descrição — padrão de espaço */}
-        <SpaceHeader
-          align="center"
-          kicker="Communitas Fidelium"
-          title="Igreja Viva"
-          description="Um lugar para partilhar a caminhada — testemunhos, dúvidas e leituras entre irmãos na fé."
-        />
+        <EditorialHero density="minimal">
+          <EditorialHero.Eyebrow>Communitas Fidelium</EditorialHero.Eyebrow>
+          <EditorialHero.Title>Igreja Viva</EditorialHero.Title>
+          <EditorialHero.Subtitle>Um lugar para partilhar a caminhada — testemunhos, dúvidas e leituras entre irmãos na fé.</EditorialHero.Subtitle>
+        </EditorialHero>
 
         {/* ─── IGREJA VIVA: SSoT Grouping ─── */}
         <section className="mt-8 mb-12">
