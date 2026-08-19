@@ -65,8 +65,8 @@
     --radius-md: 1rem;
     --radius-lg: 2rem;
     --radius-xl: 2.5rem;
-    --radius-premium: 0.25rem; /* Botões mais angulares inspirados no Instagram, fugindo do arredondado excessivo */
-    --radius: 0.5rem;
+    --radius-premium: var(--radius-xl);
+    --radius: var(--radius-lg);
     
     --border-thin: 1px;
     --border-medium: 2px;
