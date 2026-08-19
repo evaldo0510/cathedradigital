@@ -45,8 +45,8 @@ export function MobileBottomNav({
       className={cn(
         "fixed bottom-0 left-0 right-0 z-40 md:hidden",
         "flex items-stretch justify-around",
-        "border-t border-stitch-outline-variant/60",
-        "bg-stitch-surface/95 backdrop-blur-md",
+        "border-t border-gold-text/20",
+        "bg-[#FDF8F3]/95 backdrop-blur-md",
         className,
       )}
       style={{
