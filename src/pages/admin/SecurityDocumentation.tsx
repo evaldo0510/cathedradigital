@@ -7,12 +7,11 @@ const SecurityDocumentation = () => {
   return (
     <ReaderShell 
       hero={
-        <EditorialHero
-          title="Segurança & RLS"
-          subtitle="Auditoria de Políticas e Permissões Supabase"
-          sacraLabel="Auditoria 2026-08-19"
-          variant="sacra"
-        />
+        <EditorialHero density="balanced">
+          <EditorialHero.Title>Segurança & RLS</EditorialHero.Title>
+          <EditorialHero.Subtitle>Auditoria de Políticas e Permissões Supabase</EditorialHero.Subtitle>
+          <EditorialHero.Meta>Auditoria 2026-08-19</EditorialHero.Meta>
+        </EditorialHero>
       }
     >
       <div className="space-y-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
