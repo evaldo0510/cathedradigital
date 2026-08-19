@@ -1,95 +1,82 @@
 {
-  "generated_at": "2026-08-19T21:44:43.659Z",
-  "project_domain": "https://www.cathedradigital.com.br",
   "summary": {
-    "pass": 12,
-    "warn": 1,
-    "fail": 1
+    "pass": 0,
+    "warning": 9,
+    "fail": 0
   },
-  "checks": [
+  "timestamp": "2026-08-19T21:49:00Z",
+  "results": [
     {
-      "id": "sitemap_exists",
-      "label": "sitemap.xml presente",
-      "status": "pass",
-      "detail": "128 URLs declaradas."
+      "route": "/",
+      "status": "WARNING",
+      "issues": [
+        "Found 0 H1 tags",
+        "Meta description exceeds 160 chars"
+      ]
     },
     {
-      "id": "sitemap_host",
-      "label": "sitemap.xml usa domínio do projeto",
-      "status": "pass",
-      "detail": "Base https://www.cathedradigital.com.br confirmada."
+      "route": "/ler",
+      "status": "WARNING",
+      "issues": [
+        "Found 0 H1 tags",
+        "Meta description exceeds 160 chars"
+      ]
     },
     {
-      "id": "robots_exists",
-      "label": "robots.txt presente",
-      "status": "pass",
-      "detail": "Arquivo presente."
+      "route": "/orar",
+      "status": "WARNING",
+      "issues": [
+        "Found 0 H1 tags",
+        "Meta description exceeds 160 chars"
+      ]
     },
     {
-      "id": "robots_sitemap",
-      "label": "robots.txt aponta para o sitemap correto",
-      "status": "pass",
-      "detail": "Sitemap: https://www.cathedradigital.com.br/sitemap.xml"
+      "route": "/igreja",
+      "status": "WARNING",
+      "issues": [
+        "Found 0 H1 tags",
+        "Meta description exceeds 160 chars"
+      ]
     },
     {
-      "id": "robots_not_blocking",
-      "label": "robots.txt não bloqueia o site inteiro",
-      "status": "pass",
-      "detail": "Crawl permitido em /."
+      "route": "/biblioteca",
+      "status": "WARNING",
+      "issues": [
+        "Found 0 H1 tags",
+        "Meta description exceeds 160 chars"
+      ]
     },
     {
-      "id": "llms_exists",
-      "label": "llms.txt presente",
-      "status": "pass",
-      "detail": "2493 bytes."
+      "route": "/santos",
+      "status": "WARNING",
+      "issues": [
+        "Found 0 H1 tags",
+        "Meta description exceeds 160 chars"
+      ]
     },
     {
-      "id": "llms_summary",
-      "label": "llms.txt traz resumo (>)",
-      "status": "pass",
-      "detail": "Resumo presente."
+      "route": "/catecismo",
+      "status": "WARNING",
+      "issues": [
+        "Found 0 H1 tags",
+        "Meta description exceeds 160 chars"
+      ]
     },
     {
-      "id": "meta_title",
-      "label": "<title> definido e não genérico",
-      "status": "pass",
-      "detail": "Cathedra Digital — Bíblia, Catecismo e Tradição Católica"
+      "route": "/biblia",
+      "status": "WARNING",
+      "issues": [
+        "Found 0 H1 tags",
+        "Meta description exceeds 160 chars"
+      ]
     },
     {
-      "id": "meta_description",
-      "label": "meta description definida",
-      "status": "warn",
-      "detail": "165 caracteres"
-    },
-    {
-      "id": "meta_canonical",
-      "label": "canonical aponta para o domínio",
-      "status": "pass",
-      "detail": "https://www.cathedradigital.com.br"
-    },
-    {
-      "id": "meta_og",
-      "label": "Open Graph (og:title, og:url) presentes",
-      "status": "pass",
-      "detail": "og:title=true, og:url=true"
-    },
-    {
-      "id": "gsc_meta",
-      "label": "Google Search Console: meta verification",
-      "status": "pass",
-      "detail": "Meta google-site-verification presente."
-    },
-    {
-      "id": "glossary_in_sitemap",
-      "label": "Verbetes do Glossário no sitemap (42 publicados)",
-      "status": "fail",
-      "detail": "Faltando: confissao, eclesiologia, caridade, alianca, mariologia, pneumatologia, soteriologia, transubstanciacao, fe, papa, escatologia, bispo, trindade, batismo, sacramento, martir, tradicao, magisterio, juizo, ceu, graca, revelacao, misericordia, amor, santidade, inferno, purgatorio, cristologia, igreja, eucaristia, encarnacao, ressurreicao, pecado, salvacao, esperanca, virtude, oracao, conversao, missa, rosario, vocacao, discernimento"
-    },
-    {
-      "id": "glossary_in_rss",
-      "label": "Verbetes do Glossário no feed RSS",
-      "status": "pass",
-      "detail": "Todos presentes no feed."
+      "route": "/admin/diagnostics",
+      "status": "WARNING",
+      "issues": [
+        "Found 0 H1 tags",
+        "Meta description exceeds 160 chars"
+      ]
     }
   ]
 }

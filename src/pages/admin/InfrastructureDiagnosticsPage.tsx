@@ -198,11 +198,10 @@ export default function InfrastructureDiagnosticsPage() {
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList className="bg-muted/50 p-1 rounded-premium-full">
           <TabsTrigger value="overview">Visão Geral</TabsTrigger>
-          <TabsTrigger value="history">Histórico e Filtros</TabsTrigger>
           <TabsTrigger value="seo">SEO & Checklist</TabsTrigger>
+          <TabsTrigger value="history">Histórico</TabsTrigger>
           <TabsTrigger value="vitals">Web Vitals</TabsTrigger>
           <TabsTrigger value="details">Módulos</TabsTrigger>
-          <TabsTrigger value="report">i18n Report</TabsTrigger>
           <TabsTrigger value="backend">Erros Backend</TabsTrigger>
         </TabsList>
 
@@ -509,18 +508,17 @@ export default function InfrastructureDiagnosticsPage() {
             <CardHeader>
               <CardTitle className="text-premium-base font-black uppercase tracking-widest flex items-center gap-2">
                 <Icons.History className="w-5 h-5 text-primary" />
-                Histórico de Alterações do Sistema
+                Histórico de Alterações
               </CardTitle>
-              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Logs de Governança, Segurança e RLS (5.000 registros recentes)</p>
             </CardHeader>
             <CardContent>
               <div className="bg-muted/20 border border-border/40 rounded-premium p-4 flex items-center justify-between">
                 <div className="space-y-1">
-                  <p className="text-xs font-bold">Trilha de Auditoria Centralizada</p>
-                  <p className="text-[10px] text-muted-foreground">Acesse o painel completo para filtrar por autor, entidade e tipo de evento.</p>
+                  <p className="text-xs font-bold">Trilha de Auditoria (Reversões e Edições)</p>
+                  <p className="text-[10px] text-muted-foreground">Acompanhe reversões, alterações de metadados e logs de governança.</p>
                 </div>
                 <Button asChild size="sm" className="rounded-premium-full h-8 px-6 uppercase text-[10px] font-black tracking-widest">
-                  <Link to="/admin/audit-logs">Acessar Histórico</Link>
+                  <Link to="/admin/audit-logs">Ver Histórico Completo</Link>
                 </Button>
               </div>
             </CardContent>
