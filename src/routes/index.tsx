@@ -399,7 +399,7 @@ export const InfrastructureDiagnostics: React.FC = () => {
           <span className="text-xl">🧭</span> Nexus & Logos
         </h2>
         <div className="p-6 border border-gold-text/20 bg-accentest rounded-premium">
-          <h3 className="font-display text-lg text-primary mb-4">Status de Otimização</h3>
+          <h2 className="font-display text-lg text-primary mb-4">Status de Otimização</h2>
           <ul className="space-y-3">
             <li className="flex items-center justify-between">
               <span>Contraste e Cores (Acessibilidade)</span>
