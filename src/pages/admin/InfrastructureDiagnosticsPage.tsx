@@ -181,7 +181,7 @@ export default function InfrastructureDiagnosticsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight" id="main-title">Cathedra Mission Control</h1>
-          <p className="text-muted-foreground">Audit 7.7.1A — Diagnostics & Multi-Language Registry</p>
+          <h2 className="text-muted-foreground">Audit 7.7.1A — Diagnostics & Multi-Language Registry</h2>
         </div>
         <div className="flex gap-2">
           <Button onClick={exportPDF} variant="outline" className="gap-2">
