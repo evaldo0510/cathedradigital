@@ -160,16 +160,6 @@ const HomeUnified: React.FC = () => {
             CATHEDRA
           </h1>
 
-          {showProfessionalCard && (
-            <div data-rise="1.5" className="mb-8 w-full max-w-2xl mx-auto px-4">
-              <ProfessionalCard 
-                name={profile.professional_name}
-                bio={profile.bio}
-                avatarUrl={avatarDisplay || undefined}
-                instagramUrl={profile.instagram_url}
-              />
-            </div>
-          )}
 
           <p
             data-rise="2"
