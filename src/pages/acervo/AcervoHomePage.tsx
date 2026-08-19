@@ -89,11 +89,14 @@ const AcervoHomePage: React.FC = () => {
 
       <SpaceLayout>
         <EditorialHero 
-          density="balanced"
-          kicker="Ecossistema Vivo · Átrio do Conhecimento"
-          title="Biblioteca do Cathedra"
-          description="Toda a riqueza da fé católica em um ambiente onde tudo se conecta."
-        />
+          density="expanded"
+          align="center"
+        >
+          <EditorialHero.Eyebrow>Ecossistema Vivo · Átrio do Conhecimento</EditorialHero.Eyebrow>
+          <EditorialHero.Title>Biblioteca do Cathedra</EditorialHero.Title>
+          <EditorialHero.Subtitle>Toda a riqueza da fé católica em um ambiente onde tudo se conecta.</EditorialHero.Subtitle>
+        </EditorialHero>
+
 
 
         <SpaceEntrance>
