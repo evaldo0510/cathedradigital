@@ -9,30 +9,69 @@ on:
 jobs:
   security-scan:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       
       - name: Check for RLS and Grants
+        id: rls_check
         run: |
+          echo "REPORT_OUTPUT<<EOF" >> $GITHUB_OUTPUT
+          echo "### 🔐 Security Audit Report" >> $GITHUB_OUTPUT
+          
           echo "Checking for tables without RLS enabled..."
-          # Encontra tabelas criadas mas sem ENABLE RLS logo após
-          # Simplificação: verifica se cada CREATE TABLE tem um ENABLE ROW LEVEL SECURITY associado no mesmo arquivo ou subsequentes
-          # Este é um check básico de regressão
           MISSING_RLS=$(grep -L "ENABLE ROW LEVEL SECURITY" $(grep -l "CREATE TABLE" supabase/migrations/*.sql))
           if [ -n "$MISSING_RLS" ]; then
-            echo "Warning: The following migrations create tables but might be missing RLS enablement:"
-            echo "$MISSING_RLS"
+            echo "❌ **Warning:** The following migrations create tables but might be missing RLS enablement:" >> $GITHUB_OUTPUT
+            echo "$MISSING_RLS" | sed 's/^/- /' >> $GITHUB_OUTPUT
+          else
+            echo "✅ RLS enablement verified for all new tables." >> $GITHUB_OUTPUT
           fi
           
+          echo "" >> $GITHUB_OUTPUT
           echo "Checking for missing GRANTs on public tables..."
           MISSING_GRANTS=$(grep -L "GRANT " $(grep -l "CREATE TABLE" supabase/migrations/*.sql))
           if [ -n "$MISSING_GRANTS" ]; then
-            echo "Warning: The following migrations create tables but might be missing GRANT statements:"
-            echo "$MISSING_GRANTS"
+            echo "❌ **Warning:** The following migrations create tables but might be missing GRANT statements:" >> $GITHUB_OUTPUT
+            echo "$MISSING_GRANTS" | sed 's/^/- /' >> $GITHUB_OUTPUT
+          else
+            echo "✅ GRANT statements verified for all new tables." >> $GITHUB_OUTPUT
           fi
+          echo "EOF" >> $GITHUB_OUTPUT
 
       - name: SQL Linting
+        id: sql_lint
         run: |
-          # Se houver um linter SQL configurado, rodar aqui
+          echo "LINT_OUTPUT<<EOF" >> $GITHUB_OUTPUT
+          echo "### 🛠 SQL Linting Report" >> $GITHUB_OUTPUT
+          
           echo "Running basic SQL pattern checks..."
-          grep -rn "SECURITY DEFINER" supabase/migrations/*.sql | grep -v "SET search_path = public" && (echo "Error: SECURITY DEFINER functions must set search_path" && exit 1) || true
+          LINT_ERRORS=$(grep -rn "SECURITY DEFINER" supabase/migrations/*.sql | grep -v "SET search_path = public")
+          if [ -n "$LINT_ERRORS" ]; then
+            echo "❌ **Error:** SECURITY DEFINER functions must set search_path:" >> $GITHUB_OUTPUT
+            echo "$LINT_ERRORS" | sed 's/^/- /' >> $GITHUB_OUTPUT
+            echo "EOF" >> $GITHUB_OUTPUT
+            exit 1
+          else
+            echo "✅ SQL best practices (search_path) verified." >> $GITHUB_OUTPUT
+          fi
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Comment PR
+        uses: thollander/actions-comment-pull-request@v2
+        if: github.event_name == 'pull_request'
+        with:
+          message: |
+            ${{ steps.rls_check.outputs.REPORT_OUTPUT }}
+            ${{ steps.sql_lint.outputs.LINT_OUTPUT }}
+
+      - name: Archive Security Reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-audit-report
+          path: |
+            supabase/migrations/*.sql
+            .lovable/plan/
+
