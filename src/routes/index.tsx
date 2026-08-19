@@ -6,7 +6,7 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Gerar e expor no painel de auditoria um relatório detalhado do `seo-checklist-report.json` com páginas falhas, warning e fail, para eu acompanhar tendências por commit.Implementar testes automatizados que validem a hierarquia de headings (H1 obrigatória, sem pular níveis) para `src/pages/*` antes do prebuild.Corrigir os 5 casos restantes de H1 ausente e a hierarquia skip identificada no relatório, ajustando EditorialHero e/ou promovendo o heading correto em cada página afetada.Verificar novamente o checklist de SEO no CI e garantir que todas as páginas passem (sem falhas) após as correções de headings e H1.
+TEXTO DO USUÁRIO: Aplique melhorias visuais inspiradas no meu Instagram, mantendo o tema paper-like, em botões, tipografia e paleta de cores.Exiba um cartão da profissional com foto, bio curta e botão para meu Instagram dentro do AppShell e nas telas principais.Adicione meu link do Instagram e um QR Code de perfil ao PDF exportado do Passaporte da Cliente.Crie uma página “Sobre o Passaporte” com CTA para eu levar meus clientes ao meu Instagram.Implemente um painel de configurações para eu personalizar marca, nome profissional e link do Instagram em toda a aplicação.
 
 
 
