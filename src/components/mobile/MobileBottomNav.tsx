@@ -77,8 +77,8 @@ export function MobileBottomNav({
               className={cn(
                 "inline-flex items-center justify-center rounded-full px-3 py-1 transition-colors",
                 isActive
-                  ? "bg-stitch-secondary-container text-stitch-secondary-on-container"
-                  : "text-stitch-on-surface-variant group-hover:text-stitch-primary",
+                  ? "bg-gold/20 text-primary"
+                  : "text-primary/60 group-hover:text-primary",
               )}
             >
               <Icon
