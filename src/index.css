@@ -15,8 +15,8 @@
     --card: 45 35% 99.4%;
     --card-foreground: 220 25% 10%;
     
-    --primary: 220 30% 12%; /* Escurecido levemente para maior profundidade */
-    --primary-foreground: 45 40% 99%;
+    --primary: 220 30% 12%; 
+    --primary-foreground: 45 40% 98%;
     
     --secondary: 42 30% 35%; /* Escurecido de 45% para 35% para melhor contraste no mobile */
     --secondary-foreground: 45 40% 98%;
