@@ -6,7 +6,7 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Adicione uma busca e filtros na seção /admin/security-docs para navegar pelos relatórios de security por data, commit e tipo de finding.Crie testes end-to-end que validem no frontend o fluxo completo de moderação de posts, garantindo que ações indevidas sejam bloqueadas pela RLS. Configure notificações no Slack ou email quando o CI identificar regressões de RLS ou findings críticos, incluindo o link para os artefatos do relatório.
+TEXTO DO USUÁRIO: build failed with exit status 1: stderr:\nureDiagnosticsPage.tsx\nH1 → H3 (esperado H2 ou menor).\n💡 Rebaixe \"Status por Área (Real-Time)\" para H2 ou adicione um heading intermediário.\n· [missing_h1] src/pages/acervo/AcervoHomePage.tsx\nNenhum H1 (nem <EditorialHero>) encontrado.\n💡 Envolva o topo da página com <EditorialHero title=\"…\" /> ou promova o primeiro heading para <h1>. Candidato mais provável: primeiro <h2> \"Hoje no Cathedra\" — considere promovê-lo a H1 se for o título da página.\n\n6 violação(ões). Bloqueando CI.\nerror: script \"prebuild\" exited with code 1\n\nstdout:\nAlias /planos desindexado; destino /pricing indexável e self-canonical.\n❌ SEO checklist: 10 pass / 2 warn / 2 fail → /dev-server/public/seo-checklist-report.json\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nP0.3.2 · Headings Audit\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nPages audited: 103\nMissing H1: 5\nDuplicate H1: 0\nEmpty H1: 0\nHierarchy skips: 1
 
 
 
