@@ -91,8 +91,8 @@ export function MobileBottomNav({
               className={cn(
                 "font-[var(--font-stitch-label)] text-[11px] font-bold uppercase tracking-[0.08em]",
                 isActive
-                  ? "text-stitch-primary"
-                  : "text-stitch-on-surface-variant",
+                  ? "text-primary font-black"
+                  : "text-primary/60",
               )}
             >
               {item.label}
