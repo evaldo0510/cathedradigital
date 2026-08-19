@@ -158,13 +158,11 @@ const AtriumCommunityPage: React.FC = () => {
       </Helmet>
 
       <SpaceLayout>
-        {/* 1+2. Título e descrição — padrão de espaço */}
-        <SpaceHeader
-          align="center"
-          kicker="Communitas Fidelium"
-          title="Igreja Viva"
-          description="Um lugar para partilhar a caminhada — testemunhos, dúvidas e leituras entre irmãos na fé."
-        />
+        <EditorialHero density="minimal">
+          <EditorialHero.Eyebrow>Communitas Fidelium</EditorialHero.Eyebrow>
+          <EditorialHero.Title>Igreja Viva</EditorialHero.Title>
+          <EditorialHero.Subtitle>Um lugar para partilhar a caminhada — testemunhos, dúvidas e leituras entre irmãos na fé.</EditorialHero.Subtitle>
+        </EditorialHero>
 
         {/* ─── IGREJA VIVA: SSoT Grouping ─── */}
         <section className="mt-8 mb-12">
