@@ -484,12 +484,12 @@ export default function InfrastructureDiagnosticsPage() {
                           <span className="text-muted-foreground truncate max-w-[150px]">{v.path}</span>
                         </div>
                         <div className="flex items-center gap-3">
-                          <Badge variant={v.rating === 'good' ? 'default' : v.rating === 'needs-improvement' ? 'secondary' : 'destructive'} className="text-[8px] uppercase">
-                            {v.rating}
-                          </Badge>
-                          <span className="text-[9px] text-muted-foreground">
-                            {new Date(v.timestamp).toLocaleTimeString()}
-                          </span>
+                  <Badge variant={v.rating === 'good' ? 'default' : v.rating === 'needs-improvement' ? 'secondary' : 'destructive'} className="text-[8px] uppercase">
+                    {v.rating}
+                  </Badge>
+                  <span className="text-[9px] text-muted-foreground">
+                    {new Date(v.timestamp).toLocaleTimeString('pt-BR')}
+                  </span>
                         </div>
                       </div>
                     ))
@@ -505,6 +505,26 @@ export default function InfrastructureDiagnosticsPage() {
         </TabsContent>
 
         <TabsContent value="details" className="space-y-6 outline-none">
+          <Card className="premium-card mb-6">
+            <CardHeader>
+              <CardTitle className="text-premium-base font-black uppercase tracking-widest flex items-center gap-2">
+                <Icons.History className="w-5 h-5 text-primary" />
+                Histórico de Alterações do Sistema
+              </CardTitle>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-widest">Logs de Governança, Segurança e RLS (5.000 registros recentes)</p>
+            </CardHeader>
+            <CardContent>
+              <div className="bg-muted/20 border border-border/40 rounded-premium p-4 flex items-center justify-between">
+                <div className="space-y-1">
+                  <p className="text-xs font-bold">Trilha de Auditoria Centralizada</p>
+                  <p className="text-[10px] text-muted-foreground">Acesse o painel completo para filtrar por autor, entidade e tipo de evento.</p>
+                </div>
+                <Button asChild size="sm" className="rounded-premium-full h-8 px-6 uppercase text-[10px] font-black tracking-widest">
+                  <Link to="/admin/audit-logs">Acessar Histórico</Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
 
           {selectedAudit ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -615,7 +635,33 @@ export default function InfrastructureDiagnosticsPage() {
                 </Card>
               </div>
 
-              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  <Card className="bg-muted/10 border-border/20">
+                    <CardHeader className="py-3 px-4">
+                      <CardTitle className="text-xs font-bold uppercase tracking-widest text-primary">Políticas RLS & RBAC</CardTitle>
+                    </CardHeader>
+                    <CardContent className="py-2 px-4 space-y-3">
+                      <p className="text-[10px] text-muted-foreground">Documentação técnica das políticas de segurança aplicadas em 39 tabelas.</p>
+                      <Button asChild variant="outline" size="sm" className="w-full h-7 text-[9px] uppercase tracking-widest">
+                        <Link to="/admin/security-docs">Ver Documentação</Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-muted/10 border-border/20">
+                    <CardHeader className="py-3 px-4">
+                      <CardTitle className="text-xs font-bold uppercase tracking-widest text-primary">Relatórios Lighthouse</CardTitle>
+                    </CardHeader>
+                    <CardContent className="py-2 px-4 space-y-3">
+                      <p className="text-[10px] text-muted-foreground">Métricas de acessibilidade (axe) e Web Vitals históricos.</p>
+                      <Button asChild variant="outline" size="sm" className="w-full h-7 text-[9px] uppercase tracking-widest">
+                        <Link to="/admin/axe-contrast">Ver Acessibilidade</Link>
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                <div className="space-y-4">
+                  <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground px-1">Logs de Erros Recentes</h3>
                 <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground px-1" id="status-area-title">Status por Área (Real-Time)</h3>
                 <div className="grid grid-cols-1 gap-2">
                   {[
@@ -676,7 +722,7 @@ export default function InfrastructureDiagnosticsPage() {
             <CardHeader>
               <CardTitle className="text-premium-base font-black uppercase tracking-widest flex items-center gap-2">
                 <Icons.AlertTriangle className="w-5 h-5 text-amber-500" />
-                Captura de Erros Supabase — Santos
+                Captura de Erros e Documentação de Segurança
               </CardTitle>
             </CardHeader>
             <CardContent>
