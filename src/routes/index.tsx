@@ -6,7 +6,7 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Aplique melhorias visuais inspiradas no meu Instagram, mantendo o tema paper-like, em botões, tipografia e paleta de cores.Exiba um cartão da profissional com foto, bio curta e botão para meu Instagram dentro do AppShell e nas telas principais.Adicione meu link do Instagram e um QR Code de perfil ao PDF exportado do Passaporte da Cliente.Crie uma página “Sobre o Passaporte” com CTA para eu levar meus clientes ao meu Instagram.Implemente um painel de configurações para eu personalizar marca, nome profissional e link do Instagram em toda a aplicação.
+TEXTO DO USUÁRIO: deesfazer a ultima
 
 
 
