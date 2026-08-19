@@ -518,7 +518,7 @@ export default function InfrastructureDiagnosticsPage() {
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground px-1">Status por Área (Real-Time)</h3>
+                <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground px-1">Status por Área (Real-Time)</h2>
                 <div className="grid grid-cols-1 gap-2">
                   {[
                     { area: 'Santos', status: 'PASS', route: '/santos', action: 'Navegação editorial ativa' },
