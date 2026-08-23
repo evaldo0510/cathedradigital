@@ -162,14 +162,14 @@ const HomeUnified: React.FC = () => {
         </div>
 
         <div className="relative z-10 flex w-full max-w-6xl flex-col items-center text-center">
-          <div data-rise className="mb-12">
+          <motion.div variants={rise} initial="hidden" animate="show" custom={0} className="mb-12">
             <div className="relative">
               <div className="absolute inset-0 blur-2xl bg-gold/20 scale-150 animate-pulse" />
               <Icons.Logo className="w-24 h-24 text-gold relative z-10 drop-shadow-[0_0_15px_rgba(201,168,76,0.5)]" />
             </div>
-          </div>
+          </motion.div>
           
-          <div data-rise="1" className="mb-6 flex flex-col items-center">
+          <motion.div variants={rise} initial="hidden" animate="show" custom={1} className="mb-6 flex flex-col items-center">
             <Eyebrow className="mb-4 text-gold-light brightness-125">Sanctuarium Digital</Eyebrow>
             <h1
               className="leading-[0.9] tracking-[-0.02em]"
@@ -183,10 +183,10 @@ const HomeUnified: React.FC = () => {
             >
               CATHEDRA
             </h1>
-          </div>
+          </motion.div>
 
-          <p
-            data-rise="2"
+          <motion.p
+            variants={rise} initial="hidden" animate="show" custom={2}
             className="mx-auto max-w-2xl px-4 text-xl italic leading-relaxed md:text-3xl text-balance"
             style={{ 
               fontFamily: "var(--font-display)", 
@@ -195,10 +195,11 @@ const HomeUnified: React.FC = () => {
             }}
           >
             "Onde a Tradição encontra o silêncio e o conhecimento se torna contemplação."
-          </p>
+          </motion.p>
 
           {/* Busca Premium */}
-          <div data-rise="3" className="mt-16 w-full max-w-3xl md:mt-24">
+          <motion.div variants={rise} initial="hidden" animate="show" custom={3} className="mt-16 w-full max-w-3xl md:mt-24">
+
             <div
               className="group relative flex items-center gap-4 rounded-premium border px-8 py-5 transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_0_40px_-10px_rgba(201,168,76,0.2)]"
               style={{
@@ -241,7 +242,8 @@ const HomeUnified: React.FC = () => {
                     {s.label}
                   </Link>
                 ))}
-              </div>
+            </motion.div>
+
             )}
           </div>
 
