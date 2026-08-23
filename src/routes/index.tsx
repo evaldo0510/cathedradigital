@@ -6,7 +6,7 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Adicionar mensagens claras de erro e sucesso quando eu publicar o site, para eu entender por que não aparece nada no cathedro.Adicionar uma seção de logs de build e deploy para eu verificar exatamente o que falhou quando eu publicar.
+TEXTO DO USUÁRIO: oo preview sumiu
 
 
 
