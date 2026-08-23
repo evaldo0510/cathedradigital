@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,12 +6,14 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, AreaChart, Area } from 'recharts';
 import { supabase } from '@/integrations/supabase/client';
 import { useLang } from '@/hooks/useLang';
 import { SUPPORTED_LOCALES } from '@/lib/i18n/locales';
 import { toast } from 'sonner';
 import { Icons } from '@/constants';
 import { cn } from '@/lib/utils';
+
 
 interface AuditRun {
   id: string;
@@ -349,6 +351,66 @@ export default function InfrastructureDiagnosticsPage() {
         </TabsContent>
 
         <TabsContent value="seo" className="space-y-6 outline-none">
+          {/* 📈 Tendência de Auditoria */}
+          <Card className="premium-card">
+            <CardHeader>
+              <CardTitle className="text-premium-base font-black uppercase tracking-widest flex items-center gap-2">
+                <Icons.BarChart className="w-5 h-5 text-primary" />
+                Tendência de Falhas por Rota
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart
+                    data={useMemo(() => {
+                      if (!history || history.length === 0) return [];
+                      // Processa as últimas 10 execuções para o gráfico
+                      return [...history]
+                        .reverse()
+                        .slice(-10)
+                        .map(run => {
+                          const date = new Date(run.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+                          const areas = run.details?.areas || [];
+                          const result: any = { date };
+                          areas.forEach((a: any) => {
+                            result[a.area] = a.status === 'FAIL' ? 1 : 0;
+                          });
+                          return result;
+                        });
+                    }, [history])}
+                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
+                    <XAxis dataKey="date" fontSize={10} tick={{ fill: '#666' }} />
+                    <YAxis fontSize={10} tick={{ fill: '#666' }} />
+                    <Tooltip 
+                      contentStyle={{ 
+                        backgroundColor: '#fff', 
+                        borderRadius: '8px', 
+                        border: '1px solid #e2e8f0',
+                        fontSize: '11px',
+                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' 
+                      }} 
+                    />
+                    <Legend iconType="circle" wrapperStyle={{ fontSize: '10px', paddingTop: '20px' }} />
+                    {['Santos', 'Catecismo', 'Bíblia', 'Biblioteca', 'Nexus'].map((area, idx) => (
+                      <Area
+                        key={area}
+                        type="monotone"
+                        dataKey={area}
+                        stackId="1"
+                        stroke={[ '#0B1F3A', '#C8A96A', '#4A5568', '#718096', '#A0AEC0' ][idx % 5]}
+                        fill={[ '#0B1F3A', '#C8A96A', '#4A5568', '#718096', '#A0AEC0' ][idx % 5]}
+                        fillOpacity={0.6}
+                      />
+                    ))}
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+
           <Card className="premium-card">
             <CardHeader className="flex flex-row items-center justify-between">
               <CardTitle className="text-premium-base font-black uppercase tracking-widest flex items-center gap-2">
@@ -445,6 +507,7 @@ export default function InfrastructureDiagnosticsPage() {
             </CardContent>
           </Card>
         </TabsContent>
+
 
         <TabsContent value="vitals" className="space-y-6 outline-none">
           <Card className="premium-card">
