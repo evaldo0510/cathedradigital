@@ -6,7 +6,7 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: A LANDING PAGE ESTA FEIA
+TEXTO DO USUÁRIO: Reforçar o SEO on-page da landing page ajustando título, meta description, Open Graph e estrutura de headings para reduzir warnings no checklist.Otimizar a performance da landing page, reduzindo tamanhos de assets, aplicando lazy loading e verificando Core Web Vitals.Refinar as seções e chamadas para ação da landing page, adicionando um fluxo claro de navegação com botões e âncoras que levem às áreas principais.Auditar e melhorar a acessibilidade da landing page, garantindo contraste de cores, navegação por teclado e uso correto de headings e landmarks.Ajustar a responsividade da landing page para mobile e tablets, garantindo que tipografia, espaçamentos e componentes fiquem bem alinhados.
 
 
 
