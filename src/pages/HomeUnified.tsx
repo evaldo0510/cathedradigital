@@ -1,26 +1,13 @@
 /**
  * HomeUnified — Sprint Visual 3.0, Turno 2.
- *
- * Home única (deslogado + logado) que substitui a landing bugada e o Átrio v2 como
- * porta de entrada visível. Composição: bandas full-width empilhadas, paleta noir & gold,
- * tipografia editorial (Playfair Display + Inter — ambas já carregadas no projeto).
- *
- * ✅ Turno 1: shell visual completo com dados estáticos.
- * ✅ Turno 2: dados reais via hooks do Átrio (useResume, useLiturgyToday, useAnnouncements,
- *             useFeaturedThemes, useSearchSuggestions). Regra do Átrio preservada:
- *             a página consome apenas hooks — adapters continuam sendo trocáveis (mock → real).
- * ⏳ Turno 3: polish, motion, SEO, mobile refinements.
- *
- * Rotas:
- *   /              → esta página
- *   /legacy-home   → Index antigo (rollback)
- *
- * Ambientes canônicos vêm do EnvironmentRegistry (fonte única de verdade).
+ * Redesigned for "Mosteiro Digital" Premium Aesthetics.
  */
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+
 import {
   BookOpen,
   HandHeart,
