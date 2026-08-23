@@ -69,7 +69,7 @@ function formatRelativeDate(iso: string): string {
 }
 
 /** Capitaliza a primeira letra (para weekday minúsculo vindo do adapter). */
-const rise = {
+const rise: any = {
   hidden: { 
     opacity: 0, 
     y: 30,
@@ -84,6 +84,7 @@ const rise = {
     },
   }),
 };
+
 
 function capitalize(s: string): string {
   return s.length ? s[0].toUpperCase() + s.slice(1) : s;
