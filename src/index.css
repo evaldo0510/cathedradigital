@@ -63,13 +63,14 @@
     /* 3. Borders & Radius */
     --radius-sm: 0.5rem;
     --radius-md: 1rem;
-    --radius-lg: 2rem;
-    --radius-xl: 2.5rem;
-    --radius-premium: var(--radius-xl);
-    --radius: var(--radius-lg);
+    --radius-lg: 1.5rem;
+    --radius-xl: 2rem;
+    --radius-premium: 2.5rem;
+    --radius: 1.5rem;
     
     --border-thin: 1px;
-    --border-medium: 2px;
+    --border-medium: 1.5px;
+
     
     /* 4. Shadows */
     --shadow-premium-sm: 0 1px 2px 0 rgb(0 0 0 / 0.02);
@@ -350,22 +351,28 @@
    * Palette: #0d0d0d / #1a1a1a / #c9a84c / #f0d78c
    * ===================================================================== */
   .cathedra-noir {
-    --noir-bg: #0d0d0d;
-    --noir-surface: #1a1a1a;
-    --noir-surface-2: #1a1a1a;
-    --noir-line: rgba(201, 168, 76, 0.14);
-    --noir-line-strong: rgba(201, 168, 76, 0.32);
-    --noir-text: #f5f0e0;
-    --noir-text-muted: rgba(245, 240, 224, 0.62);
-    --noir-text-faint: rgba(245, 240, 224, 0.36);
+    --noir-bg: #030303;
+    --noir-surface: #0a0a0a;
+    --noir-surface-elevated: #111111;
+    --noir-text: #f5f5f7;
+    --noir-text-muted: #a1a1a6;
+    --noir-text-faint: #424245;
+    --noir-line: rgba(255, 255, 255, 0.05);
+    --noir-line-strong: rgba(255, 255, 255, 0.12);
     --gold: #c9a84c;
-    --gold-light: #f0d78c;
+    --gold-light: #dfc17a;
     --font-display: 'Cormorant Garamond', 'Playfair Display', serif;
     --font-body: 'Karla', 'Inter', sans-serif;
+    
     background-color: var(--noir-bg);
     color: var(--noir-text);
     font-family: var(--font-body);
   }
+
+  .rounded-premium {
+    border-radius: var(--radius-premium);
+  }
+
   .cathedra-noir ::selection { background: rgba(201, 168, 76, 0.35); color: #0d0d0d; }
 
   /* Reset agressivo dos estilos globais dentro do escopo Noir.
