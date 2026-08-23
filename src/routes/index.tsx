@@ -6,7 +6,8 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Implementar testes automatizados de regressão (headings e metadados) para garantir que futuras edições não quebrem a hierarquia H1–H6.Implementar um painel de histórico de alterações com data, arquivo afetado e descrição para eu acompanhar o que foi revertido.Gerar novamente o `seo-checklist-report.json` e exibir um resumo das páginas ainda com issues (fail/warning) para eu conferir tendências.Verificar se o checklist de SEO no CI está 100% passando após o desfazer da última alteração.
+TEXTO DO USUÁRIO: Adicionar no painel de Diagnóstico gráficos de tendência mostrando evolução de fail/warning por rota ao longo das últimas execuções.
+
 
 
 
