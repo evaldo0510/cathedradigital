@@ -132,94 +132,106 @@ const HomeUnified: React.FC = () => {
       </Helmet>
 
       {/* ══════ HERO (100vh) — O Companheiro Espiritual ══════ */}
-      <section className="relative flex min-h-[90vh] w-full flex-col items-center justify-center px-6 py-16 md:px-12">
-        {/* Halo dourado sutil */}
+      <section className="relative flex min-h-[95vh] w-full flex-col items-center justify-center px-6 py-16 md:px-12">
+        {/* Halo dourado sutil com movimento orgânico */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(ellipse 80% 55% at 50% 45%, rgba(201,168,76,0.12) 0%, transparent 65%)',
-          }}
-        />
+          className="pointer-events-none absolute inset-0 overflow-hidden"
+        >
+          <div 
+            className="absolute inset-0 opacity-20"
+            style={{
+              background: 'radial-gradient(circle at 50% 50%, var(--gold) 0%, transparent 70%)',
+              filter: 'blur(80px)',
+              transform: 'scale(1.2)',
+            }}
+          />
+          <div 
+            className="absolute inset-0 opacity-10"
+            style={{
+              background: 'conic-gradient(from 0deg at 50% 50%, transparent, var(--gold), transparent)',
+              filter: 'blur(100px)',
+              animation: 'spin 60s linear infinite',
+            }}
+          />
+        </div>
 
         <div className="relative z-10 flex w-full max-w-6xl flex-col items-center text-center">
-          <div data-rise><Icons.Logo className="w-16 h-16 mb-8 opacity-40 text-primary" /></div>
-          <div data-rise><Eyebrow className="mb-4 md:mb-6">Ecossistema Vivo</Eyebrow></div>
-
-          <h1
-            data-rise="1"
-            className="mb-6 leading-[0.95] tracking-[0.06em]"
-            style={{
-              fontFamily: "var(--font-display)",
-              fontWeight: 500,
-              fontSize: 'clamp(3.5rem, 12vw, 9rem)',
-              color: 'var(--noir-text)',
-            }}
-          >
-            CATHEDRA
-          </h1>
-
+          <div data-rise className="mb-12">
+            <div className="relative">
+              <div className="absolute inset-0 blur-2xl bg-gold/20 scale-150 animate-pulse" />
+              <Icons.Logo className="w-24 h-24 text-gold relative z-10 drop-shadow-[0_0_15px_rgba(201,168,76,0.5)]" />
+            </div>
+          </div>
+          
+          <div data-rise="1" className="mb-6 flex flex-col items-center">
+            <Eyebrow className="mb-4 text-gold-light brightness-125">Sanctuarium Digital</Eyebrow>
+            <h1
+              className="leading-[0.9] tracking-[-0.02em]"
+              style={{
+                fontFamily: "var(--font-display)",
+                fontWeight: 500,
+                fontSize: 'clamp(4rem, 15vw, 11rem)',
+                color: 'var(--noir-text)',
+                textShadow: '0 10px 30px rgba(0,0,0,0.5)',
+              }}
+            >
+              CATHEDRA
+            </h1>
+          </div>
 
           <p
             data-rise="2"
-            className="mx-auto max-w-2xl px-4 text-lg italic leading-relaxed md:text-2xl"
-            style={{ fontFamily: "var(--font-display)", color: 'var(--noir-text-muted)' }}
+            className="mx-auto max-w-2xl px-4 text-xl italic leading-relaxed md:text-3xl text-balance"
+            style={{ 
+              fontFamily: "var(--font-display)", 
+              color: 'var(--noir-text-muted)',
+              textShadow: '0 2px 4px rgba(0,0,0,0.3)'
+            }}
           >
-            Um ecossistema espiritual vivo para sua caminhada.
+            "Onde a Tradição encontra o silêncio e o conhecimento se torna contemplação."
           </p>
 
-          {/* Busca Spotlight-like */}
-          <div data-rise="3" className="mt-14 w-full max-w-2xl md:mt-20">
-            <Link 
-              to="/admin/acervo/audit" 
-              className="absolute -top-12 right-0 text-[8px] font-black uppercase tracking-[0.4em] text-gold/20 hover:text-gold transition-colors z-20"
-            >
-              Mission Control
-            </Link>
-            <label htmlFor="home-search" className="sr-only">Pesquisar</label>
+          {/* Busca Premium */}
+          <div data-rise="3" className="mt-16 w-full max-w-3xl md:mt-24">
             <div
-              className="group flex items-center gap-3 rounded-full border px-6 py-4 transition-colors md:py-5"
+              className="group relative flex items-center gap-4 rounded-premium border px-8 py-5 transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_0_40px_-10px_rgba(201,168,76,0.2)]"
               style={{
-                borderColor: 'var(--noir-line)',
-                background: 'rgba(255,255,255,0.02)',
-                backdropFilter: 'blur(6px)',
+                borderColor: 'var(--noir-line-strong)',
+                background: 'rgba(255,255,255,0.03)',
+                backdropFilter: 'blur(20px)',
               }}
             >
-              <SearchIcon className="h-5 w-5 shrink-0" style={{ color: 'var(--gold)' }} aria-hidden />
+              <SearchIcon className="h-6 w-6 shrink-0 transition-transform group-focus-within:scale-110" style={{ color: 'var(--gold)' }} aria-hidden />
               <input
                 id="home-search"
                 type="text"
-                placeholder="O que deseja estudar hoje?"
-                className="w-full bg-transparent text-base outline-none placeholder:italic md:text-lg"
+                placeholder="O que deseja descobrir hoje?"
+                className="w-full bg-transparent text-lg md:text-2xl outline-none placeholder:italic"
                 style={{
                   color: 'var(--noir-text)',
                   fontFamily: "var(--font-display)",
                 }}
               />
-              <kbd
-                className="hidden shrink-0 rounded border px-2 py-1 text-[10px] tracking-widest md:inline-block"
-                style={{
-                  borderColor: 'var(--noir-line)',
-                  color: 'var(--noir-text-faint)',
-                  fontFamily: 'var(--font-body)',
-                }}
-              >
-                ⌘K
-              </kbd>
+              <div className="flex items-center gap-2">
+                <kbd className="hidden md:inline-flex items-center gap-1 rounded border border-noir-line px-2 py-1 text-[10px] tracking-widest text-noir-text-faint">
+                  <span>⌘</span><span>K</span>
+                </kbd>
+                <button className="bg-gold hover:bg-gold-light text-noir-bg px-6 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all">
+                  Explorar
+                </button>
+              </div>
             </div>
 
-            {/* Sugestões (chips) — vindas do SearchAdapter */}
+            {/* Sugestões Contextuais */}
             {suggestions.length > 0 && (
-              <div className="mt-6 flex flex-wrap justify-center gap-2">
-                {suggestions.slice(0, 6).map((s) => (
+              <div className="mt-8 flex flex-wrap justify-center gap-3">
+                {suggestions.slice(0, 5).map((s) => (
                   <Link
                     key={s.id}
                     to={`/buscar?q=${encodeURIComponent(s.label)}`}
-                    className="rounded-full border px-3 py-1.5 text-xs tracking-wide transition-colors"
-                    style={{ borderColor: 'var(--noir-line)', color: 'var(--noir-text-muted)', fontFamily: 'var(--font-body)' }}
-                    onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--gold)'; e.currentTarget.style.color = 'var(--gold-light)'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'var(--noir-line)'; e.currentTarget.style.color = 'var(--noir-text-muted)'; }}
+                    className="rounded-full border border-noir-line bg-noir-surface/50 px-5 py-2 text-xs tracking-widest transition-all hover:border-gold hover:text-gold hover:bg-gold/5"
+                    style={{ color: 'var(--noir-text-muted)', fontFamily: 'var(--font-body)' }}
                   >
                     {s.label}
                   </Link>
@@ -228,13 +240,13 @@ const HomeUnified: React.FC = () => {
             )}
           </div>
 
-
-          {/* Chevron descend */}
-          <div className="mt-16 opacity-40 md:mt-24">
-            <div className="mx-auto h-16 w-px" style={{ background: 'linear-gradient(to bottom, var(--gold), transparent)' }} />
+          <div className="mt-20 md:mt-32 flex flex-col items-center gap-4 animate-bounce opacity-40">
+            <span className="text-[10px] tracking-[0.4em] uppercase text-gold">Descender</span>
+            <div className="h-24 w-px bg-gradient-to-b from-gold via-gold/50 to-transparent" />
           </div>
         </div>
       </section>
+
 
       {/* ══════ FASE 8: COMPANHEIRO ESPIRITUAL — O Plano de Hoje ══════ */}
       <section className="relative w-full border-t px-6 py-20 md:px-12 md:py-32" style={{ borderColor: 'var(--noir-line)' }}>

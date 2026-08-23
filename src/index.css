@@ -63,13 +63,14 @@
     /* 3. Borders & Radius */
     --radius-sm: 0.5rem;
     --radius-md: 1rem;
-    --radius-lg: 2rem;
-    --radius-xl: 2.5rem;
-    --radius-premium: var(--radius-xl);
-    --radius: var(--radius-lg);
+    --radius-lg: 1.5rem;
+    --radius-xl: 2rem;
+    --radius-premium: 2.5rem;
+    --radius: 1.5rem;
     
     --border-thin: 1px;
-    --border-medium: 2px;
+    --border-medium: 1.5px;
+
     
     /* 4. Shadows */
     --shadow-premium-sm: 0 1px 2px 0 rgb(0 0 0 / 0.02);
