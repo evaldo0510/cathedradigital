@@ -6,7 +6,9 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: oo preview sumiu
+TEXTO DO USUÁRIO: Adicionar mensagens claras de erro e sucesso quando eu publicar o site, para eu entender por que não aparece nada no cathedro.
+
+Restaurar o preview que sumiu ao abrir o site no modo de visualização.
 
 
 
