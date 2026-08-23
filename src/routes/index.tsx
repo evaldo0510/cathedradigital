@@ -6,7 +6,7 @@ Se for um pedido de criação, alteração ou correção, execute-o por completo
 Se for apenas uma pergunta ou conversa, responda no chat em português, sem alterar nenhum arquivo.
 Nunca insira o texto enviado como conteúdo dentro do site ou da página.
 
-TEXTO DO USUÁRIO: Revisar a responsividade da landing page para mobile e tablets garantindo tipografia, espaçamentos e componentes bem alinhados.Auditar e melhorar a acessibilidade da landing page garantindo contraste adequado, navegação por teclado e uso correto de headings e landmarks.Refinar as seções e chamadas para ação da landing page adicionando botões e âncoras com um fluxo claro de navegação.Otimizar a performance da landing page reduzindo tamanhos de assets e aplicando lazy loading para melhorar Core Web Vitals.Ajustar o título, meta description e Open Graph da landing page para reduzir warnings no checklist de SEO.
+TEXTO DO USUÁRIO: NA ESTA SAIND NADA NO CATHEDRO QUANDO PUBLIC
 
 
 
