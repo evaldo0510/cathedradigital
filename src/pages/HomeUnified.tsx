@@ -69,9 +69,26 @@ function formatRelativeDate(iso: string): string {
 }
 
 /** Capitaliza a primeira letra (para weekday minúsculo vindo do adapter). */
+const rise = {
+  hidden: { 
+    opacity: 0, 
+    y: 30,
+  },
+  show: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: 0.1 + i * 0.15,
+      duration: 1,
+      ease: [0.22, 1, 0.36, 1],
+    },
+  }),
+};
+
 function capitalize(s: string): string {
   return s.length ? s[0].toUpperCase() + s.slice(1) : s;
 }
+
 
 // ─── Primitivas locais ───────────────────────────────────────────────────────
 const Eyebrow: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = '' }) => (
@@ -107,10 +124,11 @@ const HomeUnified: React.FC = () => {
 
 
   return (
-    <div className="cathedra-noir min-h-screen w-full">
+    <div className="cathedra-noir min-h-screen w-full selection:bg-gold/30 selection:text-noir-bg">
       <Helmet>
-        <title>Cathedra — Ecossistema Espiritual Vivo</title>
-        <meta name="description" content="Cathedra: um ecossistema vivo para a vida interior onde tudo se conecta — Bíblia, Catecismo, Santos e Oração." />
+        <title>Cathedra — Onde a Tradição Encontra o Silêncio</title>
+        <meta name="description" content="Sanctuarium Digital: o ecossistema espiritual vivo para sua caminhada cristã." />
+
         <meta property="og:title" content="Cathedra — Ecossistema Espiritual Vivo" />
         <meta property="og:description" content="Mais que um aplicativo, um mosteiro digital onde cada leitura conduz a uma nova descoberta espiritual." />
         <meta property="og:type" content="website" />
