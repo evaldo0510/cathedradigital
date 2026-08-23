@@ -242,10 +242,10 @@ const HomeUnified: React.FC = () => {
                     {s.label}
                   </Link>
                 ))}
-            </motion.div>
-
+              </div>
             )}
-          </div>
+          </motion.div>
+
 
           <div className="mt-20 md:mt-32 flex flex-col items-center gap-4 animate-bounce opacity-40">
             <span className="text-[10px] tracking-[0.4em] uppercase text-gold">Descender</span>
