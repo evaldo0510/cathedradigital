@@ -51,6 +51,9 @@ export default defineConfig(({ mode }) => ({
     VitePWA({
       strategies: 'injectManifest',
       srcDir: 'src',
+      injectManifest: {
+        maximumFileSizeToCacheInBytes: 6 * 1024 * 1024,
+      },
       filename: 'sw.js',
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg', 'favicon.png', 'icon-192.png', 'icon-512.png', 'icon-maskable.png', 'robots.txt', 'logos-avatar.png', 'logos-aquinas.png', 'logos-colloquium.png'],
@@ -136,54 +139,21 @@ export default defineConfig(({ mode }) => ({
     sourcemap: true, // exigido pelo Sentry para stack traces resolvidos
     rollupOptions: {
       output: {
-        manualChunks(id) {
-          // Core vendors
-          if (id.includes('node_modules/react-dom') || id.includes('node_modules/react/') || id.includes('node_modules/react-router')) return 'vendor-react';
+        manualChunks(id: string) {
+          if (!id.includes('node_modules')) return;
+
+          // Libs pesadas e independentes de React podem ficar isoladas.
           if (id.includes('node_modules/@supabase')) return 'vendor-supabase';
-          if (id.includes('node_modules/framer-motion')) return 'vendor-motion';
-          if (id.includes('node_modules/recharts') || id.includes('node_modules/d3-')) return 'vendor-recharts';
-          if (id.includes('node_modules/lucide-react')) return 'vendor-lucide';
-          if (id.includes('node_modules/@sentry')) return 'vendor-sentry';
           if (id.includes('node_modules/jspdf')) return 'vendor-pdf';
-          if (id.includes('node_modules/canvas-confetti')) return 'vendor-confetti';
           if (id.includes('node_modules/html2canvas')) return 'vendor-html2canvas';
-          if (id.includes('node_modules/@radix-ui/') || id.includes('node_modules/class-variance-authority')) return 'vendor-ui-core';
-          if (id.includes('node_modules/@tanstack/react-query')) return 'vendor-query';
+          if (id.includes('node_modules/canvas-confetti')) return 'vendor-confetti';
           if (id.includes('node_modules/date-fns')) return 'vendor-date-utils';
-          
-          // Feature: Biblical & Catechetical (Heavy Text/Logic)
-          if (id.includes('src/components/cathedra/Bible') || 
-              id.includes('src/components/cathedra/Catechism') ||
-              id.includes('src/modules/catequese')) {
-            return 'feature-sacra';
-          }
 
-          // Feature: Saints (Visual & Editorial Engine)
-          if (id.includes('src/components/cathedra/Saints') || 
-              id.includes('src/components/cathedra/SaintDetail') ||
-              id.includes('src/features/saints') ||
-              id.includes('src/services/saintsService.ts')) {
-            return 'feature-saints';
-          }
-
-          // Feature: Liturgy & Prayers
-          if (id.includes('src/components/cathedra/Liturgia') || 
-              id.includes('src/components/cathedra/Prayer') ||
-              id.includes('src/components/cathedra/Rosary')) {
-            return 'feature-devotio';
-          }
-
-          // Feature: Nexus & AI
-          if (id.includes('src/components/nexus') || 
-              id.includes('src/components/cathedra/LogosAI')) {
-            return 'feature-nexus';
-          }
-
-          // Shared UI components
-          if (id.includes('src/components/ui/')) return 'shared-ui';
-          
-          // Data isolation
-          if (id.includes('src/data/')) return 'feature-data';
+          // Todo o ecossistema React (react, react-dom, router, radix, lucide,
+          // framer-motion, query, sentry...) fica num único chunk. Separá-los
+          // cria inicialização circular entre chunks e quebra a app em produção
+          // com "Cannot read properties of undefined (reading 'forwardRef')".
+          return 'vendor-react';
         },
       },
     },
