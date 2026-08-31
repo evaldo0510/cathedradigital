@@ -73,13 +73,29 @@ if (isPreviewHost || isInIframe) {
   });
 }
 
+// Auto-recuperação: se um asset antigo em cache quebrar a inicialização
+// (tela branca), limpa service workers/caches e recarrega uma única vez.
+window.addEventListener("error", (event) => {
+  const msg = String((event as ErrorEvent).message || "");
+  const isChunkFailure =
+    /Failed to fetch dynamically imported module|Importing a module script failed|Unexpected token '<'|reading 'forwardRef'/.test(msg);
+  if (!isChunkFailure) return;
+  try {
+    if (sessionStorage.getItem("cathedra:self-heal") === "1") return;
+    sessionStorage.setItem("cathedra:self-heal", "1");
+  } catch {}
+  void hardRestorePreview();
+});
+
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <MaintenanceGate>
       <App />
+      <PreviewRecoveryControls />
     </MaintenanceGate>
   </React.StrictMode>
 );
+
 
 // Prefetch core modules after initial render
 prefetchCoreModules();
