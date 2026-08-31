@@ -4,6 +4,8 @@ import App from "./App.tsx";
 import "./index.css";
 import "./styles/typography.css";
 import { MaintenanceGate } from "./components/MaintenanceGate";
+import PreviewRecoveryControls, { hardRestorePreview } from "./components/PreviewRecoveryControls";
+
 import { prefetchCoreModules } from "./lib/prefetch";
 import { initLiturgicalPrefetchGuard } from "./lib/litcalPrefetchGuard";
 import { registerSW } from 'virtual:pwa-register';
